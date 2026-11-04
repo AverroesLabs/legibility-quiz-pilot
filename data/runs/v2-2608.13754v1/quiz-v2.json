@@ -1,0 +1,3355 @@
+{
+ "paper": "2608.13754v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p8",
+ "paper_sha256": "9bcbde4598dd93345695d23de85333d551326f2ab4de249e2e0bc2a1d8e80e54",
+ "batches": 5,
+ "written_per_batch": [
+  43,
+  39,
+  38,
+  35,
+  36
+ ],
+ "cost_per_batch": [
+  0.459508,
+  0.871224,
+  0.98834,
+  1.09972,
+  1.057492
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Circuit-derived Annex IV claims are highly unstable across defensible analytic specifications. Evidence from circuit discovery on GPT-2 small IOI is not filable at any pre-registered tolerance, for either addressee or any granularity.",
+   "methods": [
+    "Pre-registered crossed multiverse over seven analytic axes, realised as six objectives, 15,840 specifications and 7,561 with a claim",
+    "Deterministic claim map \u03c6 (overseer and affected addressees, three nested granularities)",
+    "Flip rate F (unbiased Gini\u2013Simpson, Eq. 2), modal share \u03c0*",
+    "Specification-resampling bootstrap with B=10,000"
+   ],
+   "results": [
+    "F=0.7316 (95% CI 0.7247\u20130.7380) against an H2 threshold of 0.20",
+    "\u03c0*=0.4109 against requirements of 0.95/0.90/0.80",
+    "The two most common claims (41.1% early layers, 28.5% late layers) contradict each other",
+    "Table 5: affected COARSE F=0.3950, \u03c0*=0.7291; overseer COARSE F=0.5733, \u03c0*=0.4788; overseer FINE F=0.7681, \u03c0*=0.4109; no cell filable at \u03b1=0.20",
+    "With 9 classes the F ceiling is 0.8889, and observed F is 82.3% of it"
+   ],
+   "conditions": [
+    "One model (GPT-2 small), one task (IOI)",
+    "Tolerances 0.05, 0.10, 0.20",
+    "F \u2264 1\u22121/k for k classes"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "No single analytic axis rescues filability. The evaluation metric is the largest lever but leaves F far above threshold, and the axes that drive circuit structure differ from those that drive claims.",
+   "methods": [
+    "Within-group flip rate F_within(G) (Eq. 3, weights pairs equally)",
+    "REML variance decomposition on log10 circuit size"
+   ],
+   "results": [
+    "Residual F after standardising metric 0.5939 (CI 0.5803\u20130.6063), removing 0.1377",
+    "Ablation removes 0.0302, objective 0.0298, threshold 0.0246, corruption 0.0224, prompt 0.0084, seed 0.0009",
+    "Structural variance: ablation\u00d7corruption 78.8%, residual 11.5%, ablation 4.4%, threshold 4.1%, metric 0.7%"
+   ],
+   "conditions": [
+    "Single-axis standardisation only",
+    "The seed selects which prompts are sampled (evaluation-set variability)"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Instability survives maximum pressure: with circuit size removed from the claim and held fixed, the layer-band attribution still flips above the pre-registered threshold.",
+   "methods": [
+    "Claim reduced to the dominant layer band (COARSE)",
+    "Within-size F via Eq. 3",
+    "Alternative size binnings (Table 1)"
+   ],
+   "results": [
+    "F=0.2706 (CI 0.2550\u20130.2859) > 0.20",
+    "Medium within-size F=0.2746",
+    "Binnings give F from 0.70 to 0.77; deciles 0.7719, equal thirds 0.7018, no size term 0.5733"
+   ],
+   "conditions": [
+    "Threshold 0.20 with the CI lower bound required to clear it"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Discovered circuits are structurally near-disjoint and functionally uncorrelated, so the instability is not one mechanism described in different words (rebuts phantom specialisation).",
+   "methods": [
+    "Exact pairwise Jaccard over 28,580,580 pairs",
+    "Per-example functional agreement and Cohen's kappa (Bayat Makou measures)"
+   ],
+   "results": [
+    "Mean Jaccard 0.1396; median pairwise D 0.960 (4% shared edges); only 1% of pairs above Jaccard 0.8",
+    "About 45\u00d7 the chance overlap at 200 edges (0.0031)",
+    "Functional agreement 0.6028; kappa 0.0146; kappa 0.016\u20130.047 at every size while raw agreement rises 0.52\u21920.92 with accuracy 0.51\u21920.95"
+   ],
+   "conditions": [
+    "GPT-2 small, |E|=32,491 edges, 156 components"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "When specifications select objects of different sizes, pooled statistics can invert. The random-null comparison reverses and the H4 functional gap fails within size.",
+   "methods": [
+    "Size-matched random null (R=1,000 null multiverses)",
+    "Within-size decomposition (Table 7)"
+   ],
+   "results": [
+    "Pooled: discovered 0.7316 vs null 0.6774 (H3 rejected)",
+    "Within size: discovered 0.2746 vs null 0.4230 (medium), 0.2706 vs 0.3822 (coarse)",
+    "Null collapses to 1 class at \u22651,000 edges; discovered collapses at 5,000 and 10,000 (2,692 specs contribute no flips)",
+    "Per size, discovered vs null: 10 edges 0.4543 vs 0.7331; 50 edges 0.4639 vs 0.7310; 500 edges 0.4258 vs 0.1421; 1,000 edges 0.5133 vs 0; 2,000 edges 0.5714 vs 0",
+    "H4 gap 0.3344 pooled but fails 0.10 at 6/10 sizes, negative at 5, carried by the 500\u20132,000 edge band"
+   ],
+   "conditions": [
+    "Circuit size is an outcome chosen by the threshold rule"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "A standalone filability protocol: declare the specification space and a deterministic claim map, compute \u03c0* and F, file only if \u03c0* \u2265 1\u2212\u03b1, and report per-level discard rates and within-group decompositions.",
+   "methods": [
+    "Five-step protocol (Section 8)",
+    "Deterministic, non-LLM claim map"
+   ],
+   "results": [
+    "Applied to IOI, \u03c0*=0.411 fails all tolerances"
+   ],
+   "conditions": [
+    "The regulator does not adjudicate which choice is correct; the filer declares the space"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "The instrument and the design have limitations that bound the result: one objective does not execute, the discard rate is high and uneven, the space is as wide as the library, and the bootstrap fails for small groups.",
+   "methods": [
+    "Pre-fixed exclusion criteria",
+    "Metric-relative threshold rule"
+   ],
+   "results": [
+    "220 cells of one objective fail with an MSE error inside the library",
+    "Discard 52.3%: comprehensiveness 0.003, KL 0.630, logit difference 0.679, sufficiency 0.779",
+    "Surviving pool is 52% comprehensiveness",
+    "Optimal ablation is absent, so F is called a lower bound",
+    "Bootstrap unusable when groups hold 2\u20135 specifications"
+   ],
+   "conditions": [
+    "The Pythia-160m replication is pre-registered but not run",
+    "Seed axis has 3 levels in the replication"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the conclusion that discovered circuits are more stable than the size-matched random null hold if every specification had selected circuits of 1,000 to 2,000 edges?",
+   "answer": "No. In that band the null collapses to a single claim class (F=0), while discovered circuits still flip at 0.51 to 0.57. Discovered circuits would look less stable than random. The 'more stable once fair' result depends on the smaller sizes.",
+   "rubric": [
+    "Says the conclusion would not hold (discovered would be less stable or not more stable)",
+    "Cites the null F of 0 (one class) at 1,000\u20132,000 edges versus discovered F around 0.51\u20130.57"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would the paper's bootstrap give usable confidence intervals for a residual flip rate computed after standardising every axis except the seed?",
+   "answer": "No. Conditioning on all other axes leaves groups of at most five specifications (the five seeds, fewer after discards). The paper reports that its bootstrap breaks down for groups of two to five specifications because retained self-pairs dominate.",
+   "rubric": [
+    "Says the intervals would not be usable",
+    "Explains that groups would hold at most five specifications (one per seed), which is the 2\u20135 range where self-pairs dominate"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would H4 (filings differ more than mechanisms, by more than 0.10) still be supported if the threshold rule had produced no circuits between 500 and 2,000 edges?",
+   "answer": "Probably not. The pooled gap is carried by the 500\u20132,000 edge band alone. At the other sizes the gap fails the 0.10 threshold or is negative, with mechanisms differing more than filings.",
+   "rubric": [
+    "Says H4 would likely fail or not be supported",
+    "Explains that the pooled gap is carried by the 500\u20132,000 band, and elsewhere the gap is below 0.10 or negative"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would a size-matched random null over edges stop collapsing to one claim class at 1,000 edges if the same analysis were run on a model with many more components and edges than GPT-2 small, and why?",
+   "answer": "Yes, the collapse would move to larger sizes. The null collapses because a uniform 1,000-edge draw from 32,491 edges touches all 156 components and so yields one claim. With more edges and components, a 1,000-edge draw would cover a smaller fraction and would no longer saturate.",
+   "rubric": [
+    "Says the collapse point would shift to larger circuit sizes (the null would not collapse at 1,000 edges)",
+    "Explains that the collapse comes from uniform draws touching all components, which takes more edges in a larger model"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If a filer declared a specification space whose threshold only ever yields 10,000-edge circuits, would the filability criterion still distinguish informative evidence from uninformative evidence?",
+   "answer": "No. At 10,000 edges the discovered circuits produce a single claim class (F=0, \u03c0*=1), so the evidence would pass trivially. The random null also yields one claim at that size, so passing would reflect circuits saturating the model, not a stable explanation.",
+   "rubric": [
+    "Says it would pass filability (\u03c0*=1, F=0) but would no longer discriminate",
+    "Notes that the random null also collapses to one claim at that size, so the stability is uninformative"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the kappa-based rebuttal of phantom specialisation break down for the largest circuits, where raw functional agreement reaches about 0.92?",
+   "answer": "No. Kappa stays between 0.016 and 0.047 at every circuit size. The high raw agreement at large sizes tracks accuracy rising to 0.95, not circuits being right on the same examples. The circuits remain functionally uncorrelated.",
+   "rubric": [
+    "Says the rebuttal does not break down",
+    "Cites kappa remaining near zero (0.016\u20130.047) at all sizes, with raw agreement explained by accuracy"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would the paper's size-matched random baseline remain meaningful for a model with only a few hundred edges, and why?",
+   "answer": "No. Even modest uniform draws would touch nearly every component, so the null would collapse to a single claim at small sizes and give no useful comparison. The paper notes that GPT-2 small's large edge count is what makes the size-matched baseline meaningful.",
+   "rubric": [
+    "Says the baseline would not be meaningful (it would degenerate)",
+    "Explains that small random circuits would cover all components and yield one claim, as the null does above 1,000 edges in GPT-2 small"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why is the affected-person COARSE claim's flip rate (0.3950) so much lower than the other cells in Table 5?",
+   "answer": "It has only two claim classes, so its flip rate is capped at 1\u22121/2 = 0.5. Its modal class also holds 73% of specifications. The low F reflects the few available classes, not stable evidence, and it still fails filability.",
+   "rubric": [
+    "Attributes the low F to having only two classes and the ceiling of 0.5 (or few classes plus a high modal share of 0.73)",
+    "Notes it still fails filability or that low F does not mean filable"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the overseer FINE claim have a higher flip rate than MEDIUM (0.7681 vs 0.7316) while its modal share stays exactly 0.4109?",
+   "answer": "FINE refines MEDIUM by construction, because granularities are nested. The 3,107 specifications in the modal medium class all fall into one fine class, so \u03c0* is unchanged. Other medium classes split into several fine classes, which creates extra disagreeing pairs and raises F.",
+   "rubric": [
+    "Invokes nesting: fine classes refine medium classes",
+    "Explains that the modal class did not split, so \u03c0* is unchanged, while other classes split and raise F"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does holding circuit size fixed cut the medium-granularity flip rate from 0.7316 to 0.2746?",
+   "answer": "Within one size level the size-class part of the claim is essentially constant, so only the layer band can differ. In addition, the 2,692 specifications at 5,000 and 10,000 edges all share one claim within their size and contribute no flips.",
+   "rubric": [
+    "Says the size-class component no longer varies within a fixed size, so only the layer band drives flips",
+    "Mentions that the large-circuit sizes (5,000 and 10,000) contribute zero flips, or that the cross-size pairs are removed"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why are the within-size flip rates at medium granularity (0.2746) and coarse granularity (0.2706) nearly identical?",
+   "answer": "Medium adds only a size class to the coarse layer band. Within a fixed circuit size, the size class barely varies, so the medium claim almost reduces to the coarse one.",
+   "rubric": [
+    "States that medium differs from coarse only by the size-class term",
+    "Explains that the size class is nearly constant once circuit size is fixed, so the two claims nearly coincide"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why is the residual flip rate after standardising the evaluation metric (0.5939) mostly a statement about comprehensiveness specifications?",
+   "answer": "Equation 3 weights every pair equally, not every group. Comprehensiveness kept 3,947 specifications against 877 to 1,467 for the other metrics, because its discard rate is 0.3%. It therefore supplies roughly three quarters of all within-metric pairs.",
+   "rubric": [
+    "Notes that the within-group form weights pairs, not groups",
+    "Cites the uneven discard rule leaving comprehensiveness with far more specifications (3,947), and so most within-metric pairs"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why do discovered circuits produce zero flips at 5,000 and 10,000 edges even though they flip at 1,000 and 2,000 edges?",
+   "answer": "Circuits that large cover most of the model's components, like random draws above 1,000 edges, so the dominant layer band and size class are fixed and only one claim results. Discovered circuits at 1,000 to 2,000 edges are concentrated rather than uniform, so they can still differ in where they place their mass.",
+   "rubric": [
+    "Says very large circuits touch essentially all components, so only one claim class is possible",
+    "Contrasts with mid-size discovered circuits being non-uniform or concentrated, so they can still differ"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does binning size into deciles give a higher flip rate (0.7719) than binning into equal thirds (0.7018)?",
+   "answer": "Deciles create more size classes than thirds. More classes raise the flip-rate ceiling 1\u22121/k and give two specifications more ways to land in different claims.",
+   "rubric": [
+    "Says deciles produce more size classes",
+    "Links more classes to more possible disagreement or a higher ceiling 1\u22121/k"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": "b1-p1",
+   "question": "Would the affected-person COARSE claim be filable if a conformity assessment body accepted a tolerance of \u03b1=0.30?",
+   "answer": "Yes. Filability at \u03b1=0.30 requires \u03c0* \u2265 0.70, and this claim's modal share is 0.7291.",
+   "rubric": [
+    "Says yes, it would be filable",
+    "Compares \u03c0*=0.7291 with the requirement of 0.70"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": "b1-p1",
+   "question": "Would the affected-person COARSE claim be filable if a conformity assessment body accepted a tolerance of \u03b1=0.20?",
+   "answer": "No. Filability at \u03b1=0.20 requires \u03c0* \u2265 0.80, and the modal share is only 0.7291.",
+   "rubric": [
+    "Says no, it would not be filable",
+    "Compares \u03c0*=0.7291 with the requirement of 0.80"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "Would H2 have been confirmed if the pre-registered threshold had been 0.50 instead of 0.20?",
+   "answer": "Yes. The CI lower bound for F is 0.7247, which is above 0.50.",
+   "rubric": [
+    "Says yes, confirmed",
+    "Cites the lower bound of 0.7247 exceeding 0.50"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "Would H2 have been confirmed if the pre-registered threshold had been 0.75 instead of 0.20?",
+   "answer": "No. Even the point estimate of 0.7316 is below 0.75, so the CI lower bound of 0.7247 cannot clear it.",
+   "rubric": [
+    "Says no, not confirmed",
+    "Cites F=0.7316 and/or the lower bound of 0.7247 falling below 0.75"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p3",
+   "question": "Would the size-free, size-held-fixed result of Section 7.4 still clear a pre-registered threshold of 0.25, with the interval lower bound required to exceed it?",
+   "answer": "Yes. The CI lower bound is 0.2550, which is above 0.25.",
+   "rubric": [
+    "Says yes, it clears",
+    "Cites the lower bound of 0.2550 exceeding 0.25"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p3",
+   "question": "Would the size-free, size-held-fixed result of Section 7.4 still clear a pre-registered threshold of 0.30, with the interval lower bound required to exceed it?",
+   "answer": "No. The point estimate of 0.2706 and the lower bound of 0.2550 are both below 0.30.",
+   "rubric": [
+    "Says no, it does not clear",
+    "Cites 0.2706 and/or 0.2550 being below 0.30"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "At a fixed circuit size of 500 edges, do discovered circuits flip more often than the size-matched random null?",
+   "answer": "Yes. Discovered F is 0.4258 against a null F of 0.1421 at 500 edges.",
+   "rubric": [
+    "Says yes, discovered flips more",
+    "Cites 0.4258 vs 0.1421"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "At a fixed circuit size of 50 edges, do discovered circuits flip more often than the size-matched random null?",
+   "answer": "No. Discovered F is 0.4639 against a null F of 0.7310 at 50 edges, so discovered circuits are more stable.",
+   "rubric": [
+    "Says no, discovered flips less",
+    "Cites 0.4639 vs 0.7310"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The Pythia-160m replication uses three seed levels instead of five. Based on the GPT-2 results, should this reduction be expected to change the replication's flip rate materially?",
+   "answer": "No. Standardising the seed axis removed only 0.0009 of F on GPT-2, so seed variation contributes almost nothing. Dropping two seed levels should barely affect F.",
+   "rubric": [
+    "Says no material change is expected",
+    "Cites the seed removing only 0.0009 of F"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A provider wants to file a claim stating only the size class (sparse, moderate or distributed), using the medium-granularity overseer data in Table 4. Would it be filable at \u03b1=0.20?",
+   "answer": "No. Summing Table 4 by size class gives 3,686 distributed, 2,899 sparse and 976 moderate, so the modal share is about 3,686/7,561 \u2248 0.49. That is well below the 0.80 required.",
+   "rubric": [
+    "Says not filable",
+    "Gives a modal share of about 0.49 (distributed) from summing Table 4, below 0.80"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "What tolerance \u03b1 would a conformity body have to accept for the overseer's layer-band-only (COARSE) claim to be filable?",
+   "answer": "\u03b1 \u2265 about 0.52. Its modal share is 0.4788, and filability requires \u03c0* \u2265 1\u2212\u03b1. That is far looser than any pre-registered tolerance.",
+   "rubric": [
+    "Gives \u03b1 of about 0.52 or more",
+    "Derives it from \u03c0*=0.4788 and the rule \u03c0* \u2265 1\u2212\u03b1"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team runs a multiverse over feature-attribution methods where different specifications select different numbers of features. What should they report alongside any pooled stability statistic, according to this paper's findings?",
+   "answer": "They should report a decomposition within each number of selected features. In this paper, a size-like outcome inverted three pooled quantities: F, the direction of the null comparison, and the sign of the functional gap.",
+   "rubric": [
+    "Recommends a within-size (within-number-of-features) decomposition",
+    "Justifies it by the paper's pooled statistics inverting when specifications selected objects of different sizes"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "An overseer-facing filer hopes to reach filability at \u03b1=0.20 by switching to a different claim granularity. Can any overseer granularity achieve it?",
+   "answer": "No. The overseer's modal shares are 0.4788 (COARSE), 0.4109 (MEDIUM) and 0.4109 (FINE), all far below 0.80.",
+   "rubric": [
+    "Says no granularity works",
+    "Cites overseer \u03c0* values all at or below about 0.48"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A standards body wants to simplify the protocol by checking only the flip rate F against a cut-off. Using the affected-person COARSE cell, explain why this would be inadequate.",
+   "answer": "F depends on the number of classes, with a ceiling of 1\u22121/k. The affected COARSE claim has a fairly low F of 0.395 only because it has two classes, yet its \u03c0* of 0.73 still fails \u03b1=0.20. Filability is defined on \u03c0*, so \u03c0* must be reported.",
+   "rubric": [
+    "Says checking F alone is inadequate and \u03c0* is needed",
+    "Uses the example: low F (0.395, two classes, ceiling 0.5) but \u03c0*=0.73 fails the 0.80 requirement"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If a provider files the modal overseer medium claim ('early layers, distributed'), what fraction of the declared specification space would yield a different claim?",
+   "answer": "About 59%. The modal share is 0.4109, so 1\u22120.4109 \u2248 0.589 of specifications produce a different claim.",
+   "rubric": [
+    "Gives about 0.59 (59%)",
+    "Derives it as 1 minus \u03c0*=0.4109"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If Cohen's kappa between circuits had come out high, which interpretation of the 73% flip rate would lose its main defence?",
+   "answer": "The defence against phantom specialisation would lose its support. With high kappa, the circuits could be functionally interchangeable members of one equivalence class, and the flip rate might only measure which member was sampled rather than genuinely different explanations.",
+   "rubric": [
+    "Identifies the rebuttal of phantom specialisation (instability not being one mechanism in different words)",
+    "Explains that high kappa would suggest functionally interchangeable circuits, so flips might reflect sampling within an equivalence class"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If most alternative size binnings in Table 1 had given flip rates far below 0.7316, which defence of the headline result would be undermined?",
+   "answer": "The defence that the committed size bins were not chosen to produce the reported flip rate would be undermined. The headline F would then look like an artefact of the binning.",
+   "rubric": [
+    "Identifies the robustness of the claim map's size bins or the headline F against binning choices",
+    "Explains that the headline would then look inflated by the chosen bins"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the random null had not collapsed to a single claim class at and above 1,000 edges, which explanation in Section 7.5 would lose its basis?",
+   "answer": "The explanation that the pooled 'discovered less stable than random' direction is an artefact of the size distribution would lose its basis. That argument rests on the degenerate large-size null depressing the null's pooled F.",
+   "rubric": [
+    "Identifies the claim that the pooled null-comparison direction is an artefact (the reason H3's direction is not reported as a finding)",
+    "Explains that the artefact argument relies on the null's single-class collapse lowering its pooled F"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the size-free, size-held-fixed flip rate had come out at or below 0.20, which contribution would lose its support?",
+   "answer": "Contribution (iii) would lose its support: the claim that instability survives the most aggressive controls, including removing size from the claim and holding size fixed. The instability could then be attributed to circuit size variation.",
+   "rubric": [
+    "Identifies contribution (iii) or the 'maximum pressure' result",
+    "Explains that the instability would then be explainable by size"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If standardising the evaluation metric had brought the residual flip rate below 0.20, which conclusion of the Discussion would be overturned?",
+   "answer": "The conclusion that there is no single knob, and that standardising one axis cannot solve the problem, would be overturned. Standardising the metric would then be enough to pass the pre-registered threshold.",
+   "rubric": [
+    "Identifies the 'no single axis rescues the filing / no single knob' conclusion",
+    "Explains that one standardised axis would then suffice"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If standardising the seed axis had removed a large share of the flip rate, which of the paper's 'not claiming' statements would be threatened?",
+   "answer": "The statement that random seeds are not the problem would be threatened. Because the seed selects which prompts are sampled, a large seed effect would mean evaluation-set variability drives the instability.",
+   "rubric": [
+    "Identifies the statement that seeds are not the problem",
+    "Notes that the seed represents prompt sampling (evaluation-set variability), which would then be a major driver"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the ablation-corruption interaction had also been the dominant driver of claim flips, which policy warning in Section 7.3 would no longer apply?",
+   "answer": "The warning that a standards body reading the structural decomposition would standardise the ablation operator and fix almost none of the filing instability would no longer apply. Structure and claim would then be governed by the same axis.",
+   "rubric": [
+    "Identifies the warning about relying on the structural variance decomposition (standardising ablation)",
+    "Explains that it rests on structure and claims being driven by different axes"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that circuit-level evidence would be unfilable for large deployed language models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The study covers only GPT-2 small on IOI. The paper says larger models give more room to the layer band and size class in an unknown direction, and the Pythia replication has not been run.",
+   "rubric": [
+    "Answers not settled",
+    "Cites one model and one task, with scale untested or the replication not yet run"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the evaluation metric is the main determinant of how large the selected circuits are? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The REML decomposition attributes only 0.7% of size variance to the metric and 78.8% to the ablation-corruption interaction. The metric is the largest driver of claim variance, not of structure.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the metric's 0.7% versus ablation\u00d7corruption at 78.8% of structural variance"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that filings always differ more than the underlying mechanisms do? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The pooled gap of 0.3344 supports it, but within size the gap fails 0.10 at 6 of 10 sizes and is negative at 5. At both ends of the size range, mechanisms differ more than filings.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the within-size gap failing at 6/10 sizes and being negative at 5, with the pooled result carried by the 500\u20132,000 band"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that standardising two axes jointly, the metric and the ablation operator, would leave claims unfilable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports residual flip rates only for standardising one axis at a time. A joint standardisation was not computed, and its effect cannot be read off by adding single-axis reductions.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that only single-axis standardisation is reported"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the failing discovery objective, had it run, would have changed the flip rate? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All 220 of its cells raised a runtime error, and the paper deliberately did not repair the library. No claims from that objective exist, so its effect on F is unknown.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the objective was excluded and not repaired, so no data from it exist"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the claim instability comes mainly from variability in which evaluation prompts are sampled? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The seed axis is exactly the choice of sampled prompts, and standardising it removes only 0.0009 of F, the smallest effect of any axis.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the seed (prompt sampling) removing only 0.0009 of F"
+   ],
+   "batch": 1,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that circuits of 5,000 edges or more give trustworthy filings because their claims never flip? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported. The zero flip rate at those sizes is matched by the random null, which also gives one claim above 1,000 edges. The stability reflects circuits covering the whole model, not a reliable explanation.",
+   "rubric": [
+    "Answers that it is not supported (contradicted or not shown)",
+    "Explains that the random null also collapses to one claim at those sizes, so zero flips reflect saturation rather than trustworthiness"
+   ],
+   "batch": 1,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would the Section 8 filability protocol still guard against an overconfident filing if the filer declared a specification space with only one level on every analytic axis?",
+   "answer": "No. A space with a single specification, or only identical choices, gives \u03c0*=1 and F=0, so any claim passes trivially. The protocol only works if the filer declares every level a competent analyst could defend, because the regulator does not adjudicate which choice is correct. The paper's library-wide space gives \u03c0*=0.411.",
+   "rubric": [
+    "Says the protocol would not protect, or that the claim would be trivially filable",
+    "Reason: a one-specification (or one-level) space gives \u03c0*=1 / F=0, so \u03c0* \u2265 1\u2212\u03b1 is met automatically",
+    "Notes that the protocol depends on the filer declaring the full defensible space, since the regulator does not judge which choices are correct"
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The paper calls its measured F a lower bound because optimal ablation never entered the space. Would that reading fail if adding optimal-ablation specifications mostly produced the current modal claim?",
+   "answer": "Yes. F is a Gini\u2013Simpson index over all specifications. Adding specifications that land in the modal class raises \u03c0* and lowers F. The lower-bound reading holds only if the new levels spread across classes at least as much as the existing ones.",
+   "rubric": [
+    "Says the lower-bound reading would fail, i.e. F could go down",
+    "Reason: specifications added to the modal class raise \u03c0* and reduce the Gini\u2013Simpson flip rate",
+    "Condition: F rises only if the new specifications are at least as spread across claim classes as the existing ones"
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Would the finding that circuit structure and filed claims are governed by different axes still hold if the claim map were keyed on size class alone?",
+   "answer": "Probably not. A size-only claim is a binning of circuit size, and 78.8% of size variance comes from the ablation\u2013corruption interaction. Such claims would therefore be driven by the same axes as structure. The separation arises because the current claims flip mainly on layer band, which the metric drives, while the metric explains only 0.7% of size variance.",
+   "rubric": [
+    "Says the separation would likely not hold",
+    "Reason: a size-class claim would inherit the drivers of circuit size (ablation\u00d7corruption interaction, 78.8%)",
+    "Notes that the current divergence comes from claims depending largely on layer band, which is driven by the metric (only 0.7% of size variance)"
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Could the Section 7.4 control, which holds circuit size fixed using Equation 3, be computed if every specification's circuit had a different edge count?",
+   "answer": "No. Equation 3 counts pairs within groups, and a group of one specification contributes n(n\u22121)=0 pairs, so the denominator vanishes. The control works only because the threshold rule selects a few discrete sizes (10 to 10,000 edges). With unique sizes you would have to bin them, which adds a new choice, and small groups would also make the bootstrap unusable.",
+   "rubric": [
+    "Says no, it could not be computed as is",
+    "Reason: singleton groups have no within-group pairs, so Equation 3 has nothing to count (zero denominator)",
+    "Notes it works here because sizes take a few discrete threshold-selected values, or that binning would otherwise be needed"
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the REML finding that the ablation\u2013corruption interaction explains 78.8% of size variance describe what drives circuit size among specifications that use the two ablation operators which never read the corrupt distribution?",
+   "answer": "No. Corruption is nested only within the five operators that read it. For the other two operators corruption does not vary, so no ablation\u2013corruption interaction can act within them. Their size variation must come from other axes, such as threshold, objective or the residual.",
+   "rubric": [
+    "Says no, it does not apply to those two operators",
+    "Reason: corruption is nested and absent for those operators, so it cannot vary within them",
+    "Says their size variation must come from other axes (e.g. threshold, objective, residual)"
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why, within each addressee in Table 5, does the flip rate never fall and the modal share never rise as the claim granularity becomes finer?",
+   "answer": "The granularities are nested by construction, so a finer class only refines a coarser one. Any pair of specifications that differ at the coarse level also differ at the finer level, so F cannot fall. The largest fine class sits inside one coarse class, so \u03c0* cannot rise.",
+   "rubric": [
+    "Attributes the pattern to the nested construction of the three granularities",
+    "Explains that coarse disagreements persist at finer levels (F non-decreasing) and the largest fine class is a subset of a coarse class (\u03c0* non-increasing)"
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is the within-size medium flip rate (0.2746) lower than the discovered flip rate at every individual size from 10 to 2,000 edges in Table 7?",
+   "answer": "Equation 3 weights pairs, not groups. The 5,000- and 10,000-edge groups hold 2,692 specifications with F=0 and supply roughly 40% of all within-group pairs. They dilute sizes whose own flip rates lie between 0.338 and 0.579.",
+   "rubric": [
+    "Says the pooled within-size figure is pulled down by the zero-flip 5,000 and 10,000-edge groups",
+    "Reason: Equation 3 weights every pair equally, and those large groups (2,692 specs, about 40% of pairs) contribute many non-flipping pairs"
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does standardising the ablation operator remove only 0.0302 of the flip rate, even though the REML decomposition attributes 78.8% of structural variance to the ablation\u2013corruption interaction?",
+   "answer": "Fixing the ablation operator alone leaves corruption free to vary within it. The structural variance sits in their interaction, not in ablation's main effect (4.4%). Also, claim flips are driven mainly by other axes: the metric is the largest claim lever, and layer bands still flip with size removed.",
+   "rubric": [
+    "Points out that fixing ablation alone leaves corruption varying, and that size variance is in the interaction rather than ablation's 4.4% main effect",
+    "Adds that claim instability is mostly driven by axes other than the structural drivers (metric largest; layer-band flips persist without the size term)"
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does standardising the threshold \u03c4 remove only 0.0246 of the flip rate, when holding circuit size fixed lowers it from 0.7316 to 0.2746?",
+   "answer": "Circuit size is an outcome of the metric-relative threshold rule, not something \u03c4 sets directly. \u03c4 explains only 4.1% of size variance, against 78.8% for the ablation\u2013corruption interaction. Fixing \u03c4 therefore leaves circuit size, and the claim flips tied to size, largely free to vary.",
+   "rubric": [
+    "Says fixing \u03c4 does not fix circuit size",
+    "Reason: size is an outcome jointly determined by other axes (\u03c4 only 4.1% of size variance; ablation\u00d7corruption 78.8%)"
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does each discovery cell correspond to exactly 12 specifications (1,540 cells and 18,480 specifications pre-registered; 1,320 and 15,840 realised)?",
+   "answer": "The metric (4 levels) and threshold (3 levels) act on a circuit after discovery, so each cell yields 4\u00d73=12 specifications. A cell is objective \u00d7 ablation/corruption combination \u00d7 prompt \u00d7 seed. There are 22 ablation/corruption combinations (2 operators without corruption plus 5\u00d74), so 7\u00d722\u00d72\u00d75=1,540 cells, or 1,320 with six objectives.",
+   "rubric": [
+    "States that the 12 comes from 4 metrics \u00d7 3 thresholds applied to each discovered circuit",
+    "Explains the cell count as objective \u00d7 22 ablation-corruption combinations (2 + 5\u00d74) \u00d7 2 prompts \u00d7 5 seeds"
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the exact Jaccard computation cover 28,580,580 pairs rather than all pairs of the 15,840 realised specifications?",
+   "answer": "Only 7,561 specifications produced a circuit and claim. The metric-relative threshold rule discarded the other 8,279. The pair count is 7,561\u00d77,560/2 = 28,580,580.",
+   "rubric": [
+    "Says only the 7,561 specifications that produced a circuit enter the computation (the rest were discarded)",
+    "Shows or states that 7,561 choose 2 = 28,580,580"
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why can the affected-person MEDIUM claim, with 4 classes, have a higher modal share (0.4875) than the overseer COARSE claim, with 3 classes (0.4788)?",
+   "answer": "Nesting holds only within one addressee's map. The affected map leads with the input segment and the overseer map leads with the layer band. Because they partition circuits on different features, the number of classes does not order modal share across addressees.",
+   "rubric": [
+    "Says the two maps are not nested in each other, so class counts are not comparable across addressees",
+    "Reason: the affected map is keyed first on input segment and the overseer map on layer band"
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5",
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "Using only Table 7's discovered flip rate and class count at 10 edges, can one conclude that a filer restricted to 10-edge circuits would fail filability at \u03b1=0.20 for the overseer medium claim?",
+   "answer": "Yes. With 3 classes, \u03c0* \u2265 0.80 would cap F at about 1 \u2212 0.8\u00b2 \u2212 2(0.1\u00b2) = 0.34. The observed 0.4543 exceeds that cap, so \u03c0* must be below 0.80 and the claim is not filable.",
+   "rubric": [
+    "Says yes, it would fail",
+    "Reason: with 3 classes, \u03c0* \u2265 0.80 implies F \u2264 about 0.34, but F is 0.4543, so \u03c0* < 0.80"
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5",
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "Using only Table 7's discovered flip rate and class count at 20 edges, can one conclude that a filer restricted to 20-edge circuits would fail filability at \u03b1=0.20 for the overseer medium claim?",
+   "answer": "No, it cannot be concluded. With 4 classes, \u03c0*=0.80 still allows F up to about 1 \u2212 0.64 \u2212 3(0.067\u00b2) \u2248 0.347. The observed 0.3380 falls below that, so \u03c0* \u2265 0.80 is not ruled out by F alone.",
+   "rubric": [
+    "Says no, failure cannot be concluded from F alone",
+    "Reason: with 4 classes, \u03c0* = 0.80 is compatible with F up to about 0.347, which exceeds 0.3380"
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": "b2-p2",
+   "question": "Would the within-size medium flip rate (computed with Equation 3) still exceed 0.20 if the 2,067 specifications at 10,000 edges were dropped?",
+   "answer": "Yes. Those specifications contribute about 4.27M non-flipping pairs. Removing them raises the pair-weighted within-size F to about 0.43.",
+   "rubric": [
+    "Says yes, it would stay above 0.20 (rising to about 0.43)",
+    "Reason: the 10,000-edge group contributes only non-flipping pairs (F=0), so removing it raises the pair-weighted average"
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": "b2-p2",
+   "question": "Would the within-size medium flip rate (computed with Equation 3) still exceed 0.20 if the 2,492 specifications at 10 edges were dropped?",
+   "answer": "No. The 10-edge group supplies over half of all within-group pairs and most of the flipping pairs (F=0.4543). Without it, the large zero-flip groups dominate and F falls to about 0.07.",
+   "rubric": [
+    "Says no, it would fall below 0.20 (to about 0.07)",
+    "Reason: the 10-edge group carries most within-group pairs and flips, leaving the zero-flip 5,000/10,000 groups to dominate"
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p3",
+   "question": "Under the paper's analytic random line, would two uniformly random 10,000-edge circuits in GPT-2 small be expected to overlap more than the discovered multiverse's mean Jaccard of 0.1396?",
+   "answer": "Yes. k/(2|E|\u2212k) = 10,000/(64,982\u221210,000) \u2248 0.18, which exceeds 0.1396.",
+   "rubric": [
+    "Says yes",
+    "Reason: the random line gives about 0.18 at 10,000 edges with |E|=32,491"
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p3",
+   "question": "Under the paper's analytic random line, would two uniformly random 2,000-edge circuits in GPT-2 small be expected to overlap more than the discovered multiverse's mean Jaccard of 0.1396?",
+   "answer": "No. 2,000/(64,982\u22122,000) \u2248 0.032, well below 0.1396.",
+   "rubric": [
+    "Says no",
+    "Reason: the random line gives about 0.03 at 2,000 edges"
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c4",
+    "c5"
+   ],
+   "pair": "b2-p4",
+   "question": "Holding functional agreement at 0.6028, would the H4 gap clear its 0.10 threshold if the overseer FINE flip rate replaced the overseer MEDIUM flip rate?",
+   "answer": "Yes. 0.7681 \u2212 0.3972 \u2248 0.37, well above 0.10. Functional agreement is a property of the circuits and does not depend on the claim map.",
+   "rubric": [
+    "Says yes",
+    "Reason: the gap is 0.7681 \u2212 0.3972 \u2248 0.37 > 0.10"
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c4",
+    "c5"
+   ],
+   "pair": "b2-p4",
+   "question": "Holding functional agreement at 0.6028, would the H4 gap clear its 0.10 threshold if the affected-person COARSE flip rate replaced the overseer MEDIUM flip rate?",
+   "answer": "No. 0.3950 \u2212 0.3972 \u2248 \u22120.002, a slightly negative gap, so filings would differ no more than the mechanisms do.",
+   "rubric": [
+    "Says no",
+    "Reason: the gap is 0.3950 \u2212 0.3972, about zero or slightly negative, far below 0.10"
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the overseer COARSE map merged 'middle layers' into 'late layers', giving a two-class early-versus-not-early claim, would that claim be filable at \u03b1=0.20?",
+   "answer": "No. From Table 4's aggregates, early is 47.9% and late plus middle is 52.1%. The modal share would be about 0.521, far below the required 0.80.",
+   "rubric": [
+    "Says not filable",
+    "Reason: the merged class is about 52.1% (43.6% + 8.5%), so \u03c0* \u2248 0.52 < 0.80"
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A conformity body wants confidence intervals for a filer's F and proposes to bootstrap by resampling specification pairs. Is that appropriate, according to the paper's method?",
+   "answer": "No. It should resample specifications. F is a U-statistic over pairs, and pairs that share a specification are dependent. Resampling pairs would treat them as independent and understate the uncertainty.",
+   "rubric": [
+    "Says no; resample specifications instead",
+    "Reason: pairs sharing a specification are dependent (F is a U-statistic), so pair resampling would give overly narrow intervals"
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A filer declares a four-specification space whose claims are A, A, A and B. What flip rate does Equation 2 give?",
+   "answer": "F = 1 \u2212 (3\u00b72)/(4\u00b73) = 0.5. This is the probability that two draws without replacement differ. The plug-in form would give only 0.375.",
+   "rubric": [
+    "Gives F = 0.5",
+    "Shows the unbiased computation 1 \u2212 n_c(n_c\u22121)/(N(N\u22121)) = 1 \u2212 6/12, or notes it differs from the plug-in 0.375"
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A rival study reports F=0.45 from a two-class claim map. Read against the class ceiling, as the paper recommends, is its claim instability relatively higher or lower than the paper's overseer medium result?",
+   "answer": "Relatively higher. With two classes the ceiling is 1 \u2212 1/2 = 0.5, so 0.45 is 90% of the maximum. The paper's 0.7316 is 82.3% of its 0.8889 ceiling.",
+   "rubric": [
+    "Says relatively higher",
+    "Reason: 0.45 is 90% of the two-class ceiling 0.5, versus 82.3% for the paper's result"
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A filer following the Section 8 protocol reports \u03c0*=0.85 and F=0.40 for the same space. Can both numbers be correct?",
+   "answer": "No, not for any sizeable number of specifications. A modal share of 0.85 alone makes the sum of squared class shares at least 0.7225, which caps F at about 0.28.",
+   "rubric": [
+    "Says no, they are inconsistent",
+    "Reason: \u03c0* = 0.85 implies F \u2264 about 1 \u2212 0.85\u00b2 \u2248 0.28"
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the discovery objective that fails on GPT-2 small also fails on Pythia-160m, how many cells would the realised 924-cell replication grid have?",
+   "answer": "792 cells. The replication is 7 objectives \u00d7 22 ablation-corruption combinations \u00d7 2 prompts \u00d7 3 seeds = 924, so each objective contributes 132 cells, and 924 \u2212 132 = 792.",
+   "rubric": [
+    "Gives 792 cells",
+    "Reason: each objective contributes 22 \u00d7 2 \u00d7 3 = 132 cells, given three seeds instead of five"
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the median pairwise D had been about 0.2 instead of 0.960, would the paper's rebuttal of phantom specialisation still stand?",
+   "answer": "Yes. The rebuttal rests on functional measurement, kappa 0.0146 on per-example verdicts, not on edge overlap. Only the claim that circuits are structurally near-disjoint would fall.",
+   "rubric": [
+    "Says the rebuttal would still stand",
+    "Reason: it relies on functional agreement / Cohen's kappa rather than structural overlap; only the near-disjointness claim would be lost"
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the digest over the sorted failing cell identifiers had shown failures scattered across several discovery objectives, which statement about the exclusion would lose its support?",
+   "answer": "The statement that exactly one of the seven objectives does not execute, and that the failure set is that arm alone. This also underpins treating the realised grid as a clean six-objective crossing of 1,320 cells.",
+   "rubric": [
+    "Names the claim that the failure is confined to one objective (one of seven does not execute)",
+    "Links this to the realised grid being a complete six-objective, 1,320-cell crossing"
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the affected-person COARSE claim had shown a modal share above 0.80, which defence of the headline result would fail?",
+   "answer": "The defence that the instability is not an artefact of fine-grained claim language. So would the claim that no cell is filable for either addressee at any granularity, because the coarsest two-class claim would then be filable at \u03b1=0.20.",
+   "rubric": [
+    "Identifies the defence that non-filability is not an artefact of fine-grained claim language / no addressee-granularity cell is filable",
+    "Reason: \u03c0* > 0.80 would make that cell filable at \u03b1 = 0.20"
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the paper had reported only the pooled random-null comparison, which of its 'not claiming' statements could it not have made?",
+   "answer": "That discovered circuits are better than random and carry information. Pooled, discovered circuits look less stable than the null (0.7316 against 0.6774). Only the within-size comparison (0.2746 against 0.4230) shows them to be more stable.",
+   "rubric": [
+    "Names the statement that discovered circuits are not no better than random / carry information",
+    "Reason: the pooled comparison points the other way; only the within-size comparison supports it"
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If H4's functional instability had been defined as 1 minus Cohen's kappa instead of 1 minus raw agreement, which pre-registered outcome in Table 3 would change, and why?",
+   "answer": "H4 would go from supported to not supported. Functional instability would be about 0.985, so the gap would be 0.7316 \u2212 0.985 \u2248 \u22120.25, far below 0.10. Raw agreement is inflated by circuits matching accuracy rates rather than matching examples.",
+   "rubric": [
+    "Says H4 would no longer be supported",
+    "Reason: with 1 \u2212 kappa \u2248 0.985 the gap becomes strongly negative (about \u22120.25)"
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the 220 failing cells had executed but every resulting specification had been discarded by the threshold rule, would the headline flip rate of 0.7316 change?",
+   "answer": "No. F is computed only over specifications that yield a claim, so the 7,561 would be unchanged. The discard rate would rise to about (8,279 + 2,640)/18,480 \u2248 59%.",
+   "rubric": [
+    "Says F would not change",
+    "Reason: only specifications producing a claim enter F; only the discard rate would rise (to about 59%)"
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that comprehensiveness is a more reliable evaluation metric because it discards almost none of its specifications? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The 0.003 discard rate is a product of the metric-relative threshold rule, not a measure of reliability. The paper reports the resulting composition (52% comprehensiveness) without judging metrics, and cites work showing comprehensiveness can be inflated.",
+   "rubric": [
+    "Answers not settled (or not supported)",
+    "Reason: the discard rate reflects the threshold rule's interaction with the metric, and the paper reports composition rather than evaluating metric reliability"
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the circuit discovery library it uses cannot produce circuits? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Six of the seven objectives ran across 1,320 cells and yielded 7,561 claims. Only one objective's 220 cells failed with the MSE error.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: only one objective failed; the other six produced 1,320 cells and 7,561 claims"
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that any deterministic claim map for Article 86 explanations would yield unfilable evidence on GPT-2 small IOI? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only the paper's pre-registered affected-person map at three nested granularities was tested. Its best cell reaches \u03c0*=0.7291. Other claim maps were not evaluated.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: only one pre-registered affected-person map (three granularities) was tested, not all possible maps"
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that GPT-2 small performs IOI mainly in its early layers? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Early layers win only 47.9% of the space, against 43.6% for late layers, and no claim is filable. The result concerns how attribution depends on specification, not where the behaviour lives.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the layer split is nearly even (47.9% early vs 43.6% late) and the modal claim is far from filable"
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper's 95% CI for F (0.7247 to 0.7380) show that the pre-registered Pythia-160m replication will find a flip rate in that range? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The bootstrap intervals quantify uncertainty given the GPT-2 grid and license nothing beyond it. The replication uses a different model with three seed levels, and it has not been run.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: intervals are conditional on the grid and do not extend to another model or grid, and the replication has not been run"
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that, on GPT-2 small IOI, affected-person claims are more stable than overseer claims at every granularity? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported for this setting. At COARSE, MEDIUM and FINE the affected claim has lower F (0.3950, 0.6597, 0.6744 against 0.5733, 0.7316, 0.7681). It also has higher \u03c0* at each granularity. None of them is filable.",
+   "rubric": [
+    "Answers supported (within GPT-2 small / IOI)",
+    "Reason: Table 5 shows lower F and higher \u03c0* for affected-person claims at each granularity"
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its high, uneven discard rate inflates the headline flip rate? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports the 52.3% discard rate and the comprehensiveness-heavy composition but deliberately does not adjust for them. No analysis establishes which direction the discards push F.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the composition is reported but not adjusted for or analysed, so the direction of any bias is unknown"
+   ],
+   "batch": 2,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the ceiling F \u2264 1\u22121/k stated in Section 4 hold exactly for Equation 2 when the set of specifications is very small?",
+   "answer": "No. Equation 2 counts draws without replacement, so it can exceed 1\u22121/k in small sets. Two specifications with different claims give F=1, against a two-class ceiling of 0.5. The excess shrinks as N grows and is negligible at N=7,561.",
+   "rubric": [
+    "Says the ceiling does not hold exactly (it can be exceeded) for small N.",
+    "Gives a reason or example tied to the without-replacement (unbiased) form, e.g. two specifications with different claims give F=1 > 0.5.",
+    "Notes the overshoot vanishes or is negligible for large N such as the paper's 7,561."
+   ],
+   "batch": 3,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A critic says the overseer medium flip rate is an artefact of the size bins. Could any size binning, however extreme, push that flip rate below 0.5733?",
+   "answer": "No. Every size binning refines the layer-band-only claim, and having no size term is the same as using a single bin. Refining a claim can only split classes, and splitting a class cannot reduce the probability that two specifications differ. So 0.5733, the 'no size term' value, is a floor for any binning.",
+   "rubric": [
+    "Concludes no binning can go below 0.5733.",
+    "Reasons that any size binning refines (splits) the layer-band-only claim, and splitting classes cannot lower F."
+   ],
+   "batch": 3,
+   "orig_id": "q84"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would H4's claim, that filings differ more than mechanisms, hold among the 2,067 specifications that select 10,000-edge circuits?",
+   "answer": "No. These specifications all yield one claim, so their claim flip rate is 0. Raw functional agreement peaks at about 0.92 even at the largest sizes, so functional instability is still about 0.08 or more. The gap is therefore negative there.",
+   "rubric": [
+    "Says H4 does not hold for this group (the gap is negative or below 0.10).",
+    "Reason: claim F is 0 at 10,000 edges (one class), while functional agreement is at most about 0.92, so functional instability stays positive."
+   ],
+   "batch": 3,
+   "orig_id": "q85"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The exact Jaccard computation exploits the fact that 7,561 specifications hold only 3,218 distinct circuits. Would averaging Jaccard over pairs of distinct circuits, without weighting by how many specifications produced each circuit, reproduce the reported 0.1396?",
+   "answer": "No. J\u0304 is defined over specification pairs. Pairs of specifications that share a circuit contribute a Jaccard of 1, and circuits produced by many specifications carry proportionally more weight. An unweighted average over distinct circuits drops the identical pairs and reweights the rest, so in general it gives a different value.",
+   "rubric": [
+    "Says it would not reproduce 0.1396 (in general it gives a different value).",
+    "Reason: the mean is over specification pairs, so multiplicity weighting matters, including same-circuit pairs with Jaccard 1."
+   ],
+   "batch": 3,
+   "orig_id": "q86"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Would the \u03c0* and F computed by the Section 8 protocol stay trustworthy if the declared space contained duplicate specifications, such as those produced by crossing corruption with the two ablation operators that never read it?",
+   "answer": "No. Duplicates produce identical circuits and claims, so they inflate the counts of whichever classes they fall in. They also add pairs that cannot flip, which biases F downward and pulls \u03c0* toward those classes. This is why the paper nests corruption rather than crossing it.",
+   "rubric": [
+    "Says the statistics would be distorted or untrustworthy.",
+    "Reason: duplicates repeat identical claims, inflating class counts and adding non-flipping pairs (F biased down, \u03c0* shifted)."
+   ],
+   "batch": 3,
+   "orig_id": "q87"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the closed-form edge count have the output receiving edges from 157 sources, when circuits are said to touch only 156 components?",
+   "answer": "The sources include the input embedding as well as the 144 attention heads and 12 MLPs. That embedding is the '1' in the 1+13b term, giving 1+13\u00d712=157. The 156 components counted for circuits are only the heads and MLPs.",
+   "rubric": [
+    "Identifies the extra source as the embedding/input, i.e. the '1' in 1+13b.",
+    "Shows 157 = 1 + 13\u00d712, or 1 + 144 heads + 12 MLPs, while components counts only heads and MLPs (156)."
+   ],
+   "batch": 3,
+   "orig_id": "q88"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why can't the overseer COARSE flip rate of 0.5733 be attributed mainly to disagreement over the rare 'middle layers' band?",
+   "answer": "Using Table 4's layer split (47.9% early, 43.6% late, 8.5% middle), pairs involving a middle-layer claim make up at most about 2\u00d70.085\u00d70.915 \u2248 0.16. Early-versus-late pairs make up about 2\u00d70.479\u00d70.436 \u2248 0.42. So roughly three quarters of the COARSE flips are direct early/late contradictions.",
+   "rubric": [
+    "Concludes most COARSE flips are early-versus-late, not middle-related.",
+    "Supports this with Table 4 shares: early-late pairs \u2248 0.42 versus middle-involving pairs \u2248 0.16, out of 0.5733."
+   ],
+   "batch": 3,
+   "orig_id": "q89"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is the mean pairwise Jaccard (0.1396) so much higher than the overlap of the median pair (about 0.04)?",
+   "answer": "The distribution is strongly skewed. Most pairs are near-disjoint: median D is 0.960 and the 75% quantile is 0.998. A minority of high-overlap pairs pulls the mean up: the 1% quantile of D is 0.196, and the top quarter of pairs have Jaccard of at least 0.212.",
+   "rubric": [
+    "Attributes the gap to a skewed distribution with a minority of high-overlap pairs.",
+    "Cites quantiles: e.g. most pairs have D near 1 (median 0.960, 75% at 0.998), while some pairs have low D (1% at 0.196, 25% at 0.788)."
+   ],
+   "batch": 3,
+   "orig_id": "q90"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why can the pooled H4 gap reach 0.3344 when the gap fails the 0.10 threshold at six of the ten circuit sizes?",
+   "answer": "The claim side of the gap is the pooled flip rate of 0.7316. Much of that comes from pairs of specifications at different sizes, which get different size classes and layer bands; within size, F is only 0.2746. Pooling across sizes therefore inflates claim instability relative to functional instability. The remaining positive gap is carried by the 500\u20132,000 edge band.",
+   "rubric": [
+    "Explains that pooled claim F is inflated by cross-size pairs (within-size F is only 0.2746).",
+    "Notes the positive gap within size comes only from the 500\u20132,000 edge band, so the pooled figure is driven by size heterogeneity."
+   ],
+   "batch": 3,
+   "orig_id": "q91"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is the median circuit size 200 edges, when only 199 specifications select 200-edge circuits and most specifications sit at 10 or 10,000 edges?",
+   "answer": "Accumulating Table 7 counts in ascending size gives 2,492, 2,981, 3,500, 3,742 and then 3,941 at 200 edges. Half of 7,561 is about 3,781, and that point is crossed inside the 200-edge group. The size distribution is bimodal, so the median lands in a thinly populated middle size.",
+   "rubric": [
+    "Explains via cumulative counts that the halfway point (~3,781) is crossed within the 200-edge group.",
+    "Notes the size distribution is bimodal (heavy at 10 and 10,000 edges), so the median falls in a sparse middle group."
+   ],
+   "batch": 3,
+   "orig_id": "q92"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does removing the size term from the claim lower F only to 0.5733, while also holding circuit size fixed lowers it to 0.2706?",
+   "answer": "Layer band is itself associated with circuit size. In Table 4, sparse claims are mostly late (2,153 late versus 477 early) and distributed claims are mostly early (3,107 versus 489). So circuits of different sizes often get different layer bands even when size is absent from the claim. Holding size fixed removes those cross-size pairs.",
+   "rubric": [
+    "Says layer band correlates with circuit size, so cross-size pairs flip on layer band even without a size term.",
+    "Supports this with Table 4, e.g. sparse claims mostly late and distributed claims mostly early, and notes that holding size fixed removes those pairs."
+   ],
+   "batch": 3,
+   "orig_id": "q93"
+  },
+  {
+   "id": "q94",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b3-A",
+   "question": "Would replacing Equation 2 with the with-replacement index 1\u2212\u03a3(n_c/N)\u00b2 materially change the headline flip rate of 0.7316?",
+   "answer": "No. The two forms differ only by a factor of (N\u22121)/N. With N=7,561 the change is about 0.0001.",
+   "rubric": [
+    "Says no material change.",
+    "Reason: the forms differ by a factor of (N\u22121)/N, negligible at N=7,561."
+   ],
+   "batch": 3,
+   "orig_id": "q94"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b3-A",
+   "question": "Would replacing Equation 2 with the with-replacement index 1\u2212\u03a3(n_c/N)\u00b2 materially change the flip rate for a group of three specifications whose claims are A, A and B?",
+   "answer": "Yes. Equation 2 gives 1\u22122/6 \u2248 0.667, while the with-replacement form gives 1\u2212(4/9+1/9) \u2248 0.444. The (N\u22121)/N factor is 2/3 at N=3, so it is large in small groups.",
+   "rubric": [
+    "Says yes, the change is material.",
+    "Gives the values (\u22480.667 versus \u22480.444) or explains that the (N\u22121)/N factor is large when N is small."
+   ],
+   "batch": 3,
+   "orig_id": "q95"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5",
+    "c6"
+   ],
+   "pair": "b3-B",
+   "question": "If the 2,067 specifications at 10,000 edges were dropped from the space, would the overseer medium modal share rise above 0.4109?",
+   "answer": "No, it would fall. The 10,000-edge group collapses to one class, which must be 'early layers, distributed': only that class and late-sparse have at least 2,067 members, and 'sparse' cannot describe the largest circuits. Dropping the group leaves at most 1,040 early-distributed specifications, so late-sparse becomes modal at 2,153/5,494 \u2248 0.39.",
+   "rubric": [
+    "Says \u03c0* would not rise; it falls to about 0.39.",
+    "Reason: the 10,000-edge group supplies most of the modal 'early layers, distributed' class (deduced from Table 4 counts), so removing it makes late-sparse modal."
+   ],
+   "batch": 3,
+   "orig_id": "q96"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5",
+    "c6"
+   ],
+   "pair": "b3-B",
+   "question": "If the 2,492 specifications at 10 edges were dropped from the space, would the overseer medium modal share rise above 0.4109?",
+   "answer": "Yes. 10-edge circuits cannot carry the 'distributed' size class, so all 3,107 'early layers, distributed' specifications remain among 5,069. That gives \u03c0* \u2265 0.61, which is still below the 0.80 needed to file at \u03b1=0.20.",
+   "rubric": [
+    "Says \u03c0* would rise (to about 0.61).",
+    "Reason: the modal early-distributed class is untouched by removing 10-edge circuits while N shrinks.",
+    "Notes it would still fail filability at \u03b1=0.20 (below 0.80)."
+   ],
+   "batch": 3,
+   "orig_id": "q97"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b3-C",
+   "question": "If corruption were crossed with all seven ablation operators instead of nested, would the pre-registered grid contain duplicate specifications?",
+   "answer": "Yes. Two operators never read the corrupt distribution, so three of their four corruption copies duplicate each other. That is 7 objectives \u00d7 2 operators \u00d7 3 \u00d7 2 prompts \u00d7 5 seeds = 420 duplicate cells (1,960 cells instead of 1,540).",
+   "rubric": [
+    "Says yes, duplicates would appear.",
+    "Reason: the two non-reading operators ignore corruption, so their corruption variants are identical (about 420 duplicate cells)."
+   ],
+   "batch": 3,
+   "orig_id": "q98"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b3-C",
+   "question": "If the grid kept only the five ablation operators that read the corrupt distribution, would crossing corruption with ablation produce duplicate specifications?",
+   "answer": "No. Each corruption level changes what these operators compute, so crossing is the same as the paper's nesting and gives 7\u00d75\u00d74\u00d710 = 1,400 distinct cells.",
+   "rubric": [
+    "Says no duplicates.",
+    "Reason: all five operators read the corrupt distribution, so every corruption level yields a distinct specification."
+   ],
+   "batch": 3,
+   "orig_id": "q99"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": "b3-D",
+   "question": "A two-class claim over a large specification space has \u03c0*=0.80, just filable at \u03b1=0.20. Would its flip rate still exceed H2's threshold of 0.20?",
+   "answer": "Yes. With two classes, F \u2248 2\u03c0*(1\u2212\u03c0*) = 2\u00d70.8\u00d70.2 = 0.32, which exceeds 0.20.",
+   "rubric": [
+    "Says yes, F exceeds 0.20.",
+    "Computes F \u2248 0.32 from the two-class form of Equation 2."
+   ],
+   "batch": 3,
+   "orig_id": "q100"
+  },
+  {
+   "id": "q101",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": "b3-D",
+   "question": "A two-class claim over a large specification space has \u03c0*=0.90. Would its flip rate still exceed H2's threshold of 0.20?",
+   "answer": "No. With two classes, F \u2248 2\u00d70.9\u00d70.1 = 0.18, which is below 0.20.",
+   "rubric": [
+    "Says no, F is below 0.20.",
+    "Computes F \u2248 0.18 from the two-class form of Equation 2."
+   ],
+   "batch": 3,
+   "orig_id": "q101"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If GPT-2 small's graph were built without separate query, key and value inputs, what would |E| be under the paper's closed-form count?",
+   "answer": "Summing 1+13b over 12 blocks gives 870 sources. With one input slot per head, attention edges are 870\u00d712 = 10,440. MLP edges are \u03a3(13+13b) = 1,014 and output edges are 157, so |E| = 11,611 instead of 32,491.",
+   "rubric": [
+    "Gives |E| \u2248 11,611.",
+    "Shows the derivation: attention edges drop from 31,320 to 10,440 (one slot instead of three), with MLP (1,014) and output (157) edges unchanged."
+   ],
+   "batch": 3,
+   "orig_id": "q102"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Two analysts independently draw specifications from the paper's declared space, and each prepares the coarsest Article 86 explanation for the affected person. How likely are they to give the same statement?",
+   "answer": "About 60.5%. The affected COARSE flip rate of 0.3950 is the probability that two distinct specifications give different statements, so agreement is 1\u22120.3950.",
+   "rubric": [
+    "Gives about 0.605 (60.5%).",
+    "Reason: F is the probability that two specifications differ, so agreement is 1 \u2212 0.3950 for the affected COARSE claim."
+   ],
+   "batch": 3,
+   "orig_id": "q103"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Read against the class ceiling, as the paper recommends, is the overseer COARSE claim relatively more or less unstable than the overseer MEDIUM claim?",
+   "answer": "Relatively more unstable. COARSE has 3 classes, so its ceiling is 0.667, and 0.5733 is about 86% of it. MEDIUM is 82.3% of its 0.8889 ceiling. COARSE is relatively worse despite its lower absolute F.",
+   "rubric": [
+    "Says COARSE is relatively more unstable.",
+    "Shows about 86% of the 3-class ceiling (0.667) versus 82.3% for MEDIUM."
+   ],
+   "batch": 3,
+   "orig_id": "q104"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose optimal ablation were added as an eighth ablation operator that reads the corrupt distribution. How many discovery cells and specifications would the pre-registered grid then have?",
+   "answer": "Each objective would have 2 + 6\u00d74 = 26 ablation\u2013corruption combinations. That gives 7\u00d726\u00d72 prompts\u00d75 seeds = 1,820 cells, and with 12 specifications per cell (4 metrics \u00d7 3 thresholds), 21,840 specifications.",
+   "rubric": [
+    "Gives 1,820 cells and 21,840 specifications.",
+    "Applies the nesting rule (corruption nested within operators that read it) and 12 specifications per cell."
+   ],
+   "batch": 3,
+   "orig_id": "q105"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A regulator receives only \u03c0*=0.7291 for the affected COARSE claim. Can it recover that claim's flip rate from \u03c0* alone?",
+   "answer": "Yes. With two classes, the other class holds 1\u2212\u03c0*, so F \u2248 2\u00d70.7291\u00d70.2709 \u2248 0.395, matching Table 5. This works only because k=2; with three or more classes, \u03c0* does not determine F.",
+   "rubric": [
+    "Says yes, F \u2248 0.395.",
+    "Reason: with two classes the full distribution follows from \u03c0*.",
+    "Notes this fails for claims with three or more classes."
+   ],
+   "batch": 3,
+   "orig_id": "q106"
+  },
+  {
+   "id": "q107",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A filer's declared space gives \u03c0*=0.82 for its claim, but its per-level discard report shows that one metric lost 95% of its specifications. Under the Section 8 protocol, is the claim filable at \u03b1=0.20?",
+   "answer": "Yes. Filability depends only on \u03c0* \u2265 1\u2212\u03b1 = 0.80, and 0.82 passes. Step 5 requires the discard rates to be reported, but they do not enter the filing criterion.",
+   "rubric": [
+    "Says the claim is filable at \u03b1=0.20.",
+    "Reason: the criterion is \u03c0* \u2265 0.80 only; discard rates must be reported (step 5) but do not block filing."
+   ],
+   "batch": 3,
+   "orig_id": "q107"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the instrument's edge count and the closed-form count had disagreed, which reported results would be in doubt and which would not?",
+   "answer": "In doubt: results that use |E|, namely the analytic random line (0.0031 at 200 edges and the '45\u00d7 chance' figure) and the size-matched random null drawn from the 32,491-edge population, including where it collapses. Not in doubt: the flip rates, modal shares, observed Jaccard and kappa, which are computed from the discovered circuits themselves.",
+   "rubric": [
+    "Names the random-line chance overlap and/or the size-matched null as dependent on |E|.",
+    "States that discovered-circuit F, \u03c0*, Jaccard or kappa do not depend on |E|."
+   ],
+   "batch": 3,
+   "orig_id": "q108"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If Equation 3 weighted every size group equally rather than every pair, would the within-size medium instability result look weaker or stronger than 0.2746?",
+   "answer": "Stronger. The unweighted mean of Table 7's ten per-size flip rates is about 0.386. Under pair weighting, the two collapsed groups at 5,000 and 10,000 edges (F=0, 2,692 specifications) supply roughly 40% of all pairs and pull the figure down to 0.2746.",
+   "rubric": [
+    "Says it would look stronger (higher, about 0.39).",
+    "Reason: pair weighting gives heavy weight to the large zero-flip groups at 5,000 and 10,000 edges, while equal weighting gives them only 2/10."
+   ],
+   "batch": 3,
+   "orig_id": "q109"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the overseer claim granularities were not nested, which cross-check reported with Table 4 would be unavailable?",
+   "answer": "The check that aggregating the medium classes by layer band reproduces the COARSE shares, with 47.9% early matching the independently computed COARSE modal share of 0.4788. That aggregation is valid only because each medium class refines exactly one coarse class.",
+   "rubric": [
+    "Identifies the Table 4 aggregation of medium classes into layer-band shares matching the COARSE \u03c0* (0.4788).",
+    "Reason: nesting guarantees each medium class maps into a single coarse class."
+   ],
+   "batch": 3,
+   "orig_id": "q110"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the pooled discovered-versus-null comparison had pointed the same way as the within-size comparison, how would contribution (iv)'s count of pooled statistics distorted by size change?",
+   "answer": "It would drop from three to two: F itself and the sign of the functional gap. The direction of the null comparison would no longer be an artefact needing correction.",
+   "rubric": [
+    "Says the count drops from three to two.",
+    "Identifies the remaining two as the magnitude of F and the sign of the H4 functional gap, with the null direction removed."
+   ],
+   "batch": 3,
+   "orig_id": "q111"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If functional instability at the smallest circuits had been 0.30 rather than 0.4777, which statement in Section 7.6 would lose its support at that end of the size range?",
+   "answer": "The statement that at both ends of the range mechanisms differ more than filings do. At 10 edges the claim flip rate is 0.4543, so the gap would be about +0.15 rather than negative, and it would even clear the 0.10 threshold.",
+   "rubric": [
+    "Identifies the 'at both ends of the range mechanisms differ more than filings' statement (the negative gap at small sizes).",
+    "Reason: 0.4543 \u2212 0.30 \u2248 0.15 is positive (above 0.10), whereas 0.4543 \u2212 0.4777 is negative."
+   ],
+   "batch": 3,
+   "orig_id": "q112"
+  },
+  {
+   "id": "q113",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If H2 and the Section 7.4 test had required only the point estimate, rather than the CI lower bound, to exceed 0.20, would either outcome change?",
+   "answer": "No. Both lower bounds, 0.7247 and 0.2550, already exceed 0.20, so the stricter rule was not the binding constraint.",
+   "rubric": [
+    "Says neither outcome would change.",
+    "Reason: both CI lower bounds (0.7247 and 0.2550) are already above 0.20."
+   ],
+   "batch": 3,
+   "orig_id": "q113"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the 2,067 specifications at 10,000 edges, which all yield one claim, select the same circuit? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. If they were identical, about 2.1 million pairs (\u22487.5% of the 28,580,580) would have D=0. Yet the 1% quantile of D is 0.196, so fewer than 1% of all pairs are identical circuits. Sharing a claim does not mean sharing a circuit.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: identical circuits in this group would make about 7.5% of pairs have D=0, inconsistent with the 1% quantile of D being 0.196."
+   ],
+   "batch": 3,
+   "orig_id": "q114"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that affected persons would be given contradictory layer attributions (early versus late layers)? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The early/late contradiction is shown for the overseer map, which is keyed on the dominant layer band. The affected-person map leads with the input segment, so its flip rates (0.3950 at COARSE) concern input segments, not layer bands.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the layer contradiction comes from the overseer map; the affected map is keyed on the input segment."
+   ],
+   "batch": 3,
+   "orig_id": "q115"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the size-class element of the overseer claim is what makes it unfilable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Dropping size from the claim (overseer COARSE) still leaves \u03c0*=0.4788, far below 0.80. With size held fixed, the layer band alone still flips on 27% of pairs (0.2706).",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the size-free claim remaining unfilable (COARSE \u03c0* 0.4788, F 0.5733) and/or the within-size layer-band F of 0.2706."
+   ],
+   "batch": 3,
+   "orig_id": "q116"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its results are insensitive to where the layer-band boundaries are drawn? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Table 1 tests sensitivity only to the size binnings. No alternative layer-band boundaries are reported, so their effect is unknown.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the sensitivity analysis (Table 1) varies only size bins, not layer-band boundaries."
+   ],
+   "batch": 3,
+   "orig_id": "q117"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the 52.3% discard rate stems from the same library failure as the non-executing discovery objective? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The failing objective's 220 cells are excluded before the discard is counted over the realised 15,840 specifications, and the digest confirms the failures are confined to that arm. The discard comes from the metric-relative threshold rule admitting no circuit, and it varies by metric.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: the two exclusions are separate; the discard is caused by the threshold rule over the realised grid, while the runtime failure is confined to one objective."
+   ],
+   "batch": 3,
+   "orig_id": "q118"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does Table 7 show that at 1,000 and 2,000 edges random circuits give more trustworthy claims than discovered ones? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The null's zero flip rate there is degenerate: uniform draws of that size touch all 156 components and can produce only one claim. Its agreement is guaranteed, so it carries no information about trustworthiness.",
+   "rubric": [
+    "Answers contradicted (or not supported).",
+    "Reason: the null collapses to one class because uniform draws touch every component, so its zero flips are uninformative."
+   ],
+   "batch": 3,
+   "orig_id": "q119"
+  },
+  {
+   "id": "q120",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that claim instability is confined to the smallest, 10-edge circuits? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Discovered flip rates stay between 0.34 and 0.58 at every size from 10 to 2,000 edges. Several larger sizes flip more than 10 edges does: 0.5792 at 100 edges and 0.5714 at 2,000 edges, against 0.4543 at 10 edges.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites Table 7: substantial F at all sizes up to 2,000 edges, with some larger sizes (e.g. 100 or 2,000 edges) exceeding the 10-edge value."
+   ],
+   "batch": 3,
+   "orig_id": "q120"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Would the within-size conclusion that discovered circuits are more stable than the size-matched null (0.2746 vs 0.4230) survive if each of Table 7's ten size groups were weighted equally, instead of weighting every pair equally as Equation 3 does?",
+   "answer": "No. Averaging Table 7's per-size flip rates with equal weights gives about 0.386 for discovered circuits and about 0.356 for the null, so discovered circuits would look less stable. The pair-weighted result is driven by the 10-edge group, which has 2,492 specifications and most of the within-size pairs, and where the null (0.7331) is far above the discovered multiverse (0.4543). At 1,000 edges and above the null is 0, which pulls its equal-weight average down.",
+   "rubric": [
+    "States that the ordering would not survive: discovered would appear less stable than, or no more stable than, the null.",
+    "Gives approximate equal-weight averages (about 0.39 discovered vs about 0.36 null), or explains that the pair weighting is dominated by the large 10-edge group, where the null is much less stable, while the null scores 0 at 1,000 edges and above."
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Would the Section 8 filability verdict still mean anything if the filer declared a deterministic claim map that sends every circuit to the same single statement?",
+   "answer": "No. With one class, \u03c0* = 1 and F = 0 for any specification space, so the claim would always be filable. The protocol measures agreement across the space, not how informative the claim is. The paper's own note that F must be read against the ceiling 1\u22121/k gives a ceiling of 0 when k = 1.",
+   "rubric": [
+    "States that the verdict would become vacuous, because the claim is always filable.",
+    "Explains that a one-class map forces \u03c0* = 1 (and F = 0, with ceiling 1\u22121/k = 0), so agreement is guaranteed regardless of the evidence."
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose the single-axis reductions in Table 6 simply added up when all seven axes were standardised together. Would the flip rate then fall below H2's threshold of 0.20?",
+   "answer": "No. The seven reductions sum to about 0.254 (0.1377 + 0.0302 + 0.0298 + 0.0246 + 0.0224 + 0.0084 + 0.0009). Subtracting that from 0.7316 leaves about 0.478, still more than twice the threshold.",
+   "rubric": [
+    "States that F would still be above 0.20.",
+    "Shows the sum of the reductions (about 0.25) and the remaining F (about 0.48)."
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The paper attributes claim instability to analytic choices rather than computational nondeterminism, and notes that the seed axis removes only 0.0009. Would that attribution still be secure if the 1,320 cells had been run across several different software or hardware environments?",
+   "answer": "No. Environment differences would be an unmodelled source of variation that could be confounded with the analytic axes, so some flips credited to those axes might be nondeterminism. The seed axis cannot rule this out, because it only changes which prompts are sampled. What excludes the confound is that the whole sweep ran in one verified environment.",
+   "rubric": [
+    "States that the attribution would no longer be secure.",
+    "Explains that the seed axis varies prompt sampling, not the environment, so environment-driven variation could masquerade as axis effects; the single verified environment is what rules this out."
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the structural result (median pairwise D 0.960) still count against 'one mechanism described in different words' if every smaller discovered circuit were a subset of every larger one?",
+   "answer": "No. Selected sizes range from 10 to 10,000 edges, so even perfectly nested circuits would have a Jaccard as low as 10/10,000 = 0.001. Size differences alone would then produce high D. The rebuttal would have to rest on the functional result (kappa about 0.015), not on Jaccard.",
+   "rubric": [
+    "States that structural near-disjointness alone would no longer be evidence of different mechanisms.",
+    "Explains that Jaccard between nested circuits of very different sizes is bounded by the size ratio (for example 10/10,000), so the size spread mechanically inflates D, leaving the kappa result as the real support."
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can standardising the discovery objective remove almost as much flip rate as standardising the ablation operator (0.0298 vs 0.0302), when the objective is not among the reported REML components of circuit-size variance?",
+   "answer": "The reported REML components (78.8 + 11.5 + 4.4 + 4.1 + 0.7) account for 99.5% of size variance, leaving at most about 0.5% for the objective, so the objective barely changes how large circuits are. The claim, however, is keyed first on the dominant layer band, that is, on where the circuit sits. The objective can change which edges and layers are selected without changing circuit size.",
+   "rubric": [
+    "Notes that the objective has a negligible effect on circuit size (at most about 0.5% left after the listed components).",
+    "Explains that claims depend on circuit location (dominant layer band), which the objective can change independently of size."
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "With edge count held fixed, why does adding the size class to the claim raise the null's within-size flip rate noticeably (0.3822 coarse to 0.4230 medium) but the discovered multiverse's barely (0.2706 to 0.2746)?",
+   "answer": "The size class can still vary inside a fixed edge count. Table 7 shows the null producing 6 medium classes at 10 and 50 edges, more than the 3 layer bands, and the bins come from a node-count curve. Random draws with the same number of edges vary a lot in how many components they touch, whereas discovered circuits mostly stay at 3 classes per size. So the size class adds flips for the null but hardly any for discovered circuits.",
+   "rubric": [
+    "Explains that the size class is not fixed by edge count: the null has 6 classes at 10 and 50 edges, more than 3 bands, and the bins are node-count based.",
+    "States that random circuits vary in size class at a fixed edge count much more than discovered circuits, which mostly show only 3 classes."
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Under the paper's closed-form count for GPT-2 small, why do attention inputs account for the overwhelming majority of the 32,491 edges?",
+   "answer": "Block b's attention receives from 1+13b sources at 3 input slots for each of 12 heads, so each source feeds 36 attention edges per block. Summed over the 12 blocks this gives 31,320 edges. Each MLP takes each source only once (1,014 edges in total), and the output takes 157.",
+   "rubric": [
+    "States that about 31,320 of the 32,491 edges (about 96%) are attention inputs.",
+    "Explains the 36-fold multiplication (3 query/key/value slots \u00d7 12 heads) per source, compared with a single input per source for each MLP and for the output."
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the non-executing discovery objective account for exactly 220 cells?",
+   "answer": "Each of the seven objectives covers one seventh of the 1,540 pre-registered discovery cells, which is 220. Equivalently, there are 22 ablation\u2013corruption combinations (5 corruption-reading operators \u00d7 4 corruptions + 2 operators that do not read corruption) \u00d7 2 prompt variants \u00d7 5 seeds. Metric and threshold are not part of a cell; they give the 12 specifications per cell.",
+   "rubric": [
+    "States that 220 = 1,540/7, one objective's share of the cells.",
+    "Decomposes it as 22 ablation\u2013corruption combinations \u00d7 2 prompts \u00d7 5 seeds, with metric and threshold excluded from the cell."
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does refining the overseer claim from MEDIUM to FINE, by adding the ranked input segment, raise the number of classes only from 9 to 12?",
+   "answer": "The granularities are nested, so each medium class splits into one or more fine classes. Only 3 extra classes means that at most three medium classes are split at all. Within most medium classes, the ranked input segment never varies. This is consistent with F rising only modestly (0.7316 to 0.7681) and \u03c0* staying the same.",
+   "rubric": [
+    "States that the input segment rarely varies within a medium class: at most 3 of the 9 medium classes split.",
+    "Grounds this in nesting: fine classes refine medium classes, so the class count can grow only by splitting."
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q131",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the REML decomposition assign 78.8% of circuit-size variance to the ablation\u2013corruption interaction rather than to corruption as a main effect?",
+   "answer": "Corruption is nested within the five ablation operators that read the corrupt distribution. The other two operators ignore it. Corruption's effect on size therefore exists only together with particular operators and depends on which one is used, which the decomposition records as an interaction rather than a standalone corruption effect.",
+   "rubric": [
+    "States that corruption's effect depends on the ablation operator.",
+    "Explains this by the nesting: two operators never read the corrupt distribution, so corruption only matters within the five that do."
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q132",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": "b4-pA",
+   "question": "Under a simple-majority rule (file only if \u03c0* > 0.5), would the affected-person COARSE claim be filable?",
+   "answer": "Yes. Its modal share is 0.7291, well above 0.5.",
+   "rubric": [
+    "Answers yes.",
+    "Cites \u03c0* = 0.7291 > 0.5."
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q133",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": "b4-pA",
+   "question": "Under a simple-majority rule (file only if \u03c0* > 0.5), would the affected-person MEDIUM claim be filable?",
+   "answer": "No. Its modal share is 0.4875, just below 0.5, so even a majority standard fails.",
+   "rubric": [
+    "Answers no.",
+    "Cites \u03c0* = 0.4875 < 0.5."
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q134",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b4-pB",
+   "question": "Could any distribution of the 7,561 specifications over the overseer MEDIUM claim classes produce a flip rate of 0.90?",
+   "answer": "No. With 9 classes the ceiling is 1\u22121/9 = 0.8889, and with N = 7,561 the unbiased form exceeds this only negligibly, so 0.90 is unreachable.",
+   "rubric": [
+    "Answers no.",
+    "Cites the 9-class ceiling of about 0.889, which is below 0.90."
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q135",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b4-pB",
+   "question": "Could any distribution of the 7,561 specifications over the overseer FINE claim classes produce a flip rate of 0.90?",
+   "answer": "Yes, in principle. FINE has 12 classes, so the ceiling is 1\u22121/12 \u2248 0.917, which is above 0.90.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the 12-class ceiling of about 0.917, which is above 0.90."
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q136",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-pC",
+   "question": "Could a 10-edge discovered circuit and a 200-edge discovered circuit have a Jaccard similarity above the multiverse mean of 0.1396?",
+   "answer": "No. The intersection is at most 10 edges and the union at least 200, so the Jaccard is at most 10/200 = 0.05.",
+   "rubric": [
+    "Answers no.",
+    "Gives the bound 10/200 = 0.05, reached when the small circuit is nested in the large one."
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q137",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-pC",
+   "question": "Could a 200-edge discovered circuit and a 1,000-edge discovered circuit have a Jaccard similarity above the multiverse mean of 0.1396?",
+   "answer": "Yes. If the smaller circuit were nested in the larger, the Jaccard would be 200/1,000 = 0.2, which is above 0.1396.",
+   "rubric": [
+    "Answers yes.",
+    "Gives the maximum 200/1,000 = 0.2."
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q138",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-pD",
+   "question": "If all sufficiency specifications were removed from the surviving pool, would comprehensiveness make up more than 60% of what remains?",
+   "answer": "No. 3,947 / (7,561 \u2212 877) = 3,947 / 6,684 \u2248 59%.",
+   "rubric": [
+    "Answers no.",
+    "Computes about 0.59 from Table 2's kept counts."
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q139",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-pD",
+   "question": "If all KL-divergence specifications were removed from the surviving pool, would comprehensiveness make up more than 60% of what remains?",
+   "answer": "Yes. 3,947 / (7,561 \u2212 1,467) = 3,947 / 6,094 \u2248 65%.",
+   "rubric": [
+    "Answers yes.",
+    "Computes about 0.65 from Table 2's kept counts."
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Under the paper's closed-form count, what would |E| be if each MLP received input only from earlier blocks and not from its own block's 12 heads?",
+   "answer": "32,347. Each of the 12 MLPs loses 12 incoming edges, removing 144 from 32,491.",
+   "rubric": [
+    "Gives 32,347, or equivalently 32,491 minus 144.",
+    "Explains the subtraction as 12 own-block heads \u00d7 12 MLPs."
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q141",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Using the closed-form count, roughly what share of a uniformly drawn random circuit's edges would terminate in blocks 0\u20133, compared with blocks 8\u201311 (counting the output with the last block)?",
+   "answer": "About 9% compared with about 57%. Blocks 0\u20133 receive 2,952 attention-input edges and 130 MLP-input edges (3,082). Blocks 8\u201311 receive 17,928 attention-input edges, 546 MLP-input edges and 157 output edges (18,631). Later blocks have many more possible sources, so uniform draws concentrate there.",
+   "rubric": [
+    "Gives approximately 9\u201310% for blocks 0\u20133 and approximately 57% for blocks 8\u201311.",
+    "Explains the skew by the 1+13b growth in the number of sources available to later blocks."
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Using Table 4's counts, would an overseer claim stating only the size class flip more or less often than the layer-band-only claim (F = 0.5733)?",
+   "answer": "Slightly more often. The size-class shares are distributed 3,686 (0.488), sparse 2,899 (0.383) and moderate 976 (0.129). This gives F \u2248 1 \u2212 (0.238 + 0.147 + 0.017) \u2248 0.60, above 0.5733.",
+   "rubric": [
+    "States that it would flip more often (F about 0.60).",
+    "Shows the aggregation of Table 4 by size class and the Gini\u2013Simpson computation."
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q143",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Applying the paper's closed-form edge-count scheme to a hypothetical 24-block model with 12 heads per block and the same query/key/value factorisation, roughly how much larger would |E| be than GPT-2 small's?",
+   "answer": "About 4.1 times larger, roughly 134,000 edges. The calculation is 36\u00b7(24 + 13\u00b7276) = 130,032 attention-input edges, plus 13\u00b7300 = 3,900 MLP-input edges and 313 output edges. Edges grow roughly quadratically with depth, because each block receives from all earlier components.",
+   "rubric": [
+    "Gives about 134,000 edges, or about 4 times GPT-2 small's count.",
+    "Explains the quadratic growth: the number of sources per block rises linearly with depth."
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q144",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Two circuits are each correct on 95% of IOI examples, but their errors fall on unrelated examples. What raw functional agreement and Cohen's kappa would the Bayat Makou measures give?",
+   "answer": "Raw agreement is about 0.95\u00b2 + 0.05\u00b2 \u2248 0.905, and kappa is about 0. This is why the paper's raw agreement can climb to 0.92 as accuracy rises while kappa stays near zero.",
+   "rubric": [
+    "Gives raw agreement of about 0.90 and kappa of about 0.",
+    "Links this to the paper's pattern: raw agreement tracks accuracy while kappa stays flat near zero."
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q145",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the claim map \u03c6 had been generated by a language model rather than deterministic code, which pre-registered comparison in Section 7.6 would become uninterpretable?",
+   "answer": "The H4 gap, claim flip rate minus functional instability. The flip rate would mix the language model's output variance with circuit variance, so a positive gap could come from the generator rather than from filings differing more than mechanisms.",
+   "rubric": [
+    "Names H4 (the gap between claim F and 1 \u2212 functional agreement).",
+    "Explains that F would absorb language-model variance, so the gap could no longer be attributed to filings versus mechanisms."
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q146",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If H2 had been pre-registered on the affected-person COARSE cell instead of the overseer MEDIUM claim, which statement in Section 7.2 would no longer hold?",
+   "answer": "The statement that F clears the threshold 'by more than three times'. The affected COARSE F of 0.3950 is less than twice 0.20, although its point estimate would still exceed the threshold.",
+   "rubric": [
+    "Identifies the 'clears by more than three times' statement.",
+    "Notes that 0.3950 is under twice 0.20, while still above 0.20 as a point estimate."
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q147",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If a filer applied steps 1\u20134 of the Section 8 protocol but skipped step 5, what kind of misreading documented in Section 7.5 could its report contain?",
+   "answer": "A pooled statistic distorted by differences in selected object size. For example, it could conclude that discovered circuits are less stable than random (0.7316 vs 0.6774), a direction that reverses once size is held fixed (0.2746 vs 0.4230). Step 5's within-group decomposition is what exposes this.",
+   "rubric": [
+    "Identifies size-confounded pooled statistics, such as the inverted comparison with the random null.",
+    "Explains that step 5's within-group decomposition is what reveals the reversal."
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q148",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If removing the size term from the claim (Table 1's 'no size term' row) had brought F below 0.20, which objection that Section 5 rebuts would gain force?",
+   "answer": "The objection that the size bins were chosen to produce the reported flip rate. If only the size class flipped, the instability would depend on how the bins were calibrated. The observed 0.5733 shows that the layer attribution alone flips heavily.",
+   "rubric": [
+    "Names the objection that the size bins manufacture the flip rate.",
+    "Explains that the instability would then sit in the binned size class rather than in the layer attribution, which currently flips at 0.5733."
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the choice of discovery objective has little effect on which edges a circuit contains? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The REML decomposition measures only circuit size, not which edges are selected. Table 6 shows that standardising the objective removes 0.0298 of claim F, which suggests it does change where circuits sit.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that REML concerns size only, and notes that the objective does shift claims (removing 0.0298 of F)."
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q150",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that circuits whose claim says 'early layers' contain no late-layer edges? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The overseer map is keyed on the dominant layer band, so an 'early layers' circuit may still contain late-layer edges. The contradiction the paper reports concerns which band dominates.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the claim reports only the dominant band, not the absence of edges in other bands."
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q151",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the verification script's result (36 checks, 0 failures) show that the claim map \u03c6 is a correct translation of Annex IV? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The script recomputes reported quantities from the raw results and checks that they match. It verifies the computation, not whether \u03c6 or the declared specification space is the right one.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the checks confirm numerical reproducibility, not the validity of the claim map."
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q152",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that GPT-2 small implements IOI with a circuit of about 200 edges? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The 200-edge median is a statistic over sizes selected by the threshold rule across specifications, most of which sit at 10 or 10,000 edges. Circuit size is an outcome of analytic choices, not a measured property of the mechanism.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that size is an outcome of the threshold rule and that the median reflects the spread of specifications, not a single true circuit."
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q153",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the claim instability is a defect of the particular circuit-discovery library it uses? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only one library is used and no other is compared. Because that library omits optimal ablation, the paper treats its F as a lower bound for the field's full space, which implies other tools could widen the space rather than stabilise it.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that there is a single instrument with no comparison, and that the library's narrowness makes F a lower bound rather than a library-specific excess."
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q154",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the Cohen's kappa of 0.0146 show that the discovered circuits are mostly inaccurate on IOI? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Kappa measures chance-corrected agreement on which examples two circuits get right, not accuracy. Circuit accuracy rises to 0.95 at larger sizes while kappa stays between 0.016 and 0.047.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that kappa measures agreement beyond chance, not accuracy, and cites accuracy reaching about 0.95."
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q155",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a Pythia-160m flip rate of 0.30 would count as a successful replication? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The replication criteria are said to be committed and timestamped, but the paper does not state them, and the replication has not been run.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the criteria are not reported in the paper and that the replication is unrun."
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q156",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "When a conditioning group holds only two to five specifications, would the naive specification-resampling bootstrap tend to understate or overstate that group's flip rate, and why?",
+   "answer": "It would tend to understate it. Resampling with replacement duplicates specifications, and a specification paired with its own copy always yields the same claim. These retained self-pairs therefore always agree. In a group of two to five specifications such pairs make up a large share of all pairs, so the resampled flip rate is pulled down. In Table 6's groups of 1,512 to 2,520 they are negligible.",
+   "rubric": [
+    "Concludes the naive bootstrap understates (biases downward) the flip rate in such small groups",
+    "Reason: resampling with replacement creates self-pairs (a specification with its own copy) that always agree, and in groups of 2\u20135 these form a large share of pairs",
+    "Condition: the effect is negligible for large groups such as Table 6's 1,512\u20132,520 specifications"
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q157",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Is the near-zero Cohen's kappa as strong evidence against phantom specialisation at the smallest circuits as at the largest ones?",
+   "answer": "No. At the smallest sizes accuracy is only about 0.51, so those circuits barely perform the task. Low agreement beyond chance is expected for them whether or not they share a mechanism. The rebuttal draws its force from the largest circuits, where accuracy is about 0.95 and kappa still stays at or below about 0.047.",
+   "rubric": [
+    "Concludes the evidence is weaker (less informative) at the smallest circuits",
+    "Reason: accuracy there is only about 0.51, so near-zero kappa is unsurprising for circuits that barely do the task",
+    "States that the strong evidence comes from large circuits (accuracy about 0.95) where kappa remains low (\u22640.047)"
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q158",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Is the paper's analytic random line k/(2|E|\u2212k) an appropriate chance benchmark for a pair consisting of one 10-edge and one 10,000-edge discovered circuit?",
+   "answer": "No. The formula assumes both circuits have the same size k. For a 10-edge and a 10,000-edge circuit, even full nesting gives a Jaccard of at most 10/10,000 = 0.001. Overlap for such size-mismatched pairs is therefore capped by the size ratio, not by chance alone.",
+   "rubric": [
+    "Concludes it is not an appropriate benchmark for this pair",
+    "Reason: the formula assumes two circuits of equal size k",
+    "Notes that the Jaccard of such a pair is capped at about 0.001 (10/10,000) even if the small circuit is wholly contained in the large one"
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q159",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would the IOI modal share \u03c0*=0.4109 stay the same if the declared space added further levels to the evaluation-metric axis, and why?",
+   "answer": "Not necessarily; it could shift substantially. \u03c0* is a share over surviving specifications, so each level's claims count in proportion to the specifications it contributes. The metric is the largest lever on claims, and survival varies enormously by metric (discard 0.003 to 0.779). New metric levels could therefore change the composition and the modal share. Adding seed levels would barely matter, because the seed removes only 0.0009.",
+   "rubric": [
+    "Concludes \u03c0* would not be invariant and could shift materially",
+    "Reason: \u03c0* is a share over surviving specifications, the metric is the largest lever on claims (removes 0.1377), and discard rates differ greatly by metric",
+    "Contrasts this with axes that barely affect claims, such as the seed (0.0009)"
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q160",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the 'early layers' versus 'late layers' disagreement between the two most common claims still be a substantive contradiction if the competing circuits each split their edges almost evenly between early and late bands?",
+   "answer": "Largely no. \u03c6_overseer reports only the dominant layer band, so for circuits near a tie a small shift in edge share flips the label. In that case the two claims would differ by a hair rather than locate the behaviour in different places. The contradiction reading presumes clear dominance, and the paper does not report band shares.",
+   "rubric": [
+    "Concludes the contradiction would become a near-tie labelling difference rather than a substantive contradiction",
+    "Reason: the claim is keyed on the dominant layer band (an argmax), so a small shift in edge share flips the label",
+    "Notes the paper does not report the band shares, so the strength of the contradiction rests on dominance being clear"
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q161",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "The seed axis removes only 0.0009 of the flip rate. Would this still show that evaluation-set variability barely affects claims if the prompt samples drawn under different seeds overlapped almost entirely?",
+   "answer": "No. The seed varies only which prompts are sampled. If the samples were nearly identical, the axis would hardly vary the evaluation set, and a tiny effect would say little about how sensitive claims are to genuinely different evaluation sets. The paper does not report how much the samples overlap.",
+   "rubric": [
+    "Concludes the inference would no longer be informative (would fail)",
+    "Reason: the seed only selects which prompts are sampled, so nearly identical samples would hardly vary the evaluation set",
+    "Notes the paper does not report how much the seed samples overlap"
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q162",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does refining the affected-person claim from MEDIUM to FINE double the number of classes (4 to 8) yet raise the flip rate only from 0.6597 to 0.6744?",
+   "answer": "The FINE refinement leaves the large MEDIUM classes almost intact. The modal share falls only from 0.4875 to 0.4786, so under 1% of the space splits off the biggest class. The four new classes must be small, and small classes add few disagreeing pairs.",
+   "rubric": [
+    "Concludes the new FINE classes are small, so they add few disagreeing pairs",
+    "Reason: the modal share barely drops (0.4875 to 0.4786), showing the large MEDIUM classes are mostly not split"
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q163",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does the size-matched null's flip rate fall from 0.6366 at 200 edges to 0.1421 at 500 edges?",
+   "answer": "A uniform random draw covers more components as it grows. At 1,000 edges it touches all 156 components and can produce only one claim. At 500 edges most random draws are already close to that saturation, so they mostly converge on the same layer band and size class.",
+   "rubric": [
+    "Concludes most 500-edge random draws already yield the same claim, which is why the flip rate is low",
+    "Reason: larger uniform draws approach touching all 156 components, the condition under which the null collapses to one class at \u22651,000 edges"
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q164",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the pooled Cohen's kappa (0.0146) be lower than the kappa at every individual circuit size (0.016 to 0.047)?",
+   "answer": "The pooled figure also includes pairs of circuits of different sizes, which the per-size values exclude. All same-size kappas are at least 0.016, so the cross-size pairs must on average sit below 0.0146 to pull the pooled value under the per-size minimum. This is another case of pooling across sizes giving a figure that no size shows.",
+   "rubric": [
+    "Concludes the pooled value includes cross-size pairs that the per-size values exclude",
+    "Reason: since every within-size kappa is \u22650.016, the cross-size pairs must average below 0.0146 to drag the pooled value below every per-size value"
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q165",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why do the 7,561 claim-producing specifications hold only 3,218 distinct circuits?",
+   "answer": "Each discovery cell's single run serves 12 specifications, which differ only in metric and threshold. These specifications just pick a circuit size from the same run. When two of them land on the same size, they select the identical edge set, so many specifications share circuits.",
+   "rubric": [
+    "Concludes that many specifications share a circuit because they share one discovery run",
+    "Reason: metric and threshold (12 specifications per cell) only choose a size from the same discovery output, so specifications selecting the same size get identical edge sets"
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q166",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the paper say that observed overlap of about 45 times chance is 'not evidence of much'?",
+   "answer": "The chance baseline is tiny because a 200-edge circuit uses well under 1% of GPT-2 small's 32,491 edges, giving an expected overlap of only 0.0031. A large multiple of a tiny number is still small: mean Jaccard is 0.14, and the median pair shares only 4% of its edges.",
+   "rubric": [
+    "Concludes that beating chance by a large factor still leaves overlap small",
+    "Reason: the random baseline is minuscule (0.0031 at 200 edges) because circuits are a tiny fraction of 32,491 edges, while actual overlap is only about 0.14 mean or 4% at the median"
+   ],
+   "batch": 5,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q167",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The specification tuple includes the granularity g. Why does granularity not multiply the count of 15,840 specifications?",
+   "answer": "Granularity is applied by the claim map \u03c6 to a circuit that has already been discovered. It changes the wording of the claim, not the circuit or whether a circuit is admitted. The 15,840 count comes from the seven analytic axes (1,320 cells \u00d7 12 metric-threshold combinations), and each granularity is evaluated on the same 7,561 claim-producing specifications, as in Table 5.",
+   "rubric": [
+    "Concludes granularity is a property of the claim, not of the discovered circuit",
+    "Reason: \u03c6 applies granularity to an already-discovered circuit, so the same 7,561 specifications are re-read at each granularity while the count comes from the seven analytic axes"
+   ],
+   "batch": 5,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q168",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b5-p1",
+   "question": "Holding the measured H4 gap fixed, would H4 still be supported if its pre-registered threshold had been 0.30, with the interval lower bound required to exceed it?",
+   "answer": "Yes. The gap is 0.3344 with a 95% CI of 0.3297 to 0.3394, so even the lower bound exceeds 0.30.",
+   "rubric": [
+    "Answers yes, H4 would be supported",
+    "Reason: the CI lower bound of 0.3297 is above 0.30"
+   ],
+   "batch": 5,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q169",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b5-p1",
+   "question": "Holding the measured H4 gap fixed, would H4 still be supported if its pre-registered threshold had been 0.35?",
+   "answer": "No. The gap's point estimate is 0.3344 and its upper bound is 0.3394, both below 0.35.",
+   "rubric": [
+    "Answers no, H4 would not be supported",
+    "Reason: the gap (0.3344, CI upper bound 0.3394) falls below 0.35"
+   ],
+   "batch": 5,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q170",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b5-p2",
+   "question": "Would the Section 7.4 within-size COARSE flip rate (0.2706) change if the claim map used decile size bins instead of the committed bins?",
+   "answer": "No. The COARSE claim contains no size term, so size bins never enter it. The within-size grouping in Section 7.4 uses edge count (the Table 7 sizes), not the claim's size bins.",
+   "rubric": [
+    "Answers no, it would not change",
+    "Reason: the COARSE claim has no size term and the size-holding uses edge counts, not the claim's size bins"
+   ],
+   "batch": 5,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q171",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b5-p2",
+   "question": "Would the pooled overseer MEDIUM flip rate (0.7316) change if the claim map used decile size bins instead of the committed bins?",
+   "answer": "Yes. The MEDIUM claim includes the size class, so the bins determine claim classes. Table 1 reports F=0.7719 under deciles.",
+   "rubric": [
+    "Answers yes, it would change (rise to about 0.77)",
+    "Reason: the MEDIUM claim includes the size class, so the bins alter the claim classes (Table 1: deciles give 0.7719)"
+   ],
+   "batch": 5,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q172",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p3",
+   "question": "Do at least a quarter of all discovered-circuit pairs have a Jaccard similarity of at least 0.20?",
+   "answer": "Yes. The 25% quantile of pairwise D is 0.788, so a quarter of pairs have D \u2264 0.788, which means Jaccard \u2265 0.212.",
+   "rubric": [
+    "Answers yes",
+    "Reason: the 25% quantile of D is 0.788, meaning 25% of pairs have Jaccard \u2265 0.212"
+   ],
+   "batch": 5,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q173",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p3",
+   "question": "Do more than a quarter of all discovered-circuit pairs have a Jaccard similarity of at least 0.30?",
+   "answer": "No. Jaccard \u2265 0.30 means D \u2264 0.70, which is below the 25% quantile of 0.788, so at most a quarter of pairs qualify.",
+   "rubric": [
+    "Answers no",
+    "Reason: Jaccard 0.30 corresponds to D 0.70, below the 25% quantile of D (0.788), so no more than a quarter of pairs reach it"
+   ],
+   "batch": 5,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q174",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c6",
+    "c7"
+   ],
+   "pair": "b5-p4",
+   "question": "Using Table 6's residual flip rate after standardising the metric (0.5939) and Table 2's kept counts, can one rule out that a filer restricting the space to comprehensiveness specifications would be filable at \u03b1=0.20?",
+   "answer": "Yes. Equation 3 weights pairs, and the 3,947 comprehensiveness specifications supply about 77% of within-metric pairs. Even if the other metric groups were at the nine-class ceiling of 0.889, the comprehensiveness F would have to be about 0.5 or more. That bounds \u03c0* at roughly \u221a0.5 \u2248 0.70, below 0.80.",
+   "rubric": [
+    "Answers yes, filability is ruled out",
+    "Reason: comprehensiveness contributes about 77% of the pairs in the pair-weighted 0.5939, forcing its own F to roughly 0.5 or above even if the other groups were maximal",
+    "Notes that this caps \u03c0* well below 0.80 (\u03c0*\u00b2 \u2264 1\u2212F)"
+   ],
+   "batch": 5,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q175",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c6",
+    "c7"
+   ],
+   "pair": "b5-p4",
+   "question": "Using the same Table 6 residual (0.5939) and Table 2 counts, can one rule out that a filer restricting the space to sufficiency specifications would be filable at \u03b1=0.20?",
+   "answer": "No. The 877 sufficiency specifications supply only about 4% of within-metric pairs, so the pair-weighted residual barely constrains their flip rate. Their F could be low without contradicting 0.5939.",
+   "rubric": [
+    "Answers no, it cannot be ruled out",
+    "Reason: sufficiency carries only a few percent of the pairs in the pair-weighted residual, so its group flip rate is essentially unconstrained"
+   ],
+   "batch": 5,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "From Tables 4 and 7, which overseer MEDIUM claim class must the 2,067 specifications at 10,000 edges all yield?",
+   "answer": "'Early layers, distributed'. They all yield one class, and only two classes have at least 2,067 members: early-distributed (3,107) and late-sparse (2,153). A 10,000-edge circuit cannot be labelled sparse. So about two-thirds of the modal claim comes from these largest circuits.",
+   "rubric": [
+    "Identifies 'early layers, distributed'",
+    "Reason: only early-distributed (3,107) and late-sparse (2,153) have enough members to hold 2,067 specifications, and a 10,000-edge circuit cannot be in the sparse size class"
+   ],
+   "batch": 5,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A reviewer asks the author to report a p-value testing whether F exceeds 0.20, treating the 7,561 specifications as an independent sample. How would the paper's methodology answer?",
+   "answer": "It would decline. The specifications are a designed grid, not a random sample, so no p-value is computed across them. Because F is a U-statistic over pairs that share specifications, uncertainty is quantified instead by bootstrapping specifications (B=10,000). The resulting intervals hold only given the grid.",
+   "rubric": [
+    "Concludes the paper would not compute such a p-value",
+    "Reason: specifications are a designed grid, not an independent sample, and pairs sharing a specification are dependent",
+    "States that uncertainty comes instead from the specification-resampling bootstrap, with intervals valid only given the grid"
+   ],
+   "batch": 5,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q178",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the affected-person COARSE claim were keyed on the dominant layer band (as the overseer's is) instead of the input segment, what flip rate and modal share would it have?",
+   "answer": "It would partition the circuits exactly as the overseer COARSE claim does: F=0.5733 and \u03c0*=0.4788. That is markedly worse than the current 0.3950 and 0.7291, assuming the same band definitions.",
+   "rubric": [
+    "Gives F=0.5733 and \u03c0*=0.4788 (the overseer COARSE values)",
+    "Reason: a claim keyed only on the dominant layer band produces the same three-class partition as \u03c6_overseer at COARSE granularity"
+   ],
+   "batch": 5,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q179",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Under the pre-registered design, how many discovery cells and specifications would be added if a fifth corruption distribution were included?",
+   "answer": "350 cells and 4,200 specifications. Corruption is nested within the five operators that read it, giving 7 objectives \u00d7 5 operators \u00d7 2 prompts \u00d7 5 seeds = 350 cells, each with 12 specifications. The grid would grow to 1,890 cells and 22,680 specifications.",
+   "rubric": [
+    "Gives 350 additional cells and 4,200 additional specifications (totals 1,890 and 22,680)",
+    "Reason: corruption is nested only within the 5 operators that read it, and each cell has 12 specifications (4 metrics \u00d7 3 thresholds)"
+   ],
+   "batch": 5,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q180",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Two analysts independently draw specifications from the declared space and file overseer claims. Roughly how likely is it that one attributes the behaviour to early layers and the other to late layers?",
+   "answer": "About 42%. Aggregating Table 4 over size class, early is 47.9% and late is 43.6%. The probability of a direct early-versus-late contradiction is about 2 \u00d7 0.479 \u00d7 0.436 \u2248 0.42.",
+   "rubric": [
+    "Gives roughly 0.42 (about 40%)",
+    "Reason: uses the aggregate layer shares (47.9% early, 43.6% late) and counts both orderings, 2\u00d70.479\u00d70.436"
+   ],
+   "batch": 5,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q181",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team builds a multiverse in which every specification returns a circuit of exactly 200 edges. Should they expect the pooled discovered-versus-null comparison to invert relative to the within-size one, as it did in this paper?",
+   "answer": "No. The inversion arose because circuit size varied and the null collapses at large sizes. With size fixed, the pooled comparison is the within-size comparison. At 200 edges the paper's figures put discovered (0.5122) below the null (0.6366).",
+   "rubric": [
+    "Concludes no inversion should be expected",
+    "Reason: the inversion is caused by size varying across specifications (null collapsing above 1,000 edges), and with a single size pooled equals within-size",
+    "Notes that at 200 edges discovered (0.5122) is more stable than the null (0.6366)"
+   ],
+   "batch": 5,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the author had repaired the failing mean-squared-error call so that the seventh discovery objective ran, which framing of the study would be compromised?",
+   "answer": "The framing of the study as a test of the library by its own definitions, with the instrument reproduced verbatim, would be compromised. The repaired objective would be a level not taken from a published implementation, breaking the rule that no level was invented. Repairing it would also depart from exclusion criteria fixed before any circuit was seen.",
+   "rubric": [
+    "Identifies the framing of the library as the instrument under test, reproduced verbatim (a stress test by the tooling's own definitions)",
+    "Reason: a patched objective is no longer the published implementation, violating the rule that every level comes from a published implementation and the pre-fixed exclusion criteria"
+   ],
+   "batch": 5,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the threshold rule had discarded specifications at the same rate for every metric, which feature of Figure 1's lower panel would disappear?",
+   "answer": "The solid band on the comprehensiveness row would disappear. That band is the composition effect of the uneven discard: comprehensiveness is 52% of survivors against 25% by design. With even discards it would stay near 25% of the surviving pool.",
+   "rubric": [
+    "Identifies the solid band on the comprehensiveness row",
+    "Reason: that band reflects comprehensiveness making up 52% of survivors because of uneven discards, whereas even discards would keep it near its 25% design share"
+   ],
+   "batch": 5,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q184",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the 0.20 threshold for H2 and the Section 7.4 test had been set after the sweep rather than fixed and tagged beforehand, which result would be most open to the charge that the threshold was chosen to fit?",
+   "answer": "The Section 7.4 result would be most exposed. Its lower bound of 0.2550 clears 0.20 only narrowly, so a post hoc threshold would look tailored. H2's 0.7247 clears by more than three times and would be robust to almost any reasonable threshold.",
+   "rubric": [
+    "Identifies the Section 7.4 size-free, size-held-fixed result (F=0.2706)",
+    "Reason: its CI lower bound (0.2550) clears 0.20 only narrowly, whereas H2 clears it by more than three times"
+   ],
+   "batch": 5,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q185",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Step 1 of the filability protocol requires citing each level of the declared space. Which limitation of this study shows that step 1 does not guarantee the space covers every defensible choice, and what does that imply for a filed \u03c0*?",
+   "answer": "The absence of optimal ablation shows it: the operator is defensible but the instrument does not implement it, so the space is as wide as the library, not the literature. A filed \u03c0* is therefore only relative to the declared space. Here that makes F a lower bound with respect to the field's full set of choices.",
+   "rubric": [
+    "Identifies the missing optimal-ablation operator (space as wide as the library, not the literature)",
+    "Reason: a declared, fully cited space can still omit defensible choices, so \u03c0* and F hold only relative to the declared space (F is a lower bound here)"
+   ],
+   "batch": 5,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q186",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that discovered circuits of the same size are near-disjoint? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Jaccard is reported only pooled over all pairs, and many pairs mix very different sizes. For such pairs Jaccard is mechanically capped by the size ratio, for example at most 0.001 for 10 versus 10,000 edges. The pooled low overlap may therefore partly reflect size mismatch, and same-size overlap is not reported.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: Jaccard is reported only pooled, and cross-size pairs have Jaccard capped by the size ratio, so pooled near-disjointness need not hold within size"
+   ],
+   "batch": 5,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does Table 1 show that the flip rate falls steadily as all size-bin thresholds are scaled up? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The trend is broadly downward, but it is not monotone: \u00d71.1 gives 0.7289, while \u00d71.25 gives 0.7314 and \u00d71.5 gives 0.7308. All the scalings stay within about 0.70 to 0.75.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: the flip rate is not monotone in the scaling factor (e.g. \u00d71.1 gives 0.7289, below \u00d71.25 at 0.7314)"
+   ],
+   "batch": 5,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q188",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the EU AI Act requires providers to file circuit-level interpretability evidence? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper quotes Annex IV's requirement for the 'general logic' and interpretation measures, and Article 86's right to explanation. It presents circuit discovery as an obvious possible source of such evidence and reasons conditionally ('if a provider files a circuit-level account'). It does not establish that circuits are mandated.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the quoted provisions ask for general logic and explanations, and the paper treats circuit evidence as a possible source conditionally rather than showing it is required"
+   ],
+   "batch": 5,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that as discovered circuits become more accurate they converge on getting the same examples right? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Raw agreement rises from 0.52 to 0.92, but it tracks accuracy, which rises from 0.51 to 0.95. Kappa, which corrects for that, stays between 0.016 and 0.047 at every size. Accurate circuits agree because both are mostly right, not because they agree on particular examples beyond chance.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: kappa stays at 0.016\u20130.047 at every size while raw agreement rises only in step with accuracy, so there is no convergence beyond chance"
+   ],
+   "batch": 5,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q190",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that most analysts drawing from the declared space would give the affected person the same input-segment explanation at the coarsest granularity? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. The affected COARSE modal share is 0.7291, so about 73% of claim-producing specifications give the same segment. That is a clear majority, though still short of the 0.80 needed for filability at \u03b1=0.20.",
+   "rubric": [
+    "Answers supported",
+    "Reason: \u03c0*=0.7291, so roughly 73% of specifications yield the modal segment, a majority even though it falls short of the 0.80 filability requirement"
+   ],
+   "batch": 5,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q191",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that GPT-2 small uses 156 components to perform IOI? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted as a reading of the number. 156 is the model's full inventory of 144 attention heads and 12 MLPs that any circuit can draw on, not an IOI finding. That is why a uniform random draw of 1,000 edges touches all 156. Discovered circuits as small as 10 edges carry claims.",
+   "rubric": [
+    "Answers contradicted (156 is not an IOI-specific finding)",
+    "Reason: 156 is the total number of components in GPT-2 small (144 heads + 12 MLPs), the whole pool that random circuits saturate at \u22651,000 edges"
+   ],
+   "batch": 5,
+   "orig_id": "q36"
+  }
+ ],
+ "rejected": [],
+ "types": {
+  "failure": 28,
+  "why": 32,
+  "counterfactual": 40,
+  "transfer": 30,
+  "connect": 27,
+  "scope": 34
+ }
+}

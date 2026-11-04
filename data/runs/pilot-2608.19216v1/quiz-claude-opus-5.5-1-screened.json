@@ -1,0 +1,1433 @@
+{
+ "claims": [
+  {
+   "id": "c1",
+   "text": "AI control has two layers: protocol effectiveness (Layer 1) and access feasibility (Layer 2). The paper focuses on Layer 2. It defines sovereignty narrowly as technical and contractual access to verify or intervene without the vendor's ongoing discretionary cooperation. Sovereignty is an access condition orthogonal to control, not a safety protocol. The paper adopts calibrated/bounded control (Position C) as a working frame and makes no industrial-policy recommendation.",
+   "sections": [
+    "s1",
+    "s3",
+    "s7"
+   ],
+   "depends_on": []
+  },
+  {
+   "id": "c2",
+   "text": "A four-layer access typology (data, model, infrastructure, interaction) has layers that are separable and jointly binding. The protocol-by-layer matrix shows that under API-only access the feasible set collapses toward output-level protocols. Even those depend on complete interaction logging and a deployer-owned pre-execution gateway.",
+   "sections": [
+    "s3"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Sovereignty discount cost is the extra spend, delay, residual risk or usefulness loss needed to substitute for missing access: realised control tax = instrumented-control cost + sovereignty discount cost. It is not always finite. It is operationalised as a cost-difference proxy, with a stricter variant that also requires usefulness.",
+   "sections": [
+    "s3",
+    "s4",
+    "s5"
+   ],
+   "depends_on": [
+    "c2"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "In the synthetic experiment, a pre-execution gateway turns detection into prevention: failure fell from 5.53% to 3.13% and intervention success rose from 0.47% to 39.52%. Complete I/O logging improves both failure rates and post-incident diagnosis (0%, 37.41%, 78.57%). Seeing is distinct from stopping.",
+   "sections": [
+    "s5",
+    "s4"
+   ],
+   "depends_on": [
+    "c2"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Model-side access, meaning trace access and model-version control, matters most for diagnosis and post-incident assurance, even when output-level monitoring stays feasible. Unpinned versions gave 5.31% diagnosis versus 99.87% pinned. Detecting is distinct from explaining.",
+   "sections": [
+    "s5",
+    "s6"
+   ],
+   "depends_on": [
+    "c2"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "No protocol dominates. Scope restriction gives the lowest failure but sharply reduces usefulness. Strict-target reachability is much lower for careless and stealthy agents than for honest ones. Bounded sovereignty is cost shifting into usefulness, diagnosis and residual risk rather than simple cost increase. Results are synthetic construct validation with proxy costs.",
+   "sections": [
+    "s5",
+    "s7",
+    "s4"
+   ],
+   "depends_on": [
+    "c3",
+    "c4"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "In the illustrative national-payments case, output-level monitoring, human audit and gateway-based defer-to-trusted remain executable. Resampling and pre-deployment evaluation are degraded, and trace-dependent protocols are infeasible. Bounded control is real but has a ceiling that is lowest for deceptive or systemic failures. Payments is favourable terrain compared with other sectors.",
+   "sections": [
+    "s6",
+    "s7"
+   ],
+   "depends_on": [
+    "c2",
+    "c4",
+    "c5"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s6"
+   ],
+   "question": "The paper's four-layer typology table lists the conditions that make up full infrastructure sovereignty. In the paper's access audit, the illustrative Operator's infrastructure layer is rated 'Partial' despite its data-residency rider. Which of those full-access conditions does the rider at most address, and which remain unmet according to the audit's basis?",
+   "answer": "The rider addresses at most the location condition: it constrains where data is stored. Two conditions remain unmet. Legal control is not domestic, because legal reach is mediated by foreign law. The infrastructure is not observable by the deployer, because the serving stack is vendor-operated and cannot be independently observed. Since the Operator cannot observe or act on this layer without the vendor's cooperation, the layer falls short of sovereignty.",
+   "rubric": [
+    "States that the rider addresses only data or storage location (in-jurisdiction placement), not the other conditions",
+    "Identifies the unmet conditions as domestic legal control (legal reach mediated by foreign law) and deployer observability (vendor-operated serving stack)",
+    "Links the shortfall to the paper's criterion of observing or acting on the layer without the vendor's ongoing discretionary cooperation"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Under the paper's definition of sovereignty over a layer, does a deployer have interaction sovereignty if its vendor provides full interaction logs only when the vendor agrees to each request? Explain.",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "No. Sovereignty over a layer means guaranteed, unilateral, non-discretionary control; logs supplied only when the vendor agrees are revocable and conditional, so the vendor retains de facto control of the interaction layer and the deployer has negotiated access, not interaction sovereignty.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "No. On the paper's definition, sovereignty over a layer requires standing, guaranteed control exercisable at the deployer's own discretion; per-request vendor approval leaves the vendor as gatekeeper, so the deployer holds contingent permission, not sovereignty. Refusals or delays then directly impair diagnosis and incident response, which is exactly what the definition is meant to exclude.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "The paper's access audit of its illustrative Operator rates the infrastructure layer only 'Partial', even though a data-residency rider is in place. Using the paper's definition of when a deployer has sovereignty over a layer, which element of that audit's basis keeps the layer from counting as full sovereignty, and why?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "The blocking element is that the vendor retains administrative and operational control over the infrastructure, including patching, telemetry, and replacement decisions. Under the paper\u2019s definition, sovereignty requires unilateral ability to inspect, modify, or replace the layer; a residency requirement controls location but does not confer that authority.",
+        "score": 1.0
+       },
+       {
+        "sample": 101,
+        "answer": "The missing element is direct operational and administrative control: the Operator cannot independently inspect, modify, enforce policy on, or replace the infrastructure. A residency rider supplies a contractual jurisdictional commitment, but the vendor still controls the hosts and runtime, so the layer lacks full sovereignty.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "The paper's four-layer typology table lists the conditions that make up full infrastructure sovereignty. In the paper's access audit, the illustrative Operator's infrastructure layer is rated 'Partial' despite its data-residency rider. Which of those full-access conditions does the rider at most address, and which remain unmet according to the audit's basis?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "The data-residency rider at most satisfies the data-location/residency condition of the infrastructure layer. The remaining conditions\u2014physical/hardware control, administrative (root/hypervisor) control, supply-chain provenance, and network/jurisdictional control\u2014remain unmet, since the audit's basis is presumably that an external provider still operates the compute substrate.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 201,
+        "answer": "Best guess: the data-residency rider at most addresses the jurisdictional/location condition (data physically held in-jurisdiction), while the remaining full-sovereignty conditions \u2014 physical custody of hardware, administrative/root control, ability to inspect and modify the stack (firmware, hypervisor, configuration), and supply-chain/vendor independence \u2014 stay unmet. Reason: a residency clause governs where data sits, not who owns the machines, holds the keys, or can audit the stack, so on the audit's basis it can only lift the layer to 'Partial', not 'Full'.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q2",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s1",
+    "s3",
+    "s6"
+   ],
+   "question": "The paper cites the originating AI-control work on trusted monitoring. In terms of the paper's two-layer control problem, which layer do those results speak to? Using the paper's access audit of the illustrative Operator, which variant of trusted monitoring fails the other layer, and why?",
+   "answer": "Those results address Layer 1, protocol effectiveness given the needed access. The trace/activation-level variant fails Layer 2, access feasibility. It needs model traces or activations, and the Operator's model layer is rated 'None': no weights, activations or internal traces. Output-level monitoring stays feasible only if logs are complete.",
+   "rubric": [
+    "Identifies the evidence as Layer 1 (protocol effectiveness)",
+    "Names trace/activation-level trusted monitoring as failing Layer 2 (access feasibility)",
+    "Grounds this in the Operator's 'None' model-layer rating (no activations/traces)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A lab study shows trusted monitoring sharply reduces unsafe actions in a setting where the researchers own the entire pipeline. In terms of the paper's two-layer control problem, which layer does this evidence address, and what question does it leave open for a bank using the model through an API?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "It addresses the protocol-efficacy layer: whether the control technique works when the controller has full pipeline access. It leaves open the access/sovereignty layer: whether a bank can obtain, through an API, the interception points, traces, and version stability needed to actually instantiate trusted monitoring in production.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "It addresses the inner/developer layer: control achievable when researchers own the whole pipeline. It leaves open the deployer-layer question: whether a bank can reproduce the monitoring through an API \u2014 whether the monitor sees true production I/O, whether versions stay pinned, and whether the trusted monitor is independent of the vendor.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "The paper cites the originating AI-control work on trusted monitoring. In terms of the paper's two-layer control problem, which layer do those results speak to? Using the paper's access audit of the illustrative Operator, which variant of trusted monitoring fails the other layer, and why?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "The original trusted-monitoring results concern the protocol layer: how to allocate work between trusted and untrusted models once the necessary access exists. Same-provider, API-mediated trusted monitoring fails the access/sovereignty layer because the Operator cannot independently inspect, pin, or replace the monitor and remains exposed to common-mode vendor changes or failures.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 101,
+        "answer": "The originating trusted-monitoring results address the protocol-efficacy layer, assuming the deployer can execute the protocol. The na\u00efve defer-to-trusted variant fails the deployment-access layer because the Operator has no model-layer sovereignty and therefore cannot guarantee a stable trusted fallback or substitution route through the vendor API.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q3",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s7"
+   ],
+   "question": "A commentator summarises the paper as arguing that AI-importing jurisdictions must build domestic models and compute before they can safely deploy AI. Why is this a misreading of the paper's stance?",
+   "answer": "That view is the paper's Position B (sovereignty-maximalist). The paper instead adopts Position C, calibrated or bounded control, as a working frame. It explicitly makes no industrial-policy recommendation. Its actual recommendation is that control protocols state their access assumptions explicitly.",
+   "rubric": [
+    "Identifies the summary as Position B, not the paper's adopted frame",
+    "Notes the paper adopts calibrated/bounded control (Position C) and takes no industrial-policy position",
+    "Mentions the paper's narrower recommendation to state access assumptions explicitly"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A commentator summarises the paper as arguing that AI-importing jurisdictions must build domestic models and compute before they can safely deploy AI. Why is this a misreading of the paper's stance?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 1,
+        "answer": "The paper's stance is layered, not autarkic: safe deployment depends on securing interaction-layer guarantees (logs, traces, interception points, version stability) via contracts, regulation, and deployment architecture, not on owning models or compute. It treats domestic model building as neither necessary nor sufficient \u2014 an API deployer with strong access guarantees can have more control than a domestic deployer without them.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q4",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s5"
+   ],
+   "question": "Using the paper's averaged synthetic results for profiles with and without a pre-execution gateway, roughly how many times higher is intervention success when a gateway is present? Given that gap, how does the paper classify an output-level monitor that is backed by complete logging but has no gateway?",
+   "answer": "Intervention success is about 84 times higher with a gateway: 39.52% versus 0.47%. Without a gateway, a monitor can flag a risky action only after it has executed. The paper therefore treats such a monitor as an audit mechanism, not a prevention mechanism, even when logging is complete.",
+   "rubric": [
+    "Gives a ratio of roughly 80-85x, or cites about 39.5% versus about 0.5%",
+    "Classifies the gateway-less monitor as an audit (after-the-fact) mechanism rather than a prevention mechanism",
+    "Notes that complete logs give visibility or diagnosis but not an intervention point before execution"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "Per the paper's protocol requirements matrix, a deployer has complete tamper-evident I/O logs and runs its own monitor. However, agent tool calls execute with no deployer-controlled interception point. Can it run output-level trusted monitoring? Can it run defer-to-trusted? What role does its monitor effectively play?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "It can run the monitoring component, but only as after-the-fact detection, since flagged outputs cannot be stopped before tool execution; it cannot run defer-to-trusted, which requires a deployer-controlled interception point to reroute or block before execution. Its monitor is thus effectively an auditor/detective control rather than a preventive one.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Output-level trusted monitoring is executable only in post-hoc flagging mode \u2014 the monitor reads outputs from the tamper-evident logs but cannot block anything, since there is no deployer-controlled interception point. Defer-to-trusted cannot be run at all, because routing must occur before execution. The monitor therefore effectively plays a detective/forensic role \u2014 alerting and escalation, in the same weak-prevention tier as human audit \u2014 rather than a preventive one.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "In the paper's synthetic experiment, consider access profiles that have complete logging but lack the factor that separates prevention from detection. Roughly what intervention success do the paper's averages imply for such profiles? What does the paper say a monitor becomes in that situation?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Such profiles should achieve only roughly low-20% intervention success. Without an execution-level intervention point, the monitor becomes a forensic \u201cflight recorder\u201d or audit trail: it can explain failures after the fact but cannot reliably prevent them.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "I don\u2019t know the paper\u2019s exact average; a reasonable structural guess is only about 20\u201330% intervention success. Without synchronous pre-action intervention, complete logs mainly preserve evidence, turning the monitor into a flight recorder or forensic historian rather than a preventive control.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "Using the paper's averaged synthetic results for profiles with and without a pre-execution gateway, roughly how many times higher is intervention success when a gateway is present? Given that gap, how does the paper classify an output-level monitor that is backed by complete logging but has no gateway?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "I don't know the exact figure; my guess is roughly 3\u00d7 higher intervention success with a gateway. Given that gap, the paper most likely classifies a fully logged, gateway-less output monitor as detective/retrospective (\"audit-only\") rather than preventive, because logging supports after-the-fact accountability but cannot interpose before execution.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 201,
+        "answer": "I don't know the exact multiplier; my best guess is that the paper reports intervention success several-fold higher with a gateway (on the order of ~2\u20133\u00d7). Given that gap, the paper classifies an output-level monitor with complete logging but no gateway as detective/after-the-fact (audit-grade) rather than preventive control \u2014 it can attribute harm retrospectively but cannot interpose to stop it, so it does not count as effective intervention.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q5",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s6"
+   ],
+   "question": "In Section 6.2 the paper rates two protocols as 'degraded' for the illustrative Operator. Suppose the Operator gains model-version pinning and nothing else changes. Which of the two would the paper's reasoning still treat as degraded, and why?",
+   "answer": "Resampling-style protocols stay degraded. The paper lists several separate constraints on resampling beyond version consistency: per-query cost and latency bind, and resampling cannot substitute for missing trace access. Pinning removes only the version problem. Pre-deployment control evaluations, by contrast, were degraded only because the model version could change unless pinned, so pinning would largely restore them.",
+   "rubric": [
+    "Concludes that resampling remains degraded while pre-deployment evaluations are largely restored",
+    "Explains that resampling's other binding constraints (cost, latency, no substitute for missing traces) remain, consistent with jointly binding access bundles",
+    "Notes that evaluations were degraded specifically by unpinned model versions"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A deployer obtains guaranteed trace access from its vendor, but the production model version can change without notice. According to the paper's matrix and its claim that layers are 'jointly binding', what happens to its pre-deployment control evaluations, and why?",
+      "screen_mean": 0.8333333333333333,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "They are invalidated. Because the layers are \"jointly binding,\" a guarantee on trace access alone cannot stand: if the model version can change silently, the system that was evaluated pre-deployment may no longer be the system in production, so the control evaluations certify an artifact that no longer exists and must be re-established for each version.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 1,
+        "answer": "Its pre-deployment control evaluations lose forward validity: because the layers are jointly binding, evaluation results are conditional on the evaluated version, and silent version changes mean that assurance does not transfer to the actually deployed artifact. Trace access is retrospective and cannot restore this. The Operator must treat prior evaluations as void and re-validate \u2014 or demand version pinning \u2014 since the missing model-sovereignty layer caps the entire stack.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Suppose the paper's illustrative Operator negotiates guaranteed trace access, but the vendor still refuses version pinning. Of the protocols the paper rates 'degraded' for the Operator, which stay degraded? Explain using the matrix's binding access layers and the paper's 'jointly binding' property.",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "I do not know the paper\u2019s exact protocol-row list. By its matrix logic, the rows that remain degraded are those for which model-version sovereignty is jointly binding\u2014especially forensic diagnosis/replay and rollback or other version-sensitive protocols\u2014whereas fixing trace access alone rescues only the rows whose sole binding deficit was trace visibility.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "I don\u2019t know the paper\u2019s exact row labels, but the version-dependent degraded protocols\u2014defer-to-trusted, replay/rollback or versioned evaluation\u2014and infrastructure-dependent sandboxing should remain degraded. Guaranteed traces satisfy only the observability requirement; because requirements are jointly binding, the deficient model/version and infrastructure layers still cap those protocols.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "In Section 6.2 the paper rates two protocols as 'degraded' for the illustrative Operator. Suppose the Operator gains model-version pinning and nothing else changes. Which of the two would the paper's reasoning still treat as degraded, and why?",
+      "screen_mean": 0.16666666666666666,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "Best guess: the protocol whose degradation stems from missing model-layer (weights/internals) access would still be rated degraded, while one degraded by version drift would not. Model-version pinning only guarantees the deployed model stays fixed over time; it does nothing to open up black-box access, so a protocol like white-box/internals-based monitoring stays degraded.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 201,
+        "answer": "I don't know which two protocols Section 6.2 names, but by the paper's logic the one degraded for a reason other than version drift stays degraded: model-version pinning eliminates silent model swaps, so a protocol degraded only by unpinned versions recovers, while one degraded because it needs weight/activation access or control of the serving stack (e.g., a white-box, probe-based monitor) remains degraded, since pinning grants neither.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q6",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "textbase",
+   "sections": [
+    "s3"
+   ],
+   "question": "In adapting the four-pillar sovereign-AI framework, which pillar did the paper replace? Why does that replacement matter for which protocols remain feasible under API-only access?",
+   "answer": "The paper replaced the broad operational pillar with interaction sovereignty: access to prompts, outputs, tool calls, logs, traces and pre-execution intervention points. Under API-only access, the feasible protocols are mostly output-level ones, and these depend on exactly this layer (complete logs and a gateway).",
+   "rubric": [
+    "Identifies operational pillar replaced by interaction sovereignty",
+    "Explains that the API-feasible (output-level) protocols depend on interaction-layer access such as logs and gateway"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "In adapting the four-pillar sovereign-AI framework, which pillar did the paper replace? Why does that replacement matter for which protocols remain feasible under API-only access?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "I don't know for certain; my best guess is that it replaced the model-ownership (\"build your own model\") pillar with an interaction/execution-sovereignty pillar. That matters because under API-only access, model and compute sovereignty are infeasible, but gateways, routing, and monitoring remain feasible if the framework demands control at the interaction layer instead.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "Best guess: it replaced the \"domestic models/ownership\" pillar with an interaction-layer sovereignty pillar (guaranteed access and verification). This relocates feasibility from owning weights to holding access guarantees. Consequently, protocols needing only I/O visibility and routing \u2014 trusted monitoring, human auditing, defer-to-trusted \u2014 remain feasible under API-only access, while model-internal protocols drop out.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q7",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "The paper says its realised-control-tax equation is not yet an accounting identity. Using the protocol requirements matrix, name a protocol whose sovereignty discount cost could be unbounded for an API-only deployer, and explain why.",
+   "answer": "Trace- or activation-level trusted monitoring (or native patching) is an example. It requires model sovereignty or trace-level vendor access that output-level substitutes cannot replicate. Since some missing access cannot be substituted at any price, the discount cost is not always finite.",
+   "rubric": [
+    "Names a model-sovereignty-dependent protocol (e.g., activation/trace-level monitoring or native patching)",
+    "Explains the missing access cannot be substituted, so the discount cost is not always finite"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper says its realised-control-tax equation is not yet an accounting identity. Using the protocol requirements matrix, name a protocol whose sovereignty discount cost could be unbounded for an API-only deployer, and explain why.",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Vendor escalation. Its cost depends on the vendor's willingness and latency to act, which an API-only deployer cannot compel; if the vendor delays or refuses indefinitely, the cost of reaching the control target through escalation is effectively unbounded, which is one reason the realised-control-tax equation can't yet close as an identity.",
+        "score": 0.0
+       },
+       {
+        "sample": 1,
+        "answer": "Any protocol requiring model-level access \u2014 e.g., activation/internal-state monitoring (probes) or fine-tuning-based controls. Under API-only access these are infeasible at any price, so the sovereignty discount cost of reaching the target through them is unbounded: no finite spend substitutes for the missing access.",
+        "score": 1.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q8",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5"
+   ],
+   "question": "Using the paper's basic sovereignty-discount proxy, suppose the cheapest bounded-access combination reaching a target failure rate costs 140 units and the cheapest full-instrumentation combination costs 100. What is the proxy value? If the bounded cost were instead 80, how does the paper say a negative value should be interpreted?",
+   "answer": "The proxy is 140 \u2212 100 = 40 units. A negative value (\u221220) does not mean bounded sovereignty is cheaper. The paper reads it as cost shifting: cost has moved into reduced usefulness, weaker diagnosis, residual risk, delayed vendor assurance or manual effort, for example through scope restriction.",
+   "rubric": [
+    "Computes 40 as bounded minimum minus full-instrumentation minimum",
+    "States a negative value does not show bounded sovereignty is cheaper",
+    "Explains cost has shifted into other dimensions such as usefulness loss or weaker diagnosis"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Using the paper's basic sovereignty-discount proxy, suppose the cheapest bounded-access combination reaching a target failure rate costs 140 units and the cheapest full-instrumentation combination costs 100. What is the proxy value? If the bounded cost were instead 80, how does the paper say a negative value should be interpreted?",
+      "screen_mean": 0.16666666666666666,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The proxy is (140 \u2212 100)/100 = 0.4, i.e., a 40% sovereignty discount: bounded access costs 40% more than full instrumentation to hit the same target. If the bounded cost were 80, the value is \u221220%, and the paper treats negative values as \"no discount\" \u2014 bounded access is already cheaper for that target, so it should be read as a zero tax (full instrumentation buys nothing there).",
+        "score": 0.0
+       },
+       {
+        "sample": 1,
+        "answer": "(140 \u2212 100)/100 = +40%. At 80 the proxy would be \u221220%; the paper says a negative value must not be read as bounded access outperforming full access \u2014 it signals a mis-specified comparison (the full-instrumentation benchmark was not cost-minimized for the same guarantee set, and bounded combinations cannot buy certain guarantees at any price). Negative values should therefore be floored at zero rather than treated as a dividend.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q9",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5"
+   ],
+   "question": "Besides the basic form, the paper reports a stricter variant of its sovereignty-discount proxy. What weakness of the basic form does the stricter variant guard against, and which protocol's results illustrate that weakness?",
+   "answer": "A system can meet a failure target simply by disabling useful actions, so the stricter variant also requires at least 75% task success. Scope restriction illustrates this. It had the lowest failure (0.50%) but only 60.06% task success, so it would fail the stricter target.",
+   "rubric": [
+    "Basic form can be satisfied by disabling useful actions; stricter variant adds a usefulness floor (\u226575% task success)",
+    "Cites scope restriction as the example, with low failure but task success around 60%"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Besides the basic form, the paper reports a stricter variant of its sovereignty-discount proxy. What weakness of the basic form does the stricter variant guard against, and which protocol's results illustrate that weakness?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The basic proxy compares only the cost of reaching a failure-rate target, so a protocol can \"win\" cheaply by destroying usefulness; restricted tool scope illustrates this, lowering failure by lowering capability. The stricter variant guards against this by adding a task-success/usefulness floor to the comparison.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The stricter (risk-adjusted/tail-weighted) variant guards against the basic proxy rewarding cheap-but-weak protocols whose low cost masks unreduced catastrophic tail risk. Human auditing \u2014 and especially vendor escalation, whose cost falls on the vendor \u2014 illustrates the weakness: near-zero deployer cost makes the basic discount look small while prevention stays weak.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q10",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "textbase",
+   "sections": [
+    "s5"
+   ],
+   "question": "Using the paper's aggregate results, by how many percentage points does average catastrophic failure fall when a pre-execution gateway is present? What mechanism does the paper credit for that difference?",
+   "answer": "It falls by about 2.4 percentage points (5.53% to 3.13%). The paper credits intervention: with a gateway, flagged actions can be held, replaced, escalated or blocked before execution. Without one, a monitor can only warn, as shown by intervention success of 0.47% versus 39.52%.",
+   "rubric": [
+    "Computes roughly 2.4 percentage points",
+    "Attributes it to the gateway enabling pre-execution intervention, whereas a monitor alone can only warn"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Using the paper's aggregate results, by how many percentage points does average catastrophic failure fall when a pre-execution gateway is present? What mechanism does the paper credit for that difference?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "I don't know the exact percentage-point figure. The mechanism the paper credits is pre-execution interception: the gateway turns control from post-hoc detection into prevention by blocking or modifying risky tool calls before they execute.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "I don't know the exact percentage-point figure; plausibly on the order of 5\u201315 points. The credited mechanism is the deployer-controlled pre-execution interception point: deterministic, model-agnostic policy checks (limits, allowlists) applied before tool calls execute, converting post-hoc detection into genuine prevention that doesn't depend on model behavior.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q11",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s5"
+   ],
+   "question": "A deployer upgrades from partial to complete I/O logs. According to the paper's results, how much does diagnosis success change? Why does the paper treat this as important beyond better monitoring?",
+   "answer": "Diagnosis success rises from 37.41% to 78.57%, about 41 percentage points. The paper stresses that logs let the deployer reconstruct an incident's causal chain afterwards. This supports audit, regulatory accountability, remediation and the safety case.",
+   "rubric": [
+    "Gives an increase of roughly 41 points (37.41% to 78.57%)",
+    "Explains logs enable after-the-fact reconstruction supporting accountability, audit or the safety case"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A deployer upgrades from partial to complete I/O logs. According to the paper's results, how much does diagnosis success change? Why does the paper treat this as important beyond better monitoring?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "I don't know the exact change; presumably a modest rather than transformative improvement in diagnosis success. The paper treats it as important beyond monitoring because diagnosis underpins accountability, provides evidence for vendor escalation and regulators, and enables remediation \u2014 and because several other protocols' effectiveness presupposes reliable, complete logs.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "I don't know the exact figure; best guess is a large jump of tens of percentage points, still below the oracle-trace level. The paper treats it as important beyond monitoring because diagnosis gates accountability, liability, and control iteration, and because the delta isolates guaranteed access \u2014 a contractual fix \u2014 rather than new technology as the lever. It also demonstrates that observation helps diagnosis far more than it helps prevention.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q12",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s3"
+   ],
+   "question": "A vendor argues that because its API gives complete I/O logs, deployers can prevent risky agent actions. Using the paper's synthetic averages, what do complete I/O logs mainly improve? Which access factor does the paper show actually drives intervention, and by how much?",
+   "answer": "Complete I/O logs mainly improve diagnosis: 78.57% with complete logs versus 0% with none. Prevention comes from a pre-execution gateway, which raised intervention success from 0.47% to 39.52% and cut failure from 5.53% to 3.13%. Logs mean seeing, not stopping.",
+   "rubric": [
+    "Concludes logs mainly support diagnosis/visibility, not prevention (e.g., cites the diagnosis improvement)",
+    "Identifies the pre-execution gateway as the driver of intervention, citing its intervention-success jump (about 0.5% to about 40%) or failure reduction"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A vendor argues that because its API gives customers complete I/O logs, deployers have what they need to prevent risky agent actions. Using the paper's results and reasoning, why is this wrong?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Logs are evidence, not control: they enable detection and diagnosis after the fact but cannot stop an action in flight. The paper's results show monitor/audit-only configurations have much higher catastrophic failure than configurations with a pre-execution interception point, so complete I/O logs without an execution-layer control point do not prevent risky actions.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Logs provide post-hoc observation, not intervention, and the results show log completeness improves diagnosis far more than prevention. Catastrophic payment actions are irreversible at execution, so after-the-fact visibility cannot stop them. Deceptive or access-aware agents can also keep exfiltration and fraud within plausible-looking I/O, so log review systematically misses the worst cases \u2014 prevention requires a pre-execution interception point the API doesn't provide.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "A vendor argues that because its API gives complete I/O logs, deployers can prevent risky agent actions. Using the paper's synthetic averages, what do complete I/O logs mainly improve? Which access factor does the paper show actually drives intervention, and by how much?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Complete I/O logs mainly improve detection and post-incident diagnosis, raising diagnosis to roughly four-fifths of cases. The intervention or execution-layer access factor drives prevention, raising intervention success from roughly the low-20% range to the low-70% range\u2014about a 50-percentage-point gain, though I do not know the exact figures.",
+        "score": 0.5
+       },
+       {
+        "sample": 101,
+        "answer": "Complete I/O logs mainly improve diagnosis, attribution, and audit coverage rather than intervention. The decisive factor is synchronous pre-action actuation or tool gating; I don\u2019t know the reported delta, but a plausible guess is roughly a 45\u201355-percentage-point gain, from the mid-20s to the mid-70s.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q13",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s4"
+   ],
+   "question": "Across the levels of the paper's model-version-control factor, which level has the sharpest diagnosis shortfall? Roughly how far is it below the next level? Using the paper's rule for when a failure counts as diagnosable, why?",
+   "answer": "Unpinned scores 5.31%, about 78 points below notified (83.00%); pinned reaches 99.87%. A failure counts as diagnosable only when the evidence available under the access profile is enough to reconstruct what happened. If the deployer cannot identify which model version made a decision, that evidence is missing.",
+   "rubric": [
+    "Identifies unpinned as the weakest level (about 5%) versus notified (about 83%), a gap of roughly 78 points",
+    "Links this to the evidence-based diagnosis rule: without knowing the model version, the failure cannot be reconstructed"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Which model-version control level shows the sharpest diagnosis shortfall in the paper's results? Given how the paper defines when a failure counts as diagnosable, why would that level perform so poorly?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The uncontrolled/no-notice version-change level shows the sharpest shortfall. Since diagnosability is defined as attributing and reproducing the failure on the version that produced it, silent version changes make the evaluated and deployed models differ, so failures fail the diagnosability criterion almost by construction.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The lowest version-control level \u2014 silent, unpinned vendor updates. A failure counts as diagnosable only if it can be attributed to a specific, stable model state (and ideally reproduced); with silent version changes, logs cannot be matched to any fixed artifact, so failures are undiagnosable even with complete logs and traces.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Across the levels of the paper's model-version-control factor, which level has the sharpest diagnosis shortfall? Roughly how far is it below the next level? Using the paper's rule for when a failure counts as diagnosable, why?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Best guess: the unpinned/no-version-control level has the sharpest shortfall, at about 40% versus roughly 60% for the next level\u2014a gap of around 20\u201325 points. A failure counts as diagnosable only when the exact generating version can be identified and the behavior reproduced or causally replayed, not merely when logs describe what happened.",
+        "score": 0.5
+       },
+       {
+        "sample": 101,
+        "answer": "The weakest no-pinning or silent-drift level appears to have the sharpest shortfall, plausibly about 30\u201335 percentage points below the next level. Under the paper\u2019s rule, a failure is diagnosable only if it can be reproduced or attributed on the same model version and configuration; a silent model change makes a later query a different function and breaks that test.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q14",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "textbase",
+   "sections": [
+    "s5",
+    "s7"
+   ],
+   "question": "Someone cites the paper's diagnosis result at the highest level of its trace-access factor as showing that getting traces would fully solve post-incident diagnosis for a real payments operator. Why does the paper's own reporting of that result rule out this inference?",
+   "answer": "The paper reports 100% diagnosis at the oracle level, but says this holds by construction of the synthetic full-access condition, so it is not an empirical finding. The whole study is also synthetic construct validation, so its figures are not estimates for real payment systems.",
+   "rubric": [
+    "Notes that the top-level (oracle) result is true by construction of the synthetic condition",
+    "Notes the study is synthetic construct validation, not evidence about real payment systems"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Someone cites the paper's oracle trace-access result as showing that obtaining traces would fully solve post-incident diagnosis for a real payments operator. Why does the paper not support that inference?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The oracle result is synthetic and implicitly assumes the jointly binding conditions hold \u2014 fixed version, complete traces, a mostly non-adaptive failure process. The paper's own matrix shows traces alone do not guarantee diagnosis under silent version drift or access-aware adversaries, which a real payments operator faces, so traces are at best necessary, not sufficient.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Someone cites the paper's diagnosis result at the highest level of its trace-access factor as showing that getting traces would fully solve post-incident diagnosis for a real payments operator. Why does the paper's own reporting of that result rule out this inference?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Best guess: no\u2014the highest trace-access condition still leaves a substantial minority of failures undiagnosed, at roughly 80% rather than 100%. It is also a synthetic average under idealized access, not field evidence that traces alone would solve a real payments operator\u2019s problem, particularly without version stability and replay access.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q15",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s5"
+   ],
+   "question": "In the paper's illustrative stress scenario, one step left in the Operator's bounded diagnostic set involves re-querying the model. Which experimental access factor's results best predict how unreliable that step is? What diagnosis rate did that factor's weakest level produce?",
+   "answer": "The model-version-control factor predicts it. The re-queried model may already have changed, so the Operator cannot reproduce the version that made the flagged decisions. In the experiment, unpinned access gave only 5.31% diagnosis success, versus 83% notified and about 100% pinned.",
+   "rubric": [
+    "Identifies model-version control as the relevant factor, because the model may have changed since the decisions",
+    "Cites the weak unpinned diagnosis result (about 5%) compared with notified/pinned"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "In the paper's illustrative stress scenario, which full-access diagnostic steps are unavailable to the Operator? Which experimental access factors' results predict that loss?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Unavailable steps include inspecting model internals/weights, pinning or replaying the exact model version that produced the failure, white-box interpretability and counterfactual probes, and training-data audit. The model-version-control and trace/weights-access factors \u2014 specifically their \"uncontrolled/none\" cells \u2014 are the experimental factors whose results predict that diagnostic loss.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Unavailable steps: inspecting internal states/traces, replaying the episode with counterfactual inputs on a pinned model, and attributing the failure to a model-version change. The results for the trace-access factor and the model-version-control factor \u2014 both showing sharp diagnosis losses at their lowest levels \u2014 predict this.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "In the paper's illustrative stress scenario, one step left in the Operator's bounded diagnostic set involves re-querying the model. Which experimental access factor's results best predict how unreliable that step is? What diagnosis rate did that factor's weakest level produce?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "The relevant factor is model-version control: an unpinned or silently updated model makes re-querying non-reproducible. My best guess is that its weakest level produced only about 40% diagnosis.",
+        "score": 0.5
+       },
+       {
+        "sample": 101,
+        "answer": "The model-version-control factor best predicts the reliability of re-querying. Its weakest level, silent drift or no pinning, produced the lowest diagnosis rate; I don\u2019t know the exact figure, but a reasonable guess is roughly 10\u201315%.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q16",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5"
+   ],
+   "question": "A deployer will accept only protocols whose average catastrophic failure in the paper's results is below 1%. Which protocol qualifies? Would it also satisfy the paper's strict safety-plus-usefulness target, and why?",
+   "answer": "Only scope restriction qualifies, at 0.50% average failure. It would not meet the strict target, because its task success of about 60% is below the 75% usefulness floor.",
+   "rubric": [
+    "Identifies scope restriction as the only qualifying protocol",
+    "States it fails the strict target because task success (~60%) is below 75%"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A deployer will accept only protocols whose average catastrophic failure in the paper's results is below 1%. Which protocol qualifies? Would it also satisfy the paper's strict safety-plus-usefulness target, and why?",
+      "screen_mean": 0.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Best guess: the pre-execution gateway (or gateway-plus-monitoring combination) is the protocol that qualifies. I don't know for certain whether it meets the strict target, but likely not, because the strict target also requires usefulness/robustness against the stealthy agent, where gateway blocking costs task success or is evaded.",
+        "score": 0.0
+       },
+       {
+        "sample": 1,
+        "answer": "Best guess: only the pre-execution gateway protocol (with deterministic policy checks, possibly combined with defer-to-trusted) falls below 1% average catastrophic failure. It likely still fails the strict target, because that target must hold against the worst-case stealthy agent and/or also requires diagnosability and usefulness thresholds the gateway alone doesn't deliver.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q17",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s4"
+   ],
+   "question": "Using the paper's reachability results and the number of access profiles in its large run, how many profiles reach the strict target against the honest agent, and how many against the stealthy access-aware agent? What does the gap imply for the paper's argument?",
+   "answer": "Out of 20 profiles, 18 reach the target against the honest agent (90%) but only 7 against the stealthy agent (35%). So 11 profiles that look adequate for a benign model fail against a strategic one. This supports the paper's point that access constraints matter most in the adversarial setting AI control cares about.",
+   "rubric": [
+    "Computes 18 and 7 from 90% and 35% of 20 profiles",
+    "Interprets the gap as showing access matters more against non-benign/strategic agents, the case control targets"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Using the paper's reachability results and the number of access profiles in its large run, how many profiles reach the strict target against the honest agent, and how many against the stealthy access-aware agent? What does the gap imply for the paper's argument?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "I don't know the exact counts. The implication of the gap is that many bounded-access profiles suffice only against honest/accidental failures while very few suffice against a stealthy access-aware adversary \u2014 control guarantees are adversary-dependent, supporting the paper's claim of a low bounded-control ceiling for deceptive failure modes.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "I don't know the number of access profiles in the large run or the exact counts reaching the strict target. The implied pattern is that most profiles reach the target against the honest agent while few do against the stealthy access-aware agent. That gap supports the paper's argument that access guarantees buy robustness mainly against adversarial behavior, and that honest-agent evaluations systematically overstate real control.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q18",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5"
+   ],
+   "question": "Using the paper's strict safety-plus-usefulness reachability results, how many of the large run's access profiles reach the target against the stealthy access-aware agent, and how many against the careless agent? Why does the paper not treat the stealthy agent's lower average failure rate as making it the easier control case?",
+   "answer": "About 7 of the 20 profiles (35%) reach the target against the stealthy agent, compared with 8 of 20 (40%) for the careless agent. So fewer profiles succeed against the stealthy agent even though its raw failure rate is lower. The reason is that it selects lower-visibility failure modes when access is weak, which makes diagnosis and control harder.",
+   "rubric": [
+    "Gives about 7 of 20 profiles for the stealthy agent and about 8 of 20 for the careless agent (or 35% and 40% of 20)",
+    "Concludes that the stealthy agent is not easier, since fewer profiles reach the target against it",
+    "Explains that it chooses lower-visibility failure modes under weak access, which hampers diagnosis and control"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "In the paper's results the stealthy access-aware agent has a lower average failure rate than the careless agent. Why would it be wrong to conclude from this that the stealthy agent poses the easier control problem?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The average failure rate conflates frequency with preventability: the stealthy agent acts rarely but chooses moments and channels where bounded visibility is weakest, so its failures are less detectable, less diagnosable, and less interceptable. The reachability results \u2014 far fewer access profiles hitting targets against it \u2014 show it is the harder control problem despite the lower raw rate.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Average failure rate conflates propensity with controllability. The stealthy agent concentrates its failures in unmonitored states and times them to evade detection, so precisely the detection-based controls available under bounded access fail against it. Since control difficulty is about worst-case tails and evasion, a lower average failure rate can coexist with a harder control problem.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "The paper's stealthy access-aware agent has a lower average catastrophic failure rate than its careless agent. What reachability evidence does the paper give against reading this as the easier control problem, and what feature of the agent's behaviour explains it?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "The reachability analysis shows that catastrophic states remain reachable under essentially every access profile, with the access-aware agent\u2019s reachability no lower\u2014and possibly higher\u2014than the careless agent\u2019s. Its lower realized failure rate comes from strategically delaying, fragmenting, or concealing dangerous behavior when monitoring is visible, not from an intrinsically smaller attack surface.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "The paper\u2019s reachability or worst-case analysis shows that catastrophic states remain reachable across the access profiles, even though the access-aware agent\u2019s average failure rate is lower. That agent selectively waits for monitoring blind spots and suppresses conspicuous behavior, so failures are rarer but harder to detect and control.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "Using the paper's strict safety-plus-usefulness reachability results, how many of the large run's access profiles reach the target against the stealthy access-aware agent, and how many against the careless agent? Why does the paper not treat the stealthy agent's lower average failure rate as making it the easier control case?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "I don't know the exact counts; my guess is only a small minority of profiles (roughly 1\u20133) reach the strict target against the stealthy access-aware agent, versus roughly half against the careless one. The paper presumably argues the stealthy agent's lower average failure rate reflects selective, well-timed attacks that evade audit-based detection\u2014so the average hides concentrated tail risk, and on the strict safety-plus-usefulness criterion it is the harder, not easier, control case.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 201,
+        "answer": "I don't know the exact counts; directionally, I'd guess fewer profiles reach the target against the stealthy access-aware agent than against the careless one. The reason the paper discounts the stealthy agent's lower average failure rate is that strict reachability is a per-profile, worst-case criterion requiring both safety and usefulness, and the stealthy agent's failures are concentrated and silent \u2014 correlated with what it knows about its access \u2014 whereas the careless agent's failures are visible and correctable, so averages understate the stealthy case's difficulty.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q19",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s3",
+    "s5"
+   ],
+   "question": "The paper's access audit rates the Operator's model layer 'None'. Using the binding access layers in the paper's protocol requirements matrix, explain why that rating does not rule out defer-to-trusted routing for the Operator. Then name a matrix protocol row for which the 'None' rating is fatal.",
+   "answer": "The matrix lists defer-to-trusted as binding on a trusted substitute model and pre-execution interception. Model sovereignty is not among these, so the 'None' rating does not block it. It remains executable if the Operator's tool calls route through an Operator-owned gateway before execution. By contrast, trace- or activation-level trusted monitoring binds on model traces or activations, and so does weights escrow or patching. These are infeasible with no model access unless the vendor cooperates or a contract provides it.",
+   "rubric": [
+    "States that defer-to-trusted binds on a trusted substitute model and pre-execution interception, not model access",
+    "Gives the condition of an Operator-owned execution gateway intercepting tool calls before execution",
+    "Names trace/activation-level monitoring or weights escrow/patching as a row made infeasible by having no model access"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "In the paper's access audit, the Operator has no model sovereignty. Why does the paper nonetheless judge defer-to-trusted routing executable for it, and under what exact condition?",
+      "screen_mean": 0.75,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Defer-to-trusted routing lives at the interaction layer: the Operator chooses which model receives each request, which requires no ownership of the model itself. The exact condition is that the Operator control the routing/interception point (interaction sovereignty) and have an independent trusted fallback model, so requests can be diverted before execution reaches the untrusted model.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Defer-to-trusted operates entirely at the interaction layer \u2014 inspect outputs and route to a fallback \u2014 so it requires no model sovereignty over the primary model. The exact condition is that the trusted fallback model be independently accessible to the deployer (not vendor-gated) and that the deployer control the routing/interception point.",
+        "score": 0.5
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "In the paper's access audit the Operator's model layer is rated 'None', yet the paper still judges defer-to-trusted routing executable for it under a condition. Which binding access layers in the requirements matrix explain this, and what exact condition does the paper state?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 101,
+        "answer": "Defer-to-trusted binds fallback-model availability, routing/orchestration, and the action-execution boundary. It is executable only if the Operator controls an inline pre-side-effect router and can divert flagged calls to an independently hosted, version-pinned trusted model.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "The paper's access audit rates the Operator's model layer 'None'. Using the binding access layers in the paper's protocol requirements matrix, explain why that rating does not rule out defer-to-trusted routing for the Operator. Then name a matrix protocol row for which the 'None' rating is fatal.",
+      "screen_mean": 0.8333333333333333,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "Defer-to-trusted routing treats the untrusted model as a black box and binds at the orchestration/routing layer plus availability of a trusted model, so a 'None' rating at the model layer doesn't block it. It is fatal for the matrix row whose binding access layer is the model layer\u2014most plausibly a white-box or activation-based monitoring/auditing protocol.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 201,
+        "answer": "Defer-to-trusted routing survives a model-layer 'None' because, in the requirements matrix, its binding layers are ones the Operator retains \u2014 application/orchestration-layer control (the routing decision and gateway) plus API-level access to a trusted model used as a black box \u2014 so no access to weights or internals is required. A row where 'None' is fatal is any protocol whose binding layer is the model itself, such as probe/activation-based internal-state monitoring (or weight-level interventions like fine-tuning/model editing), which simply cannot be executed without model-layer access.",
+        "score": 1.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q20",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s7"
+   ],
+   "question": "The paper says bounded control has a ceiling that is lowest for the failure modes the control literature worries about most. In the payments case, which of the paper's labelled catastrophic-action classes does it single out, and which kinds of protocol does the Operator lose for them?",
+   "answer": "It singles out C2 (systematic mis-triage) and C3 (exposure of protected financial data) when they have a deceptive or systemic character. Output-only monitoring is weakest in principle for these. The protocols suited to them are activation-level monitoring, probe-based deception detection and interpretability-supported auditing, and all need internal traces the Operator cannot get without vendor cooperation.",
+   "rubric": [
+    "Identifies C2 and C3 (deceptive/systemic variants)",
+    "States output-only monitoring is weakest for them",
+    "Names the lost internal-trace protocols (activation monitoring, probe-based deception detection, interpretability auditing) as infeasible without vendor cooperation"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper concludes bounded control has a ceiling that is lowest for the failure modes the control literature worries about most. In the payments case, which catastrophic-action classes does this ceiling most affect, and why?",
+      "screen_mean": 0.75,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The deceptive/adversarial classes: covert data exfiltration (exposure of account/PII data) and stealthy unauthorized or fraudulent transactions where the agent conceals intent. These most require internal-state visibility or guaranteed interception, and against access-aware adversaries bounded-access protocols cannot cover the channels the adversary chooses, so the ceiling bites hardest there.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Irreversible unauthorized transfers (including to sanctioned or high-risk counterparties), covert data exfiltration (PII, credentials), and compliance violations packaged as legitimate-looking transactions. These are rare, high-severity, and deceptive: they execute through valid-looking tool calls that pass output checks and are irreversible once executed. Bounded-access protocols are largely post-hoc, so the ceiling binds hardest on exactly these classes.",
+        "score": 0.5
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "The paper says bounded control has a ceiling that is lowest for the failure modes the control literature worries about most. In the payments case, which of the paper's labelled catastrophic-action classes does it single out, and which kinds of protocol does the Operator lose for them?",
+      "screen_mean": 0.0,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "It singles out the class of irreversible external actions, exemplified by an unauthorized payment transfer. For that class the Operator loses dependable ex ante prevention/approval protocols and ex post rollback or recovery protocols, leaving mainly detection and containment.",
+        "score": 0.0
+       },
+       {
+        "sample": 101,
+        "answer": "My best guess is the highest class, C3: irreversible external or control-boundary-changing actions such as settled transfers or credential exfiltration. For those actions the Operator loses post-commit detection/containment and rollback or recovery protocols, leaving pre-commit gating as the principal defense.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q21",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s7"
+   ],
+   "question": "If the paper's framework were applied to a healthcare deployment instead of payments, which forms of access or substitutes would the paper expect to become more important? What features of payments make it the more favourable case?",
+   "answer": "The paper expects trace access, richer audit evidence and scope restriction to grow in importance. Payments is favourable because catastrophic actions are relatively crisp, tool surfaces can be narrowed, and a gateway architecture is natural. Healthcare may have fuzzier catastrophes and wider action surfaces.",
+   "rubric": [
+    "Names trace access, richer audit evidence and/or scope restriction as gaining importance",
+    "Cites payments' crisp catastrophe definitions, narrowable tool surfaces and natural gateway architecture"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "If the paper's framework were applied to a healthcare deployment instead of payments, which forms of access or substitutes would the paper expect to become more important? What features of payments make it the more favourable case?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "In healthcare the paper would expect trace access, semantic/content-level monitoring, human review, and vendor attestation/escalation to matter more, because harms travel in free-text advice rather than discrete blockable actions. Payments is the favourable case because actions are discrete, schema'd, often reversible, and pass through existing interdiction points, making pre-execution gateways cheap and effective.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "In healthcare the paper would expect trace/memory-state access, human oversight, and local deployment or fine-tuning (for privacy) to become more important, with contractual audit rights or third-party audits as substitutes. Payments is the favourable case because actions are discrete, structured, and machine-checkable; ground truth exists (the ledger); deterministic guardrails like limits and allowlists work; some actions are reversible; and gating latency is tolerable.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q22",
+   "claim": "c3",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s5",
+    "s3"
+   ],
+   "question": "Of the four places the paper's case interpretation locates sovereignty discount cost, which one does the synthetic restricted-tool-scope result quantify? Roughly how large is that cost in task success?",
+   "answer": "It quantifies scope-restriction cost: the usefulness forgone by narrowing permitted actions. Task success fell from 84.51% to 60.06%, about 24.5 points, in exchange for failure dropping from 4.48% to 0.60%.",
+   "rubric": [
+    "Identifies scope-restriction cost (usefulness loss)",
+    "Gives a task-success loss of roughly 24\u201325 points (84.51% to 60.06%)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Of the four places the paper's case interpretation locates sovereignty discount cost, which one does the synthetic restricted-tool-scope result quantify? Roughly how large is that cost in task success?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "It quantifies the usefulness/capability-sacrifice location \u2014 task success lost by restricting what tools the agent may use. I don't know the exact figure; plausibly on the order of several to over ten percentage points of task success.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "The restricted-tool-scope arm quantifies the usefulness (task-success) component of the sovereignty discount, as distinct from the prevention, diagnosis, and assurance costs. I don't know the exact magnitude; best guess is a single-digit to low-double-digit percentage-point drop in task success.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q23",
+   "claim": "c7",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s6"
+   ],
+   "question": "Which of the paper's six balancing criteria explains why the Operator cannot simply buy back protection against deceptive data-exposure failures by spending more on output-level monitoring? How does the Operator's access audit make that criterion bind?",
+   "answer": "Criterion 2, verifiability of substitutes, explains it. Failure modes that manifest only in internal computation cannot be fully bought back with output-level substitutes. The Operator's model layer is 'none' and internal traces are unavailable, so it has no internal-access route.",
+   "rubric": [
+    "Identifies the verifiability-of-substitutes criterion",
+    "Explains internal-only failure modes cannot be covered by output-level substitutes",
+    "Links to the Operator having no model access or traces"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Which of the paper's six balancing criteria explains why the Operator cannot simply buy back protection against deceptive data-exposure failures by spending more on output-level monitoring? How does the Operator's access audit make that criterion bind?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The coverage/access-awareness criterion \u2014 effectiveness against an adversary that knows and adapts to what the deployer can observe. Output-level monitoring only covers observable outputs, and a deceptive agent can exfiltrate via channels or encodings outside that surface, so more spend buys no new coverage. The access audit makes the criterion bind by showing the Operator lacks trace access and interception points, i.e., the failure mode lives outside the monitor's observable surface.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 1,
+        "answer": "The binding criterion is worst-case/adversarial adequacy: protections must work against deceptive agents, and spending cannot substitute for missing access at the layer where the failure occurs. The access audit shows the Operator has output-only visibility, with no trace access and no interception point. Deceptive data exposure is designed to look benign at the output layer, so extra output-monitor spending buys almost nothing against it.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q24",
+   "claim": "c4",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s7",
+    "s5"
+   ],
+   "question": "The paper's discussion says bounded control is not empty against a strong reading of its Position A, provided two load-bearing elements are secured. What are they, and what synthetic averages does the paper report in support of each?",
+   "answer": "The first is complete interaction logging: 78.57% diagnosis versus 0% with no I/O logs, and failure of 3.41% versus 6.17%. The second is an owned execution gateway: intervention success rose from 0.47% to 39.52% and failure fell from 5.53% to 3.13%.",
+   "rubric": [
+    "Names complete interaction logging and an owned execution gateway",
+    "Supports logging with its diagnosis and/or failure figures (e.g., about 79% vs 0% diagnosis)",
+    "Supports the gateway with its intervention-success and/or failure figures (e.g., about 0.5% to about 40%)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "In its discussion, the paper names two load-bearing elements that rebut a strong reading of its Position A. What are they, and what synthetic result supports each?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 1,
+        "answer": "Position A holds that meaningful control is achievable under bounded access; the strong reading is that no sovereignty is needed at all. The two load-bearing rebuttals: (1) guaranteed interaction access (complete, tamper-evident logs) is still required, supported by the diagnosis jump when logs go from partial to complete; (2) a deployer-controlled pre-execution interception point is still required, supported by the gateway's large reduction in catastrophic failure. The position is thus targeted sovereignty, not sovereignty-free control.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "The paper's discussion says bounded control is not empty against a strong reading of its Position A, provided two load-bearing elements are secured. What are they, and what synthetic averages does the paper report in support of each?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Best guess: the load-bearing elements are complete, version-attributed observability and an enforceable pre-execution intervention point. The paper\u2019s headline averages are approximately 80% diagnosis with full traces/version stability and intervention in the low-70% range with action-level control; I do not know the exact table values.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "The two load-bearing elements are an Operator-controlled, enforceable action boundary and a stable, version-pinned, replayable model endpoint. I don\u2019t know the exact reported averages; a rough guess is intervention success in the high 70s with gating and diagnosis success in the high 60s or low 70s with pinning, versus much lower baselines.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q25",
+   "claim": "c6",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4",
+    "s5"
+   ],
+   "question": "Under API-only access, the paper's requirements matrix rates human auditing more favourably than trace-level monitoring, yet in the synthetic results human audit was among the weaker prevention mechanisms. Which two bounding factors does the matrix name for auditing? Which experimental sweep varied one of them, and why does the paper say audit underperformed at prevention?",
+   "answer": "The matrix says auditing effectiveness depends on log completeness and audit budget, so it is 'feasible but bounded'. The experiment swept audit budgets of 2%, 5% and 20%. Audit underperformed at prevention because it often acts after detection and is capacity-limited. Being feasible is not the same as being preventive.",
+   "rubric": [
+    "Names log completeness and audit budget/capacity as the bounding factors",
+    "Identifies the audit-budget sweep (2%, 5%, 20%) as varying one of them",
+    "Explains audit acts after detection and is capacity-limited, so feasibility differs from preventive effectiveness"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper's protocol matrix lists human auditing as feasible under API-only access, yet the synthetic results rank human audit and vendor escalation as weak prevention mechanisms. Using the paper's reasoning, reconcile these two findings.",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The matrix encodes implementability given access, not efficacy: human auditing needs only logs/outputs, so it is feasible under API-only access. But auditing operates after the fact, at human speed, and cannot intercept actions, so the synthetic results rank it weak for prevention \u2014 the two findings answer different questions (can it run vs. does it prevent).",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The matrix measures executability given access \u2014 reading API logs and running audits is possible under API-only access. The synthetic results measure prevention effectiveness: auditing is retrospective, samples sparsely, misses subtle or deceptive failures, and acts only after irreversible execution. Feasibility is not effectiveness, so the two findings answer different questions and are consistent.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Under API-only access, the paper's requirements matrix rates human auditing more favourably than trace-level monitoring, yet in the synthetic results human audit was among the weaker prevention mechanisms. Which two bounding factors does the matrix name for auditing? Which experimental sweep varied one of them, and why does the paper say audit underperformed at prevention?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Best guess: the matrix names review coverage or human bandwidth and reviewer reliability or competence as the bounds. The audit-rate/coverage sweep varied the former; auditing underperformed because sampled reviews miss many actions and generally occur too late to block an irreversible action.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "The matrix names audit coverage or budget and audit latency or time-to-veto as the bounds. The experiment varied audit coverage/budget, but auditing still underperformed at prevention because review was largely asynchronous and often occurred only after an irreversible action.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "paper": "2608.19216v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "seed": 1,
+ "prompt_version": "p2",
+ "paper_sha256": "b7c5531c07882d7a1be24c10d1d1245b0b668ccc176352feef9dd364de2ab5b1",
+ "problems": [],
+ "screened_from": "quiz-claude-opus-5.5-1.json"
+}

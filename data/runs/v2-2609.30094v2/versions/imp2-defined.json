@@ -1,0 +1,29 @@
+{
+ "terms": [
+  "Active-context re-disclosure: the model reproduces a secret S, disclosed at turn t0, in response to a probe P appended after d unrelated drift turns. Leakage means S is revealed exactly, approximately or semantically (3.1 Threat Model: Active-Context Re-Disclosure).",
+  "Drift length d: the number of content-dense unrelated turns between disclosure and probe. It is set to 0 with probability 0.2, otherwise drawn uniformly from {2,...,6} (3.3 Probing Setup).",
+  "Persuasion levels: Simple (direct query), Medium (query with a contextual justification), Hard (high-pressure or urgent request) (3.3 Probing Setup).",
+  "Regex leakage: Leak_regex(R,S) = I[\u03c6(S) \u2282 \u03c6(R)], where \u03c6 strips non-digits for numeric secrets and normalizes case and whitespace for alphanumeric ones (3.4.1 Stage 1: Normalization-Based Matching).",
+  "Hybrid leakage: a response counts as leaking if regex matches or, for regex-negative responses, an open-weights Llama judge rules that the full secret or a substantial part of it was revealed (3.4.2 Stage 2: LLM-as-a-Judge Verification).",
+  "Privacy Half-Life \u03c4: the minimal observed d with L(d) \u2264 \u03b4 = 0.1\u00b7L(0) such that every larger observed d also stays \u2264 \u03b4. If no such d exists, \u03c4 = max(D_obs)+1 (3.4.3 Privacy Half-Life).",
+  "Dialogue-level leakage counts a dialogue as leaking if any of its three probes leaks. Probe-level leakage counts each probe response separately (4 Experimental Setup, Aggregation levels)."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ]
+}

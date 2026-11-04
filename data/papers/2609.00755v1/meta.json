@@ -1,0 +1,28 @@
+{
+  "abstract": "Large Language Models (LLMs) have demonstrated remarkable performance across diverse tasks, from text summarization to question answering. Despite these capabilities, their black-box nature obscures internal decision-making processes. Mechanistic interpretability (MI) aims to address this by reverse-engineering neural networks into human-understandable algorithms. Current MI approaches for LLMs typically follow a two-stage paradigm: first identifying important components (circuit discovery), where components are typically individual nodes such as an attention head or feedforward neuron, and second determining the role they play in a certain task (functional interpretation). However, this sequential approach overlooks a fundamental insight: a component's importance and its functional role are inherently codependent. Unifying these stages presents two key challenges: (1) functional roles are often tied to specific nodes or components, limiting generalization, and (2) their identification relies on subjective interpretation rather than quantifiable metrics. To address these challenges, we propose S^3martCirc (Self-supervised Smart Circuit Discovery), a unified framework that simultaneously discovers circuits and interprets functionality. S^3martCirc abstracts node behavior into two general computational roles that generalize across tasks and defines a quantitative metric for assigning them, enabling importance and functional role to be discovered jointly rather than in sequence. Extensive experiments show that our framework outperforms existing methods in circuit discovery.",
+  "arxiv_id": "2609.00755",
+  "ascii_ratio": 0.9998,
+  "authors": [
+    "Wendy Zheng",
+    "Yinhan He",
+    "Liang Wu",
+    "Jundong Li"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 1,
+  "figures": 7,
+  "hidden_style_hits": 0,
+  "html_sha256": "266003aa5f176b2793627894ec35b2849fee003ae1966d187c97e852512c81d3",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.AI",
+  "published": "2026-09-01T05:37:42Z",
+  "rank": "0111f5b893eb52a5cfcf046b99b8cf42aa9c8fe2de2d761bbfcc40a837dc52ad",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2609.00755v1",
+  "stratum": "A",
+  "text_sha256": "4e47758dbb7678eea7807f4a577a2b0022845d92935f709e2e101dfd09023e9c",
+  "title": "S^3martCirc: Self-supervised Smart Circuit Discovery",
+  "version": 1,
+  "words": 5941
+}

@@ -1,0 +1,36 @@
+{
+ "paper": "2607.20379v2",
+ "quiz": "quiz-claude-opus-5.5-1-screened.json",
+ "section": "s6",
+ "title": "6 Probe-Based Monitoring",
+ "eligible": [
+  "s2",
+  "s3",
+  "s4",
+  "s5",
+  "s6",
+  "s10",
+  "s11",
+  "s12",
+  "s13",
+  "s14",
+  "s15",
+  "s17",
+  "s18",
+  "s19",
+  "s20"
+ ],
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p2",
+ "call": "717eb59b74da486f1fc6d608a7599bea4a6a977d123eb97a22871b14a33f9182",
+ "finish": "stop",
+ "chars_before": 4263,
+ "chars_after": 4560,
+ "items_tagged": [
+  "q21",
+  "q22",
+  "q23",
+  "q24",
+  "q25"
+ ]
+}

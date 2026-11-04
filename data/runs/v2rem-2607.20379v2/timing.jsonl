@@ -1,0 +1,7 @@
+{"stage": "write", "start": "2026-11-04T19:51:20Z", "end": "2026-11-04T20:20:07Z", "seconds": 1727}
+{"stage": "filter_retrieval:gemma-4-31b-it", "start": "2026-11-04T20:20:07Z", "end": "2026-11-04T20:21:42Z", "seconds": 95}
+{"stage": "filter_withpaper", "start": "2026-11-04T20:20:09Z", "end": "2026-11-04T20:24:08Z", "seconds": 239}
+{"stage": "filter_nopaper", "start": "2026-11-04T20:20:07Z", "end": "2026-11-04T20:40:20Z", "seconds": 1213}
+{"stage": "filter_retrieval:gpt-5.6-sol", "start": "2026-11-04T20:20:07Z", "end": "2026-11-04T20:46:43Z", "seconds": 1595}
+{"stage": "combine", "start": "2026-11-04T20:46:43Z", "end": "2026-11-04T20:46:43Z", "seconds": 0}
+{"stage": "takes", "start": "2026-11-04T20:46:43Z", "end": "2026-11-04T21:01:51Z", "seconds": 907}

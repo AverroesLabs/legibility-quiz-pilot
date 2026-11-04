@@ -1,0 +1,644 @@
+{
+ "papers": {
+  "2607.10112v1": {
+   "original_quiz": {
+    "kept": 11,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8939,
+      "none": 0.4394
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.7424,
+      "none": 0.1364
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.6667,
+      "none": 0.197
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.2273,
+      "none": 0.1061
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 51,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7309,
+      "none": 0.3976
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5261,
+      "none": 0.1961
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3845,
+      "none": 0.183
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1678,
+      "none": 0.1144
+     }
+    }
+   }
+  },
+  "2607.17117v2": {
+   "original_quiz": {
+    "kept": 38,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7895,
+      "none": 0.4167
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4912,
+      "none": 0.1623
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3947,
+      "none": 0.1711
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.136,
+      "none": 0.0965
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 27,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.6975,
+      "none": 0.4012
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5247,
+      "none": 0.216
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.4691,
+      "none": 0.2222
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1605,
+      "none": 0.1667
+     }
+    }
+   }
+  },
+  "2607.20379v2": {
+   "original_quiz": {
+    "kept": 63,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7549,
+      "none": 0.3827
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5608,
+      "none": 0.2116
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.4021,
+      "none": 0.1861
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1473,
+      "none": 0.1032
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 39,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7578,
+      "none": 0.4658
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4772,
+      "none": 0.1325
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3946,
+      "none": 0.2336
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1296,
+      "none": 0.1068
+     }
+    }
+   }
+  },
+  "2607.28685v1": {
+   "original_quiz": {
+    "kept": 71,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8341,
+      "none": 0.3122
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5822,
+      "none": 0.0829
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3474,
+      "none": 0.1346
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1142,
+      "none": 0.0782
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 42,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7579,
+      "none": 0.4087
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5331,
+      "none": 0.131
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.4934,
+      "none": 0.2275
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.213,
+      "none": 0.1587
+     }
+    }
+   }
+  },
+  "2608.13754v1": {
+   "original_quiz": {
+    "kept": 61,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7787,
+      "none": 0.3415
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5137,
+      "none": 0.041
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3388,
+      "none": 0.1257
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1202,
+      "none": 0.1011
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 40,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7153,
+      "none": 0.3819
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5625,
+      "none": 0.2583
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.5153,
+      "none": 0.2667
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.2069,
+      "none": 0.1583
+     }
+    }
+   }
+  },
+  "2608.19216v1": {
+   "original_quiz": {
+    "kept": 42,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7474,
+      "none": 0.4405
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.619,
+      "none": 0.131
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.5556,
+      "none": 0.2275
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.25,
+      "none": 0.1402
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 49,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8129,
+      "none": 0.3503
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.6361,
+      "none": 0.1497
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.5011,
+      "none": 0.1916
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1644,
+      "none": 0.1145
+     }
+    }
+   }
+  },
+  "2608.25490v1": {
+   "original_quiz": {
+    "kept": 95,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8468,
+      "none": 0.3269
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5708,
+      "none": 0.007
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3538,
+      "none": 0.1602
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1298,
+      "none": 0.0696
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 35,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8095,
+      "none": 0.3857
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5476,
+      "none": 0.1952
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.4238,
+      "none": 0.2095
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1286,
+      "none": 0.1048
+     }
+    }
+   }
+  },
+  "2608.30724v1": {
+   "original_quiz": {
+    "kept": 85,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8176,
+      "none": 0.3444
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4438,
+      "none": 0.0745
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3745,
+      "none": 0.1935
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1758,
+      "none": 0.1222
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 50,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8022,
+      "none": 0.4444
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4844,
+      "none": 0.0156
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.4411,
+      "none": 0.1967
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1378,
+      "none": 0.13
+     }
+    }
+   }
+  },
+  "2609.00755v1": {
+   "original_quiz": {
+    "kept": 80,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7764,
+      "none": 0.3014
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4194,
+      "none": 0.1646
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3076,
+      "none": 0.1819
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1778,
+      "none": 0.1049
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 60,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.812,
+      "none": 0.3806
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4472,
+      "none": 0.1491
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.2611,
+      "none": 0.1806
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1454,
+      "none": 0.125
+     }
+    }
+   }
+  },
+  "2609.02893v1": {
+   "original_quiz": {
+    "kept": 53,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7453,
+      "none": 0.3878
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4036,
+      "none": 0.1342
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3512,
+      "none": 0.1887
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.2432,
+      "none": 0.1331
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 50,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7267,
+      "none": 0.3833
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5067,
+      "none": 0.22
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.37,
+      "none": 0.24
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1767,
+      "none": 0.1167
+     }
+    }
+   }
+  },
+  "2609.30094v2": {
+   "original_quiz": {
+    "kept": 73,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.8333,
+      "none": 0.3288
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5799,
+      "none": 0.0297
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.2062,
+      "none": 0.1202
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.0807,
+      "none": 0.0639
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 26,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7885,
+      "none": 0.3675
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.5171,
+      "none": 0.2179
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3889,
+      "none": 0.2436
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1645,
+      "none": 0.1838
+     }
+    }
+   }
+  },
+  "2609.34091v1": {
+   "original_quiz": {
+    "kept": 44,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.7765,
+      "none": 0.428
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4167,
+      "none": 0.1477
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.3106,
+      "none": 0.2083
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.1212,
+      "none": 0.0947
+     }
+    }
+   },
+   "rem_quiz": {
+    "kept": 32,
+    "readers": {
+     "openai/gpt-5.6-sol": {
+      "orig": 0.776,
+      "none": 0.3281
+     },
+     "google/gemma-4-31b-it": {
+      "orig": 0.4427,
+      "none": 0.1198
+     },
+     "mistralai/ministral-8b-2512": {
+      "orig": 0.4948,
+      "none": 0.224
+     },
+     "meta-llama/llama-3.2-3b-instruct": {
+      "orig": 0.2031,
+      "none": 0.1042
+     }
+    }
+   }
+  }
+ },
+ "pooled_paper_means": {
+  "openai/gpt-5.6-sol": {
+   "original_quiz": {
+    "orig": 0.7995,
+    "none": 0.3709
+   },
+   "rem_quiz": {
+    "orig": 0.7656,
+    "none": 0.3913
+   },
+   "rem_minus_original_with_paper": {
+    "mean": -0.0339,
+    "papers_lower": 9,
+    "papers": 12
+   }
+  },
+  "google/gemma-4-31b-it": {
+   "original_quiz": {
+    "orig": 0.5286,
+    "none": 0.1102
+   },
+   "rem_quiz": {
+    "orig": 0.5171,
+    "none": 0.1668
+   },
+   "rem_minus_original_with_paper": {
+    "mean": -0.0115,
+    "papers_lower": 5,
+    "papers": 12
+   }
+  },
+  "mistralai/ministral-8b-2512": {
+   "original_quiz": {
+    "orig": 0.3841,
+    "none": 0.1746
+   },
+   "rem_quiz": {
+    "orig": 0.4281,
+    "none": 0.2183
+   },
+   "rem_minus_original_with_paper": {
+    "mean": 0.044,
+    "papers_lower": 4,
+    "papers": 12
+   }
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+   "original_quiz": {
+    "orig": 0.1603,
+    "none": 0.1011
+   },
+   "rem_quiz": {
+    "orig": 0.1665,
+    "none": 0.132
+   },
+   "rem_minus_original_with_paper": {
+    "mean": 0.0062,
+    "papers_lower": 7,
+    "papers": 12
+   }
+  }
+ },
+ "kept": {
+  "2607.10112v1": [
+   11,
+   51
+  ],
+  "2607.17117v2": [
+   38,
+   27
+  ],
+  "2607.20379v2": [
+   63,
+   39
+  ],
+  "2607.28685v1": [
+   71,
+   42
+  ],
+  "2608.13754v1": [
+   61,
+   40
+  ],
+  "2608.19216v1": [
+   42,
+   49
+  ],
+  "2608.25490v1": [
+   95,
+   35
+  ],
+  "2608.30724v1": [
+   85,
+   50
+  ],
+  "2609.00755v1": [
+   80,
+   60
+  ],
+  "2609.02893v1": [
+   53,
+   50
+  ],
+  "2609.30094v2": [
+   73,
+   26
+  ],
+  "2609.34091v1": [
+   44,
+   32
+  ]
+ }
+}

@@ -1,0 +1,27 @@
+{
+  "abstract": "LLMs handle ordinary typing variation fluently: a typo or missing punctuation leaves both user intent and the model's response substantively unchanged. Yet probes that detect malicious prompts by reading the model's hidden states tell a different story: the same edit rotates the readout vector by 43--56 at the perturbed token, decaying below 15% within ~10 downstream tokens. Stacking ~3 common typos per message cuts a single-position prompt-injection probe's TPR@FPR$=1% by 12.0pp, a gap recalibration alone cannot close. Multi-position aggregation cures localized perturbations (<= 0.5 loss) but only attenuates distributed ones, where even attention- and max-based aggregators still drop ~3.8pp. For single-position probes, we introduce a KV-cache fork: a short fixed suffix appended after the user message lets the probe read a few tokens downstream of the perturbation, exploiting its rapid spatial decay. This closes 95% of the gap (-0.6pp residual) -- an order of magnitude better than perturbation-augmented training (-3.7pp). The rotation-and-decay geometry replicates on Llama-3.1-8B, Qwen3-8B, and Gemma-4-E4B; probe evaluation is on Llama-3.1-8B. Code: https://github.com/eladd-ai/latent-undertow",
+  "arxiv_id": "2609.15994",
+  "ascii_ratio": 0.9999,
+  "authors": [
+    "Elad David",
+    "Max Fomin",
+    "Amit LeVi"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 9,
+  "hidden_style_hits": 0,
+  "html_sha256": "aa45dd5555bb34a32376ac9439ae7db0f14847db748d362fe1d0006b42227369",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.CL",
+  "published": "2026-07-08T11:41:43Z",
+  "rank": "41961c1cafd1b6d5ca2ae657fb252d9ca7bb65eb995f1a59482b92202c7154f8",
+  "role": "chain_B",
+  "source_url": "https://arxiv.org/abs/2609.15994v1",
+  "stratum": "B",
+  "text_sha256": "40270da564907c6e0b1bb93861531efef3ef8c7e75108e47433af721b5a3d3a8",
+  "title": "Latent Undertow: How Ordinary Typos Break Probes",
+  "version": 1,
+  "words": 9980
+}

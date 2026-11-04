@@ -1,0 +1,32 @@
+{
+  "abstract": "Activation steering via sparse autoencoders (SAEs) enables behavioral control of large language models without task-specific fine-tuning, but standard methods apply the steering signal at every generated token, incurring constant per-token perturbation that risks degrading fluency. We ask: is dense intervention necessary? We introduce Stochastic Token Steering (STS), which gates each token independently with probability $p$, and Stochastic Block Steering (SBS), which gates a leading window once per sequence; neither requires a reward model or learned gating policy. Across two model families and two behavioral tasks, steering only a fraction of tokens recovers most of the behavioral effect of dense steering while incurring less fluency degradation. Across our experimental settings, we further find that the best-performing steering magnitude consistently rises as the intervention ratio falls.",
+  "arxiv_id": "2607.05615",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Nima Eshraghi",
+    "Lovedeep Gondara",
+    "Yuqing Huang",
+    "Sagarika Suresh",
+    "Leizer Teran",
+    "Jithin Pradeep",
+    "Xiaotong Xu",
+    "Fanny Chevalier"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 7,
+  "hidden_style_hits": 0,
+  "html_sha256": "dc3141eac6ccd9b067cc1f0e1f25819494edb666d6af834adbc011a58c210b03",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.LG",
+  "published": "2026-07-06T20:25:27Z",
+  "rank": "0ea19361cfb0f88c0f675b9d155c75c009814238cfa2daa623974045c9687015",
+  "role": "reserve",
+  "source_url": "https://arxiv.org/abs/2607.05615v2",
+  "stratum": "A",
+  "text_sha256": "0a366178ae904d3731c58b356856b6de19f4c1d755a1da3b0b716fbe8e1bb17b",
+  "title": "A Coin Flip Per Token: Bernoulli Sparse Steering of Large Language Models",
+  "version": 2,
+  "words": 5690
+}

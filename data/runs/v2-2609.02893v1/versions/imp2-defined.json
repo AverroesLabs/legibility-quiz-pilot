@@ -1,0 +1,26 @@
+{
+ "terms": [
+  "Source-domain PCA basis: source activations (layer-15, mean over assistant tokens) are standardized, and PCA keeps the top 100 PCs. Targets are standardized with source statistics. Probes on a subset S are trained on projections onto S. (3 Setup)",
+  "Probe: logistic regression with \u03bb=10, evaluated by AUROC on held-out target datasets. Ambiguous labels are removed. (3 Setup)",
+  "Greedy oracle: PCs are added one at a time, each chosen to maximize target AUROC of a source-trained probe. It stops when the improvement is \u22640.001, uses 5-fold CV over the target, and serves as an upper bound rather than an unbiased OOD estimate. (4.2 Showing a transferable subspace exists)",
+  "Standardized coefficient: the absolute probe coefficient times the standard deviation of its PC. It is used to rank PCs for the source-PCA and target-PCA probes. (4.3 Testing hypotheses for transferable principal components)",
+  "OOD score: a GPT-5-mini rating from 1 to 10 of how useful a PC direction is for out-of-distribution deception detection. It is based on the 8 most and 8 least activating source examples. Interp-selected PCs are those scoring the observed maximum of 6 in both of two runs (19 PCs). (4.4 Interpreting the transferable subspace; Appendix B)",
+  "Gap closed: (interp AUROC \u2212 baseline) / (greedy AUROC \u2212 baseline). (4.5 Selecting a subspace by interpreting PCs)"
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  false
+ ],
+ "imp2": [
+  true,
+  true,
+  true,
+  false,
+  true,
+  true
+ ]
+}

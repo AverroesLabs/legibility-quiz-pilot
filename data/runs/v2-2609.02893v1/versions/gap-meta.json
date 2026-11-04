@@ -1,0 +1,132 @@
+{
+ "paper": "2609.02893v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "insight": {
+  "insight": "Probes fail out of distribution because of where they place their weight, not because the information is missing. The 100-PC source basis holds enough signal to separate deceptive from honest responses on every target, but a source-trained probe leans on source-specific surface directions. A small subset of source PCs that encode the honest/deceptive contrast abstractly does transfer. That subset can be partly found without target data by having an LLM judge score natural-language interpretations of each PC.",
+  "dependent_results": [
+   "Target-trained probes restricted to the top-100 source PCs reach 0.936 / 0.950 / 0.869 AUROC. Source-trained full-representation baselines reach only 0.706 (IT Report), 0.874 (IT Confirm) and 0.606 (Sandbagging). (4.1 Setting a baseline)",
+   "A target-guided greedy search over source PCs selects about 15 / 8 / 14 PCs. Source-trained probes on these PCs nearly match target-trained probes, improving on the baseline by 0.22 AUROC on IT Report and 0.23 on Sandbagging. Top-k-by-variance PCs match greedy only on IT Confirm. (4.2 Showing a transferable subspace exists)",
+   "Ranking PCs by source-probe standardized weights transfers about as well as the baseline. Ranking by target-probe weights does well on IT Report, is worse than greedy on IT Confirm, and is below chance on Sandbagging. Jaccard overlap between greedy and target-PCA sets is 0.182 / 0.077 / 0.167. (4.3 Testing hypotheses for transferable principal components; Appendix D)",
+   "Of the 5 PCs that greedy selected for more than one target, 3 received the maximum OOD score (6). Only 1 of the top 5 source-probe PCs did. (4.4 Interpreting the transferable subspace)",
+   "A probe on the 19 interp-selected PCs, using no target data, beats the baseline, the top-19-by-variance control and the 81-PC ablation on all targets. It closes 78% of the baseline-to-greedy gap on IT Report (0.706\u21920.881 vs 0.929) and 25% on Sandbagging (0.606\u21920.662 vs 0.832). (4.5 Selecting a subspace by interpreting PCs; 5 Limitations)"
+  ],
+  "key_definitions": [
+   "Source-domain PCA basis: source activations (layer-15, mean over assistant tokens) are standardized, and PCA keeps the top 100 PCs. Targets are standardized with source statistics. Probes on a subset S are trained on projections onto S. (3 Setup)",
+   "Probe: logistic regression with \u03bb=10, evaluated by AUROC on held-out target datasets. Ambiguous labels are removed. (3 Setup)",
+   "Greedy oracle: PCs are added one at a time, each chosen to maximize target AUROC of a source-trained probe. It stops when the improvement is \u22640.001, uses 5-fold CV over the target, and serves as an upper bound rather than an unbiased OOD estimate. (4.2 Showing a transferable subspace exists)",
+   "Standardized coefficient: the absolute probe coefficient times the standard deviation of its PC. It is used to rank PCs for the source-PCA and target-PCA probes. (4.3 Testing hypotheses for transferable principal components)",
+   "OOD score: a GPT-5-mini rating from 1 to 10 of how useful a PC direction is for out-of-distribution deception detection. It is based on the 8 most and 8 least activating source examples. Interp-selected PCs are those scoring the observed maximum of 6 in both of two runs (19 PCs). (4.4 Interpreting the transferable subspace; Appendix B)",
+   "Gap closed: (interp AUROC \u2212 baseline) / (greedy AUROC \u2212 baseline). (4.5 Selecting a subspace by interpreting PCs)"
+  ],
+  "reasoning_steps": [
+   "The top-100 source PCs are chosen because lower-index PCs align better with SAE features and so are easier to interpret. This choice is not a claim that they generalize better. (3 Setup; Appendix C)",
+   "Target-trained probes do well within the 100-PC subspace, so the poor source transfer comes from the direction the source probe learns, not from missing information. (4.1 Setting a baseline)",
+   "Greedy target-guided selection finds a small subset that transfers. Variance-matched controls fail, so which PCs are chosen matters, and variance does not predict it. (4.2 Showing a transferable subspace exists)",
+   "Neither source-probe nor target-probe weight rankings recover the greedy subset. Transferable PCs are therefore neither the most source-discriminative nor the most target-discriminative. Source-heavy PCs appear to encode surface features. (4.3 Testing hypotheses for transferable principal components)",
+   "The LLM judge's interpretations give the maximum score to most PCs that greedy selected across multiple targets, but to few source-heavy PCs. This suggests transferable PCs encode the contrast more abstractly. (4.4 Interpreting the transferable subspace)",
+   "Training on the judge-selected PCs without target data, then comparing against variance and ablation controls, shows that interpretability-driven subspace selection partly recovers oracle transfer. This supports reframing OOD robustness as a subspace-selection problem. (4.5 Selecting a subspace by interpreting PCs; 6 Conclusion)"
+  ]
+ },
+ "insight_call": "a622029d13357bcbcc1de9bfc847e6eb9ba6507dc89dd240117ad951f57e14fc",
+ "chars": {
+  "orig": 31008,
+  "rem": 32978,
+  "imp": 25903
+ },
+ "versions": {
+  "rem": {
+   "tries": [
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "5d9d902c2aab14b7156a0f7575de734881ce195a60a70844d2db21201544f2b2",
+     "finish": "stop",
+     "cost": 0.28156,
+     "chars": 32978,
+     "ratio": 1.064,
+     "same_sections": true,
+     "missing": [
+      "7",
+      "13",
+      "14",
+      "19",
+      "25",
+      "78",
+      "81",
+      "95",
+      "0.22",
+      "0.23",
+      "0.077",
+      "0.167",
+      "0.182",
+      "0.606",
+      "0.662",
+      "0.706",
+      "0.832",
+      "0.869",
+      "0.874",
+      "0.881",
+      "0.929",
+      "0.936",
+      "0.950"
+     ],
+     "pass": true
+    }
+   ],
+   "used_try": 0,
+   "missing_vs_original": [
+    "7",
+    "13",
+    "14",
+    "19",
+    "25",
+    "78",
+    "81",
+    "95",
+    "0.22",
+    "0.23",
+    "0.077",
+    "0.167",
+    "0.182",
+    "0.606",
+    "0.662",
+    "0.706",
+    "0.832",
+    "0.869",
+    "0.874",
+    "0.881",
+    "0.929",
+    "0.936",
+    "0.950"
+   ]
+  },
+  "imp": {
+   "tries": [
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "53c29b6f989b3a6a344b80bddbec96059081bbd8cc5961d1519b1ecdb030fd1b",
+     "finish": "stop",
+     "cost": 0.234568,
+     "chars": 23029,
+     "ratio": 0.743,
+     "same_sections": true,
+     "missing": [],
+     "pass": false
+    },
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "92cf2078a297967b8ec0f60dbf50d92bd84c6da3af028108cda99ab506e0d155",
+     "finish": "stop",
+     "cost": 0.248628,
+     "chars": 25903,
+     "ratio": 0.835,
+     "same_sections": true,
+     "missing": [],
+     "pass": true
+    }
+   ],
+   "used_try": 1,
+   "missing_vs_original": []
+  }
+ }
+}

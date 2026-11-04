@@ -1,0 +1,176 @@
+{"arxiv_id": "2609.05074", "order": 1, "result": "format:errors=6", "stratum": "B"}
+{"arxiv_id": "2609.24440", "order": 2, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "A"}
+{"arxiv_id": "2607.21824", "order": 3, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.00755", "order": 4, "result": "pass", "role": "core", "stratum": "A"}
+{"arxiv_id": "2609.34463", "order": 5, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.25490", "order": 6, "result": "pass", "role": "core", "stratum": "B"}
+{"arxiv_id": "2608.02657", "order": 7, "result": "length:25671", "stratum": "B"}
+{"arxiv_id": "2607.28881", "order": 8, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2608.06110", "order": 9, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.28685", "order": 10, "result": "pass", "role": "core", "stratum": "B"}
+{"arxiv_id": "2607.17117", "order": 11, "result": "pass", "role": "core", "stratum": "A"}
+{"arxiv_id": "2608.11197", "order": 12, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "A"}
+{"arxiv_id": "2609.08322", "order": 13, "result": "format:no_html", "stratum": "A"}
+{"arxiv_id": "2609.30094", "order": 14, "result": "pass", "role": "core", "stratum": "B"}
+{"arxiv_id": "2607.10112", "order": 15, "result": "pass", "role": "core", "stratum": "B"}
+{"arxiv_id": "2609.14987", "order": 16, "result": "pass", "role": "reserve", "stratum": "B"}
+{"arxiv_id": "2609.23894", "order": 17, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.28233", "order": 18, "result": "length:15124", "stratum": "A"}
+{"arxiv_id": "2608.05430", "order": 19, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.18080", "order": 20, "result": "figures:17", "stratum": "A"}
+{"arxiv_id": "2607.20379", "order": 21, "result": "pass", "role": "core", "stratum": "C"}
+{"arxiv_id": "2607.18485", "order": 22, "result": "pass", "role": "reserve", "stratum": "B"}
+{"arxiv_id": "2609.00578", "order": 23, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.29362", "order": 24, "result": "figures:19", "stratum": "A"}
+{"arxiv_id": "2609.37054", "order": 25, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2607.02770", "as": "chain_A", "for_B": "2609.37054", "in_text_citations": 3, "result": "pass"}
+{"arxiv_id": "2609.05850", "order": 26, "result": "licence:http://creativecommons.org/licenses/by-nc-nd/4.0/", "stratum": "B"}
+{"arxiv_id": "2609.34920", "order": 27, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2601.07141", "as": "chain_A", "for_B": "2609.34920", "in_text_citations": 4, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/"}
+{"arxiv_id": "2603.21208", "as": "chain_A", "for_B": "2609.34920", "in_text_citations": 4, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/"}
+{"arxiv_id": "2609.39678", "order": 28, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.34326", "order": 29, "result": "figures:13", "stratum": "A"}
+{"arxiv_id": "2609.25518", "order": 30, "result": "length:20315", "stratum": "A"}
+{"arxiv_id": "2608.19216", "order": 31, "result": "pass", "role": "core", "stratum": "C"}
+{"arxiv_id": "2609.23065", "order": 32, "result": "length:15995", "stratum": "A"}
+{"arxiv_id": "2609.36603", "order": 33, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.27336", "order": 34, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.27240", "order": 35, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.34091", "order": 36, "result": "pass", "role": "core", "stratum": "A"}
+{"arxiv_id": "2609.01046", "order": 37, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2601.15588", "as": "chain_A", "for_B": "2609.01046", "in_text_citations": 3, "result": "pass"}
+{"arxiv_id": "2609.37991", "order": 38, "result": "figures:16", "stratum": "C"}
+{"arxiv_id": "2608.30724", "order": 39, "result": "pass", "role": "core", "stratum": "C"}
+{"arxiv_id": "2609.33667", "order": 40, "result": "licence:http://creativecommons.org/licenses/by-nc-sa/4.0/", "stratum": "C"}
+{"arxiv_id": "2608.13754", "order": 41, "result": "pass", "role": "core", "stratum": "A"}
+{"arxiv_id": "2608.30842", "order": 42, "result": "licence:http://creativecommons.org/licenses/by-nc-nd/4.0/", "stratum": "C"}
+{"arxiv_id": "2607.20518", "order": 43, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2607.05615", "order": 44, "result": "pass", "role": "reserve", "stratum": "A"}
+{"arxiv_id": "2607.17425", "order": 45, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "A"}
+{"arxiv_id": "2607.16693", "order": 46, "result": "figures:23", "stratum": "A"}
+{"arxiv_id": "2609.02893", "order": 47, "result": "pass", "role": "core", "stratum": "C"}
+{"arxiv_id": "2609.38260", "order": 48, "result": "figures:27", "stratum": "C"}
+{"arxiv_id": "2609.36657", "order": 49, "result": "length:17984", "stratum": "B"}
+{"arxiv_id": "2607.15977", "order": 50, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.10669", "order": 51, "result": "licence:http://creativecommons.org/licenses/by-nc-nd/4.0/", "stratum": "B"}
+{"arxiv_id": "2608.29461", "order": 52, "result": "pass", "role": "reserve", "stratum": "C"}
+{"arxiv_id": "2608.26008", "order": 53, "result": "figures:13", "stratum": "B"}
+{"arxiv_id": "2607.18063", "order": 54, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2608.18419", "order": 55, "result": "pass", "role": "reserve", "stratum": "A"}
+{"arxiv_id": "2609.07746", "order": 56, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2609.01322", "order": 57, "result": "figures:25", "stratum": "A"}
+{"arxiv_id": "2607.20852", "order": 58, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.12852", "order": 59, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "A"}
+{"arxiv_id": "2608.28639", "order": 60, "result": "pass", "role": "reserve", "stratum": "C"}
+{"arxiv_id": "2608.19338", "order": 61, "result": "length:15568", "stratum": "A"}
+{"arxiv_id": "2607.01567", "order": 62, "result": "length:15870", "stratum": "C"}
+{"arxiv_id": "2607.05188", "order": 63, "result": "figures:56", "stratum": "A"}
+{"arxiv_id": "2608.22103", "order": 64, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2607.18056", "order": 65, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.08975", "order": 66, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2608.23028", "order": 67, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2607.13149", "order": 68, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.36900", "order": 69, "result": "length:15660", "stratum": "C"}
+{"arxiv_id": "2608.22248", "order": 70, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.04222", "order": 71, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2601.01828", "as": "chain_A", "for_B": "2607.04222", "in_text_citations": 3, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/"}
+{"arxiv_id": "2608.04904", "order": 72, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "A"}
+{"arxiv_id": "2609.34262", "order": 73, "result": "format:errors=7", "stratum": "C"}
+{"arxiv_id": "2609.05088", "order": 74, "result": "pass", "role": "chain_pool", "stratum": "C"}
+{"arxiv_id": "2608.09867", "as": "chain_A", "for_B": "2609.05088", "in_text_citations": 4, "result": "length:20188"}
+{"arxiv_id": "2607.18966", "order": 75, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2609.33628", "order": 76, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2602.03117", "as": "chain_A", "for_B": "2609.33628", "in_text_citations": 3, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/"}
+{"arxiv_id": "2609.35350", "order": 77, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.06972", "order": 78, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.09867", "order": 79, "result": "length:20188", "stratum": "B"}
+{"arxiv_id": "2607.10034", "order": 80, "result": "length:23922", "stratum": "A"}
+{"arxiv_id": "2607.07827", "order": 81, "result": "licence:http://creativecommons.org/licenses/by-nc-sa/4.0/", "stratum": "B"}
+{"arxiv_id": "2607.13088", "order": 82, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.35367", "order": 83, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2605.11887", "as": "chain_A", "for_B": "2609.35367", "in_text_citations": 3, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/"}
+{"arxiv_id": "2607.26639", "order": 84, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.29757", "order": 85, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.36576", "order": 86, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.12573", "order": 87, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2608.25941", "order": 88, "result": "type", "stratum": "A"}
+{"arxiv_id": "2608.29458", "order": 89, "result": "pass", "role": "chain_pool", "stratum": "C"}
+{"arxiv_id": "2609.09553", "order": 90, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2602.15001", "as": "chain_A", "for_B": "2609.09553", "in_text_citations": 3, "result": "format:errors=65"}
+{"arxiv_id": "2609.18461", "order": 91, "result": "figures:14", "stratum": "A"}
+{"arxiv_id": "2609.37737", "order": 92, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2608.10530", "order": 93, "result": "type", "stratum": "B"}
+{"arxiv_id": "2608.07167", "order": 94, "result": "licence:http://creativecommons.org/licenses/by-nc-sa/4.0/", "stratum": "B"}
+{"arxiv_id": "2607.22925", "order": 95, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2608.26423", "order": 96, "result": "licence:http://creativecommons.org/licenses/by-nc-nd/4.0/", "stratum": "B"}
+{"arxiv_id": "2609.32361", "order": 97, "result": "figures:13", "stratum": "C"}
+{"arxiv_id": "2607.11151", "order": 98, "result": "figures:21", "stratum": "B"}
+{"arxiv_id": "2609.02902", "order": 99, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2607.17535", "order": 100, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.07529", "order": 101, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.35932", "order": 102, "result": "length:15438", "stratum": "B"}
+{"arxiv_id": "2608.26506", "order": 103, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2608.14626", "order": 104, "result": "type", "stratum": "B"}
+{"arxiv_id": "2608.24758", "order": 105, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2608.23873", "order": 106, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.05995", "order": 107, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.10621", "order": 108, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2607.17279", "order": 109, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.07433", "order": 110, "result": "length:16259", "stratum": "B"}
+{"arxiv_id": "2609.14803", "order": 111, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.06862", "order": 112, "result": "length:37410", "stratum": "A"}
+{"arxiv_id": "2608.20554", "order": 113, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.25021", "order": 114, "result": "format:errors=6", "stratum": "C"}
+{"arxiv_id": "2607.08883", "order": 115, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.24174", "order": 116, "result": "licence:http://creativecommons.org/licenses/by-nc-sa/4.0/", "stratum": "B"}
+{"arxiv_id": "2607.07474", "order": 117, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.11243", "order": 118, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.33910", "order": 119, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.06540", "order": 120, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.32355", "order": 121, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "A"}
+{"arxiv_id": "2608.10171", "order": 122, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.36813", "order": 123, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2608.06969", "order": 124, "result": "length:2545", "stratum": "A"}
+{"arxiv_id": "2609.00213", "order": 125, "result": "pass", "role": "chain_pool", "stratum": "C"}
+{"arxiv_id": "2608.20970", "order": 126, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2607.01799", "order": 127, "result": "figures:13", "stratum": "A"}
+{"arxiv_id": "2608.23941", "order": 128, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2609.35291", "order": 129, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.02246", "order": 130, "result": "pass", "role": "chain_pool", "stratum": "C"}
+{"arxiv_id": "2609.31664", "order": 131, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.01168", "order": 132, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.17779", "order": 133, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.28411", "order": 134, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2609.22163", "order": 135, "result": "licence:http://creativecommons.org/licenses/by-nc-nd/4.0/", "stratum": "A"}
+{"arxiv_id": "2609.34686", "order": 136, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.03247", "order": 137, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.38081", "order": 138, "result": "length:21861", "stratum": "C"}
+{"arxiv_id": "2608.27505", "order": 139, "result": "type", "stratum": "C"}
+{"arxiv_id": "2607.19396", "order": 140, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.21996", "order": 141, "result": "pass", "role": "chain_pool", "stratum": "C"}
+{"arxiv_id": "2608.08942", "order": 142, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.05732", "order": 143, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2609.36570", "order": 144, "result": "length:26826", "stratum": "B"}
+{"arxiv_id": "2609.03693", "order": 145, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2607.10269", "order": 146, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.30083", "order": 147, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.20652", "order": 148, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2602.06964", "as": "chain_A", "for_B": "2607.20652", "in_text_citations": 3, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/"}
+{"arxiv_id": "2609.37196", "order": 149, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2607.12624", "order": 150, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.11085", "order": 151, "result": "figures:15", "stratum": "A"}
+{"arxiv_id": "2610.00531", "order": 152, "result": "figures:13", "stratum": "C"}
+{"arxiv_id": "2608.30662", "order": 153, "result": "pass", "role": "chain_pool", "stratum": "A"}
+{"arxiv_id": "2608.21126", "order": 154, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2608.27910", "order": 155, "result": "type", "stratum": "C"}
+{"arxiv_id": "2608.16393", "order": 156, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2608.03166", "order": 157, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2608.29034", "order": 158, "result": "type", "stratum": "A"}
+{"arxiv_id": "2607.19829", "order": 159, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2609.16098", "order": 160, "result": "licence:http://creativecommons.org/licenses/by-nc-sa/4.0/", "stratum": "B"}
+{"arxiv_id": "2607.19424", "order": 161, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "B"}
+{"arxiv_id": "2607.07903", "order": 162, "result": "figures:19", "stratum": "B"}
+{"arxiv_id": "2609.15422", "order": 163, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "C"}
+{"arxiv_id": "2607.25507", "order": 164, "result": "licence:http://arxiv.org/licenses/nonexclusive-distrib/1.0/", "stratum": "A"}
+{"arxiv_id": "2609.15994", "order": 165, "result": "pass", "role": "chain_pool", "stratum": "B"}
+{"arxiv_id": "2602.14161", "as": "chain_A", "for_B": "2609.15994", "in_text_citations": 8, "result": "pass"}

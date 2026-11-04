@@ -1,0 +1,26 @@
+{
+ "paper": "2609.00755v1",
+ "quiz": "quiz-claude-opus-5.5-1-screened.json",
+ "section": "s7",
+ "title": "Appendix A Implementation Details",
+ "eligible": [
+  "s2",
+  "s3",
+  "s4",
+  "s5",
+  "s7",
+  "s8"
+ ],
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p2",
+ "seeded_pick": "s5",
+ "call": "65a76b78e9ac582a44594e1dc86a966dcaec9d555db9271cdf131488db9c3fc5",
+ "finish": "stop",
+ "chars_before": 4069,
+ "chars_after": 4561,
+ "items_tagged": [
+  "q18",
+  "q26",
+  "q28"
+ ]
+}

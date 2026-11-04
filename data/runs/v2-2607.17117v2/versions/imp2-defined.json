@@ -1,0 +1,35 @@
+{
+ "terms": [
+  "Section 2: a standard SAE reconstructs x\u0302 = W_dec f + b_dec with sparse non-negative f. Feature j has normalised decoder direction d_j and is active when f_j > 0.",
+  "Section 3: the projection p_j^(t) = d_j^T x^(t). Empirical persistence R_j(\u03c4) is the elevation of p_j at lag \u03c4 after activation, relative to the elevation at the activating token, both measured against the mean projection. R=1 means fully retained; R=0 means back to baseline.",
+  "Section 3: the shuffled control concatenates intact sentences from different Pile documents, preserving local but not global continuity.",
+  "Section 3: context correction x\u0302_ctx = x\u0302_base + W_dec(w_\u03c4 \u2299 f^(t\u2212\u03c4)). R\u00b2_improve is the fraction of baseline reconstruction error this recovers on held-out data.",
+  "Section 4: Persistent SAE state h_j^(t) = \u03bb_j h_j^(t\u22121) + (1\u2212\u03bb_j) a_j^(t), where a is the BatchTopK token-wise sparse activation. Reconstruction is x\u0302 = W_dec h + b_dec. h^(0) = 0 at the start of each sequence.",
+  "Section 4 / B.3: \u03bb_j = \u03bb_max \u03c3(l_j), with \u03bb_max = 0.999 and logits initialised to 0.5. The recurrence is an EMA, so the state magnitude stays bounded.",
+  "Section 5.1: slow features are the top 1% by \u03bb_j, and fast features are the bottom 50%.",
+  "Section 5.2: relative update frequency U_{q,c} = P(token category c | active feature in quintile q) / P(c).",
+  "Section 5.4: \u0394_causal is half the difference in the monitor's yes\u2212no logit margin when adding vs subtracting a probe-weighted decoder direction v_r scaled to 10% of the hidden-state norm."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  false,
+  true,
+  true,
+  true,
+  true,
+  true,
+  false,
+  true
+ ]
+}

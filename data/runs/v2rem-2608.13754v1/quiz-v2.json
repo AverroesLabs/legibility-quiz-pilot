@@ -1,0 +1,3269 @@
+{
+ "paper": "2608.13754v1-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "af25a2db976c7491a2e08ecddaca865d3ee85621d33e8f9eddc596098ec9f2d1",
+ "batches": 5,
+ "written_per_batch": [
+  41,
+  37,
+  41,
+  30,
+  37
+ ],
+ "cost_per_batch": [
+  0.32908,
+  0.52852,
+  0.631648,
+  0.526904,
+  0.711984
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Circuits returned under specifications that differ only in defensible analytic choices are almost disjoint in their edges. Structural overlap must be read against chance, and it is not the quantity a filing depends on.",
+   "methods": [
+    "Pre-registered crossed multiverse grid over seven analytic axes, every level taken from a published implementation",
+    "Structural comparison of edge sets in GPT-2 small's factorised graph (tens of thousands of edges)"
+   ],
+   "results": [
+    "Circuits are almost disjoint (Section 7.1)",
+    "Random subsets of a few hundred edges are expected to share almost nothing, so beating chance overlap is a weak bar"
+   ],
+   "conditions": [
+    "GPT-2 small, IOI task",
+    "Structural difference need not imply functional or statement difference"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "When circuits are mapped through a fixed deterministic claim map to Annex IV / Article 86-style statements, the claim flips on about three quarters of specification pairs. The flips include substantive disagreement about which region of the network is responsible, even at the coarsest granularity.",
+   "methods": [
+    "Deterministic claim map from circuit to natural-language statement, not a language model",
+    "Two addressees: the overseer (where the behaviour is carried and how concentrated it is) and the affected person (which input parts drove the decision)",
+    "Nested granularities",
+    "Specification curve presentation"
+   ],
+   "results": [
+    "Claim flips on three quarters of pairs (Section 7.2)"
+   ],
+   "conditions": [
+    "The claim map is fixed in advance",
+    "Discretisations such as size categories come from a committed calibration rule"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "No single analytic axis rescues the filing. Holding any one axis fixed does not remove the disagreement, and the axes that govern structure need not be those that govern statements.",
+   "methods": [
+    "Holding each axis fixed in turn and comparing within its levels"
+   ],
+   "results": [
+    "No analytic axis rescues the filing (Section 7.3)",
+    "Standardising the metric would still leave six axes free"
+   ],
+   "conditions": [
+    "Standardisation decisions should be made at the level of the statement"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Disagreement persists under maximum pressure. With size-dependent content removed from the statement and only same-size circuits compared, attribution of the behaviour to a region still varies.",
+   "methods": [
+    "Size-matched comparison with the statement reduced to region attribution, the core of an Annex IV 2(b) account"
+   ],
+   "results": [
+    "The result holds under maximum pressure (Section 7.4), so the disagreement cannot be attributed to the size channel"
+   ],
+   "conditions": [
+    "Circuit size is an outcome chosen by the threshold rule, not an axis"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Pooled comparisons against a size-matched random baseline mislead, so within-size comparison is required. Circuit size is a hidden channel in multiverse designs.",
+   "methods": [
+    "Random edge subsets of matched size passed through the same claim map",
+    "Within-size decomposition"
+   ],
+   "results": [
+    "At large sizes a uniform random draw touches every component and can support only one statement",
+    "A pooled direction can point either way for reasons unrelated to discovery quality"
+   ],
+   "conditions": [
+    "A pooled baseline result reported without its within-size counterpart is uninterpretable"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Over part of the size range, filings differ more than mechanisms do. This is assessed by chance-corrected, example-level functional agreement, which addresses the phantom specialisation objection.",
+   "methods": [
+    "Example-by-example success/failure agreement using the measures of Bayat Makou et al.",
+    "Cohen's kappa to correct for agreement expected from accuracy alone"
+   ],
+   "results": [
+    "Statement disagreement exceeds functional disagreement over part of the range (Section 7.6)"
+   ],
+   "conditions": [
+    "Where mechanisms differ more than statements, the procedure is coarser than the mechanisms; where statements differ more, it amplifies differences",
+    "The relationship varies with size"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "A five-item filability disclosure protocol is implementable without the regulator adjudicating which analytic choice is correct.",
+   "methods": [
+    "Declare the specification space with citations",
+    "Publish the claim map as deterministic code",
+    "State the chosen specification and why it was selected",
+    "Report discard rates per axis level",
+    "Report pooled statistics with their within-group (within-size) decomposition"
+   ],
+   "results": [
+    "Satisfiable with existing tooling",
+    "Cheap relative to the sweep that produced the circuit"
+   ],
+   "conditions": [
+    "Covers what a careful paper should already report"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "The design is pre-registered and bounded by the library. Its conclusions are conservative relative to the literature and are limited to one model and one task.",
+   "methods": [
+    "Grid of 7 objectives x 7 operators x 4 corruptions nested in 5 operators x 4 metrics x 3 thresholds x 2 prompt variants x 5 seeds = 1,540 discovery cells and 18,480 specifications",
+    "Discards recorded, not repaired",
+    "Bootstrap over specifications, not pairs",
+    "Pre-registered Pythia-160m replication of 924 cells with 3 seeds"
+   ],
+   "results": [
+    "Optimal ablation is not in the library and is therefore excluded",
+    "343 tests; numeric tokens verified against stored outputs"
+   ],
+   "conditions": [
+    "The seed selects sampled prompts and so measures evaluation-set variability, not nondeterminism",
+    "Bootstrap is unreliable for small groups",
+    "Nothing is claimed about scale",
+    "A second task is designed but not run"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "why",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does the grid contain 1,540 discovery cells but 18,480 specifications?",
+   "answer": "The metric (4 levels) and threshold (3 levels) are applied to a circuit after discovery rather than changing the discovery run. Each discovery cell (objective x operator/corruption combination x prompt x seed = 7 x 22 x 2 x 5) therefore yields 4 x 3 = 12 specifications.",
+   "rubric": [
+    "States that each discovery cell yields 12 specifications (18,480 = 1,540 x 12)",
+    "Attributes the factor of 12 to the 4 metrics x 3 thresholds applied after discovery"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "why",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does the pre-registered Pythia-160m replication have 924 cells?",
+   "answer": "The objective x operator/corruption combinations give 7 x (2 + 5 x 4) = 154, and the 2 prompt variants double this to 308. With only 3 seeds instead of 5, that gives 924 discovery cells, i.e. 1,540 x 3/5.",
+   "rubric": [
+    "Identifies the seed axis reduction from 5 to 3 as the only difference",
+    "Shows the arithmetic: 154 x 2 x 3 = 924, or equivalently 1,540 x 3/5"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose discovered circuits in some part of the grid are mostly large. Why could a pooled random-baseline comparison make them look less statement-stable than random subgraphs, even if discovery is sound?",
+   "answer": "At large sizes a random draw touches every component and can support only one statement, so random pairs agree perfectly there while discovered circuits can still vary. Pooling across sizes then favours the random baseline for reasons unrelated to discovery quality.",
+   "rubric": [
+    "Says random large draws all yield the same single statement, so their agreement is trivially high",
+    "Says the pooled comparison mixes size distributions, so the apparent inferiority reflects size rather than discovery quality"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does drawing every level from the Miller et al. library make the paper's instability findings hard to dismiss as the product of unreasonable settings?",
+   "answer": "Every level is one the tool's own authors expose as a usable configuration, and none was invented for the study. A critic therefore cannot say the varied choices are indefensible without criticising the tooling's own definitions.",
+   "rubric": [
+    "States that the levels are published or exposed by the tool itself rather than invented",
+    "Concludes that any disagreement arises among choices that count as defensible by the tooling's own standards"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why would repairing cells that fail to execute undermine the study, given what the study is testing?",
+   "answer": "The library is the instrument under test, so repairs would alter the instrument and introduce post-hoc analytic choices. That is exactly the undisclosed flexibility the paper is warning about. Recording discards with their rates keeps the evidence's composition visible instead.",
+   "rubric": [
+    "Notes that repairing changes the instrument under test",
+    "Notes that post-hoc repair is itself analytic flexibility that could shape results, so discards should be recorded and reported instead"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is the flip in which region is held responsible problematic for the Article 86 addressee, and not only for the overseer?",
+   "answer": "The coarsest statement available rests on undisclosed choices, and finer statements refine the coarse one rather than replacing it. A flip at the region level therefore propagates to every granularity, including the one offered to an affected person.",
+   "rubric": [
+    "States that the disagreement occurs even at the coarsest granularity",
+    "Explains that nested, finer statements refine the coarse one, so no addressee's account escapes the flip"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Within-axis conditioning groups in the Pythia-160m replication will be smaller than in the GPT-2 grid. Would bootstrap intervals for those within-group quantities be more or less trustworthy, and what should be reported instead?",
+   "answer": "They would be less trustworthy. With 3 seeds instead of 5, each conditioning group holds fewer specifications, and the paper says bootstrap fails for small groups. Point estimates with diagnostics should be reported instead.",
+   "rubric": [
+    "Says less trustworthy",
+    "Links this to fewer specifications per group (3 seeds vs 5) and the paper's small-group bootstrap limitation",
+    "Recommends point estimates with diagnostics"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the claim map had used a language model to write statements, could the three-quarters claim-flip rate still be read as evidence about circuit variation? Why?",
+   "answer": "No. Model variance in statement generation would add to circuit variance, with no way to separate the two, so the flip rate could partly reflect the language model rather than the circuits.",
+   "rubric": [
+    "Says no, the flip rate would no longer be attributable to circuits",
+    "Explains that language-model variance confounds circuit variance and cannot be separated from it"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose the threshold rule gave every metric's circuits a distinct, non-overlapping size band. What could the size-matched control in Section 7.4 then fail to test?",
+   "answer": "Same-size pairs would only ever share a metric, so the control could not test whether changing the metric flips region attribution. Metric effects would be confounded with size and left unexamined.",
+   "rubric": [
+    "Says cross-metric disagreement would go untested under the size-matched control",
+    "Explains that size-matched pairs would all share a metric because size is an outcome tied to the metric"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Two circuits each succeed on nearly every IOI prompt and agree on most examples. Would that raw agreement show that they implement the same mechanism?",
+   "answer": "No. With both near-perfect accuracy, high agreement is expected by chance alone. Only chance-corrected agreement such as Cohen's kappa can separate the same mechanism from mere similar accuracy.",
+   "rubric": [
+    "Says no",
+    "Explains that high accuracy produces high raw agreement by chance, so a chance-corrected measure such as kappa is needed"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the metric-relative threshold rule discarded most specifications under one metric, would the pooled claim-flip rate still describe the balanced design? Why?",
+   "answer": "No. The surviving pool would under-represent that metric, so the pooled rate would mainly reflect the other metrics. This is why discard rates per axis level must be reported.",
+   "rubric": [
+    "Says no",
+    "Explains that the surviving pool's composition departs from the balanced grid, so per-level discard rates must be reported"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "In the large-size region, discovered circuits show lower statement agreement than random subsets. Would that imply discovery performs worse than random there?",
+   "answer": "No. The random baseline is degenerate there: every draw touches every component and supports the same one statement. The baseline's perfect agreement says nothing about discovery quality.",
+   "rubric": [
+    "Says no",
+    "Explains that the baseline is degenerate at large sizes, supporting only one statement"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If discovered circuits shared clearly more edges than chance, would that establish that their filed statements are compatible?",
+   "answer": "No. Exceeding chance overlap is a weak bar in a graph this large. Circuits with considerable overlap may still support different statements, because filings depend on statements, not edges.",
+   "rubric": [
+    "Says no",
+    "Cites both reasons: beating chance is a weak bar, and structural overlap is not the quantity the statement depends on"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b1-p1",
+   "question": "Would adding a fifth evaluation metric to the grid require running any new discovery cells?",
+   "answer": "No. Metrics are applied to already-discovered circuits; specifications go from 1,540 x 12 to 1,540 x 15 while the 1,540 discovery cells stay the same.",
+   "rubric": [
+    "Says no new discovery cells are needed",
+    "Explains that the metric is applied after discovery (the 1,540 vs 18,480 structure)"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b1-p1",
+   "question": "Would adding a sixth seed to the grid require running new discovery cells?",
+   "answer": "Yes. The seed selects the sampled prompts that discovery runs on, so it is part of the discovery cell. It would add 308 new cells (7 x 22 x 2).",
+   "rubric": [
+    "Says yes",
+    "Explains that the seed is a discovery-cell axis (prompt sampling), adding 308 cells"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b1-p2",
+   "question": "Would adding an eighth ablation operator that never reads the corrupt distribution add exactly 70 discovery cells?",
+   "answer": "Yes. Such an operator is not crossed with the corruptions, so it adds 7 objectives x 2 prompts x 5 seeds = 70 cells.",
+   "rubric": [
+    "Says yes, 70",
+    "Explains that it is not crossed with the 4 corruption levels, being like the two existing non-reading operators"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b1-p2",
+   "question": "Would adding an eighth ablation operator that does read the corrupt distribution add exactly 70 discovery cells?",
+   "answer": "No. It would be crossed with the 4 corruption levels, adding 7 x 4 x 2 x 5 = 280 cells.",
+   "rubric": [
+    "Says no",
+    "Explains nesting of the 4 corruptions under corruption-reading operators, giving 280"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p3",
+   "question": "If region attribution still disagreed across size-matched specifications with size removed from the statement, could the disagreement be attributed to the size channel?",
+   "answer": "No. Size has been held fixed and removed from the statement, so persisting disagreement must come through some other channel.",
+   "rubric": [
+    "Says no",
+    "Explains that the control eliminates size as the route of disagreement"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b1-p3",
+   "question": "If region attribution agreed across size-matched specifications once size was removed from the statement, would the size channel be implicated in the overall claim flips?",
+   "answer": "Yes. The pooled flips would then be explained by analytic choices changing circuit size, which the paper identifies as a hidden channel.",
+   "rubric": [
+    "Says yes",
+    "Explains that disagreement vanishing under size control points to size as the propagating channel"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p4",
+   "question": "In a size range where statement disagreement exceeds chance-corrected functional disagreement, is the claim map under-reporting the differences between mechanisms?",
+   "answer": "No. There it is amplifying differences the mechanisms do not carry, which is the regime the paper labels 'filings differ more than mechanisms'.",
+   "rubric": [
+    "Says no; the map amplifies rather than under-reports",
+    "Ties this to statements differing more than kappa-based functional disagreement"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p4",
+   "question": "In a size range where chance-corrected functional disagreement exceeds statement disagreement, is the claim map under-reporting the differences between mechanisms?",
+   "answer": "Yes. The statement procedure is coarser than the mechanisms there, so distinct mechanisms get compatible statements.",
+   "rubric": [
+    "Says yes",
+    "Explains that the procedure is coarser than the mechanisms in that regime"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A provider files a single circuit with its config and a pooled faithfulness score, and nothing else. Which protocol items are still missing?",
+   "answer": "Missing are: the declared specification space with citations (1), the deterministic claim-map code (2), the reason the specification was selected (3, which needs more than the config), per-level discard rates (4), and the within-size decomposition of the pooled score (5).",
+   "rubric": [
+    "Lists the specification space, claim-map code, selection rationale and discard rates as missing",
+    "Notes that the pooled score needs a within-group or within-size decomposition"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A filer is drafting the account owed to a person under Article 86(1). What content should it lead with, and why not the overseer's version?",
+   "answer": "It should lead with which parts of the input drove the decision, because the right is owed to the person the decision concerns. The overseer's account leads with where the behaviour sits and how concentrated it is, which may be inadequate for that person.",
+   "rubric": [
+    "Says it should lead with input segments or input parts that drove the decision",
+    "Contrasts this with the overseer's location and concentration focus, which serves a different addressee"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A conformity body proposes mandating a single faithfulness metric for all circuit filings. Given the paper's results, should it expect filed statements to become compatible?",
+   "answer": "No. No single axis rescues the filing, and six axes would remain free. The axis that changes statements most need not be the metric, so any standard should be checked at the statement level.",
+   "rubric": [
+    "Says no or not necessarily",
+    "Cites the 'no axis rescues' result or the six remaining free axes",
+    "Notes that standardisation should be evaluated at the statement level"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A neuroscience multiverse study selects brain-region clusters by a significance threshold, so cluster size varies by specification. What does this paper recommend for its pooled statistics?",
+   "answer": "Report every pooled statistic with its within-size decomposition. Size is an outcome of the threshold rather than an axis, so it can carry analytic choices into the results as a hidden channel.",
+   "rubric": [
+    "Recommends within-size decomposition of pooled statistics",
+    "Explains that size is a threshold-determined outcome acting as a hidden channel"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "An analyst finds a within-group bootstrap interval for a three-specification group embarrassingly wide. What should they do under the paper's principles?",
+   "answer": "They should report the point estimate with diagnostics. They should not construct a bias-corrected estimator in response to the unwelcome interval, because that would be the analytic flexibility the paper warns against.",
+   "rubric": [
+    "Says to report a point estimate with diagnostics",
+    "Says not to devise a new estimator post hoc, because that is undisclosed flexibility"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team reruns the design with a library that also implements optimal ablation. Should they expect a narrower or wider space of filed statements than the GPT-2 grid, and why?",
+   "answer": "Wider, or at least no narrower. An additional defensible operator expands the space, which is why the paper calls its library-bounded conclusions conservative.",
+   "rubric": [
+    "Says wider or at least as wide",
+    "Explains that an added defensible level expands the space, consistent with the 'conservative' framing"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A provider of a 70B-parameter system wants to cite the three-quarters flip rate as its expected instability. Is that justified?",
+   "answer": "No. The study covers one small model on one task, and the paper says it is not obvious in which direction a larger circuit and statement space would move the result. The provider would need its own declared multiverse.",
+   "rubric": [
+    "Says not justified",
+    "Explains that the result is limited to one model and one task and that the direction of scale effects is untested"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If region attribution had agreed in the size-matched, size-removed comparison, which conclusion about Annex IV 2(b) accounts would lose its support?",
+   "answer": "The conclusion that even the size-independent core of a general-logic account, namely where in the model the behaviour is located, varies across defensible specifications. The flips could instead be traced to the size channel.",
+   "rubric": [
+    "Identifies the persistence-under-maximum-pressure conclusion about region attribution",
+    "Notes that the disagreement would be attributable to size instead"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If holding one axis fixed had reduced claim flips to near zero, which conclusion would be undermined, and what would it imply for regulators?",
+   "answer": "The 'no analytic axis rescues the filing' result would be undermined. Standardising that one axis would become a viable route, reducing the need for full specification-space disclosure.",
+   "rubric": [
+    "Identifies the 'no axis rescues' result",
+    "Notes that single-axis standardisation would become viable"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If circuits had shared most of their edges across specifications, would the claim-flip result automatically lose support?",
+   "answer": "No. Structural overlap and statement compatibility are distinct, and overlapping circuits may still support different statements. Only the structural premise (c1) would change.",
+   "rubric": [
+    "Says no",
+    "Explains that structure and statements are distinct units of analysis"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If chance-corrected functional agreement had been high across the whole size range while statements still flipped, how would the reading of the claim-flip result change?",
+   "answer": "The phantom specialisation objection would gain ground: the circuits would share a mechanism. The flips would then reflect the claim map amplifying differences everywhere, rather than discovery returning different mechanisms over part of the range.",
+   "rubric": [
+    "Says the flips would be read as amplification by the statement procedure, or phantom specialisation, rather than mechanism differences",
+    "Notes that the 'over part of the range' finding would become the whole range"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the Pythia-160m replication met its pre-registered refutation criteria, which conclusions would it weaken and which would remain?",
+   "answer": "It would weaken any extension of the findings beyond GPT-2 small or to other architectures. The GPT-2 IOI results themselves would stand, since the paper claims nothing beyond one model and one task.",
+   "rubric": [
+    "Says it weakens generalisation to other models or architectures",
+    "Says the GPT-2 IOI findings themselves are not overturned"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the specification curve showed each region statement supported only by specifications sharing one particular axis level, which other result would be in tension with that pattern?",
+   "answer": "The 'no analytic axis rescues the filing' result. Statements tied to a single axis level would mean fixing that axis would make statements agree.",
+   "rubric": [
+    "Identifies the 'no axis rescues' result",
+    "Explains that statements tied to one axis level imply single-axis standardisation would work"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Which protocol item exists specifically because of the hazard identified for the random baseline?",
+   "answer": "Item 5: report any pooled statistic with its within-group decomposition, particularly within circuit size. Pooled baseline directions can mislead because of size mixing.",
+   "rubric": [
+    "Identifies item 5 (within-group or within-size decomposition)",
+    "Links it to size-mixing in pooled baseline comparisons"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the near-disjointness of circuits show that circuit discovery fails to recover genuine structure? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Structurally distinct circuits can implement the same computation, as phantom specialisation shows, and the paper disclaims any bearing on whether discovery recovers genuine structure.",
+   "rubric": [
+    "Answers not settled",
+    "Cites structural difference not implying functional difference, or the paper's explicit disclaimer"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that nondeterminism in discovery algorithms is a main driver of circuit instability? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The seed axis selects sampled prompts, so it measures evaluation-set variability rather than nondeterminism, and it is only one of seven axes.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the seed captures prompt sampling, not algorithmic nondeterminism"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper support excluding interpretability evidence from technical documentation? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The protocol is designed to accompany such evidence with disclosure of its specification space, not to remove it.",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that the remedy is disclosure alongside the evidence, not exclusion"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that claim instability spans the full set of defensible choices in the interpretability literature? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The grid is only as wide as the library; optimal ablation, for example, is excluded. The results are therefore a conservative view, not a census of the literature's space.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the library-bounded grid or the optimal ablation omission"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the same instability would arise for other tasks on GPT-2 small? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only IOI was run; a second task is designed but not run.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that only one task was run and the second task is unrun"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the axis causing the most edge-set variation is the best one to standardise? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted as a general rule. The axes governing structure need not govern statements, so standardising the most structure-changing axis could leave the statement-changing axis free.",
+   "rubric": [
+    "Answers contradicted, or not supported",
+    "Explains the structure/statement axis mismatch and that standardisation should be judged at the statement level"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose the claim map's size categories were picked by hand after the analyst had looked at the discovered circuits. Would the resulting claim-flip rate still be interpretable as evidence about variation across specifications, and why?",
+   "answer": "No. A hand-picked discretisation is itself an undeclared analytic choice made after seeing the data. The flip rate could then reflect where the analyst drew the category boundaries rather than how circuits vary across specifications. The paper requires categories from a committed calibration rule applied to a measured curve, with sensitivity reported and the discretisation declared in the specification space.",
+   "rubric": [
+    "Asserts the flip rate would no longer be cleanly interpretable (or would be compromised).",
+    "Reason: the hand-picked category boundaries are an undeclared, post-hoc analytic choice that can drive the statements and so the flips.",
+    "Condition/remedy: categories must come from a committed calibration rule, with sensitivity reported and the discretisation declared as part of the specification space."
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "The paper's warning about the random baseline rests on what happens at large circuit sizes. Would that specific degeneracy still arise in a model whose graph is so large that a size-matched random draw never touches every component, even at the largest admitted sizes?",
+   "answer": "No, not that specific degeneracy. It arises because a random draw that touches every component can support only one statement. If draws never cover all components, random subsets can still map to different statements. The within-size comparison remains the recommended practice, but the reason the baseline collapses at large sizes would not apply.",
+   "rubric": [
+    "Asserts the specific degeneracy would not arise (the baseline would not collapse to a single statement).",
+    "Reason: the degeneracy depends on random draws touching every component, which forces one statement; draws that leave components untouched can still yield varied statements."
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "The deviations file records whether each deviation was decided before or after the affected material was seen. If that before/after field were dropped, what protection would the pre-registration lose?",
+   "answer": "Readers could no longer tell whether a change was made in response to results. That would hide exactly the kind of data-dependent analytic flexibility the paper studies. The study's own conclusions could then not be distinguished from flexibility-manufactured ones, and a study about analytic flexibility that was itself flexible would undermine its own argument.",
+   "rubric": [
+    "Asserts readers could no longer distinguish result-driven (post hoc) changes from pre-planned ones.",
+    "Reason: undisclosed post hoc changes are exactly the analytic flexibility the paper warns about, so the study's conclusions could be self-undermining."
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose some threshold settings admitted discovered circuits so large that each touched every component. Would high agreement among those circuits' region statements count as evidence of filability, and why?",
+   "answer": "No. A circuit that touches every component maps to a single region statement, just as the large random draw does. Agreement there is forced by the mapping and size rather than by convergent mechanisms. The agreement is degenerate and uninformative about whether competent analysts would reach compatible accounts.",
+   "rubric": [
+    "Asserts the agreement would not be evidence of filability.",
+    "Reason: circuits touching every component can support only one statement, so agreement is guaranteed by size/the mapping (degenerate), as with the large-size random baseline."
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose the pool of IOI prompts the seed axis samples from were so small that different seeds drew nearly identical prompt sets. What would the seed axis then measure, and could it shed light on algorithmic nondeterminism?",
+   "answer": "It would capture almost no evaluation-set variability, because the seed only selects which prompts are sampled. It would contribute little variation to the grid. Its weak effect would also say nothing about nondeterminism, since the seed axis never measured nondeterminism in the first place.",
+   "rubric": [
+    "Asserts the seed axis would measure little or no variation (near-identical evaluation sets).",
+    "Reason: the seed only selects sampled prompts (evaluation-set variability), so it cannot speak to algorithmic nondeterminism either way."
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does a claim flip at the coarsest granularity imply that the two specifications' statements also disagree at every finer granularity?",
+   "answer": "The granularities are nested, so a finer statement refines the coarser one rather than contradicting it. Two finer statements that refine incompatible coarse statements cannot be compatible. Coarse disagreement therefore propagates to every level of detail.",
+   "rubric": [
+    "Asserts that coarse disagreement entails disagreement at all finer levels.",
+    "Reason: granularities are nested; finer statements refine (do not contradict) the coarse statement, so they inherit the coarse incompatibility."
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "In the Section 7.4 control, why is it not enough to strip size-dependent content from the statement? Why must the comparison also be restricted to same-size circuits?",
+   "answer": "Size can still shape the region attribution itself. Larger circuits touch more of the network, as the random baseline shows when large draws touch every component. Removing size wording from the statement would leave size acting as a hidden channel. Only matching size closes that channel.",
+   "rubric": [
+    "Asserts size can influence region attribution even after size wording is removed.",
+    "Reason: larger circuits cover more components/regions (cf. random draws touching everything), so size is a hidden channel that only size matching removes."
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can the same pair of circuits flip the claim for one addressee but not for the other?",
+   "answer": "The two addressees' statements lead with different content. The overseer's statement covers where the behaviour is carried and how concentrated it is. The affected person's statement covers which input parts drove the decision. Two circuits can agree on one kind of content and disagree on the other.",
+   "rubric": [
+    "Asserts the two addressee statements can diverge in agreement because they report different content.",
+    "Reason: the overseer statement concerns location and concentration in the network; the Article 86 statement concerns which input parts drove the decision."
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why is complying with the filability protocol cheap relative to the sweep that produced the circuit?",
+   "answer": "Everything the protocol asks for is already produced by, or computed from, the sweep's stored outputs: the declared space, discard rates and within-size decompositions. The claim map is deterministic code, and the analysis layer runs without a GPU. Disclosure therefore needs no new discovery runs.",
+   "rubric": [
+    "Asserts compliance requires no new expensive discovery computation.",
+    "Reason: the required items come from the sweep's existing outputs, with a deterministic claim map and an analysis layer that runs without a GPU."
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does it matter that the claim map, and not only the discovery grid, was fixed before any confirmatory work?",
+   "answer": "Claim flips are defined through the mapping from circuit to statement. If the mapping had been adjusted after seeing circuits, the flip rate could be tuned up or down. That would reintroduce analytic flexibility at the statement layer, which the study is meant to expose rather than exercise.",
+   "rubric": [
+    "Asserts that a post hoc claim map could make the flip rate an artefact of tuning.",
+    "Reason: flips are computed through the mapping, so choosing it after seeing circuits is analytic flexibility at the statement level."
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can two circuits with little edge overlap still support the same region statement under the claim map?",
+   "answer": "The claim map aggregates edges up to statements about regions, concentration or input segments. Different edges lying in the same region can therefore yield the same statement. Edge-level disjointness need not show up at the coarser level of what is filed.",
+   "rubric": [
+    "Asserts that low edge overlap is compatible with identical statements.",
+    "Reason: the statement aggregates edges into coarser units (regions etc.), so different edges in the same region map to the same claim."
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p_gran",
+   "question": "If two specifications' statements agree at the finest granularity, must they also agree at the coarsest granularity?",
+   "answer": "Yes. Finer statements refine the coarser ones in the nested hierarchy, so agreeing fine statements imply the same coarse statement.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: nesting means each fine statement determines (refines) a unique coarse statement."
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p_gran",
+   "question": "If two specifications' statements agree at the coarsest granularity, must they also agree at the finest granularity?",
+   "answer": "No. A coarse region statement can be refined in different ways, for example in how distributed the computation is or which input segment it reads, so the finer statements can still differ.",
+   "rubric": [
+    "Answers no.",
+    "Reason: finer levels add information (distribution, input segment) on which statements sharing a coarse claim can still differ."
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b2-p_rand",
+   "question": "At circuit sizes where a uniform random draw touches every component, can size-matched random subsets passed through the claim map disagree with one another on the statement?",
+   "answer": "No. Such draws touch every component and can support only one statement, so the baseline is degenerate there.",
+   "rubric": [
+    "Answers no.",
+    "Reason: touching every component forces a single statement (degenerate baseline)."
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b2-p_rand",
+   "question": "At sizes small enough that a uniform random draw leaves some components untouched, can size-matched random subsets disagree with one another on the statement?",
+   "answer": "Yes. Different draws can touch different components or regions and so map to different statements. The degeneracy is specific to large sizes.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: draws that leave components untouched can cover different regions, so the mapping can yield different statements."
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b2-p_boot",
+   "question": "Is a bootstrap that resamples specifications an acceptable way to quantify uncertainty in the pairwise claim-flip rate, under the paper's statistical approach?",
+   "answer": "Yes, provided the interval is read as conditional on the designed grid rather than as licensing inference beyond it. Resampling specifications respects the dependence among pairs that share a specification.",
+   "rubric": [
+    "Answers yes (acceptable).",
+    "Reason/condition: resampling specifications handles the dependence among pairs sharing specifications, and the interval is conditional on the grid."
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b2-p_boot",
+   "question": "Is a bootstrap that resamples pairs of specifications as independent units an acceptable way to quantify uncertainty in the claim-flip rate?",
+   "answer": "No. Pairs that share a specification are dependent, so treating them as independent misrepresents the uncertainty, typically giving intervals that are too narrow.",
+   "rubric": [
+    "Answers no.",
+    "Reason: pairwise quantities are dependent whenever pairs share a specification, so resampling pairs as independent units is invalid (overstates precision)."
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b2-p_chance",
+   "question": "For circuits of a few hundred edges in GPT-2 small's factorised graph, is the overlap expected between two random edge subsets of that size close to zero?",
+   "answer": "Yes. A few hundred edges is a tiny fraction of tens of thousands, so random subsets of that size are expected to share almost nothing.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: the circuits are a very small fraction of a graph with tens of thousands of edges."
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b2-p_chance",
+   "question": "If the threshold rule admitted circuits covering most of the factorised graph, would two random edge subsets of that size still be expected to share almost nothing?",
+   "answer": "No. Subsets that each cover most of the graph must overlap heavily, so chance overlap would be large and the comparison against chance would change accordingly.",
+   "rubric": [
+    "Answers no.",
+    "Reason: when each subset covers most of the edge set, they necessarily share many edges, so chance overlap is high."
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team studies a model with ten times more edges than GPT-2 small and reports that its few-hundred-edge circuits share three times more edges than chance. How much should that reassure a regulator?",
+   "answer": "Very little. In a bigger graph, chance overlap for same-size circuits is even closer to zero, so beating it is an even weaker bar. In any case, structural overlap is not the quantity a filing depends on; statement compatibility is.",
+   "rubric": [
+    "Asserts the result is weak reassurance.",
+    "Reason: chance overlap shrinks as the graph grows, so exceeding it is an even weaker bar.",
+    "Adds that edge overlap is not what the filing depends on; statements are."
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A provider runs many configurations and files the one whose region statement is most favourable to it. Which protocol items would make this visible to a second analyst?",
+   "answer": "Item 1, declaring the specification space with citations, shows what else could have been run. Item 3, stating which specification produced the circuit and why it was selected, forces the selection rationale into the open. Together they let another analyst rerun the space and see that other defensible specifications support different statements.",
+   "rubric": [
+    "Identifies item 1 (declared specification space) and item 3 (chosen specification and why).",
+    "Reason: together these expose the alternatives and the selection, so another analyst can reproduce the space and see the contrary statements."
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A filer reports a single overall discard rate of 10% for its grid. Does that satisfy the protocol's discard item, and why?",
+   "answer": "No. Item 4 requires the discard rate per axis level. A metric-relative threshold rule can admit circuits unevenly, so the discards could be concentrated under one metric. An overall rate would then hide a skewed composition of the surviving evidence.",
+   "rubric": [
+    "Asserts it does not satisfy the protocol.",
+    "Reason: discards must be reported per axis level because a metric-relative threshold rule can concentrate discards in particular levels (e.g. one metric), skewing composition that an aggregate rate hides."
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Two published analyses of the same model attribute a behaviour to different regions. Before treating this as a substantive scientific conflict, what does the paper imply a reader needs?",
+   "answer": "The reader needs each analysis's declared specification space and chosen specification. With claims flipping on about three quarters of specification pairs, two defensible settings can easily produce opposite region attributions. Without the declared spaces, the conflict cannot be told apart from analytic variation.",
+   "rubric": [
+    "Asserts the reader needs the declared specification spaces/chosen specifications of both analyses.",
+    "Reason: claims flip on most specification pairs, including region attribution, so the disagreement could stem from defensible analytic choices rather than a real conflict."
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A standards body proposes fixing the threshold so that all filed circuits have comparable size, expecting this to make region attributions agree. Should it expect that, given the paper's results?",
+   "answer": "No. Section 7.4 shows region attribution still varies among same-size circuits once size-dependent content is removed. Equalising size does not remove the disagreement, consistent with the finding that no single axis rescues the filing.",
+   "rubric": [
+    "Asserts region attributions would still disagree.",
+    "Reason: the size-matched, size-removed comparison already shows region attribution varying among same-size circuits (and no single axis rescues the filing)."
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A filer's declared specification space lists only the single evaluation metric it actually used. Does that satisfy protocol item 1?",
+   "answer": "No. Item 1 asks for the levels a competent analyst could defend, each with a citation, not just the level used. Published alternatives exist; the grid alone uses four metrics from the Miller et al. library. Listing only the chosen level hides the space the protocol is meant to reveal.",
+   "rubric": [
+    "Asserts item 1 is not satisfied.",
+    "Reason: item 1 requires all defensible levels with citations; published alternative metrics exist (e.g. the four in the library), so a single level hides the space."
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the claim map's granularities were not nested, so that a finer statement could contradict a coarser one, which inference drawn from the coarsest-granularity flips would lose its force?",
+   "answer": "The inference that disagreement at the coarsest, most lenient level carries through to every more detailed filing. Without nesting, a coarse flip would not guarantee fine-level disagreement. Nor would fine-level agreement imply coarse agreement, so the levels could not be read as one interpretable hierarchy.",
+   "rubric": [
+    "Identifies the inference that coarse-level disagreement propagates to (rules out agreement at) finer levels / the interpretable hierarchy.",
+    "Reason: that propagation depends on finer statements refining rather than contradicting coarser ones."
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If computing the within-size decompositions and discard rates had required rerunning discovery on GPUs, which of the paper's claims about the protocol would be weakened?",
+   "answer": "The claims that the protocol is cheap relative to the sweep and satisfiable with existing tooling. Both rest on the analysis layer running without a GPU over stored outputs.",
+   "rubric": [
+    "Identifies the cheapness / existing-tooling claim for the protocol.",
+    "Reason: that claim relies on disclosure quantities being computed from stored outputs by a GPU-free analysis layer."
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the relationship between statement disagreement and functional disagreement had been constant across circuit sizes, would protocol item 5 lose its justification?",
+   "answer": "Only partly. It would lose the motivation from Section 7.6, that a pooled figure can hide which regime dominates in which part of the range. It would keep the motivation from Section 7.5, where pooled random-baseline comparisons mislead because the baseline becomes degenerate at large sizes.",
+   "rubric": [
+    "Asserts item 5 would remain justified, losing only part of its motivation.",
+    "Reason: the Section 7.6 regime-mixing rationale would disappear, but the Section 7.5 random-baseline/size-degeneracy rationale would still require within-size decomposition."
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose size-matched random subsets passed through the claim map flipped as often as discovered circuits within every size. Which of the paper's filability conclusions would this undermine?",
+   "answer": "None of them. The baseline answers only whether discovered circuits behave differently from arbitrary subgraphs, and the paper explicitly does not claim discovered circuits beat random. The claim-flip rate and the case for disclosure stand regardless.",
+   "rubric": [
+    "Asserts the filability conclusions (claim flips, protocol) would not be undermined.",
+    "Reason: the baseline speaks only to discovered vs arbitrary subgraphs, which the paper explicitly makes no claim about."
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose the Pythia-160m replication reproduced the overall claim-flip rate, but region attribution agreed in its size-matched, size-removed comparison. Which conclusion would then look specific to GPT-2 small?",
+   "answer": "The maximum-pressure conclusion, that disagreement cannot be attributed to the size channel. On Pythia the flips could be explained by size, so the persistence of region disagreement beyond size would appear model-specific.",
+   "rubric": [
+    "Identifies the maximum-pressure / not-attributable-to-size conclusion (Section 7.4).",
+    "Reason: on Pythia, disagreement would vanish once size is matched and removed, implicating the size channel there."
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If chance-corrected, example-level agreement had been low for structurally distinct circuits across the entire size range, what would happen to the phantom specialisation objection and to the finding that filings differ more than mechanisms?",
+   "answer": "The objection would fail for this grid, because the circuits would genuinely differ in mechanism rather than being members of one equivalence class. The finding that statements differ more than mechanisms over part of the range would also lose support, since mechanisms would differ at least as much everywhere.",
+   "rubric": [
+    "Asserts the phantom specialisation objection would fail (circuits are functionally different, not an equivalence class).",
+    "Asserts the 'filings differ more than mechanisms over part of the range' result would lose support, because functional disagreement would be high throughout."
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does Section 7.4 show that Article 86 statements about which input parts drove a decision remain unstable among size-matched circuits? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The control reduces the statement to region attribution, the core of an Annex IV 2(b) overseer-facing account. Input-part content for the affected person is not what that control tests.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the Section 7.4 control reduces statements to region attribution (Annex IV 2(b)), not the input-part content owed under Article 86."
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper's bootstrap interval for the claim-flip rate bound the instability one would see if optimal ablation were added as an operator? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Intervals resample specifications within the designed grid and are conditional on it, not licensing inference beyond it. Optimal ablation is not in the library, so it never entered the grid.",
+   "rubric": [
+    "Answers contradicted (the paper rules out such inference).",
+    "Reason: intervals are conditional on the grid, and optimal ablation was excluded because the library does not implement it."
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the pre-registered Pythia-160m replication succeeds, would the paper's findings be shown to hold at larger scale? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Pythia-160m is a small model of a different architecture family performing the same task. A successful replication would address model-specificity, not scale, and the paper claims nothing about scale.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the replication changes architecture family at a comparably small size, so it tests model-specificity rather than scale, about which the paper claims nothing."
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its statement procedure amplifies differences the mechanisms do not carry across the whole circuit-size range? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Statement disagreement exceeds chance-corrected functional disagreement only over part of the range, and the relationship varies with size. Elsewhere the procedure can be coarser than the mechanisms.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: the excess of statement over functional disagreement holds only over part of the size range; the relationship varies with size."
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the filability protocol let a regulator determine which of two conflicting filed circuits is correct? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The protocol is designed so that the regulator does not adjudicate which analytic choice is correct. It only requires the filer to declare the space and its choice, so a second analyst can reproduce or challenge the account on equal terms.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: the protocol deliberately avoids adjudicating correctness and instead enables reproduction/challenge via declared space and choice."
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the evaluation metric is the axis responsible for most of the statement disagreement? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The metric is named as the obvious candidate because of prior sensitivity and inflation results, but the paper does not rank it as the main driver. It reports that holding any single axis fixed does not remove the disagreement, and that standardising the metric would leave six axes free.",
+   "rubric": [
+    "Answers not settled (the paper does not establish it).",
+    "Reason: the metric is only the obvious candidate from prior work; the paper finds no single axis rescues the filing and gives no ranking making the metric dominant."
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A filer files the circuit from whichever specification in its sweep scored highest on sufficiency. Would that high sufficiency score show that the filed account is filable?",
+   "answer": "No. Sufficiency is one of the metrics Hsia et al. show can be inflated, and the paper treats the metric as one analytic axis among seven, not a neutral measuring device. Filability asks whether other defensible specifications yield compatible statements, and a score on one specification says nothing about that. Picking by score is itself a selection the filer would have to state and justify under protocol item 3.",
+   "rubric": [
+    "Says no, the score does not establish filability.",
+    "Reason: filability concerns agreement of statements across the declared specification space, not one configuration's score, and/or sufficiency is an inflatable metric that is itself an analytic axis.",
+    "Notes that the selection rule must be disclosed (protocol item 3) or is the kind of undisclosed flexibility the paper warns about."
+   ],
+   "batch": 3,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q80",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The claim map's size categories come from a committed calibration rule, but the filer reports nothing about how statements change under other calibration choices. What would a reviewer then be unable to tell?",
+   "answer": "The reviewer could not tell whether the observed agreement or flips depend on the discretisation itself rather than on the circuits. Every discretisation between circuit and statement is an analytic choice that belongs in the specification space. A committed rule removes hand-picking, but without a sensitivity report the effect of that choice stays hidden.",
+   "rubric": [
+    "Says the reviewer could not tell whether statement agreement or flips are driven by the size-category discretisation rather than by the circuits.",
+    "Reason: the discretisation is itself an analytic choice in the specification space, and committing to a rule does not reveal its influence; the paper asks for sensitivity to be reported."
+   ],
+   "batch": 3,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q81",
+   "type": "failure",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Suppose the grid's cells had been run across several different software environments instead of one pinned environment. Could differences between seeds still be read purely as evaluation-set variability?",
+   "answer": "No. The seed only selects which prompts are sampled. Differences between environments could add variation that no declared axis captures, and that variation would be confounded with the seed and other axes. The single pinned environment and the environment fingerprint are what keep variation attributable to the declared axes.",
+   "rubric": [
+    "Says no.",
+    "Reason: differences between environments would add an undeclared source of variation, confounded with the seed (and other) axes; the pinned environment is what isolates the seed as prompt sampling."
+   ],
+   "batch": 3,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If corruption had been crossed with all seven ablation operators instead of nested, in which direction would the resulting duplicate specifications bias the pairwise claim-flip rate, and why?",
+   "answer": "The rate would be biased downward. The two operators that never read the corrupt distribution would each be run under four corruption labels and would return identical circuits. Pairs of these duplicates would always support the same statement, so they would add pairs that never flip and make the filing look more stable than the distinct specifications warrant.",
+   "rubric": [
+    "Says the claim-flip rate would be biased downward (apparent stability inflated).",
+    "Reason: the duplicate specifications for operators that ignore the corrupt distribution produce identical circuits, so pairs among them never flip."
+   ],
+   "batch": 3,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Two specifications differ only in seed, so each sampled a different set of IOI prompts. If each circuit's successes and failures were taken on its own sampled prompts, could the Section 7.6 functional-agreement measure be computed validly?",
+   "answer": "No. The measure compares, example by example, whether two circuits succeed and fail on the same inputs. On disjoint or different prompt sets there are no shared examples to pair, so neither raw agreement nor kappa means anything. Both circuits must be evaluated on a common set of inputs.",
+   "rubric": [
+    "Says no, the measure would not be valid.",
+    "Reason: example-level agreement (and kappa) requires both circuits to be scored on the same inputs; the seed changes which prompts are sampled."
+   ],
+   "batch": 3,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A filer tried a published ablation operator, saw that it supported a different region statement, and left that operator out of its declared specification space. Would the protocol still let a second analyst reproduce or challenge the account on equal terms?",
+   "answer": "No. The protocol depends on item 1 declaring every level a competent analyst could defend. Omitting a tried level that disagrees hides exactly the part of the space that would reveal the instability. The second analyst would be working in a narrower space than the one the filer actually explored, so the account is asserted rather than audited.",
+   "rubric": [
+    "Says no.",
+    "Reason: item 1 requires declaring all defensible levels; omitting one that changes the statement conceals the disagreement, so the second analyst does not work on equal terms."
+   ],
+   "batch": 3,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q85",
+   "type": "why",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does the verification script compute pairwise quantities by more than one route, including a brute-force computation, rather than relying on one efficient implementation?",
+   "answer": "The headline results, such as the claim-flip rate, are pairwise quantities over very many specifications, and an efficient computation can hide implementation errors. Recomputing the same quantity by an independent brute-force route checks that the reported numbers really follow from the stored outputs and are not artefacts of code.",
+   "rubric": [
+    "Says independent routes guard against implementation errors in computing the pairwise quantities.",
+    "Links this to the headline results being pairwise (e.g. the claim-flip rate) and being checked against stored raw outputs."
+   ],
+   "batch": 3,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q86",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can changing only the evaluation metric change which specification pairs enter the Section 7.4 size-matched comparison?",
+   "answer": "Circuit size is not set by the analyst. It is an outcome of the threshold rule, and that rule is metric-relative. A different metric can therefore admit circuits of different sizes, which changes which specifications have same-size partners in the matched comparison.",
+   "rubric": [
+    "Says the metric changes the size of the admitted circuits.",
+    "Reason: size is an outcome of the metric-relative threshold rule, so it determines which pairs are size-matched."
+   ],
+   "batch": 3,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q87",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can discovered circuits still support different statements at sizes where a size-matched uniform random draw has become degenerate?",
+   "answer": "The random baseline is degenerate because a uniform draw of that many edges spreads across the graph and touches every component. Discovered circuits are not uniform draws: discovery concentrates edges in selected components. At the same size they can therefore leave components untouched and differ in which region they emphasise.",
+   "rubric": [
+    "Identifies that the degeneracy comes from uniform sampling spreading edges over every component.",
+    "Reason: discovery selects edges non-uniformly and concentrates them, so discovered circuits of the same size need not touch every component and can differ in region."
+   ],
+   "batch": 3,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does the paper treat building a bias-corrected estimator, in response to an unwelcome bootstrap interval for a small group, as the very behaviour it warns against?",
+   "answer": "Choosing an estimator after seeing an unwelcome result is a post-hoc analytic choice. That is the undisclosed flexibility which, as Simmons et al. showed, lets an analyst present almost anything. It would also depart from the pre-registered plan, and a study about analytic flexibility must not itself be flexible. The pre-registered response is to report point estimates with diagnostics.",
+   "rubric": [
+    "Says it is a post-hoc analytic choice driven by the result, i.e. undisclosed analytic flexibility.",
+    "Reason ties to self-consistency or pre-registration: a study of analytic flexibility that adjusts its analysis after seeing results would undermine its own argument (the alternative is point estimates with diagnostics)."
+   ],
+   "batch": 3,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does protocol item 1 require a citation for each declared level of each axis?",
+   "answer": "In the paper, a level counts as defensible because it comes from a published implementation; the grid contains no invented levels. A citation lets a regulator check that each level has that standing without judging which choice is correct. The space is then anchored in the literature rather than in the filer's say-so, which keeps the protocol free of adjudication.",
+   "rubric": [
+    "Says citations ground each level's defensibility in published work, mirroring the grid's rule that every level comes from a published implementation.",
+    "Reason: this lets the regulator verify the space without adjudicating which analytic choice is correct."
+   ],
+   "batch": 3,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does stripping size-dependent content in the Section 7.4 control leave region attribution but remove the overseer's account of how concentrated the computation is?",
+   "answer": "How concentrated the responsible computation is depends directly on how many edges or components the circuit contains, and that size is set by the threshold rule. Where the behaviour is located can be stated independently of size. So removing size-dependent content leaves only the region attribution, the Annex IV 2(b) core.",
+   "rubric": [
+    "Says concentration is size-dependent content, whereas region attribution can be stated independently of size.",
+    "Reason: concentration reflects how many edges or components the circuit includes, which is set by the threshold rule."
+   ],
+   "batch": 3,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q91",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "Two circuits each succeed on 50% of IOI examples and agree on 90% of examples. Does their agreement exceed what accuracy alone would produce?",
+   "answer": "Yes. With both circuits at 50% accuracy, chance agreement is 0.5\u00d70.5 + 0.5\u00d70.5 = 0.5. Observed agreement of 0.9 gives a kappa of (0.9 \u2212 0.5)/0.5 = 0.8, well above chance.",
+   "rubric": [
+    "Says yes, agreement exceeds chance.",
+    "Reason: expected chance agreement is about 50%, so 90% gives a high chance-corrected agreement (kappa about 0.8)."
+   ],
+   "batch": 3,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q92",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "Two circuits each succeed on 95% of IOI examples and agree on 90% of examples. Does their agreement exceed what accuracy alone would produce?",
+   "answer": "No. Chance agreement is 0.95\u00d70.95 + 0.05\u00d70.05 \u2248 0.905. Observed agreement of 0.90 is at or slightly below that, so kappa is about zero or slightly negative.",
+   "rubric": [
+    "Says no, agreement does not exceed chance.",
+    "Reason: expected chance agreement is about 90.5%, so 90% observed gives kappa near zero (or negative)."
+   ],
+   "batch": 3,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q93",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "pair": "b3-p2",
+   "question": "Under the pre-registered exclusion rules, is a specification for which the threshold rule admits no circuit recorded as a discard?",
+   "answer": "Yes. Specifications for which the threshold rule admits no circuit are one of the two pre-registered exclusions. They are recorded as discards with their rates and are not repaired.",
+   "rubric": [
+    "Says yes, it is recorded as a discard.",
+    "Reason: this is one of the two exclusions fixed in advance (alongside execution failures), recorded with rates and not repaired."
+   ],
+   "batch": 3,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q94",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "pair": "b3-p2",
+   "question": "Under the pre-registered exclusion rules, is a specification that admits a circuit, but whose statement contradicts the filer's preferred account, recorded as a discard?",
+   "answer": "No. The only exclusions are cells that fail to execute and specifications with no admitted circuit, and both criteria were fixed before any circuit was seen. Excluding a specification because of what its statement says would be the result-driven flexibility the study warns against.",
+   "rubric": [
+    "Says no.",
+    "Reason: exclusions are limited to execution failures and no admitted circuit, fixed before circuits were seen; excluding by statement content would be result-driven flexibility."
+   ],
+   "batch": 3,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b3-p3",
+   "question": "A discovery cell is rerun in the pinned environment with the same configuration and the same seed. Should it return the same circuit?",
+   "answer": "Yes. The seed selects which prompts are sampled and does not represent nondeterminism. Every run traces to a config, a seed and an environment fingerprint, so the same configuration, seed and environment should reproduce the same prompts and the same circuit.",
+   "rubric": [
+    "Says yes.",
+    "Reason: the seed fixes the prompt sample and is not nondeterminism, and config, seed and environment fully trace a run."
+   ],
+   "batch": 3,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b3-p3",
+   "question": "A discovery cell is rerun in the pinned environment with the same configuration but a different seed. Should it be expected to return the same circuit?",
+   "answer": "Not necessarily. A different seed samples different prompts, and the seed axis exists to measure evaluation-set variability. The circuit can change because the evaluation set changed.",
+   "rubric": [
+    "Says not necessarily, or that it may differ.",
+    "Reason: a different seed selects different prompts, so the axis captures evaluation-set variability."
+   ],
+   "batch": 3,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b3-p4",
+   "question": "If every discovered circuit and its matched random subsets had exactly the same size across all specifications, would a pooled baseline comparison be interpretable without a within-size decomposition?",
+   "answer": "Yes. With a single size, the pooled comparison is the within-size comparison. The hazard the paper identifies comes from mixing different distributions of circuit size, and that cannot happen here.",
+   "rubric": [
+    "Says yes.",
+    "Reason: with one size the pooled comparison equals the within-size comparison; the hazard comes from mixing size distributions."
+   ],
+   "batch": 3,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b3-p4",
+   "question": "If specifications admitted circuits across a wide range of sizes, including sizes where a uniform random draw touches every component, would a pooled baseline comparison be interpretable without a within-size decomposition?",
+   "answer": "No. The pooled comparison would mix size distributions, including a region where the baseline is degenerate and supports only one statement. Its direction could then point either way for reasons unrelated to discovery quality, so it is uninterpretable without the within-size decomposition.",
+   "rubric": [
+    "Says no.",
+    "Reason: pooling mixes size distributions, including the degenerate large-size region, so the direction can mislead regardless of discovery quality."
+   ],
+   "batch": 3,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q99",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A filer produces its statement with its published deterministic claim map, then has a language model rephrase the statement for readability before filing. Does the filed text satisfy protocol item 2?",
+   "answer": "No. Item 2 requires the procedure from circuit to filed statement to be deterministic, published code, not a language model. The rephrased text is no longer what the published map outputs, and it brings in model variance that cannot be separated from circuit variance. A second analyst running the map could not reproduce the filed wording.",
+   "rubric": [
+    "Says no.",
+    "Reason: the filed statement is no longer the output of the declared deterministic map, and the language model adds variance that is inseparable from circuit variance, so the statement cannot be reproduced."
+   ],
+   "batch": 3,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q100",
+   "type": "transfer",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "The Pythia-160m replication keeps four metrics and three thresholds. How many specifications does it contain?",
+   "answer": "11,088. Specifications are discovery cells multiplied by metrics and thresholds, as in the GPT-2 grid where 1,540 \u00d7 12 = 18,480, so 924 \u00d7 4 \u00d7 3 = 11,088.",
+   "rubric": [
+    "Gives 11,088.",
+    "Reason: specifications = discovery cells \u00d7 4 metrics \u00d7 3 thresholds (924 \u00d7 12)."
+   ],
+   "batch": 3,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q101",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team runs a multiverse in which every specification keeps exactly the top 300 edges, whatever the metric. Does circuit size still act as a hidden channel in their pooled statistics?",
+   "answer": "No. Size is then fixed by the analyst and constant across specifications, so pooled statistics coincide with within-size ones. The value 300 is now an analytic choice and should be declared in the specification space. On the paper's evidence, fixing size would not by itself remove disagreement about region.",
+   "rubric": [
+    "Says size no longer acts as a hidden channel.",
+    "Reason: size is constant and set by the analyst rather than an outcome of the threshold rule, so pooled equals within-size.",
+    "Notes that the fixed size is itself an analytic choice to declare, and/or that matched size did not remove region disagreement in Section 7.4."
+   ],
+   "batch": 3,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Two providers file region statements about the same model, each derived through its own claim map, and the statements disagree. What does the paper imply is needed before the disagreement can be blamed on the circuits?",
+   "answer": "Both claim maps must be available as published deterministic code. The derivation procedure is part of the evidence, and its discretisations are analytic choices. The disagreement could come from the maps rather than the circuits, so both circuits need to go through the same map to separate the two.",
+   "rubric": [
+    "Says both claim maps are needed as published code (or both circuits must be run through a common map).",
+    "Reason: the map from circuit to statement is part of the evidence, and its choices (e.g. discretisations) can produce disagreement on their own."
+   ],
+   "batch": 3,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A conformity body proposes that providers must file the statement supported by the largest share of their declared specification space, instead of the one from their chosen specification. Is that something the paper's protocol requires?",
+   "answer": "No. The protocol requires declaring the space, the deterministic claim map, the chosen specification and why it was selected, discard rates, and within-group decompositions. It deliberately does not prescribe which choice is right. A mandated selection rule goes beyond that disclosure-only design.",
+   "rubric": [
+    "Says no, the protocol does not require this.",
+    "Reason: the protocol only requires disclosure of the space and of the chosen specification with its rationale (item 3); it avoids prescribing or adjudicating the correct choice."
+   ],
+   "batch": 3,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "A second analyst reruns a filed configuration with the same config and seed and gets a different circuit. Given the paper's reproducibility setup, where should they look for the cause?",
+   "answer": "They should compare the environment fingerprint and the code commit. The commit can be recovered by content-addressed comparison of archived outputs against the git tree. The seed only selects prompts and is not a source of nondeterminism, so a mismatch at the same config and seed points to a different environment or code version.",
+   "rubric": [
+    "Says to check the environment fingerprint and/or code commit (version).",
+    "Reason: with config and seed equal and the seed only selecting prompts, the remaining traced inputs (environment, code) must account for the difference."
+   ],
+   "batch": 3,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A provider adds a prompt variant it wrote itself and has never published. Under the paper's rules, can that variant enter the declared specification space as a defensible level?",
+   "answer": "Not as things stand. Protocol item 1 requires a citation for each level, and the paper's own grid admits only levels taken from published implementations. An unpublished variant has no such grounding, so its defensibility cannot be checked without the regulator judging it.",
+   "rubric": [
+    "Says no, not as a defensible level.",
+    "Reason: levels must carry a citation to published work (item 1, and the grid's rule of published levels only), which an unpublished variant lacks."
+   ],
+   "batch": 3,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q106",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose the threshold rule had admitted circuits at equal rates for every metric and no cell had failed to execute. Which stated limitation would become moot for this grid, and would protocol item 4 still be worth requiring?",
+   "answer": "The limitation that the discard rule shapes the evidence would be moot, because the surviving pool would keep the balanced composition. Item 4 would still be worth requiring: a filer cannot assume this in general, and the paper asks filings to record which configurations ran and which did not. A zero discard rate per level is itself the report that makes the composition visible.",
+   "rubric": [
+    "Identifies the 'discard rule shapes the evidence' limitation (uneven composition of the surviving pool) as moot.",
+    "Says item 4 is still worth requiring, because composition must be shown rather than assumed (zero rates are themselves the disclosure)."
+   ],
+   "batch": 3,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q107",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If chance-corrected functional agreement had been near perfect across the whole size range, so that all circuits implemented the same mechanism, would the filability protocol lose its justification?",
+   "answer": "No. What is filed is the statement, and statements still flip on about three quarters of pairs. A second analyst would therefore still file something incompatible. The instability would be traced to the statement procedure amplifying differences, which makes publishing the claim map and declaring the space more important, not less.",
+   "rubric": [
+    "Says no, the protocol would still be justified.",
+    "Reason: filability concerns statements, which still flip; with mechanisms agreeing the flips come from the procedure, which strengthens the need to disclose the claim map and the space."
+   ],
+   "batch": 3,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Which hazard identified for the random baseline also applies when comparing statement disagreement with functional disagreement, and what does it require there?",
+   "answer": "Circuit size acting as a hidden channel. The relationship between statement and functional disagreement varies with size, so a pooled figure can hide which regime dominates in which part of the range. The comparison should be reported within size, as protocol item 5 requires for pooled statistics.",
+   "rubric": [
+    "Identifies the circuit-size channel, i.e. that pooling across sizes misleads.",
+    "Says the statement-versus-functional comparison must be decomposed within size, because the regime varies with size."
+   ],
+   "batch": 3,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the random edge subsets had been mapped to statements by a different procedure from the one applied to discovered circuits, which question could the baseline no longer answer?",
+   "answer": "It could no longer answer whether discovered circuits behave differently from arbitrary subgraphs of matched size. Any difference in statement agreement could then come from the two procedures rather than from discovery, because the statement procedure is part of the evidence.",
+   "rubric": [
+    "Says the baseline could no longer show whether discovered circuits differ from arbitrary subgraphs.",
+    "Reason: differences in statements could be caused by the differing procedures rather than by discovery."
+   ],
+   "batch": 3,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If Section 7.1 had found circuits nearly identical in their edges across specifications, would the phantom specialisation objection still need addressing for the claim-flip result?",
+   "answer": "No, it would be largely moot. The objection is that structurally distinct circuits may implement the same computation. Nearly identical circuits passed through a deterministic claim map would yield nearly identical statements, leaving no flips for the objection to explain away.",
+   "rubric": [
+    "Says it would be largely moot or would not need addressing.",
+    "Reason: the objection concerns structurally distinct circuits; nearly identical circuits under a deterministic map would support the same statements."
+   ],
+   "batch": 3,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If claim flips had occurred only in the affected person's statement and never in region attribution, which results would lose support?",
+   "answer": "The Section 7.4 result would lose support, since it says region attribution still varies among size-matched circuits with size removed from the statement. So would the part of the claim-flip result saying flips include substantive disagreement about which region is responsible. The Annex IV 2(b) account would then look stable.",
+   "rubric": [
+    "Names the Section 7.4 persistence of region disagreement (c4).",
+    "Also names the claim that the flips include disagreement about which region is responsible (c2), or the implied instability of the Annex IV 2(b) account."
+   ],
+   "batch": 3,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose Section 7.6 found that, in the size range covered by the Section 7.4 matched pairs, statements differ more than mechanisms. How would that change the reading of 7.4's persistent region disagreement?",
+   "answer": "In that range, the persistent region disagreement would partly reflect the statement procedure amplifying differences that the mechanisms do not carry, rather than genuinely different mechanisms. It would still undermine the filing, because filed statements remain incompatible. But it would point to the claim map, not the circuits, as the main source.",
+   "rubric": [
+    "Says the region disagreement would partly reflect the procedure amplifying differences, not genuinely different mechanisms.",
+    "Says the filing problem would remain because the statements still disagree (the source shifts towards the claim map)."
+   ],
+   "batch": 3,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that sufficiency and comprehensiveness are unreliable metrics for judging circuit faithfulness? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper cites Hsia et al.'s inflation result as one reason to treat the metric as an analytic axis. It does not itself evaluate the quality of any metric, and its protocol deliberately avoids adjudicating which choice is correct.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the paper relies on Hsia et al. as motivation and treats the metric as an axis, without testing metric validity or adjudicating between metrics."
+   ],
+   "batch": 3,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does Section 7.4 show that the overseer's account of how concentrated the computation is remains unstable among size-matched circuits? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The 7.4 control removes all size-dependent content from the statement, which includes concentration, and tests only region attribution. It says nothing about the stability of the concentration content.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: size-dependent content such as concentration is removed in that control; only region attribution is tested."
+   ],
+   "batch": 3,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that integrated edge gradients produces more stable filed statements than the edge attribution patching family? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Discovery objectives are one axis of the grid. The reported finding is only that no single axis, when held fixed, removes the disagreement; the paper does not rank objectives by stability. The comparison is also limited to the library's implementations on one model and one task.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the paper reports that no axis rescues the filing but gives no ranking of discovery objectives by statement stability (and the scope is limited to one model and task)."
+   ],
+   "batch": 3,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that adopting the filability protocol would make filings by different analysts agree? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled; the paper does not claim it. The protocol is disclosure: it makes the specification space and the filer's position within it visible, so disagreement can be examined and challenged. It does not reduce variation, and the paper finds that even standardising an axis does not remove disagreement.",
+   "rubric": [
+    "Answers not settled (or says the paper does not show or claim this).",
+    "Reason: the protocol requires disclosure rather than constraining choices, converting an assumed property into an examinable one, and no axis fixing removes disagreement."
+   ],
+   "batch": 3,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its claim map is the correct translation of circuits into Annex IV and Article 86 statements? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The claim map is one procedure, fixed in advance and published so it can be attacked and checked. The paper itself says every discretisation between circuit and statement is an analytic choice belonging to the specification space, not a uniquely correct translation.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the map is one fixed, published choice open to attack, and its discretisations are themselves analytic choices rather than a validated correct translation."
+   ],
+   "batch": 3,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the three-quarters claim-flip rate show that about three quarters of pairs of real-world filings by different providers would conflict? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The rate is computed over pairs of specifications in a designed, balanced grid, and any interval is conditional on that grid. Real providers need not choose uniformly from it. The study also covers one model and one task.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the rate is over all pairs of a designed grid, conditional on the grid, and real filers' choices are not a uniform draw from it (with one model and one task as an added limit)."
+   ],
+   "batch": 3,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the near-disjoint circuits implement different mechanisms throughout the size range? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Structural difference need not imply functional difference. Section 7.6 finds that over part of the range statements differ more than mechanisms do, which points to functional similarity there, and the relationship varies with size. So the paper does not establish that the mechanisms differ everywhere.",
+   "rubric": [
+    "Answers not settled (and not shown).",
+    "Reason: structural difference need not imply functional difference, and over part of the range chance-corrected functional disagreement is smaller than statement disagreement, with the relationship varying by size."
+   ],
+   "batch": 3,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q120",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b4-p1",
+   "question": "Would adding a fifth corruption distribution to the pre-registered GPT-2 grid add exactly 350 discovery cells?",
+   "answer": "Yes. Corruption is nested within the five operators that read it, so the new level crosses 5 operators \u00d7 7 objectives \u00d7 2 prompt variants \u00d7 5 seeds = 350 new cells.",
+   "rubric": [
+    "Answers yes (350 new cells)",
+    "Reasons that corruption is nested within only the five corruption-reading operators, giving 5 \u00d7 7 objectives \u00d7 2 prompt variants \u00d7 5 seeds"
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q121",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b4-p1",
+   "question": "Would adding a third prompt variant to the pre-registered GPT-2 grid add exactly 350 discovery cells?",
+   "answer": "No. A prompt variant crosses every objective and every operator\u2013corruption combination. That is 7 \u00d7 22 \u00d7 5 seeds = 770 new cells, not 350.",
+   "rubric": [
+    "Answers no (it adds 770 cells, not 350)",
+    "Reasons that prompt variant is fully crossed with all 7 objectives, the 22 operator\u2013corruption combinations (2 + 5\u00d74) and the 5 seeds"
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q122",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p2",
+   "question": "Would requiring filers to state only the coarsest-granularity statement remove all claim flips between specifications?",
+   "answer": "No. The paper reports that flips include disagreement about which region is responsible even at the coarsest granularity, so coarse-only filing leaves those flips in place.",
+   "rubric": [
+    "Answers no",
+    "Reasons that flips in region attribution persist at the coarsest granularity"
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q123",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p2",
+   "question": "Would requiring filers to state only the coarsest-granularity statement remove disagreements that arise only in how distributed the computation is?",
+   "answer": "Yes. Granularities are nested, so finer statements refine the coarse region statement by adding distribution and input segment. A disagreement confined to that added detail disappears when only the coarse level is filed.",
+   "rubric": [
+    "Answers yes",
+    "Reasons that granularities are nested, so how distributed the computation is belongs only to finer statements, which refine rather than contradict the coarse one"
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q124",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "If two circuits have the same aggregate success rate on IOI, must they agree on which individual examples they succeed on?",
+   "answer": "No. The paper notes that functional agreement in aggregate need not imply agreement on individual examples. Two circuits can be equally accurate while failing on different prompts.",
+   "rubric": [
+    "Answers no",
+    "Reasons that equal aggregate accuracy is compatible with succeeding and failing on different examples (aggregate agreement need not imply example-level agreement)"
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q125",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "If two circuits succeed and fail on exactly the same IOI examples, must they have the same aggregate success rate?",
+   "answer": "Yes. Identical example-by-example outcomes fix the number of successes, so aggregate accuracy must match. Example-level agreement is the stronger of the two notions.",
+   "rubric": [
+    "Answers yes",
+    "Reasons that identical per-example outcomes determine the same success count, so example-level agreement implies aggregate agreement"
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q126",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b4-p4",
+   "question": "If the Pythia-160m replication's overall claim-flip rate differed from GPT-2 small's, could the difference be attributed purely to the change of architecture family?",
+   "answer": "No. The two grids also differ in the seed axis, three levels versus five. The composition of specification pairs, including pairs differing in sampled prompts, is therefore not the same, and the grid change is confounded with the model change.",
+   "rubric": [
+    "Answers no",
+    "Reasons that the Pythia grid has 3 seed levels rather than 5, so the pair composition differs and confounds the comparison"
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q127",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b4-p4",
+   "question": "If the GPT-2 small grid were first restricted to three seed levels before computing its claim-flip rate, would comparing it with Pythia-160m still be confounded by the number of seed levels?",
+   "answer": "No. Pythia's grid is identical to GPT-2's on every axis except seed count. Restricting GPT-2 to three seeds matches the grid composition, so the seed-count confound is removed. Any remaining difference is conditional on the grids, not a general claim.",
+   "rubric": [
+    "Answers no",
+    "Reasons that the replication differs from the GPT-2 grid only in seed levels, so matching seed count equalises grid composition"
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q128",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Two discovered circuits both succeed on every IOI example in the evaluation set. Can Section 7.6's chance-corrected agreement tell whether they implement the same mechanism?",
+   "answer": "No. With perfect accuracy for both circuits, the agreement expected from accuracy alone already equals observed agreement, so kappa is undefined or uninformative. The measurement needs variation in success and failure to separate shared mechanism from shared accuracy.",
+   "rubric": [
+    "Answers no, the measure cannot distinguish them",
+    "Reasons that agreement expected from accuracy alone equals the observed agreement when both are always correct, so chance correction leaves nothing to measure (kappa undefined or uninformative)"
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q129",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose the design used a coarser computational graph without separate query, key and value inputs, so it had far fewer edges but the same components. Would the random-baseline degeneracy described in Section 7.5 begin at the same circuit sizes?",
+   "answer": "No, it would begin at smaller sizes. A size-matched uniform draw covers a larger fraction of a smaller edge set, so it touches every component, and supports only one statement, sooner.",
+   "rubric": [
+    "Answers that degeneracy would set in at smaller circuit sizes",
+    "Reasons that with fewer edges a draw of a given size covers a larger fraction of the graph and touches every component earlier"
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q130",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A standards body evaluates Section 7.3-style 'hold one axis fixed' comparisons by computing each level's claim-flip rate pooled across all circuit sizes. Why might its conclusion about which level stabilises statements be misleading?",
+   "answer": "Fixing a level, for example one metric under the metric-relative threshold rule, can shift the distribution of circuit sizes. A lower pooled within-level flip rate might then reflect size composition rather than stabilisation, so each within-level comparison needs its within-size decomposition.",
+   "rubric": [
+    "States that the comparison can be confounded by circuit size",
+    "Reasons that axis levels can change the circuit sizes the threshold rule admits, and size is a hidden channel",
+    "Says a within-size decomposition is required"
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q131",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A filer presents a specification curve showing the share of specifications supporting each region statement, but most specifications under one metric were discarded by the threshold rule. Why might the curve misstate the share of the declared space behind each statement?",
+   "answer": "The curve is built from the surviving pool, whose composition differs from the balanced design. The heavily discarded metric is under-represented, so shares and level\u2013statement associations reflect survivors rather than the declared space. Per-level discard rates are needed to read it.",
+   "rubric": [
+    "States that the shares describe the surviving pool, not the declared space",
+    "Reasons that uneven discards across metric levels change composition, so the under-represented level's statements are under-weighted",
+    "Mentions per-level discard rates (protocol item 4) as what makes this visible"
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q132",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A conformity body checks a filing by having a second analyst rerun the exact filed specification and finds an identical circuit and statement. Does this establish filability in the paper's sense?",
+   "answer": "No. Rerunning the same configuration under a pinned environment checks reproducibility, not filability. Filability asks whether a competent analyst working anywhere in the declared space of defensible choices would reach a compatible account, and the paper shows other defensible specifications flip the claim on most pairs.",
+   "rubric": [
+    "Answers no",
+    "Reasons that filability concerns agreement across the declared space of defensible specifications, not reruns of one configuration (which only test reproducibility)"
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q133",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why must the random baseline's edge subsets be matched in size to the discovered circuits, rather than drawn at one fixed size?",
+   "answer": "The statement a subgraph supports depends on its size: how many components it touches and how concentrated it looks under the size categories. Unmatched subsets would therefore differ from discovered circuits for size reasons alone. Matching size isolates whether discovery differs from arbitrary subgraphs.",
+   "rubric": [
+    "States that size itself influences which statements a subgraph can support (components touched, concentration or size categories)",
+    "Concludes that unmatched sizes would confound the comparison of discovered and random subgraphs"
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q134",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "The paper says a claim that an explanation is stable is exactly the kind of claim undisclosed flexibility can manufacture. Why, given its results?",
+   "answer": "Defensible specifications flip the claim on about three quarters of pairs. An analyst who tries many configurations could therefore report only those that happen to agree and present the result as stable. Without the declared space and discard rates, a reader cannot see the configurations that disagreed.",
+   "rubric": [
+    "States that an analyst could report only the subset of configurations that agree",
+    "Links this to the high flip rate across defensible specifications, and notes the omission is invisible without disclosure of the space"
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q135",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the phantom specialisation objection threaten the interpretation of the claim-flip result but not the near-disjointness finding of Section 7.1?",
+   "answer": "The objection concedes that circuits are structurally distinct and argues they may still implement the same computation. Near-disjointness is a structural fact the objection leaves intact. What it disputes is whether disagreeing statements reflect real mechanism differences, which is why a functional measurement is needed.",
+   "rubric": [
+    "States that near-disjointness is a structural fact the objection accepts",
+    "Reasons that the objection targets whether statement disagreement reflects different mechanisms (it could reflect sampling from an equivalence class)"
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q136",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why is the overseer's statement more directly exposed to the threshold axis than a pure region attribution is?",
+   "answer": "The overseer's account includes how concentrated the responsible computation is, which depends on circuit size. Circuit size is set by the threshold rule. Changing the threshold can therefore alter that content even when the region is unchanged.",
+   "rubric": [
+    "States that the overseer's statement includes size-dependent content (how concentrated the computation is)",
+    "Reasons that circuit size is an outcome of the threshold rule, so threshold changes feed into that content"
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q137",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "pair": null,
+   "question": "After discards, an analyst proposes reweighting the surviving specifications to restore the design's balanced composition before computing the claim-flip rate. Is that consistent with the paper's approach?",
+   "answer": "No. The paper says the surviving pool's composition is a property of the evidence and should be reported rather than smoothed or adjusted for, with discard rates reported per axis level.",
+   "rubric": [
+    "Answers no",
+    "Reasons that composition should be reported, not adjusted or smoothed, with per-level discard rates disclosed"
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q138",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "In a filer's sweep, one published discovery objective fails to execute in every cell. Should the filer drop it from the declared specification space or substitute another objective?",
+   "answer": "Neither. Item 1 declares the levels a competent analyst could defend, whether or not they ran. The failing objective stays declared and is reported with a 100% discard rate for that level, without repair or substitution, which also records which configurations ran and which did not.",
+   "rubric": [
+    "Answers that it stays in the declared space and is not substituted or repaired",
+    "Reasons that the space lists defensible levels and failures are recorded as discards, reported per axis level"
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q139",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A regulator proposes mandating one complete configuration on all seven axes for every circuit filing. Is that consistent with the rationale the paper gives for its protocol?",
+   "answer": "No. The protocol is implementable because it does not require the regulator to adjudicate which analytic choice is correct, and full mandating does exactly that. The paper also judges that even fully standardising the metric alone is more than a conformity procedure can reasonably demand.",
+   "rubric": [
+    "Answers no",
+    "Reasons that mandating a configuration requires adjudicating which choice is correct, which the protocol is designed to avoid (or that even standardising one axis is judged too demanding)"
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A reviewer builds a specification curve from a compliant filing and finds the filed region statement is supported by only a small minority of the declared space. What does the paper imply this shows, and what does the protocol require the filer to have supplied?",
+   "answer": "It shows that the opposite statement is defensible by most of the space, which is the situation the paper says filings currently conceal. The reviewer can see this without adjudicating, and item 3 requires the filer to have stated which specification it chose and why.",
+   "rubric": [
+    "States that the filed statement's alternative is defensible across most of the declared space (the filing's position in the space is now visible)",
+    "Mentions protocol item 3: stating the chosen specification and why it was selected"
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q141",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If Section 7.6 had used raw example-level agreement instead of chance-corrected agreement, in which direction would the finding that filings differ more than mechanisms be distorted?",
+   "answer": "It would be exaggerated. Similarly accurate circuits agree on many examples by chance, so raw agreement understates functional disagreement. The regime where statement disagreement exceeds functional disagreement would then appear larger than it is.",
+   "rubric": [
+    "States that the finding would be overstated (the statements-exceed-mechanisms regime would look larger)",
+    "Reasons that raw agreement inflates functional agreement through accuracy alone, understating functional disagreement"
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q142",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose changing the claim map's size-category calibration rule had removed most claim flips. Which result would nonetheless be unaffected, and why?",
+   "answer": "The Section 7.4 result. It removes all size-dependent content from the statement and compares only same-size circuits, so the region attribution it tests does not pass through size categories at all.",
+   "rubric": [
+    "Identifies the Section 7.4 maximum-pressure result (region disagreement among size-matched circuits)",
+    "Reasons that 7.4 strips size-dependent content, so size-category calibration does not enter its statements"
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q143",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the within-size baseline had shown discovered circuits flipping far less often than random subsets at every size, would that undermine the paper's conclusion that filings are not filable as currently produced?",
+   "answer": "No. The baseline answers whether discovered circuits differ from arbitrary subgraphs, which concerns discovery quality. The filability problem is that defensible specifications produce discovered circuits whose statements flip on about three quarters of pairs, and beating random does not reduce that.",
+   "rubric": [
+    "Answers no",
+    "Reasons that the baseline tests discovery against arbitrary subgraphs, while filability concerns disagreement among defensible specifications (the three-quarters flip rate stands)"
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q144",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If Hsia et al. had found that sufficiency and comprehensiveness cannot be inflated, would the paper's case for treating the evaluation metric as an analytic axis collapse?",
+   "answer": "No. Hsia et al. is only one reason. Miller et al. show faithfulness scores are highly sensitive to methodological choices, and the four metrics are published, defensible levels in the library, so the metric remains a consequential choice.",
+   "rubric": [
+    "Answers no",
+    "Reasons that the metric axis also rests on Miller et al.'s sensitivity findings and on the metrics being published, defensible levels"
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q145",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the exclusion of optimal ablation make the finding that no analytic axis rescues the filing conservative, in the sense that adding it could only strengthen that finding? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Adding a level widens the space, which bears on overall instability. Whether holding the operator fixed at optimal ablation would remove the disagreement is a within-level comparison the grid never ran.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that optimal ablation was never in the grid, so no within-level comparison at that operator exists (wider space does not determine what fixing at the new level does)"
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q146",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that holding any two analytic axes fixed together would still leave filed statements in disagreement? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The design holds each axis fixed in turn and compares within its levels. Joint fixing of pairs of axes is not reported, though the paper's caution about standardisation suggests it should not be assumed to help.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that Section 7.3 holds one axis fixed at a time, and joint fixing of two axes is not tested"
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q147",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does Section 7.6 show that phantom specialisation holds, meaning structurally distinct circuits implement the same mechanism, over part of the size range? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The result is comparative: over part of the range, statement disagreement exceeds chance-corrected functional disagreement. That does not mean functional disagreement is zero, so it does not establish that the mechanisms are identical.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that the finding is only that statements differ more than mechanisms, which does not imply functional disagreement is absent"
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q148",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that circuits from different specifications are nearly disjoint at the level of model components (attention heads and MLP blocks), not just edges? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Section 7.1 concerns edge sets in a factorised graph of tens of thousands of edges. Circuits with little edge overlap may still occupy the same region and support the same statement, so component-level overlap is not reported.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that the disjointness result is about edges, and the paper notes edge-disjoint circuits can still support the same region statement, so component overlap is not established"
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q149",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": "b5-p1",
+   "question": "Would adding a further, finer granularity level to the claim map require running any new discovery cells?",
+   "answer": "No. Granularity is applied by the deterministic claim map to circuits that already exist. It is not one of the factors that multiply to 1,540 discovery cells, so no discovery has to be rerun.",
+   "rubric": [
+    "Asserts that no new discovery cells are needed.",
+    "Explains that granularity is applied by the claim map to existing circuits and is not a factor in the 1,540-cell discovery count."
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q150",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b5-p1",
+   "question": "Would adding an eighth discovery objective to the pre-registered GPT-2 grid require running new discovery cells?",
+   "answer": "Yes. Each objective spans 22 operator\u2013corruption combinations \u00d7 2 prompt variants \u00d7 5 seeds, which is 220 discovery cells (1,540 / 7). An eighth objective therefore adds 220 cells and 2,640 specifications.",
+   "rubric": [
+    "Asserts that new discovery cells are required.",
+    "Gives 220 new cells (1,540/7, or 22 \u00d7 2 \u00d7 5), optionally 2,640 specifications."
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q151",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b5-p2",
+   "question": "When a single discovery cell fails to execute, are all the specifications built on that cell lost?",
+   "answer": "Yes. Each cell yields 12 specifications (4 metrics \u00d7 3 thresholds, since 18,480 / 1,540 = 12). A failed cell produces no circuit, so all 12 are recorded as discards.",
+   "rubric": [
+    "Asserts that all specifications built on the cell are lost.",
+    "States that this is 12 specifications (4 metrics \u00d7 3 thresholds)."
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q152",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b5-p2",
+   "question": "When the threshold rule admits no circuit for one metric\u2013threshold combination of a cell that ran successfully, are the other specifications built on that cell also lost?",
+   "answer": "No. Only that one specification is discarded. The cell's other metric\u2013threshold combinations apply their own threshold rule to the same discovery output and can still admit circuits.",
+   "rubric": [
+    "Asserts that the other specifications are not lost.",
+    "Explains that metric and threshold are applied per specification on top of the shared discovery output, so the discard is specific to that combination."
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q153",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": "b5-p3",
+   "question": "Before any discards, when Section 7.3 holds the evaluation metric fixed, does each metric level contain the same number of specifications?",
+   "answer": "Yes. The metric is fully crossed with everything else, so each of the four levels holds 18,480 / 4 = 4,620 specifications.",
+   "rubric": [
+    "Asserts that the groups are equal.",
+    "Gives 4,620 per level, or explains that the metric is fully crossed."
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q154",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": "b5-p3",
+   "question": "Before any discards, when Section 7.3 holds the ablation operator fixed, does each operator level contain the same number of specifications?",
+   "answer": "No. Each corruption-reading operator spans four corruption levels, giving 3,360 specifications. Each of the two non-reading operators gives only 840, because corruption is nested.",
+   "rubric": [
+    "Asserts that the groups are unequal.",
+    "Attributes this to corruption being nested within the five reading operators: four times as many specifications, about 3,360 versus 840."
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q155",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": "b5-p4",
+   "question": "Do two specifications that differ only in threshold share the same discovery cell?",
+   "answer": "Yes. Threshold is one of the 12 metric\u2013threshold combinations applied to each discovery cell. Any statement difference between the two comes from post-discovery selection, not from rerunning discovery.",
+   "rubric": [
+    "Asserts yes.",
+    "Explains that threshold (with metric) is applied to a shared discovery output, the 12 specifications per cell."
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q156",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b5-p4",
+   "question": "Do two specifications that differ only in seed share the same discovery cell?",
+   "answer": "No. Seed is a factor of the 1,540 discovery cells, and it selects different sampled prompts. The two specifications therefore come from separate discovery runs.",
+   "rubric": [
+    "Asserts no.",
+    "Explains that seed multiplies the discovery cells (it is part of the cell definition and selects different prompts)."
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q157",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": "b5-p5",
+   "question": "When Section 7.3 holds the corruption distribution fixed, does every specification in the grid fall into one of its levels?",
+   "answer": "No. Specifications using the two operators that never read the corrupt distribution have no corruption level. That is 140 cells, or 1,680 specifications, which no within-corruption comparison can include.",
+   "rubric": [
+    "Asserts that not every specification falls into a level.",
+    "Identifies the specifications using the two non-reading operators (about 1,680 specifications or 140 cells) as the excluded set."
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q158",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": "b5-p5",
+   "question": "When Section 7.3 holds the prompt variant fixed, does every specification in the grid fall into one of its levels?",
+   "answer": "Yes. Prompt variant is crossed with every other axis, so each specification uses one of the two variants (9,240 each before discards).",
+   "rubric": [
+    "Asserts yes.",
+    "Explains that prompt variant is fully crossed (not nested), so every specification has a level."
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q159",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "question": "The surviving pool may contain unequal numbers of specifications per evaluation metric. Why must that imbalance come from the threshold rule rather than from cells that failed to execute?",
+   "answer": "A failed cell discards all 12 of its specifications, three under each metric, so cell failures remove specifications equally across metric levels. Uneven survival by metric can only come from specifications for which the metric-relative threshold rule admits no circuit.",
+   "rubric": [
+    "Attributes the metric imbalance to the threshold rule (no-admit discards).",
+    "Explains that a cell failure removes all metric levels equally (3 specifications per metric of its 12)."
+   ],
+   "batch": 5,
+   "orig_id": "q11",
+   "pair": null
+  },
+  {
+   "id": "q160",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "question": "Why does a claim-flip rate pooled over the full balanced grid weight each corruption-reading ablation operator four times as heavily as each non-reading operator?",
+   "answer": "Corruption is nested within the five reading operators. Each of them appears with four corruption distributions, giving 280 cells, while each non-reading operator appears in only 70 cells. A pooled figure therefore reflects reading operators disproportionately, even though the design is balanced in its nested structure.",
+   "rubric": [
+    "States that reading operators contribute four times as many cells or specifications.",
+    "Attributes this to corruption being nested only within the reading operators."
+   ],
+   "batch": 5,
+   "orig_id": "q12",
+   "pair": null
+  },
+  {
+   "id": "q161",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "question": "Bayat Makou et al. already documented phantom specialisation. Why can the paper not simply cite their finding to dismiss the objection for its own grid, rather than measuring functional agreement?",
+   "answer": "Their circuits varied only input statistics with the task held fixed. This grid also varies objectives, operators, metrics and thresholds, so nothing shows that its circuits form one behavioural equivalence class. Whether that holds has to be measured example by example within the grid.",
+   "rubric": [
+    "States that their result cannot be transferred and must be measured within this grid.",
+    "Notes that Bayat Makou varied input statistics while this grid varies other axes (operators, metrics, thresholds, objectives)."
+   ],
+   "batch": 5,
+   "orig_id": "q13",
+   "pair": null
+  },
+  {
+   "id": "q162",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "question": "Why should an edge-overlap comparison between circuits admitted at different thresholds also be read within size?",
+   "answer": "Overlap expected by chance depends on how large a circuit is relative to the graph. It is near zero at a few hundred edges and grows as circuits approach the graph's size. Pooling overlaps across thresholds mixes different chance levels, which is the same size-channel hazard the paper identifies for the random baseline.",
+   "rubric": [
+    "Asserts that structural comparisons need within-size reading.",
+    "Explains that chance overlap rises with circuit size, so pooling mixes different chance baselines."
+   ],
+   "batch": 5,
+   "orig_id": "q14",
+   "pair": null
+  },
+  {
+   "id": "q163",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "question": "Why can a filer give the overseer a coarse statement and the affected person a finer one from the same circuit without the two filed versions contradicting each other?",
+   "answer": "The claim map nests its granularities, so a finer statement refines the coarser one rather than contradicting it. Both are produced by the same deterministic map from the same circuit, so choosing detail by addressee changes how much is said, not what is said.",
+   "rubric": [
+    "Asserts that the two versions cannot contradict each other.",
+    "Attributes this to nested granularities (finer refines coarser) applied by one deterministic map to the same circuit."
+   ],
+   "batch": 5,
+   "orig_id": "q15",
+   "pair": null
+  },
+  {
+   "id": "q164",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "question": "Suppose the random baseline drew its edge subsets only from the union of edges that appeared in some discovered circuit. Could it still answer the question the paper's baseline is meant to answer?",
+   "answer": "No. The baseline is meant to show whether discovered circuits behave differently from arbitrary subgraphs of the full edge set. A pool already shaped by discovery is not arbitrary, so the comparison would partly measure discovery against itself.",
+   "rubric": [
+    "Asserts that it could no longer answer the question.",
+    "Explains that the baseline must be drawn from the full edge set because a discovery-shaped pool is not arbitrary."
+   ],
+   "batch": 5,
+   "orig_id": "q16",
+   "pair": null
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "question": "A provider reruns its filed configuration under all five seeds and gets the same region statement each time. Does this show the filing is filable?",
+   "answer": "No. In this design the seed only changes which prompts are sampled, so it measures evaluation-set variability and is one of seven axes. A competent second analyst could vary the other six, and the paper finds that no single axis governs the disagreement.",
+   "rubric": [
+    "Asserts that seed robustness does not establish filability.",
+    "Explains that seed is one axis (evaluation-set variability) and leaves the other axes, where disagreement persists, unexamined."
+   ],
+   "batch": 5,
+   "orig_id": "q17",
+   "pair": null
+  },
+  {
+   "id": "q166",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "question": "Suppose the threshold rule discarded nearly every specification under one evaluation metric, leaving only a handful in that level. Would a bootstrap interval for that metric's within-level claim-flip rate be trustworthy, and what should be reported instead?",
+   "answer": "No. Bootstrap intervals become unreliable when a conditioning group holds only a handful of specifications. That level's quantity should be reported as a point estimate with diagnostics and its discard rate, not repaired with a bespoke estimator.",
+   "rubric": [
+    "Asserts that the interval is not trustworthy.",
+    "Recommends a point estimate with diagnostics (and the discard rate) instead of an interval or a bias-corrected estimator."
+   ],
+   "batch": 5,
+   "orig_id": "q18",
+   "pair": null
+  },
+  {
+   "id": "q167",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "question": "A filer's specification curve orders specifications by the statement they support but omits which analytic levels are active for each. What can a reviewer no longer judge?",
+   "answer": "The reviewer cannot tell whether particular analytic levels are associated with particular statements. That is the information needed to judge whether fixing some axis would bring statements together, or whether a filed statement depends on one level choice. Only the share of the space behind each statement remains visible.",
+   "rubric": [
+    "Identifies the lost information as the association between analytic levels and statements.",
+    "Links it to judging whether standardising an axis would help, or whether the filed statement depends on a particular level."
+   ],
+   "batch": 5,
+   "orig_id": "q19",
+   "pair": null
+  },
+  {
+   "id": "q168",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "question": "Two analysts each pick a specification from the paper's surviving GPT-2 pool, independently and with every specification equally likely. Roughly how likely are their filed claims to agree, and under what restriction?",
+   "answer": "About one in four, since the claim flips on about three quarters of specification pairs. This holds only conditional on the grid and on uniform selection. Real analysts do not choose uniformly, so the figure says nothing directly about real-world filings.",
+   "rubric": [
+    "Gives about 25% (one quarter) agreement.",
+    "Derives it from the three-quarters flip rate.",
+    "Notes that it is conditional on the grid and on uniform random choice."
+   ],
+   "batch": 5,
+   "orig_id": "q20",
+   "pair": null
+  },
+  {
+   "id": "q169",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "question": "In a filer's version of the paper's grid, one of the seven discovery objectives fails in every cell and nothing else is discarded. What discard rates would protocol item 4 show for that objective and for each metric level?",
+   "answer": "That objective's level would show 100% discards and the other objectives 0%. Each metric level, like every other axis level, would show about 14.3% (1/7). Only the per-level breakdown locates the loss in one objective.",
+   "rubric": [
+    "States 100% for the failing objective (0% for the others).",
+    "States about 14.3% (1/7) for each metric level.",
+    "Notes that the per-level report shows where the loss is concentrated."
+   ],
+   "batch": 5,
+   "orig_id": "q21",
+   "pair": null
+  },
+  {
+   "id": "q170",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "question": "A reviewer asks a filer for a p-value testing whether the claim-flip rate differs between two metric levels in its grid. What does the paper imply the filer should provide instead?",
+   "answer": "No p-value, because specifications are a designed grid, not an independent sample. The filer should report the within-level rates, with intervals from resampling specifications (not pairs) read as conditional on the grid. Where groups are small, it should give point estimates with diagnostics.",
+   "rubric": [
+    "Asserts that a p-value is inappropriate.",
+    "Explains that specifications are a designed grid, not a sample.",
+    "Recommends within-level estimates with specification-resampled, grid-conditional intervals (or point estimates for small groups)."
+   ],
+   "batch": 5,
+   "orig_id": "q22",
+   "pair": null
+  },
+  {
+   "id": "q171",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "question": "A filer's statements label computation as 'concentrated' or 'distributed' using a cutoff on the share of heads involved, chosen by its team. The declared specification space lists only the seven discovery axes. What is missing under the paper's principles?",
+   "answer": "The cutoff is a discretisation between circuit and statement, so it is itself an analytic choice. It belongs in the declared space, should come from a committed calibration rule rather than hand selection, and should have its sensitivity reported.",
+   "rubric": [
+    "Asserts that the cutoff must be declared in the specification space.",
+    "Explains that every discretisation between circuit and statement is an analytic choice (it should come from a committed calibration rule, with sensitivity reported)."
+   ],
+   "batch": 5,
+   "orig_id": "q23",
+   "pair": null
+  },
+  {
+   "id": "q172",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "question": "A team's threshold rule always keeps a fixed number of top-scoring edges. Which of the paper's two pre-registered exclusion types could still occur in their grid?",
+   "answer": "Only cells failing to execute. A fixed-count rule always admits a circuit, so specifications with no admitted circuit cannot arise, and threshold-driven uneven survival across metrics disappears.",
+   "rubric": [
+    "Identifies cell execution failures as the only remaining exclusion type.",
+    "Explains that a fixed-count rule always admits a circuit, removing no-admit discards."
+   ],
+   "batch": 5,
+   "orig_id": "q24",
+   "pair": null
+  },
+  {
+   "id": "q173",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "question": "A provider expects that an auditor will check its filing on IOI prompts sampled differently from its own. Which axis of the paper's grid represents that difference, and what does this imply for the filing?",
+   "answer": "The seed axis, because in this design the seed selects which prompts are sampled and so measures evaluation-set variability. The provider should treat prompt sampling as a declared axis and expect statements to possibly differ along it, rather than assuming its sample is neutral.",
+   "rubric": [
+    "Identifies the seed axis (prompt variant is also acceptable if template wording differs).",
+    "Explains that seed here selects sampled prompts, so it should be declared in the specification space."
+   ],
+   "batch": 5,
+   "orig_id": "q25",
+   "pair": null
+  },
+  {
+   "id": "q174",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "question": "If M\u00e9loux et al. had shown that a behaviour always has a unique explanation under mechanistic interpretability's own criteria, what part of the paper's argument would lose support, and what would not?",
+   "answer": "The premise that defensible variation should yield different circuits, which the paper adopts from them and uses to frame 7.1, would lose its theoretical backing. The measured near-disjointness and claim flips are empirical results of the grid, so they would stand as observations still needing explanation.",
+   "rubric": [
+    "Identifies the non-identifiability premise or expectation behind 7.1 as the part weakened.",
+    "States that the empirical findings (disjointness, claim flips) do not depend on it and would remain."
+   ],
+   "batch": 5,
+   "orig_id": "q26",
+   "pair": null
+  },
+  {
+   "id": "q175",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "question": "If Miller et al. had found faithfulness scores insensitive to design choices, would the Section 7.2 claim-flip result lose support?",
+   "answer": "No. Miller et al. motivate treating metric and operator choices as consequential and supply the library. The three-quarters flip rate is measured directly by running the grid through the claim map, so it does not rest on their sensitivity finding.",
+   "rubric": [
+    "Asserts that 7.2 would not lose support.",
+    "Explains that the flip rate is measured directly in the grid, while Miller et al. only motivate the axes and supply the instrument."
+   ],
+   "batch": 5,
+   "orig_id": "q27",
+   "pair": null
+  },
+  {
+   "id": "q176",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "question": "Section 7.6 finds a size range where statements differ more than mechanisms. Which protocol item lets a second analyst check whether a given filing's statement procedure is the source of such amplification?",
+   "answer": "Item 2, publishing the claim map as deterministic code. Only with the exact procedure can the analyst map alternative circuits to statements and compare statement disagreement with chance-corrected functional agreement.",
+   "rubric": [
+    "Identifies item 2 (published deterministic claim map).",
+    "Explains that amplification is a property of the statement procedure, which must be available to run on alternative circuits."
+   ],
+   "batch": 5,
+   "orig_id": "q28",
+   "pair": null
+  },
+  {
+   "id": "q177",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2",
+    "c4"
+   ],
+   "question": "If circuits had been nearly disjoint across specifications but their statements had never flipped, which of the paper's conclusions would lose their force?",
+   "answer": "The regulatory conclusions would lose their force: that filings are not filable as produced, that no axis rescues them, and that disagreement survives size control. The paper treats structural variation as a premise, not as the quantity a filing depends on, so disjointness alone would raise no filing problem.",
+   "rubric": [
+    "Identifies the claim-flip and filability conclusions (c2, and with them c3 and c4) as losing force.",
+    "Explains that structural difference is only a premise and need not imply statement difference."
+   ],
+   "batch": 5,
+   "orig_id": "q29",
+   "pair": null
+  },
+  {
+   "id": "q178",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2",
+    "c8"
+   ],
+   "question": "Suppose the Pythia-160m replication found circuits as nearly disjoint as in GPT-2 small, but claim flips far rarer. Which caution in the paper would this illustrate, and which conclusion would look model-specific?",
+   "answer": "It would illustrate the caution that structural difference need not imply statement difference, so edge overlap is not what a filing depends on. The high claim-flip rate would then look specific to GPT-2 small.",
+   "rubric": [
+    "Names the structure-versus-statement caution (c1).",
+    "States that the claim-flip result (c2) would look specific to GPT-2 small."
+   ],
+   "batch": 5,
+   "orig_id": "q30",
+   "pair": null
+  },
+  {
+   "id": "q179",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "question": "If edge overlap between circuits perfectly predicted whether their statements agreed, which recommendation in Section 7.3 would lose its rationale?",
+   "answer": "The recommendation that standardisation decisions be made at the level of the statement. Its rationale is that the axes governing structure need not govern statements. If overlap tracked statements, standardising the axis that most changes the edge set would suffice.",
+   "rubric": [
+    "Identifies the recommendation to standardise at the statement level.",
+    "Explains that it rests on structure-governing axes possibly differing from statement-governing axes."
+   ],
+   "batch": 5,
+   "orig_id": "q31",
+   "pair": null
+  },
+  {
+   "id": "q180",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "question": "Does the paper give a numerical claim-flip threshold below which a filing counts as filable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper says filability names a standard rather than a measurement, and its protocol requires disclosure of the specification space, not meeting any numeric cutoff.",
+   "rubric": [
+    "Answers not settled (no threshold is given).",
+    "Explains that filability is a standard rather than a measurement and the protocol is disclosure-based."
+   ],
+   "batch": 5,
+   "orig_id": "q32",
+   "pair": null
+  },
+  {
+   "id": "q181",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "question": "Does the paper predict that claim instability will grow in larger models because they have more components? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper notes that larger models enlarge both the space of circuits and the space of statements, and says it is not obvious in which direction the considerations would move. It claims nothing about scale.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that both the circuit and statement spaces grow, so the direction is unclear, and that nothing is claimed about scale."
+   ],
+   "batch": 5,
+   "orig_id": "q33",
+   "pair": null
+  },
+  {
+   "id": "q182",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "question": "Does the paper show that a region attribution stable across specifications would by itself satisfy Annex IV point 2(b)? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Region attribution is called the core of a 2(b) account and is what Section 7.4 tests. The paper does not argue that it is sufficient, and other obligations (2(e), Article 86) need further content.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that region is described as the core of 2(b), not as sufficient, and that the paper only tests whether it is stable."
+   ],
+   "batch": 5,
+   "orig_id": "q34",
+   "pair": null
+  },
+  {
+   "id": "q183",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "question": "Do discovery cells that fail to execute show that the library's discovery methods are defective? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled, and the paper explicitly disclaims this reading. Failures are recorded as discards that shape the composition of the evidence. The paper says only that robustness of every exported configuration cannot be taken for granted, so filings should record which configurations ran.",
+   "rubric": [
+    "Answers not settled (the paper disclaims the defect reading).",
+    "Explains that failures are treated as recorded discards and a reporting matter, not as evidence of defective methods."
+   ],
+   "batch": 5,
+   "orig_id": "q35",
+   "pair": null
+  },
+  {
+   "id": "q184",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "question": "Does the paper show that claim flips affect only the overseer's detailed account, leaving the affected person's coarsest account stable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper states that flips occur even at the coarsest granularity, and that even the coarsest account available to an affected person rests on undisclosed choices.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the finding that flips occur at the coarsest granularity, including the account available to an affected person."
+   ],
+   "batch": 5,
+   "orig_id": "q36",
+   "pair": null
+  },
+  {
+   "id": "q185",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "question": "Does the paper show that complying with the filability protocol is cheap in absolute terms? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper claims compliance is cheap relative to the sweep that produced the circuit and possible with existing tooling. It gives no absolute cost, which would depend on how expensive the sweep was.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the cheapness claim is relative to the sweep, not absolute."
+   ],
+   "batch": 5,
+   "orig_id": "q37",
+   "pair": null
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose Section 7.6 found that, among size-matched pairs, mechanisms differ more than statements do. How would that bear on reading the Section 7.4 region disagreement as a property of the statement procedure?",
+   "answer": "In that regime the statement procedure is coarser than the mechanisms rather than amplifying them. The persistent region disagreement in 7.4 would then reflect real mechanism differences, at least partly, rather than artefacts of the claim map.",
+   "rubric": [
+    "States that the claim map would be coarser than the mechanisms there, not amplifying differences",
+    "Concludes that 7.4's region disagreement would then track genuine mechanism differences rather than being produced by the procedure"
+   ],
+   "batch": 4,
+   "orig_id": "q30",
+   "reject": "near-duplicate of q112"
+  }
+ ],
+ "types": {
+  "why": 27,
+  "failure": 27,
+  "counterfactual": 42,
+  "transfer": 30,
+  "connect": 30,
+  "scope": 29
+ }
+}

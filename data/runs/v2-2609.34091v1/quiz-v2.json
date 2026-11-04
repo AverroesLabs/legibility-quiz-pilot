@@ -1,0 +1,3275 @@
+{
+ "paper": "2609.34091v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p8",
+ "paper_sha256": "cb6b5fc929e4279aea05392c5886b9af05773e56d008b56ce94b5d860ad4edd9",
+ "batches": 5,
+ "written_per_batch": [
+  41,
+  40,
+  38,
+  36,
+  33
+ ],
+ "cost_per_batch": [
+  0.4694,
+  0.562688,
+  0.755848,
+  1.038152,
+  0.998796
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Alpha (8\u201312 Hz) band-stop removal changes SAE latent firing much more than a width-matched 30\u201334 Hz sham notch in every setting. This raw signature looks like evidence for alpha features.",
+   "methods": [
+    "TopK SAEs (k=32) trained on frozen CBraMod, REVE and DINOv3 activations at early, middle and late depth on BCI, MA and Speech: 27 settings",
+    "Paired clean vs perturbed trials with a 4th-order zero-phase Butterworth band-stop; alpha vs width-matched 30\u201334 Hz sham",
+    "Metrics: |\u0394f_j|, active-set Jaccard, sparse-code cosine"
+   ],
+   "results": [
+    "Raw alpha/sham |\u0394f| ratio 7.33 (95% CI [6.18, 8.68]), >1 in 27/27 settings",
+    "Per-backbone raw ratios: CBraMod 7.4, REVE 8.9, DINOv3 5.1",
+    "Alpha lowers code overlap in all 27 settings",
+    "Alpha is the max-|\u0394f| and min-Jaccard band in only 15/27 settings of the six-band sweep (a plurality, not a rule)",
+    "Raw code-overlap ratio 2.77"
+   ],
+   "conditions": [
+    "Frozen backbones and frozen SAEs",
+    "Fixed splits; data at 200 Hz",
+    "CIs bootstrapped over settings, not latents"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "The raw alpha signature is largely an artifact of input distortion. EEG power falls as 1/f, so the alpha notch deletes far more signal than the sham, and the advantage collapses once responses are normalized by how much each notch removes.",
+   "methods": [
+    "Divide the SAE response by time-domain distortion ||x\u2212x\u0303||2/||x||2",
+    "Divide the SAE response by the fraction of spectral energy removed"
+   ],
+   "results": [
+    "Removed-energy ratios (alpha/sham): 57.2 (BCI), 34.6 (MA), 11.8 (Speech)",
+    "Time-normalized ratio 1.32 [1.12, 1.55], >1 in 17/27 settings",
+    "Spectral-normalized ratio 0.28 [0.22, 0.36], >1 in 0/27 settings",
+    "Code-overlap ratios: raw 2.77, then 0.51 and 0.11 after normalization"
+   ],
+   "conditions": [
+    "The two normalizations bracket the confound rather than settle it",
+    "The removed-energy denominator varies almost fivefold across datasets",
+    "A band-stop cannot isolate a biological oscillator"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Alpha selectivity does not identify latents that matter to a linear task readout.",
+   "methods": [
+    "Selectivity s_{j,b} = |\u0394f_{j,b}| minus the mean |\u0394f| over the other five bands",
+    "Specialist-like latent: top quartile of alpha selectivity and at or below median channel-dropout fragility",
+    "Logistic probes on mean-pooled codes; importance = |w_j|\u00b7E[c_j]",
+    "Size-matched group ablation (zeroing codes), with frozen-probe and retrained variants"
+   ],
+   "results": [
+    "Selectivity\u2013importance mean Pearson r = 0.107 [0.068, 0.146] over 21 settings",
+    "|r| \u2264 0.32 in all nine BCI-middle seed retrainings",
+    "Frozen-probe \u0394BA: specialists +0.0055 [\u22120.007, 0.027]; fragile \u22120.028 [\u22120.051, \u22120.003]; random \u22120.019 [\u22120.033, \u22120.008]",
+    "Effects shrink after probe retraining",
+    "Probe balanced accuracy spans 0.236\u20130.625"
+   ],
+   "conditions": [
+    "Ablation ordering is seed-dependent on BCI middle",
+    "Fragile latents fire 8.9\u00d7 more than specialists, so readout groups are unmatched on baseline activity",
+    "Linear probe only; 21/27 settings (REVE MA and Speech exports missing)"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Independent observational validation on clean EEG fails in the intended direction. Specialist latents do not fire more on high-alpha trials; on average they are slightly anti-correlated with relative alpha power.",
+   "methods": [
+    "Correlate each latent's clean activation with trial-wise relative alpha power, a quantity not used in selection",
+    "Activity-matched non-specialist controls, nearest in clean firing rate and mean activation, drawn without replacement",
+    "Top-five exemplar analysis with Welch spectra (secondary)"
+   ],
+   "results": [
+    "Specialist mean |r| 0.143 vs fragile 0.246 (fragile higher in 26/27 settings) vs random 0.097",
+    "Specialist signed r = \u22120.073, negative in 23/27 settings",
+    "Activity-matched controls: |r| 0.143 vs 0.101, specialist edge in 27/27 settings; \u0394|r| CI [0.032, 0.052]; matched firing 0.374 vs 0.374",
+    "Top-activating exemplars: specialists +0.012 relative alpha over fragile exemplars, higher in only 12/27 settings"
+   ],
+   "conditions": [
+    "Relative band power tests only a global frequency-detector reading",
+    "Structured spatial\u2013spectral features are not ruled out"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "A forked validation ladder sets out which evidence supports which claim. Stages 1\u20133 (sensitivity, distortion control, specificity) plus independent observational validation support a representational claim. Readout intervention (stage 4) is needed only for the stronger task-relevance claim.",
+   "methods": [
+    "Table 1 maps each kind of evidence to the claim it supports",
+    "Figure 1 shows the fork in the ladder"
+   ],
+   "results": [
+    "In this case study neither the representational claim nor the task-relevance claim is supported",
+    "Responding to alpha removal supports only 'alpha-sensitive'"
+   ],
+   "conditions": [
+    "The ladder is an operational protocol for excluding alternatives, not a universal feature finder",
+    "No positive control has been run yet",
+    "Nothing in the ladder establishes neural causality"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Channel-dropout robustness of SAE codes decreases with depth in all nine backbone\u2013dataset combinations, most strongly for DINOv3.",
+   "methods": [
+    "Random and contiguous channel-dropout perturbations",
+    "Late-minus-early active-set Jaccard"
+   ],
+   "results": [
+    "Mean late-minus-early Jaccard: \u22120.17 (random dropout), \u22120.20 (contiguous dropout)",
+    "Contiguous \u0394Jaccard: DINOv3 \u2248 \u22120.35, CBraMod \u2248 \u22120.19, REVE \u2248 \u22120.07"
+   ],
+   "conditions": [
+    "Reported as a secondary architectural observation in Appendix C"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "The validation problem is not specific to EEG-pretrained models; it persists when EEG is encoded by a vision-pretrained foundation model.",
+   "methods": [
+    "DINOv3 ViT-B/16 receives channel-by-time EEG images (prefix tokens excluded)",
+    "DINOv3 dictionary width reduced to 4\u00d7 or 8\u00d7 where token support is limited"
+   ],
+   "results": [
+    "DINOv3 raw alpha/sham ratio 5.1, alongside CBraMod 7.4 and REVE 8.9",
+    "Spectral-normalized ratio >1 in 0/27 settings, which include all DINOv3 settings"
+   ],
+   "conditions": [
+    "One SAE seed for every setting except BCI middle"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "The collapse of the alpha/sham ratio under spectral-energy normalization depends on a property of the EEG spectrum. Would the normalization still turn a large raw ratio into a ratio below one if the EEG spectrum were flat across 8\u201312 Hz and 30\u201334 Hz, and why?",
+   "answer": "No. With a flat spectrum, the alpha and sham notches would remove roughly equal energy, so the removed-energy ratio would be near 1. Dividing by it would leave the raw advantage largely intact. The collapse happens only because the 1/f spectrum makes the alpha notch remove 11.8\u201357.2\u00d7 more energy than the sham.",
+   "rubric": [
+    "States that the collapse would not occur, or that the raw advantage would largely remain",
+    "Explains that the removed-energy ratio would be near 1 because, under a flat spectrum, both notches remove similar energy",
+    "Ties the actual collapse to the 1/f spectrum making the alpha notch remove much more energy"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "The fragile groups produce a larger frozen-probe accuracy drop than the specialist groups. Under what condition would this gap stop being evidence that fragile latents are intrinsically more important to the readout, and why?",
+   "answer": "The gap stops being such evidence when the groups differ in baseline activity, as they do here: fragile latents fire 8.9\u00d7 more. Importance is |w_j|\u00b7E[c_j], and zeroing a high-activity latent removes more input to the probe. The larger drop may therefore reflect activity rather than intrinsic relevance, and the comparison would only be clean if the groups were matched on activity.",
+   "rubric": [
+    "Identifies unmatched baseline activity (fragile latents fire 8.9\u00d7 more) as the condition",
+    "Explains that zeroing high-activity latents removes more probe input, so importance is confounded with activity (for example via the E[c_j] term)"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the paper's independent observational validation reliably detect a latent that encodes alpha only over a small cluster of channels, and why?",
+   "answer": "Not reliably. The validation correlates activation with trial-wise relative alpha power, a global spectral quantity. Alpha confined to a few channels could vary independently of global relative alpha, so a localized alpha latent might show a weak correlation and be missed. The paper says these tests do not rule out structured spatial\u2013spectral features.",
+   "rubric": [
+    "Says the test would not reliably detect such a latent, or might miss it",
+    "Explains that relative alpha power is a global quantity that can miss channel-localized alpha structure"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "The conclusion that alpha sensitivity is not distortion-independent leans most heavily on the spectral-energy normalization. If SAE responses actually scaled with time-domain distortion rather than with removed spectral energy, would that conclusion still hold as strongly, and why?",
+   "answer": "It would hold less strongly. Under time-domain normalization the ratio is 1.32 (CI [1.12, 1.55]) and exceeds one in 17/27 settings, which leaves a modest residual alpha advantage rather than a reversal. This is why the paper says the two normalizations bracket the confound rather than settle it.",
+   "rubric": [
+    "Says the conclusion would be weaker, or that a modest alpha advantage would remain",
+    "Cites the time-normalized ratio of about 1.32 and/or >1 in 17/27 settings, with a CI above 1"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "The selectivity score subtracts the mean response over the other five bands. Would it reliably exclude a latent that responds equally strongly to alpha and to theta and to nothing else, and why?",
+   "answer": "No. The theta response is averaged with four near-zero bands, so only one fifth of it is subtracted from the alpha response. The latent keeps a high alpha selectivity and could land in the top quartile despite not being alpha-specific.",
+   "rubric": [
+    "Says the latent would not be reliably excluded, or could still be labeled alpha-selective",
+    "Explains that a single competing band contributes only one fifth of its response to the subtracted mean"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Would it be safe to treat the paper's specialist-versus-fragile-versus-random ablation ordering as a stable ranking for a single new setting with one SAE seed, and why?",
+   "answer": "No. The ordering is seed-dependent even on the BCI-middle setting, and the specialist effect's CI spans zero ([\u22120.007, 0.027]). Effects also shrink after probe retraining. A single-seed setting could therefore show a different ordering.",
+   "rubric": [
+    "Says it is not safe",
+    "Cites seed dependence of the ordering and/or the specialist CI including zero"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does dividing by time-domain distortion leave the alpha/sham ratio above one (1.32), while dividing by removed spectral energy drives it to 0.28?",
+   "answer": "Time-domain distortion is a norm of the removed signal, which grows more slowly than the removed energy itself. The alpha notch's much larger energy removal therefore enlarges the time-domain denominator less than it enlarges the spectral-energy denominator. The time-domain correction removes less of the raw 7.3\u00d7 advantage.",
+   "rubric": [
+    "States that the time-domain denominator penalizes the alpha notch less than the spectral-energy denominator",
+    "Explains this by the time-domain measure being a norm (amplitude-like) that scales more slowly than removed energy"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the activity-matched comparison, rather than the comparison with fragile latents, give the fair test of whether specialists track clean alpha more than other latents?",
+   "answer": "Fragile latents fire much more (8.9\u00d7) and have higher |r| (0.246), so their advantage is confounded with baseline activity. Matched controls equalize clean firing (0.374 vs 0.374) and mean activation, which isolates whether the selection procedure itself picks alpha-tracking latents.",
+   "rubric": [
+    "Says fragile latents differ in baseline activity, which confounds |r|",
+    "Explains that matched controls equalize firing and activation, isolating the effect of selection"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Specialists show a small |r| edge over activity-matched controls in 27/27 settings. Why does this edge still fail to support an alpha-detector reading?",
+   "answer": "|r| is unsigned. The signed correlation is negative on average (\u22120.073, negative in 23/27 settings), so specialists tend to fire on trials with less relative alpha, the opposite of what an alpha detector would do.",
+   "rubric": [
+    "Notes that |r| ignores direction",
+    "Cites the negative signed correlation (about \u22120.073, 23/27 settings), meaning specialists fire more when alpha is lower"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the positive mean frozen-probe change of +0.0055 after zeroing specialists not show that specialists harm the classifier?",
+   "answer": "Its 95% CI [\u22120.007, 0.027] includes zero, so the effect is indistinguishable from no change. The ordering is also seed-dependent, and the effects shrink after retraining.",
+   "rubric": [
+    "States that the effect is not distinguishable from zero",
+    "Cites the CI spanning zero"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "REVE has the largest raw alpha/sham ratio of any backbone. Why is it unsurprising that spectral normalization still pushes alpha below one even for REVE?",
+   "answer": "REVE's mean raw ratio of 8.9 is smaller than even the smallest dataset removed-energy ratio (11.8 on Speech), and much smaller than 34.6 and 57.2. Dividing a ratio near 9 by any of these gives a value below 1, consistent with 0/27 settings exceeding one.",
+   "rubric": [
+    "Compares REVE's raw ratio (8.9) with the removed-energy ratios, noting that even the smallest (11.8) is larger",
+    "Concludes that the normalized ratio is therefore below 1"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why might a latent show a nonzero |\u0394f| under the alpha band-stop even if its own pre-activation barely changed?",
+   "answer": "The SAE keeps only the top k=32 pre-activations. If the perturbation raises other latents' pre-activations enough, they can push this latent out of the active set, changing its firing through rank displacement rather than through its own response.",
+   "rubric": [
+    "Attributes the change to TopK competition or rank displacement",
+    "Explains that other latents rising can push it out of, or into, the top-32 active set"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why do the paper's confidence intervals resample settings rather than individual latents?",
+   "answer": "The claims are about whether an effect replicates across backbone\u2013dataset\u2013depth settings. Latents within a setting share one dictionary and backbone, so they are not independent replicates. Treating thousands of latents as independent would give misleadingly narrow intervals.",
+   "rubric": [
+    "States that the setting is the unit of replication, or that latents within a setting are not independent",
+    "Notes that latent-level resampling would understate uncertainty, or overstate precision"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "If the sham notch were moved from 30\u201334 Hz to 13\u201317 Hz, would you expect the raw alpha/sham |\u0394f| ratio to be smaller than 7.3?",
+   "answer": "Yes. Under the 1/f spectrum a 13\u201317 Hz notch removes more energy than a 30\u201334 Hz notch, so the sham response would grow and the raw ratio would shrink. This follows the paper's finding that the response tracks removed energy.",
+   "rubric": [
+    "Answers yes, a smaller ratio",
+    "Reasons that a lower-frequency sham removes more energy under 1/f, enlarging the sham response"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "If the sham notch were moved from 30\u201334 Hz to 60\u201364 Hz, would you expect the raw alpha/sham |\u0394f| ratio to be smaller than 7.3?",
+   "answer": "No, it would likely be larger. A higher-frequency sham removes even less energy under the 1/f spectrum, so the sham response shrinks and the raw ratio inflates, even though the alpha response is unchanged.",
+   "rubric": [
+    "Answers no, the ratio would likely be larger",
+    "Reasons that a higher-frequency sham removes less energy under 1/f"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p2",
+   "question": "A latent passes stages 1\u20133 and independent observational validation, but zeroing it does not change an imagined-speech probe. Does the ladder still support calling it an alpha-representing latent?",
+   "answer": "Yes. Under the forked ladder, stage 4 (readout intervention) is required only for the stronger task-relevance claim. Stages 1\u20133 plus observational validation suffice for the representational claim.",
+   "rubric": [
+    "Answers yes",
+    "Explains that readout intervention is a side branch needed only for task relevance, not for representation"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p2",
+   "question": "A latent passes stages 1\u20133 and a readout intervention changes task behavior, but it fails independent observational validation. Does the ladder support calling it an alpha-representing latent?",
+   "answer": "No. The representational path requires that the property be visible in clean, unperturbed data. Readout relevance does not substitute for that, and Table 1's task-relevant row also builds on observational validation.",
+   "rubric": [
+    "Answers no",
+    "Explains that observational validation on clean data is required for the representational claim and that readout evidence cannot replace it"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b1-p3",
+   "question": "Suppose specialists kept their |r| edge over activity-matched controls, but their signed correlation with relative alpha power were positive in most settings. Would they pass the independent observational validation stage?",
+   "answer": "Yes, for that stage. Specialists would then covary with clean alpha in the intended direction beyond activity-matched controls, which is what this stage asks. The full representational claim would still need the earlier stages, including distortion control.",
+   "rubric": [
+    "Answers yes for the observational stage",
+    "Reasons that positive covariation beyond matched controls is the intended direction"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b1-p3",
+   "question": "Suppose specialists kept their |r| edge over activity-matched controls, but their signed correlation with relative alpha power were negative in most settings. Would they pass the independent observational validation stage?",
+   "answer": "No. A negative signed correlation means they fire more when alpha is lower, which contradicts an alpha-detector reading despite the |r| edge. This is the paper's actual result (\u22120.073, 23/27 settings).",
+   "rubric": [
+    "Answers no",
+    "Reasons that negative signed r is the wrong direction for an alpha detector, so the unsigned edge does not count"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p4",
+   "question": "On the Speech dataset (removed-energy ratio 11.8), would a raw alpha/sham |\u0394f| ratio of 9 exceed one after spectral-energy normalization?",
+   "answer": "No. 9 / 11.8 \u2248 0.76, which is below one.",
+   "rubric": [
+    "Answers no",
+    "Shows the division 9 / 11.8 \u2248 0.76 < 1"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p4",
+   "question": "On the Speech dataset (removed-energy ratio 11.8), would a raw alpha/sham |\u0394f| ratio of 15 exceed one after spectral-energy normalization?",
+   "answer": "Yes. 15 / 11.8 \u2248 1.27, which is above one.",
+   "rubric": [
+    "Answers yes",
+    "Shows the division 15 / 11.8 \u2248 1.27 > 1"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "In an ECG foundation model, a team finds an SAE latent whose firing changes 10\u00d7 more when a low-frequency band is removed than when an equal-width high-frequency sham band is removed. Following the paper, what is the first check needed before calling it a band-specific feature, and why?",
+   "answer": "The team should first normalize the response by how much signal each removal deletes, using spectral energy and/or time-domain distortion. If the low-frequency band carries much more power, the 10\u00d7 gap may simply reflect larger distortion, as with alpha's 7.3\u00d7 that became 0.28\u00d7.",
+   "rubric": [
+    "Names distortion or energy normalization (the stage-2 control) as the needed check",
+    "Explains that unequal power across bands can inflate the raw ratio, analogous to the alpha case"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to claim that latent j is a 'task-relevant alpha representation' for a motor-imagery classifier. Is a group ablation showing an accuracy drop sufficient, and why?",
+   "answer": "No. In Table 1 the task-relevant row requires everything above it: response, survival of distortion and competing-perturbation controls, and clean-data covariation with alpha. An ablation alone shows only readout relevance, not that the latent represents alpha.",
+   "rubric": [
+    "Answers no",
+    "Explains that the task-relevant claim also requires stages 1\u20133 and observational validation in addition to the readout intervention"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team will deploy SAE codes from EEG headsets that often lose contiguous channels. Based on the paper, which depth should they extract codes from, and which backbone shows the smallest depth-related loss of stability?",
+   "answer": "They should prefer early layers, since late-layer Jaccard under dropout is lower in all nine combinations. REVE shows the mildest depth effect (contiguous \u0394Jaccard \u2248 \u22120.07, against \u22120.35 for DINOv3).",
+   "rubric": [
+    "Recommends early layers",
+    "Names REVE as the least depth-sensitive backbone (\u2248 \u22120.07 vs DINOv3 \u2248 \u22120.35)"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "On a new dataset the alpha notch removes only 3\u00d7 more spectral energy than the sham, and the raw alpha/sham ratio is 7. Would this setting pass the paper's distortion control, and would that alone justify an 'alpha-representing' label?",
+   "answer": "It would pass the spectral distortion check, since 7 / 3 \u2248 2.3 > 1. That alone would not justify the label: the latent would still need to pass the specificity stage and independent observational validation on clean EEG.",
+   "rubric": [
+    "States that the normalized ratio exceeds one (\u2248 2.3), so the distortion control is passed",
+    "States that further stages (specificity and clean-data validation) are still required for the representational label"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A researcher examines only each specialist's top-activating trials and finds slightly higher alpha than in fragile latents' exemplars. Given the paper's results, should they conclude the specialists are alpha detectors?",
+   "answer": "No. The exemplar test conditions on activation extremes, which is why the paper treats the all-trial correlation as primary. In the paper the exemplar edge was tiny (+0.012, only 12/27 settings), while the all-trial signed r was negative.",
+   "rubric": [
+    "Answers no",
+    "Notes that top-exemplar analysis conditions on extremes, so all-trial correlation is primary, or cites the weak exemplar edge versus the negative all-trial r"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to know whether an already-deployed, fixed linear classifier depends on a set of SAE latents. Which of the paper's ablation variants should they use, and why?",
+   "answer": "They should use the frozen-probe variant. It keeps the trained classifier fixed and ablates only at test time, so it measures the deployed head's reliance. The retrained variant refits the probe, which can recover the information from other latents; this is why effects shrink after retraining.",
+   "rubric": [
+    "Chooses the frozen-probe variant",
+    "Explains that retraining lets the probe compensate, so it does not measure the fixed head's dependence"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team plans to label beta-band features by comparing a 13\u201330 Hz band-stop against a width-matched notch in the high-gamma range. Based on the paper, what bias should they expect in the raw ratio?",
+   "answer": "They should expect an inflated raw ratio favoring beta. Under the 1/f spectrum the lower-frequency notch removes more energy than a high-frequency sham, so part of the raw advantage would reflect distortion and would need normalization.",
+   "rubric": [
+    "Predicts the raw ratio is biased upward in favor of the lower band",
+    "Attributes this to the 1/f spectrum causing larger energy removal by the lower-frequency notch"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the spectral-energy-normalized alpha/sham ratio had exceeded one in most settings, which of the paper's stated contributions would lose its support, and which negative finding would still stand?",
+   "answer": "Contribution (ii), that the 7.3\u00d7 signature is largely an artifact of input distortion, would lose support, because stage 2 would be passed. The observational failure (negative signed r with clean alpha) would still block the representational claim.",
+   "rubric": [
+    "Identifies the distortion-artifact claim (contribution ii, stage 2) as undermined",
+    "Notes that the clean-alpha observational failure would still stand"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If specialists' signed correlation with relative alpha power had been clearly positive and above activity-matched controls, which conclusion stated in the abstract would lose its support?",
+   "answer": "The statement that latents selected for their response to alpha removal give no support for a simple alpha-detector reading. This is also the part of contribution (iii) saying the remaining latents do not track clean-EEG alpha in the intended direction.",
+   "rubric": [
+    "Names the 'no support for an alpha-detector reading' / 'do not track clean alpha in the intended direction' conclusion",
+    "Links it to the observational validation result (negative signed r)"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If fragile and specialist groups had fired at similar baseline rates in the ablation, which caveat on the readout result would disappear?",
+   "answer": "The baseline-activity confound would disappear. The paper currently reads the ablation ordering only as a direction because fragile latents fire 8.9\u00d7 more. With matched activity, the larger fragile drop could be read more directly as a difference in importance.",
+   "rubric": [
+    "Identifies the baseline-activity confound (the 8.9\u00d7 firing difference) as the caveat removed",
+    "States that the ablation gap could then be interpreted more directly as differential importance"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If some of the nine BCI-middle seed retrainings had shown a selectivity\u2013importance correlation near 0.8, which claim would be weakened?",
+   "answer": "The claim that alpha selectivity is not readout importance would be weakened, specifically its robustness across SAE seeds. Its support includes the finding that coupling stays weak (|r| \u2264 0.32) in all nine retrainings.",
+   "rubric": [
+    "Names the claim that selectivity is not readout importance, or its seed robustness",
+    "Cites the |r| \u2264 0.32 in all nine retrainings as the evidence that would be contradicted"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If DINOv3 had shown no raw alpha-over-sham advantage, which question that the paper uses DINOv3 to address would get a different answer?",
+   "answer": "The question of whether the validation problem is peculiar to EEG-pretrained representations. The misleading raw alpha signature would then appear only in EEG-native backbones rather than persisting in a vision-pretrained model.",
+   "rubric": [
+    "Identifies the question of whether the problem is EEG-pretraining-specific or persists cross-modally",
+    "States that the answer would shift toward 'EEG-specific'"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If DINOv3's late layers had been more stable to channel dropout than its early layers, which Appendix C conclusion would be undermined?",
+   "answer": "The conclusion that useful transfer by a vision foundation model need not bring matching internal robustness, along with the claim that deeper SAE representations are less stable in both EEG-native and cross-modal backbones. That conclusion rests on DINOv3 showing the strongest depth-related drop (\u2248 \u22120.35).",
+   "rubric": [
+    "Names the 'vision FM transfer need not bring matching robustness' conclusion and/or the claim that depth instability holds across backbones",
+    "Cites DINOv3's strongest drop as its support"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its validation ladder can successfully accept a physiological label for some SAE latent? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. In this case study neither claim is supported for any latent, and the positive control on another physiological axis that would test acceptance is left for future work.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that no latent passed and no positive control was run"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that alpha-specialist latents are unimportant to fine-tuned or nonlinear EEG classifiers? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Relevance was tested only with logistic probes on mean-pooled codes from frozen backbones; the paper says this does not speak to nonlinear or fine-tuned behavior.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the restriction to linear probes on mean-pooled codes of frozen models"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that these foundation models do not encode alpha activity in any SAE latent? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Only perturbation-selected specialists were tested, and only against global relative alpha power. Structured spatial\u2013spectral alpha features, and latents chosen by other criteria, were not ruled out.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the test covered only selected latents and/or only a global frequency reading"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper support the claim that deeper layers of every tested backbone produce SAE codes less stable to channel dropout? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Supported for the tested combinations. Late-layer Jaccard was lower than early-layer Jaccard in all nine backbone\u2013dataset combinations, though the effect was only mild for REVE (\u2248 \u22120.07).",
+   "rubric": [
+    "Answers supported (within the tested backbones and datasets)",
+    "Cites all nine combinations showing lower late-layer overlap, possibly noting REVE's mild effect"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the raw alpha response is caused entirely by the amount of signal the notch removes? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. The two normalizations disagree (1.32 time-domain vs 0.28 spectral), and the paper says they bound the confound rather than remove it, since a band-stop cannot isolate a biological oscillator.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the disagreement between the normalizations (1.32 vs 0.28) or the bracketing caveat"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the selectivity\u2013importance decoupling holds for REVE on all three datasets? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Task-readout analyses cover only 21/27 settings because REVE's MA and Speech exports were unavailable, so REVE was tested on BCI only.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that REVE task analyses exist only for BCI (MA and Speech exports missing)"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that alpha-specialist latents fire more on trials with higher relative alpha power? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. Their signed correlation with relative alpha power is negative on average (\u22120.073) and negative in 23/27 settings.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the negative mean signed r (\u2248 \u22120.073, 23/27 settings)"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "The spectral-energy normalization implicitly assumes that SAE response grows in proportion to the energy a notch removes. If the response instead grew sublinearly and saturated as removed energy increased, would the 0.28 normalized ratio still show that alpha is less potent than sham per unit removed energy, and why?",
+   "answer": "No. The alpha notch removes 12\u201357\u00d7 more energy than the sham, so dividing by removed energy would over-penalize alpha under a saturating response. A value below one could then reflect saturation rather than weaker alpha-specific sensitivity. This is why the paper treats the two normalizations as bracketing the confound rather than settling it.",
+   "rubric": [
+    "States that the sub-one ratio would no longer establish weaker per-unit alpha sensitivity (it could be an artifact of the normalization).",
+    "Explains that alpha removes far more energy (11.8\u201357.2\u00d7 the sham), so linear division over-penalizes alpha when the response saturates.",
+    "Notes that this fits the paper's caveat that the normalizations bracket rather than settle the confound."
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Specialist-like latents must have channel-dropout fragility at or below the median. Would this criterion reliably pick out spatially robust latents in late DINOv3 layers, and why?",
+   "answer": "Not reliably. The median is computed within each setting, so the criterion is relative. In late DINOv3 layers, codes as a whole lose much more active-set overlap under contiguous dropout (about \u22120.35 Jaccard versus early layers). Latents that pass 'at or below median' there can still be quite fragile in absolute terms, so the filter guarantees less specificity against broad fragility.",
+   "rubric": [
+    "Concludes that the criterion would not ensure absolute robustness in late DINOv3 layers.",
+    "Explains that the threshold is relative (a within-setting median) while late DINOv3 codes are much less stable (contiguous \u0394Jaccard \u2248 \u22120.35)."
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Under what condition would the weak selectivity\u2013importance correlation (r = 0.107) stop being clean evidence that alpha selectivity is unrelated to how much the linear readout relies on a latent, and why?",
+   "answer": "It stops being clean evidence when alpha-selective latents have systematically low mean activation. Importance is defined as |w_j|\u00b7E[c_j], so low-activity latents get low importance even if their probe weights are sizeable. In this paper specialists fire far less than fragile latents (8.9\u00d7 less), so the correlation partly reflects activity level rather than reliance alone.",
+   "rubric": [
+    "Identifies the condition as selective latents having low baseline or mean activation.",
+    "Explains that importance multiplies the weight by E[c_j], so activity mechanically depresses importance; may cite fragile latents firing 8.9\u00d7 more."
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose a latent's highest clean activations came from a handful of atypical, artifact-laden trials, while its activation over all trials was unrelated to alpha. Which of the paper's two clean-data analyses would be more likely to mislead about this latent, and why?",
+   "answer": "The top-five exemplar analysis would be more likely to mislead. It looks only at each latent's five highest activations, so a few atypical trials could set its relative-alpha estimate in either direction. The all-trial Pearson correlation does not condition on the activation extreme, which is why the paper treats it as the primary test.",
+   "rubric": [
+    "Names the top-five exemplar (Welch-spectra) analysis as the misleading one.",
+    "Explains that it conditions on activation extremes (a handful of trials), whereas the all-trial r uses every trial and is the primary test."
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Activity-matched controls are drawn without replacement from the same dictionary. Would this comparison remain a clean activity control in a dictionary where specialists made up most of the latents at their firing level, and why?",
+   "answer": "No. Matching without replacement uses up the closest candidates first, so later specialists would receive poorer matches. Residual differences in firing rate or activation would then bring back the activity confound. In this paper the matches were nearly exact (firing 0.374 vs 0.374, activation 0.0060 vs 0.0062), which is what makes the control credible here.",
+   "rubric": [
+    "Concludes that the control would degrade or no longer be clean.",
+    "Explains that without-replacement matching exhausts close candidates, leaving residual activity mismatch that reintroduces the confound.",
+    "Notes that the paper's near-identical matched statistics (0.374 vs 0.374) show it held in this study."
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Zeroing specialist-like groups barely moves frozen-probe balanced accuracy. Under what condition would such a null ablation say little about whether the latents could matter to the readout, and why?",
+   "answer": "It says little when the ablated latents already have near-zero baseline activation. Specialists' mean activation is about 0.006, and they fire far less than fragile latents. Setting such codes to zero barely changes the mean-pooled input to the probe, so a small accuracy change is expected almost mechanically. It is therefore not strong evidence of irrelevance.",
+   "rubric": [
+    "Identifies the condition as very low baseline activation of the ablated latents.",
+    "Explains that zeroing near-zero codes hardly changes the mean-pooled code, so the null result is partly mechanical (may cite ~0.006 mean activation or fragile latents firing 8.9\u00d7 more)."
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "REVE has the largest raw alpha/sham |\u0394f| ratio of the three backbones. Why does this not mean REVE's latents respond most strongly to alpha removal?",
+   "answer": "REVE's alpha |\u0394f| (0.00127) is actually the smallest of the three backbones, below CBraMod (0.00338) and DINOv3 (0.00169). Its ratio is large because its sham |\u0394f| is tiny (0.00014). The high ratio comes from the small denominator, not from a strong alpha response.",
+   "rubric": [
+    "States that REVE's absolute alpha response is the lowest of the three backbones.",
+    "Explains that the ratio is inflated by REVE's very small sham response (0.00014)."
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the spectral-normalized code-overlap ratio (0.11) fall further below one than the spectral-normalized |\u0394f| ratio (0.28)?",
+   "answer": "The raw code-overlap advantage of alpha over sham is already much smaller than the raw |\u0394f| advantage (2.77 vs 7.33). Both are divided by the same large alpha/sham removed-energy factor. The smaller starting value therefore ends further below one.",
+   "rubric": [
+    "Notes that the raw code-overlap ratio (2.77) is much smaller than the raw |\u0394f| ratio (7.33).",
+    "Explains that both are divided by the same large removed-energy ratio, so the smaller raw value lands lower."
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why would group-ablation effects be expected to shrink when the probe is retrained after ablation, compared with the frozen-probe variant?",
+   "answer": "In the retrained variant the probe is refit on the ablated codes. It can shift its weights onto the remaining latents that carry overlapping task information. The frozen probe was trained on clean codes and cannot compensate, so it shows the raw dependence on the zeroed group.",
+   "rubric": [
+    "States that the retrained probe can compensate by reweighting the remaining latents.",
+    "Contrasts this with the frozen probe, which is fit on clean codes and cannot adapt to the ablation applied at test time."
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can zeroing a size-matched random-control group reliably lower frozen-probe accuracy (CI excluding zero) while zeroing specialist-like groups does not?",
+   "answer": "Random groups are drawn from the whole dictionary, so they include ordinary latents whose activity and weights carry task information that the frozen probe relies on. Specialists are a perturbation-defined subset that is low-fragility and low-activity. Their selectivity barely relates to readout importance (r \u2248 0.107), so removing them takes away little that the probe uses.",
+   "rubric": [
+    "States that random groups include typical task-informative latents that the probe uses.",
+    "Explains that specialists are a low-activity, perturbation-defined subset whose selection is nearly unrelated to importance (r \u2248 0.107)."
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does a vision-pretrained backbone like DINOv3 show the same raw alpha-over-sham signature and the same collapse under normalization as the EEG-pretrained models?",
+   "answer": "The confound sits in the input, not in the encoder's pretraining. Because EEG power falls as 1/f, the alpha notch deletes far more of the signal fed to any encoder than the sham does. Any backbone whose codes respond to input change will show the raw advantage, and the advantage disappears once that larger removal is accounted for.",
+   "rubric": [
+    "Attributes the signature to an input-level property, namely the alpha notch removing much more energy (1/f spectrum).",
+    "Explains that this holds regardless of pretraining modality, so normalization collapses it for DINOv3 as well."
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does the specialist definition require channel-dropout fragility at or below the median, rather than using alpha selectivity alone?",
+   "answer": "The requirement implements the specificity stage: it excludes latents whose alpha response simply reflects moving under any perturbation. A broadly fragile latent could have a large alpha |\u0394f| for reasons unrelated to alpha. Such fragile latents are also the high-firing group, firing 8.9\u00d7 more than specialists.",
+   "rubric": [
+    "Links the criterion to the ladder's specificity stage, which rules out broadly fragile latents.",
+    "Explains that without it the alpha response could reflect general instability under any perturbation rather than alpha."
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Alpha is the band with the largest |\u0394f| in only 15/27 settings. Why does every setting nonetheless contain alpha 'specialist-like' latents?",
+   "answer": "Specialists are defined by a relative cutoff: the top quartile of alpha selectivity, combined with at-or-below-median fragility, within each setting. Some latents always fall in that top quartile, whatever band dominates the setting overall. The label therefore does not require alpha to be the strongest band.",
+   "rubric": [
+    "States that the specialist criterion is a within-setting relative cutoff (top quartile plus median).",
+    "Explains that such a cutoff always selects some latents, regardless of which band dominates the setting."
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": "b2-p1",
+   "question": "A latent's alpha response survives distortion control, but its firing shifts just as much under channel dropout and under beta removal. Does Table 1 support calling it an 'alpha-selective latent'?",
+   "answer": "No. The alpha-selective rung requires the response to survive both distortion control and competing perturbations. A latent that moves equally under dropout and beta removal is broadly fragile rather than alpha-specific, so it remains only 'alpha-sensitive'.",
+   "rubric": [
+    "Answers no.",
+    "Explains that it fails the competing-perturbation or specificity requirement because it responds equally to dropout and other bands."
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": "b2-p1",
+   "question": "A latent's alpha response survives distortion control and is larger than its response to channel dropout and to every other band-stop. Does Table 1 support calling it an 'alpha-selective latent'?",
+   "answer": "Yes, it reaches the alpha-selective rung. It still lacks clean-data validation, so it cannot yet be called alpha-representing.",
+   "rubric": [
+    "Answers yes (alpha-selective).",
+    "Notes that this falls short of an alpha-representing claim without independent observational validation."
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p2",
+   "question": "Suppose zeroing specialist-like groups had changed frozen-probe balanced accuracy by \u22120.05, with fragile and random groups unchanged at \u22120.028 and \u22120.019. Would the paper's reading that specialists are 'not preferentially important to this linear readout' still hold?",
+   "answer": "No. A \u22120.05 drop would be larger than both the fragile and the random-control drops. That would suggest specialists matter more than the controls, contradicting 'not preferentially important'.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the specialist drop would exceed both control groups' drops."
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p2",
+   "question": "Suppose zeroing specialist-like groups had changed frozen-probe balanced accuracy by \u22120.01, with fragile and random groups unchanged at \u22120.028 and \u22120.019. Would the paper's reading that specialists are 'not preferentially important to this linear readout' still hold?",
+   "answer": "Yes. A \u22120.01 drop is smaller than both the fragile (\u22120.028) and random (\u22120.019) drops, so specialists would still be no more important than the controls.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the drop remains smaller than both control groups' drops."
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "After normalizing by time-domain distortion, does alpha removal still change |\u0394f| more than the sham does, on the pooled mean?",
+   "answer": "Yes. The time-normalized |\u0394f| ratio is 1.32, with a CI of [1.12, 1.55] that lies above one, although only 17/27 settings exceed one.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the ratio of 1.32 (CI above one) or notes that it exceeds one."
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "After normalizing by time-domain distortion, does alpha removal still disrupt code overlap more than the sham does, on the pooled mean?",
+   "answer": "No. The time-normalized code-overlap ratio is 0.51, below one. Unlike |\u0394f|, code overlap loses alpha's advantage even under the milder time-domain normalization.",
+   "rubric": [
+    "Answers no.",
+    "Cites the time-normalized code-overlap ratio of 0.51 (below one)."
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p4",
+   "question": "Does zeroing size-matched random-control groups produce a frozen-probe accuracy change that is reliably different from zero across settings?",
+   "answer": "Yes. The random-control change is \u22120.019 with CI [\u22120.033, \u22120.008], which excludes zero.",
+   "rubric": [
+    "Answers yes.",
+    "Notes that the bootstrap CI lies entirely below zero."
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p4",
+   "question": "Does zeroing specialist-like groups produce a frozen-probe accuracy change that is reliably different from zero across settings?",
+   "answer": "No. The specialist change is +0.0055 with CI [\u22120.007, 0.027], which includes zero.",
+   "rubric": [
+    "Answers no.",
+    "Notes that the bootstrap CI spans zero."
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team trains a single SAE seed on a new EEG setting and finds a selectivity\u2013importance correlation of r = 0.3. Based on the paper, should they conclude that alpha selectivity marks readout-important latents in that setting?",
+   "answer": "No. In the paper's nine BCI-middle seed retrainings, |r| reached up to 0.32 while the pooled mean was only 0.107. A value of 0.3 from one seed is within the range that seed variation alone can produce. It would need replication across seeds before being read as real coupling.",
+   "rubric": [
+    "Concludes that r = 0.3 from one seed is not sufficient evidence.",
+    "Cites the seed retrainings reaching |r| \u2264 0.32, so 0.3 lies within seed-level variability."
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants to test whether a set of beta-selective latents actually represents beta. Following the paper, what clean-data test should they run, and what result would count as passing?",
+   "answer": "Correlate each latent's activation on all clean trials with trial-wise relative beta power, a quantity not used in selection. Compare the result with activity-matched non-specialist controls. Passing requires a positive signed correlation that exceeds the matched controls, not just a larger |r|.",
+   "rubric": [
+    "Specifies correlating clean activation with trial-wise relative beta power across all trials, against activity-matched controls.",
+    "States that passing requires a positive signed correlation above the controls (a larger |r| alone is not enough)."
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team on a new EEG dataset can afford only one distortion control for screening band-stop responses. Which of the paper's two normalizations is the more conservative test against falsely calling a latent band-selective, and why?",
+   "answer": "Spectral-energy normalization is the more conservative test. In the paper it pushed the alpha/sham ratio to 0.28, below one in 0/27 settings, whereas time-domain normalization left 1.32 with 17/27 settings above one. Because it charges the high-power band for all the energy it removes, it is harder to pass.",
+   "rubric": [
+    "Chooses spectral-energy (removed-energy) normalization.",
+    "Justifies this by contrasting 0.28 (0/27 above one) with 1.32 (17/27 above one) under time-domain normalization."
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants a fairer readout-ablation test of low-firing specialist latents than the paper ran. What design change does the paper's own analysis suggest, and why?",
+   "answer": "Build the control ablation groups to match the specialists on baseline activity, as the paper did with nearest-neighbour activity matching for the clean-alpha test. In the paper's ablation, fragile latents fired 8.9\u00d7 more than specialists, so their larger accuracy drops could reflect activity rather than intrinsic importance.",
+   "rubric": [
+    "Proposes activity-matched control groups (for example nearest-neighbour matching on firing rate and activation) for the ablation.",
+    "Explains that the existing groups are unmatched (fragile fire 8.9\u00d7 more), confounding the ablation comparison."
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Among the paper's three datasets, which would let a raw alpha-versus-sham comparison be least inflated by the alpha notch removing more signal, and why?",
+   "answer": "Speech. Its alpha/sham removed-energy ratio is 11.8, compared with 34.6 for MA and 57.2 for BCI, so the extra signal deleted by the alpha notch is smallest there.",
+   "rubric": [
+    "Names the Speech dataset.",
+    "Cites its smallest removed-energy ratio (11.8 vs 34.6 and 57.2)."
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team can run only perturbation experiments (band-stops, channel dropout, distortion normalization) and has no analyses of unperturbed data. Under the paper's Table 1, what is the strongest label they can give a latent?",
+   "answer": "'Alpha-selective latent' is the strongest available label. Reaching 'evidence for an alpha-representing latent' requires independent covariation with alpha structure in clean EEG, which no perturbation experiment can supply.",
+   "rubric": [
+    "States that the strongest label is 'alpha-selective'.",
+    "Explains that the representational rung requires independent observational validation on clean data."
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the time-domain-normalized alpha/sham ratio had also fallen clearly below one, which caveat about the distortion analysis would lose much of its force?",
+   "answer": "The caveat that the two normalizations bracket rather than settle the confound would lose much of its force. Both normalizations would then agree that alpha is no more potent than sham per unit distortion, so the conclusion would depend much less on the choice of denominator.",
+   "rubric": [
+    "Identifies the 'bracket rather than settle' caveat.",
+    "Explains that the two normalizations would then agree, making the conclusion less dependent on which normalization is chosen."
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If activity-matched controls had fired at 0.60 while specialists fired at 0.374, which finding of the observational validation would lose its support?",
+   "answer": "The finding that the specialists' small |r| edge (0.143 vs 0.101) survives activity matching would lose its support. So would the claim that matching removes the fragile, high-baseline confound. With unequal firing, the |r| difference could again reflect activity level.",
+   "rubric": [
+    "Identifies the specialist |r| edge over activity-matched controls, or the claim that matching removes the activity confound.",
+    "Explains that mismatched firing would allow activity differences to explain the |r| difference."
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the alpha/sham removed-energy ratio had been roughly the same on BCI, MA and Speech, which stated limitation of the normalization analysis would weaken?",
+   "answer": "The limitation that the removed-energy denominator varies almost fivefold across datasets would weaken. The spectral normalization would then rescale every dataset similarly, so pooled normalized ratios would not mix very different correction factors.",
+   "rubric": [
+    "Identifies the caveat about the roughly fivefold variation in the removed-energy denominator (57.2 vs 11.8).",
+    "Explains that uniform denominators would make the normalization comparable across datasets."
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The specialist |r| edge is 0.046 over random controls and 0.042 over activity-matched controls. If the edge over activity-matched controls had instead had a CI spanning zero, what would that imply about the edge over random controls?",
+   "answer": "It would imply that the edge over random controls is explained by differences in activity between specialists and random latents, not by any alpha relationship. The 'small edge that survives activity matching' finding would disappear, although the negative-sign verdict would still stand.",
+   "rubric": [
+    "States that the edge over random controls would then be attributable to activity differences.",
+    "Notes that the reported survival of a small edge under activity matching would be lost."
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the spectral-normalized alpha/sham ratio had exceeded one in every DINOv3 setting while staying below one for CBraMod and REVE, which of the paper's claims would be undermined?",
+   "answer": "The claim that the validation problem persists for a vision-pretrained model would be undermined, since DINOv3 would then show alpha sensitivity beyond input distortion. The statement that the spectral-normalized ratio exceeds one in 0/27 settings would also fail.",
+   "rubric": [
+    "Identifies the claim that the problem persists across modality (DINOv3) and/or the 0/27 result.",
+    "Explains that DINOv3 would then show distortion-independent alpha sensitivity."
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the top-five exemplar analysis had shown specialists with clearly more relative alpha than fragile exemplars in 27/27 settings, while the all-trial signed r stayed at \u22120.073, would the paper's verdict on independent observational validation change, and why?",
+   "answer": "No. The all-trial Pearson correlation is the primary test because it does not condition on the activation extreme, and the exemplar analysis is secondary. A negative all-trial correlation would still mean specialists do not track alpha in the intended direction.",
+   "rubric": [
+    "Answers that the verdict would not change (validation still fails).",
+    "Explains that the all-trial r is primary and the exemplar analysis is secondary because it conditions on extremes."
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a vision-pretrained backbone encodes EEG with internal codes as robust to channel dropout as EEG-pretrained backbones? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted, at least for depth-wise robustness. DINOv3 shows the largest late-minus-early loss of active-set overlap under contiguous dropout (about \u22120.35, versus \u22120.19 for CBraMod and \u22120.07 for REVE). Appendix C notes that useful transfer need not bring matching internal robustness.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites DINOv3's larger depth-related Jaccard drop compared with the EEG-pretrained backbones."
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that alpha removal is the most disruptive of the six band-stops for SAE codes? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted as a general rule. Alpha is the maximum-|\u0394f| and minimum-Jaccard band in only 15/27 settings of the six-band sweep, a plurality rather than a rule. In the other 12 settings another band is more disruptive.",
+   "rubric": [
+    "Answers contradicted (true only in some settings).",
+    "Cites 15/27 settings (a plurality, not a rule)."
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that latents chosen by their response to alpha removal are indistinguishable from comparable controls on clean EEG? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. Specialists keep a small but consistent |r| edge over activity-matched controls (0.143 vs 0.101, 27/27 settings, CI [0.032, 0.052]), so they are distinguishable. The difference is just not an alpha-detector signature, because the signed correlation is negative.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the consistent |r| edge over activity-matched controls, while noting it does not amount to positive alpha tracking."
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that removed spectral energy is the correct measure of how strongly a band-stop perturbs the input? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. The paper presents time-domain and spectral-energy normalizations as two bounds that bracket the confound rather than settle it. They give very different ratios (1.32 vs 0.28), and the paper does not establish which is correct.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the two normalizations are treated as bounds giving different answers (1.32 vs 0.28), with no claim that either is the right one."
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its results are robust to SAE random initialization across all 27 settings? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Only the BCI-middle setting of each backbone was retrained under three seeds, and every other setting uses a single SAE seed. Even in BCI-middle the ablation ordering was seed-dependent.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that multi-seed retraining covered only BCI middle, with one seed elsewhere."
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that SAE responses to the 8\u201312 Hz band-stop reflect the removal of the brain's alpha oscillation? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. The paper states that band-stop filtering cannot isolate a biological oscillator, and that nothing in the ladder establishes neural causality. Its conclusions concern semantic claims about fitted SAE latents, not neural mechanisms.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites that a band-stop cannot isolate a biological oscillator and/or that the ladder does not establish neural causality."
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that alpha selectivity has no relationship at all with readout importance? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. The mean selectivity\u2013importance correlation is weak but positive (r = 0.107), and its CI [0.068, 0.146] excludes zero. The relationship is weak, not absent.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites r = 0.107 with a CI excluding zero (weak but positive)."
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Specialist-like latents are chosen by alpha selectivity computed from raw |\u0394f| across the six band-stops. Is this selection step protected against the input-distortion confound that the paper exposes for the alpha/sham contrast, and why?",
+   "answer": "No. Selectivity subtracts raw responses to other bands without dividing each band's response by how much signal that band-stop removes. Under 1/f power the bands remove very different amounts of energy, so a latent's score partly reflects how much energy each notch deletes, not band identity.",
+   "rubric": [
+    "States that the selection is not protected (not distortion-controlled).",
+    "Explains that selectivity uses raw |\u0394f| with no per-band normalization, while the band-stops remove unequal energy because EEG power falls as 1/f."
+   ],
+   "batch": 3,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "The 30\u201334 Hz sham notch falls inside the beta range of the paper's six-band sweep. Under what condition would it stop being a neutral sham for the alpha test, and why?",
+   "answer": "It would stop being neutral if latents were genuinely sensitive to beta-range content. The sham response would then reflect real beta sensitivity rather than a null baseline, so the alpha/sham ratio would compare alpha against beta, not against a no-effect control.",
+   "rubric": [
+    "Names the condition: latents that respond to beta-range (around 30 Hz) content.",
+    "Explains that the sham response would then be a genuine band response, so the ratio becomes alpha versus beta rather than alpha versus a null baseline."
+   ],
+   "batch": 3,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Would differences among DINOv3's BCI, MA and Speech settings cleanly reflect dataset differences, and why?",
+   "answer": "No. DINOv3's dictionary width varies with the dataset (4\u00d7 on MA, 8\u00d7 on BCI, 16\u00d7 on Speech), so dataset effects are confounded with SAE dictionary size. Only one seed per setting outside BCI middle adds further uncertainty.",
+   "rubric": [
+    "States that the comparison is not clean.",
+    "Explains that DINOv3's dictionary width differs by dataset (4\u00d7 MA, 8\u00d7 BCI, 16\u00d7 Speech), confounding dataset with dictionary size."
+   ],
+   "batch": 3,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "In a setting where the SAE reaches test FVU 0.228, would the paper's failure to find alpha-representing latents rule out the backbone carrying alpha information at that depth, and why?",
+   "answer": "No. About 23% of activation variance is not reconstructed by the latents, so alpha information could sit in the residual. All the validation tests examine only the fitted SAE latents, and the paper limits its conclusions to semantic claims about those latents.",
+   "rubric": [
+    "States that it does not rule this out.",
+    "Explains that a sizeable share of variance (FVU about 0.23) is unexplained by the latents and every test examines only SAE latents, not the dense activations."
+   ],
+   "batch": 3,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "The top-five exemplar analysis compares specialists' exemplars with those of matched fragile latents. Would this comparison be a fair test of alpha tracking given the activity profiles of the two groups, and why?",
+   "answer": "Not fully. Fragile latents fire about 8.9\u00d7 more than specialists, and the exemplar contrast is against fragile latents rather than activity-matched controls. Baseline activity therefore differs between the groups whose tails are compared. Only the all-trial analysis adds an activity-matched contrast.",
+   "rubric": [
+    "States that the exemplar comparison is not a fair, activity-controlled test.",
+    "Cites the baseline-activity gap (fragile latents fire about 8.9\u00d7 more) and notes that activity matching was applied in the all-trial analysis, not in the exemplar contrast."
+   ],
+   "batch": 3,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would the setting-level 95% CI for the raw alpha/sham ratio, [6.18, 8.68], be a reliable range for the raw ratio of a new backbone, and why?",
+   "answer": "No. The CI describes uncertainty in the pooled mean over the nine backbone\u2013dataset combinations, not the spread of individual backbones. DINOv3's own ratio of 5.1 already falls below the lower bound, so a new backbone could easily land outside it.",
+   "rubric": [
+    "States that it is not a reliable range for a new backbone.",
+    "Explains that the CI covers the pooled mean, not individual backbones, citing that a tested backbone (DINOv3, 5.1) already lies outside the interval."
+   ],
+   "batch": 3,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q88",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Would alpha being the maximum-|\u0394f| band in 15/27 settings of the six-band sweep be a fair ranking of how much SAE codes care about each frequency band, and why?",
+   "answer": "No. The six band-stops are compared on raw responses, and under 1/f power they remove very different amounts of signal. The ranking therefore mixes band identity with removed energy, the same confound that undoes the alpha/sham contrast.",
+   "rubric": [
+    "States that it is not a fair ranking.",
+    "Explains that the sweep uses raw responses, while the band-stops remove unequal energy (1/f), reproducing the distortion confound."
+   ],
+   "batch": 3,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "According to Appendix B, why is DINOv3's raw alpha/sham |\u0394f| ratio (5.1) lower than REVE's (8.9)?",
+   "answer": "It is not because DINOv3 responds less to alpha removal: its alpha |\u0394f| (0.00169) is actually larger than REVE's (0.00127). DINOv3 responds much more to the sham (0.00033, more than twice REVE's 0.00014), and that larger denominator lowers its ratio.",
+   "rubric": [
+    "States that the lower ratio is driven by DINOv3's larger sham response, not a smaller alpha response.",
+    "Supports this with the Appendix B values: alpha 0.00169 vs 0.00127 and sham 0.00033 vs 0.00014."
+   ],
+   "batch": 3,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Specialists' mean |r| with relative alpha power is 0.143, but their mean signed r is only \u22120.073. Why does this gap imply that a substantial share of specialists correlate positively with relative alpha?",
+   "answer": "If every specialist's r had the same sign, the mean |r| would equal the magnitude of the mean signed r. Mean |r| is about twice |\u22120.073|, so positive and negative correlations must be mixed. A sizeable fraction is positive, partly cancelling the negative ones.",
+   "rubric": [
+    "States that individual specialists' correlations are of mixed sign, including a substantial positive share.",
+    "Explains that mean |r| would equal |mean signed r| only if all signs agreed, and 0.143 is much larger than 0.073."
+   ],
+   "batch": 3,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why are token activations from each block layer-normalized to E\u2016x\u2016\u2082 = \u221ad before consecutive blocks (e.g., 0\u20133) are mixed to train one SAE?",
+   "answer": "Different blocks can have very different activation scales. Without normalization, high-norm blocks would dominate the reconstruction MSE and the dictionary. Normalizing puts the blocks on a common scale so one sparse dictionary serves the whole layer group.",
+   "rubric": [
+    "States that normalization puts blocks on a common activation scale.",
+    "Explains that otherwise blocks with larger norms would dominate the SAE's reconstruction loss and dictionary."
+   ],
+   "batch": 3,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the fact that the spectral-normalized ratio exceeds one in 0/27 settings imply that even in the Speech settings the raw alpha/sham ratio stays below about 12?",
+   "answer": "The spectral-normalized ratio is the raw ratio divided by the alpha/sham removed-energy ratio. For it to stay at or below one in Speech, where that ratio is 11.8, each Speech setting's raw ratio must be at most about 11.8.",
+   "rubric": [
+    "States that the raw ratio in every Speech setting must be no greater than about 11.8.",
+    "Explains that the normalized ratio equals the raw ratio divided by the removed-energy ratio (11.8 for Speech), so a normalized value at or below one caps the raw ratio."
+   ],
+   "batch": 3,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can a specialist-like latent with a large logistic-probe weight still receive low importance under the paper's measure?",
+   "answer": "Importance is |w_j|\u00b7E_train[c_j], so it scales with how much the latent is actually active. Specialists fire rarely (fragile latents fire about 8.9\u00d7 more), so their small mean code shrinks the product even when the weight is large.",
+   "rubric": [
+    "States that a low mean activation keeps importance low despite a large weight.",
+    "Refers to the importance formula |w_j|\u00b7E[c_j] and to specialists' low firing (fragile latents fire about 8.9\u00d7 more)."
+   ],
+   "batch": 3,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q94",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is it always possible to draw a distinct activity-matched non-specialist for every specialist without replacement from the same dictionary?",
+   "answer": "Specialists must be in the top quartile of alpha selectivity, so they make up at most 25% of a dictionary. Non-specialists are therefore at least three times as numerous, leaving enough unused candidates to give each specialist its own match.",
+   "rubric": [
+    "States that there are always enough non-specialists, at least three per specialist.",
+    "Explains that the top-quartile selectivity requirement caps specialists at 25% of the dictionary."
+   ],
+   "batch": 3,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p1",
+   "question": "Could the paper's group-ablation test register readout reliance on a latent whose class information lies only in when it fires within a trial, with the same trial-average activation in every class?",
+   "answer": "No. The probes read mean-pooled codes, so the latent's pooled value is the same across classes and the probe cannot use it. Zeroing it would therefore not change balanced accuracy.",
+   "rubric": [
+    "Answers no.",
+    "Explains that probes use mean-pooled codes, which erase within-trial timing, so the latent carries no class signal to the probe."
+   ],
+   "batch": 3,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p1",
+   "question": "Could the paper's group-ablation test register readout reliance on a latent whose class information lies in its trial-average activation level?",
+   "answer": "Yes. The mean-pooled code differs across classes, so the logistic probe can put weight on it. Zeroing the latent can then lower balanced accuracy.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the class difference survives mean pooling, so the probe can weight the latent and ablation can reduce accuracy."
+   ],
+   "batch": 3,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b3-p2",
+   "question": "A latent tracks absolute alpha power on trials where power in all bands rises and falls together in proportion. Would the paper's independent observational validation register this latent as tracking alpha?",
+   "answer": "No. The validation correlates activation with relative alpha power. If all bands scale together, relative alpha stays roughly constant, so the correlation would be near zero.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the test uses relative alpha power, which stays constant when all bands scale proportionally."
+   ],
+   "batch": 3,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b3-p2",
+   "question": "A latent tracks absolute alpha power on trials where alpha varies while the power in the other bands stays fixed. Would the paper's independent observational validation register this latent as tracking alpha?",
+   "answer": "Yes. With the other bands fixed, relative alpha power rises and falls with alpha power. The latent's clean activation would therefore correlate positively with the validation quantity.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that relative alpha power then moves with alpha power, giving a positive correlation."
+   ],
+   "batch": 3,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b3-p3",
+   "question": "With the sham width-matched (4 Hz) as in the paper, would a large raw alpha/sham |\u0394f| ratio need a distortion control before it could support an 'alpha-selective' label?",
+   "answer": "Yes. Under 1/f power the width-matched alpha notch removes far more energy (11.8\u201357.2\u00d7 across datasets). The raw ratio is therefore confounded with the amount of signal removed and must be normalized first.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that width matching leaves the alpha notch removing much more energy than the sham, because of 1/f power."
+   ],
+   "batch": 3,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b3-p3",
+   "question": "If the sham band were widened until it removed the same fraction of spectral energy as the alpha notch, would a large raw alpha/sham |\u0394f| ratio still need spectral-energy normalization to rule out the removed-energy confound?",
+   "answer": "No. The removed-energy ratio would be about one by design, so the raw comparison would already be matched on the amount of signal removed. A remaining alpha advantage could not be explained by alpha deleting more energy.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the two notches would already be matched on removed spectral energy, so the confound is controlled by design."
+   ],
+   "batch": 3,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q101",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants to use the summed firing of alpha specialist-like latents, chosen as in the paper, as a real-time index of a user's relative alpha power. Based on the paper, is this a sound plan?",
+   "answer": "No. On clean EEG, specialists are on average slightly anti-correlated with relative alpha power (signed r = \u22120.073, negative in 23/27 settings). Their mean |r| of 0.143 is small, so their firing would be a weak, wrong-signed proxy.",
+   "rubric": [
+    "States that it is not a sound plan.",
+    "Cites the negative mean signed correlation (\u22120.073) and the weak magnitude (|r| about 0.14) on clean data."
+   ],
+   "batch": 3,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "The time-normalized alpha/sham ratio is at or below one in 10/27 settings. Assuming raw ratios are broadly similar across datasets, which dataset's settings are most likely to be among those 10, and why?",
+   "answer": "BCI. Its alpha notch removes the most energy relative to the sham (57.2, versus 34.6 for MA and 11.8 for Speech), so its time-domain distortion denominator is largest. A similar raw ratio is therefore pushed down the most.",
+   "rubric": [
+    "Names BCI.",
+    "Explains that BCI has the largest alpha/sham removed-energy ratio (57.2), giving the biggest distortion denominator."
+   ],
+   "batch": 3,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team plans the positive control the paper leaves for future work, on a physiological axis known to be present in the signal. Under the paper's ladder, what outcome would show the hierarchy can accept a label?",
+   "answer": "Some latent would need to pass all three stages: respond to the targeted intervention, survive the distortion control, and be specific rather than broadly fragile to channel dropout and other perturbations. It would also need to covary in the intended direction with the property on unperturbed data. That would earn at least the representational label; readout intervention is needed only for task relevance.",
+   "rubric": [
+    "States that a latent must pass the sensitivity, distortion-control and specificity stages and then show intended-direction covariation on clean data.",
+    "Notes that this earns the representational label, with readout intervention needed only for the stronger task-relevance claim."
+   ],
+   "batch": 3,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team finds a frequently firing latent that is highly fragile to channel dropout and whose clean activation has |r| \u2248 0.25 with relative alpha power. Should they call it alpha-representing, given the paper's findings?",
+   "answer": "No. The paper's general-fragile latents reach exactly this |r| (0.246), which it attributes to their high baseline activity. Being broadly fragile also fails the specificity stage, so the latent cannot be called alpha-selective, let alone alpha-representing.",
+   "rubric": [
+    "States that it should not be called alpha-representing.",
+    "Explains that high fragility fails the specificity stage and that the paper's fragile, high-baseline latents show a similar |r| (about 0.25) without being alpha features."
+   ],
+   "batch": 3,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team encodes channel-by-time EEG images with a different vision-pretrained ViT and finds a large raw alpha/sham |\u0394f| ratio. Based on the paper, what should they expect after spectral-energy normalization?",
+   "answer": "They should expect the advantage to collapse below one. DINOv3, a vision-pretrained backbone, showed the same raw signature (5.1\u00d7) and its settings were among the 0/27 that exceeded one after normalization. The confound comes from the 1/f input statistics, not the pretraining modality, though one seed per setting limits certainty.",
+   "rubric": [
+    "Predicts that the ratio falls to about or below one after spectral normalization.",
+    "Grounds this in the DINOv3 result (raw ratio about 5, no setting above one after normalization) and in the input-side 1/f confound."
+   ],
+   "batch": 3,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team proposes screening candidate alpha latents by active-set Jaccard instead of |\u0394f| to avoid the input-distortion problem. Would switching metrics help, based on the paper?",
+   "answer": "No. Code-overlap ratios show the same pattern: a raw advantage of 2.77 drops to 0.51 after time-domain normalization and 0.11 after spectral normalization. The confound lies in how much each notch removes, not in which SAE metric is read.",
+   "rubric": [
+    "States that switching to Jaccard does not avoid the confound.",
+    "Cites code-overlap ratios falling from 2.77 to 0.51 and 0.11 after normalization."
+   ],
+   "batch": 3,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q107",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the spectral-normalized code-overlap ratio had stayed well above one while the spectral-normalized |\u0394f| ratio fell to 0.28, which aspect of the distortion-artifact conclusion would be weakened?",
+   "answer": "The paper's statement that code-overlap ratios 'behave the same way' would fail. The artifact conclusion would then depend on the metric: alpha would look potent per unit energy for active-set overlap but not for firing change, so the collapse would no longer hold across both SAE response measures.",
+   "rubric": [
+    "Identifies the loss of agreement between the code-overlap and |\u0394f| metrics, which the paper uses to show the collapse is robust.",
+    "Explains that the artifact conclusion would become metric-dependent rather than holding across both SAE responses."
+   ],
+   "batch": 3,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If every probe had performed at chance, which of the paper's findings would lose its evidential value, and why?",
+   "answer": "The readout findings: the selectivity\u2013importance correlation and the group ablations showing that specialists are not preferentially important. A probe that cannot decode the task gives meaningless weights and no accuracy to lose, so neither test could show which latents the readout uses.",
+   "rubric": [
+    "Identifies the readout or task-relevance findings (importance correlation and ablations).",
+    "Explains that a chance-level probe has no accuracy to lose and uninformative weights, so the tests could not distinguish latent importance."
+   ],
+   "batch": 3,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If alpha had been the maximum-|\u0394f| band in all 27 settings of the six-band sweep, would that undermine the conclusion that the raw alpha signature is largely a distortion artifact, and why?",
+   "answer": "No. The six-band sweep also compares raw responses to band-stops that remove unequal amounts of energy under 1/f power. A stronger plurality for alpha would still be uncontrolled for distortion and would not answer the normalization result.",
+   "rubric": [
+    "States that it would not undermine the artifact conclusion.",
+    "Explains that the sweep is itself raw and subject to the same unequal-removed-energy confound."
+   ],
+   "batch": 3,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If general-fragile latents had fired at about the same clean rate as specialists, which explanation offered in the observational validation would lose its support?",
+   "answer": "The paper's account that the fragile group's higher |r| (0.246 vs 0.143) is a high-baseline-activity effect. With equal firing, that edge could not be attributed to activity. Fragile, non-specialist latents would then appear to track relative alpha genuinely better than specialists.",
+   "rubric": [
+    "Identifies the explanation that the fragile |r| advantage reflects higher baseline firing.",
+    "Explains that with matched firing the fragile edge could not be attributed to activity and would suggest fragile latents track alpha better."
+   ],
+   "batch": 3,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If channel-dropout robustness had not changed with depth in any backbone, which of the paper's main-text conclusions about alpha latents would lose support?",
+   "answer": "None. The depth trend is a secondary observation in Appendix C. The specialist definition uses fragility relative to the median within each setting, and the distortion, readout and observational results do not depend on how robustness varies across depth.",
+   "rubric": [
+    "States that no main alpha-latent conclusion would lose support.",
+    "Explains that the depth effect is secondary (Appendix C) and fragility enters selection only as a within-setting median threshold."
+   ],
+   "batch": 3,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose specialists had covaried positively with relative alpha power on clean EEG, while the distortion-control result stayed as reported (0/27 settings above one). Would the ladder then support calling them alpha-representing, and why?",
+   "answer": "No. Table 1 is cumulative: the alpha-representing claim requires independent covariation 'above' an alpha-selective response, and alpha-selective requires the response to survive distortion control. Failing stage 2 blocks the representational label regardless of the clean-data result.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the ladder is cumulative, so failing the distortion-control stage prevents the representational claim even with positive clean-data covariation."
+   ],
+   "batch": 3,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does Appendix B show that the three backbones rank the same on how much alpha removal disrupts SAE codes relative to the sham, whether measured by |\u0394f| ratio or by Jaccard? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. On |\u0394f| ratio the order is REVE > CBraMod > DINOv3 (8.9, 7.4, 5.1). On the alpha-vs-sham Jaccard gap it is REVE (0.375) > DINOv3 (0.298) > CBraMod (0.278), so CBraMod and DINOv3 swap places.",
+   "rubric": [
+    "Answers contradicted.",
+    "Shows that CBraMod and DINOv3 swap order: the |\u0394f| ratio puts CBraMod above DINOv3, but the Jaccard gap (about 0.30 vs 0.28) or alpha Jaccard (0.484 vs 0.541) puts DINOv3 as more disrupted."
+   ],
+   "batch": 3,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that DINOv3's lower raw alpha/sham ratio (5.1) is caused by its vision pretraining? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. DINOv3 differs from the EEG models in several ways at once: it receives channel-by-time images, uses reduced dictionary widths on BCI and MA, and has only one SAE seed outside BCI middle. The design cannot separate pretraining modality from these factors.",
+   "rubric": [
+    "Answers not settled.",
+    "Names at least one confound: different input format (EEG images), reduced dictionary width, or single-seed SAEs."
+   ],
+   "batch": 3,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that beta- or high-gamma-selective latents also fail independent observational validation? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Beta and high-gamma sets appear only as small additions to the secondary top-five exemplar streaming, and no results are reported for them. The primary all-trial correlation test and the activity-matched controls are reported only for alpha specialists.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that beta and high-gamma latents appear only in the secondary exemplar sets without reported results, while the primary tests concern alpha."
+   ],
+   "batch": 3,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that REVE's SAE codes are more robust to channel dropout overall than CBraMod's or DINOv3's? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Appendix C reports only the late-minus-early change in Jaccard, where REVE's drop is mildest (about \u22120.07). A small depth change says nothing about absolute robustness levels, which are not reported per backbone.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that only the late-minus-early difference is reported, not absolute dropout robustness levels."
+   ],
+   "batch": 3,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its conclusions hold for SAEs trained on backbones after task fine-tuning? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. All backbones are frozen pretrained models and the SAEs are fitted on those frozen activations. Fine-tuning would change the representations, and no fine-tuned backbone was tested.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that every analysis used frozen pretrained backbones, so fine-tuned representations were never examined."
+   ],
+   "batch": 3,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the same latents are identified as alpha specialist-like across different SAE seeds? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Seeds were varied only for the BCI middle setting, and the reported seed results are the selectivity\u2013importance correlation and the ablation ordering, not the identity or overlap of specialist sets. The seed-dependent ablation ordering hints that the groups may differ, but this is not measured.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that seed analyses (BCI middle only) report correlations and ablation ordering, not overlap of specialist sets across seeds."
+   ],
+   "batch": 3,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that SAE codes are insensitive to alpha removal once input distortion is accounted for? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. Alpha removal still lowers code overlap in all 27 settings. The normalization shows only that alpha's effect per unit removed energy is not larger than the sham's (ratio 0.28), a claim about relative potency rather than an absence of response.",
+   "rubric": [
+    "Answers contradicted (or not supported as stated).",
+    "Explains that alpha removal still changes codes in every setting and that normalization compares per-unit potency rather than showing zero response."
+   ],
+   "batch": 3,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q120",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Each depth's SAE is trained on activations pooled from a group of consecutive blocks (blocks 0\u20133, 4\u20137 and 8\u201311 for CBraMod and DINOv3; 0\u20136, 7\u201314 and 15\u201321 for REVE). Could Appendix C's depth analysis tell whether channel-dropout instability appears abruptly at one particular block, and why?",
+   "answer": "No. Each depth is a single dictionary trained on tokens mixed from several layer-normalized blocks. The Jaccard values therefore describe a blend of those blocks, and the analysis gives only three points per backbone. An abrupt change at one block would be averaged with its neighbours and could not be located within the group.",
+   "rubric": [
+    "Says the analysis cannot locate the change at a specific block (resolution is only early, middle or late)",
+    "Reason: each SAE pools several consecutive blocks into one dictionary, so block-level differences are averaged together"
+   ],
+   "batch": 4,
+   "orig_id": "q120"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the paper's independent observational validation reliably register a latent that tracks brief alpha bursts filling only a small part of each trial, and why?",
+   "answer": "Not reliably. The test correlates a trial-level latent activation with trial-wise relative alpha power. A short burst contributes little to either trial-level summary, so the correlation can stay weak even if the latent tracks the bursts. The paper notes that relative band power tests only a global frequency-detector reading.",
+   "rubric": [
+    "Says the test would likely miss or understate such a latent",
+    "Reason: both the activation and relative alpha power are summarized per trial, which dilutes brief within-trial events; the test targets only a global reading"
+   ],
+   "batch": 4,
+   "orig_id": "q121"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Under what condition would Appendix C's late-minus-early Jaccard drop reflect the SAEs rather than the backbones' representations, and why?",
+   "answer": "It would reflect the SAEs if the late-depth dictionaries fit their activations worse than, or are organized differently from, the early-depth ones. The 27 dictionaries vary in test FVU from 0.059 to 0.228. Each depth has its own separately trained SAE, and Jaccard is computed on SAE codes, so a less faithful late dictionary could produce less stable codes regardless of what the backbone does.",
+   "rubric": [
+    "Names the condition: late-depth SAEs differ in fit or quality from early-depth SAEs (for example, higher FVU)",
+    "Reason: stability is measured on separately trained dictionaries' codes, so dictionary differences can masquerade as a depth effect in the backbone"
+   ],
+   "batch": 4,
+   "orig_id": "q122"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the top-five exemplar analysis give a reliable picture of how the whole alpha specialist group behaves, and why?",
+   "answer": "No. It streams at most three alpha specialist-like latents (plus matched fragile ones) per setting, with five exemplars each: 298 latents in total, including the beta and high-gamma sets. The all-trial test covers 12,041 latents per named group. The exemplar analysis is therefore a small sample of the activation tail, which is why the paper treats it as secondary.",
+   "rubric": [
+    "Says it is not a reliable whole-group estimate",
+    "Reason: it covers only up to three specialists per setting and five extreme trials each, a tiny subset compared with the all-trial analysis"
+   ],
+   "batch": 4,
+   "orig_id": "q123"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Could the paper's spectral-energy normalization be applied to a perturbation that alters the signal while leaving the power in every frequency band unchanged, and why?",
+   "answer": "No. Such a perturbation removes essentially zero spectral energy, so dividing the SAE response by the fraction of energy removed is undefined or blows up. Only the time-domain distortion ||x\u2212x\u0303||/||x||, which is still nonzero, would remain usable as a control.",
+   "rubric": [
+    "Says the spectral-energy normalization would not be usable",
+    "Reason: the removed-energy denominator would be about zero, while the time-domain distortion would still be defined"
+   ],
+   "batch": 4,
+   "orig_id": "q124"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "When would the activity-matched comparison understate how much specialists differ from genuinely alpha-insensitive latents, and why?",
+   "answer": "It would understate the difference when the non-specialist pool contains many alpha-sensitive latents that miss the specialist criteria, for example latents just below the top quartile of selectivity or above median fragility. 'Non-specialist' only means failing one criterion. Matched controls could therefore share some alpha sensitivity, which would shrink the measured \u0394|r|.",
+   "rubric": [
+    "Names the condition: the control pool includes alpha-sensitive latents excluded only by the quartile or fragility cutoffs",
+    "Reason: such controls partly share the specialists' property, so the specialist-minus-control |r| edge shrinks"
+   ],
+   "batch": 4,
+   "orig_id": "q125"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Activity matching uses squared z-distance, with clean firing rate and mean activation standardized on the union of specialists and candidates. Why would matching on raw, unstandardized values match poorly on one of the two features?",
+   "answer": "Mean firing (about 0.374) is roughly 60 times larger than mean activation (about 0.006). A raw squared distance would be dominated by firing rate and would largely ignore mean activation. Standardizing puts both features on a comparable scale.",
+   "rubric": [
+    "Says raw matching would effectively ignore mean activation (or be dominated by firing rate)",
+    "Reason: the two features differ in scale by more than an order of magnitude (about 0.37 vs about 0.006)"
+   ],
+   "batch": 4,
+   "orig_id": "q126"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is the specialist |r| edge over random controls (0.046) almost the same as the edge over activity-matched controls (0.042)?",
+   "answer": "Activity-matched controls have nearly the same |r| with relative alpha (0.101) as random controls (0.097). Matching non-specialists to the specialists' activity level barely changes their alpha correlation. So the specialists' activity level is not what produces their edge, unlike the high-baseline fragile group.",
+   "rubric": [
+    "Points out that matched and random controls have nearly equal |r| (0.101 vs 0.097)",
+    "Concludes that activity level does not drive the specialist edge, so controlling for it barely changes the gap"
+   ],
+   "batch": 4,
+   "orig_id": "q127"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does any drop in active-set Jaccard under a band-stop imply that some latents start firing, and not only that some stop?",
+   "answer": "The TopK SAE keeps exactly k=32 active latents per token, and the reported L0 is 32. The size of the active set is therefore fixed. If one latent leaves the active set, another must take its place, so lower overlap always means swaps.",
+   "rubric": [
+    "Says lower Jaccard requires new latents entering the active set",
+    "Reason: TopK with k=32 (L0=32) fixes the number of active latents per token"
+   ],
+   "batch": 4,
+   "orig_id": "q128"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the wide span of probe balanced accuracy (0.236\u20130.625) lead the paper to compare ablation groups within settings rather than pooling absolute accuracies?",
+   "answer": "Baseline accuracy differs a great deal across datasets and backbones. Pooled absolute accuracies would mix each setting's difficulty with the effect of zeroing a group. Comparing accuracy changes between groups within the same setting holds the probe and baseline fixed.",
+   "rubric": [
+    "Says baseline accuracy varies strongly across settings",
+    "Reason: within-setting comparison of accuracy changes separates the ablation effect from setting difficulty"
+   ],
+   "batch": 4,
+   "orig_id": "q129"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why must independent observational validation use a quantity, such as relative alpha power, that played no part in choosing the specialists?",
+   "answer": "Specialists were selected by their response to the alpha band-stop. A validation measure built from that same perturbation response would partly re-measure the selection criterion and pass by construction. It could not rule out that the response is a perturbation artifact. A clean-data quantity instead tests whether the property is visible without any perturbation.",
+   "rubric": [
+    "Says a reused or perturbation-derived quantity would make validation circular (pass by construction)",
+    "Reason: only an unperturbed, selection-independent quantity can test whether the property exists apart from the perturbation response"
+   ],
+   "batch": 4,
+   "orig_id": "q130"
+  },
+  {
+   "id": "q131",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why can latents chosen for a large alpha band-stop response turn out, on clean EEG, to fire more when relative alpha power is lower?",
+   "answer": "Selection uses |\u0394f|, the absolute value of the firing change, so it rewards changes in either direction. A latent whose firing rises when alpha is removed qualifies just as well as one whose firing falls. A latent that rises when alpha is removed is naturally one that fires more on low-alpha trials.",
+   "rubric": [
+    "Says selection is unsigned, so it picks latents that move in either direction",
+    "Connects this to the negative clean correlation: latents that increase when alpha is removed would fire more on low-alpha trials"
+   ],
+   "batch": 4,
+   "orig_id": "q131"
+  },
+  {
+   "id": "q132",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "The removed-energy ratio varies almost fivefold across datasets. Why does this not by itself bias the comparison of per-backbone raw ratios in Appendix B (CBraMod 7.4, REVE 8.9, DINOv3 5.1)?",
+   "answer": "Each backbone's row averages over the same nine dataset\u2013depth settings, that is, the same three datasets. Every backbone therefore faces the same mix of alpha/sham energy ratios. The dataset-level differences in the denominator are shared across backbones and do not differ between them.",
+   "rubric": [
+    "Says each backbone is averaged over the same three datasets",
+    "Reason: the dataset-driven energy differences affect all backbones equally, so they do not create between-backbone differences"
+   ],
+   "batch": 4,
+   "orig_id": "q132"
+  },
+  {
+   "id": "q133",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team finds the latent with the highest |w_j|\u00b7E[c_j] on a workload probe and proposes naming it an 'alpha workload feature'. Under the paper's framework, does this high importance support that name?",
+   "answer": "No. Readout importance belongs to the separate readout branch of the ladder. A representational label needs sensitivity, distortion control, specificity and clean-data validation, and the task-relevance label requires all of those first. The paper also finds alpha selectivity only weakly related to importance (r = 0.107), so importance says little about alpha content.",
+   "rubric": [
+    "Says high importance does not justify the alpha label",
+    "Reason: representational stages (including distortion control and observational validation) are required, and readout importance is a separate branch",
+    "Notes that selectivity and importance are only weakly related in the paper (r \u2248 0.1)"
+   ],
+   "batch": 4,
+   "orig_id": "q133"
+  },
+  {
+   "id": "q134",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team wants to know whether a latent's alpha |\u0394f| comes from its own response or from TopK rank displacement. Which quantity from the paper's SAE equation should they compare between clean and perturbed trials?",
+   "answer": "They should compare the latent's pre-TopK encoder pre-activation, ((x\u2212b_dec)W_enc + b_enc)_j. If that value barely changes while the latent's firing changes, the change comes from other latents displacing it in the top-32 ranking.",
+   "rubric": [
+    "Identifies the pre-TopK encoder pre-activation of that latent as the quantity to compare",
+    "Reason: if the pre-activation is stable but the output code changes, the change is due to rank competition in TopK"
+   ],
+   "batch": 4,
+   "orig_id": "q134"
+  },
+  {
+   "id": "q135",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team compares a 4 Hz-wide high-\u03b3 band-stop against the paper's 30\u201334 Hz sham and finds a raw |\u0394f| ratio of 0.5. Should they conclude that the SAE codes are insensitive to high-\u03b3?",
+   "answer": "No. Under the 1/f spectrum, a high-\u03b3 notch removes less energy than the 30\u201334 Hz sham, so the raw ratio is deflated. This is the reverse of the alpha case. After normalizing by removed spectral energy, the ratio could exceed one.",
+   "rubric": [
+    "Says they should not conclude insensitivity from the raw ratio",
+    "Reason: under 1/f the high-\u03b3 notch removes less energy than the sham, deflating the raw ratio, so energy normalization is needed and could reverse it"
+   ],
+   "batch": 4,
+   "orig_id": "q135"
+  },
+  {
+   "id": "q136",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team wants to show that alpha specialist-like latents are more robust to electrode loss than other latents, by comparing their channel-dropout fragility with the rest of the dictionary. Is this a valid test?",
+   "answer": "No, it is circular. Specialists are defined to be at or below median channel-dropout fragility, so they will look more robust by construction. A valid test would need a robustness measure that was not used in selection.",
+   "rubric": [
+    "Says the test is invalid or circular",
+    "Reason: low channel-dropout fragility is part of the specialist definition"
+   ],
+   "batch": 4,
+   "orig_id": "q136"
+  },
+  {
+   "id": "q137",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team cuts the DINOv3 dictionary to 4\u00d7 because token support is limited and finds far fewer alpha specialist-like latents than in a 16\u00d7 CBraMod dictionary. Does this show DINOv3 represents alpha less?",
+   "answer": "No. Specialists are defined by within-dictionary cutoffs: the top quartile of alpha selectivity and at or below median fragility. Their number scales with dictionary width, so a 4\u00d7 dictionary yields fewer specialists by construction.",
+   "rubric": [
+    "Says the smaller count is not evidence of weaker alpha representation",
+    "Reason: specialists are a quantile-defined fraction of the dictionary, so the count scales with dictionary width"
+   ],
+   "batch": 4,
+   "orig_id": "q137"
+  },
+  {
+   "id": "q138",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Given the distortion-control results, what is the strongest Table 1 label the paper's specialist-like latents can carry, and why not the next row up?",
+   "answer": "They can carry only 'alpha-sensitive'. They do respond to alpha removal, but that response does not survive distortion control: the spectral-normalized ratio exceeds one in 0/27 settings, and the two normalizations straddle one. 'Alpha-selective' requires the response to survive distortion control and competing perturbations.",
+   "rubric": [
+    "States the label is 'alpha-sensitive'",
+    "Reason: the alpha response does not survive distortion control (spectral normalization below one everywhere), which the 'alpha-selective' row requires"
+   ],
+   "batch": 4,
+   "orig_id": "q138"
+  },
+  {
+   "id": "q139",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the specialist/fragile/random ablation ordering had been stable across all BCI-middle seeds, would the paper be entitled to read it as an intrinsic importance ranking rather than only as a direction, and why?",
+   "answer": "No. The seed-dependence caveat would disappear, but the groups would still be unmatched on baseline activity, with fragile latents firing 8.9\u00d7 more. Their larger accuracy drop could still reflect activity rather than intrinsic importance, so the result would remain a direction.",
+   "rubric": [
+    "Says it would still not justify an intrinsic ranking",
+    "Reason: the baseline-activity mismatch (fragile latents fire about 8.9\u00d7 more) remains as an alternative explanation"
+   ],
+   "batch": 4,
+   "orig_id": "q139"
+  },
+  {
+   "id": "q140",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose the readout ablation had added activity-matched non-specialist groups and these, like specialists, barely changed frozen-probe accuracy. Which part of the readout comparison would that reinterpret, and would 'not preferentially important' still hold?",
+   "answer": "It would show that the fragile groups' larger drop comes from their higher baseline activity, not from any special unimportance of specialists. 'Not preferentially important' would still hold, because specialists would not exceed comparable latents.",
+   "rubric": [
+    "Says the fragile-versus-specialist gap would be attributed to activity level",
+    "Says the conclusion that specialists are not preferentially important would still stand"
+   ],
+   "batch": 4,
+   "orig_id": "q140"
+  },
+  {
+   "id": "q141",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If DINOv3's specialists had correlated positively with relative alpha on clean EEG and beaten their activity-matched controls, while its raw and normalized ratios stayed as reported, which claim would be weakened and which would survive?",
+   "answer": "The claim that the validation problem persists for a vision-pretrained model would be weakened on its observational side, because for DINOv3 the clean-data validation would no longer fail. The distortion-control failure would still hold for DINOv3, since its settings are among the 0/27 above one.",
+   "rubric": [
+    "Says the cross-modality persistence claim (c7) would be weakened for the observational-validation failure",
+    "Says the distortion-control failure would still apply to DINOv3"
+   ],
+   "batch": 4,
+   "orig_id": "q141"
+  },
+  {
+   "id": "q142",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If a positive control on a physiological axis known to be present in the signal had also been rejected by the ladder, which interpretation of the alpha result would be undermined?",
+   "answer": "The reading that the specialists fail because they truly lack an alpha representation would be undermined. If the ladder also rejects a property known to be present, the alpha rejection could reflect the ladder being too strict or insensitive rather than a real absence.",
+   "rubric": [
+    "Identifies the interpretation that the latents genuinely lack alpha representation as undermined",
+    "Reason: rejecting a known-present property would show the ladder can give false negatives"
+   ],
+   "batch": 4,
+   "orig_id": "q142"
+  },
+  {
+   "id": "q143",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that contiguous channel dropout destabilizes SAE codes more than random dropout at every depth? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Appendix C reports only late-minus-early Jaccard differences (\u22120.20 for contiguous, \u22120.17 for random), not absolute Jaccard at each depth. A larger depth-related drop does not show lower overlap at each individual depth.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: only late-minus-early differences are reported, not per-depth absolute Jaccard for each dropout type"
+   ],
+   "batch": 4,
+   "orig_id": "q143"
+  },
+  {
+   "id": "q144",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Could REVE's milder depth effect under contiguous dropout (\u2248\u22120.07) be explained by its 'late' group sitting at fewer absolute blocks than CBraMod's? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. REVE's late group spans blocks 15\u201321 of 22, which is deeper in absolute block count than CBraMod's blocks 8\u201311 of 12. Yet REVE shows the smaller depth effect, so shallowness cannot explain it.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: REVE's late group (blocks 15\u201321) is deeper in absolute terms than CBraMod's (blocks 8\u201311)"
+   ],
+   "batch": 4,
+   "orig_id": "q144"
+  },
+  {
+   "id": "q145",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that general-fragile latents matter more to the linear readout than random latents? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Fragile groups drop by \u22120.028 [\u22120.051, \u22120.003] and random groups by \u22120.019 [\u22120.033, \u22120.008], and these intervals overlap. Fragile latents also fire far more, and the ablation ordering is seed-dependent.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the CIs overlap, and/or activity mismatch and seed dependence prevent a ranking"
+   ],
+   "batch": 4,
+   "orig_id": "q145"
+  },
+  {
+   "id": "q146",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does Appendix B show that DINOv3's SAE codes are the most disrupted of the three backbones by the 30\u201334 Hz sham notch? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled; it depends on the metric. DINOv3 has the lowest sham Jaccard (0.782 vs 0.819 and 0.841). However, CBraMod has the larger sham |\u0394f| (0.00046 vs 0.00033), so the two metrics disagree.",
+   "rubric": [
+    "Answers not settled or metric-dependent",
+    "Reason: DINOv3 is lowest on sham Jaccard but CBraMod has the larger sham |\u0394f|"
+   ],
+   "batch": 4,
+   "orig_id": "q146"
+  },
+  {
+   "id": "q147",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the raw alpha/sham |\u0394f| advantage is largest at middle depth? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Raw ratios are reported pooled (7.33) and per backbone averaged over datasets and depths. No breakdown by depth is given.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the paper gives no depth-wise breakdown of the raw ratio"
+   ],
+   "batch": 4,
+   "orig_id": "q147"
+  },
+  {
+   "id": "q148",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that DINOv3 decodes the EEG tasks as well as the EEG-pretrained backbones? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Probe accuracy is reported only as an overall span (0.236\u20130.625) with no comparison across backbones. Appendix C's remark about 'useful transfer' is not backed by a reported performance comparison.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: no per-backbone probe performance is reported, only the overall accuracy span"
+   ],
+   "batch": 4,
+   "orig_id": "q148"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that alpha specialist-like latents are less important to the linear readout than random latents? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. The specialist CI [\u22120.007, 0.027] includes zero, the groups are unmatched on baseline activity, and the ordering is seed-dependent. The paper claims only that specialists are 'not preferentially important', read as a direction.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the paper claims only 'not preferentially important'; activity mismatch and seed dependence block a stronger ranking"
+   ],
+   "batch": 4,
+   "orig_id": "q149"
+  },
+  {
+   "id": "q150",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "Under the SAE's TopK rule, if alpha removal lowered every latent's pre-activation by the same amount while all 32 top latents stayed positive, would active-set Jaccard fall below one?",
+   "answer": "No. A uniform shift keeps the ranking unchanged, so the same 32 latents are selected and the active set is identical. Only the activation magnitudes, and hence |\u0394f|, would change.",
+   "rubric": [
+    "Answers no",
+    "Reason: TopK selects by rank, and a uniform shift preserves the ranking, so the active set is unchanged"
+   ],
+   "batch": 4,
+   "orig_id": "q150"
+  },
+  {
+   "id": "q151",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "Under the SAE's TopK rule, if alpha removal lowered only one active latent's pre-activation below that of the 33rd-ranked latent, would active-set Jaccard fall below one?",
+   "answer": "Yes. That latent drops out of the top 32 and the former 33rd latent enters, so the active set changes and Jaccard falls below one.",
+   "rubric": [
+    "Answers yes",
+    "Reason: the ranking changes, so one latent is swapped out and another in under TopK"
+   ],
+   "batch": 4,
+   "orig_id": "q151"
+  },
+  {
+   "id": "q152",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-p2",
+   "question": "If the validation quantity had been each trial's change in latent firing under the alpha band-stop, would the analysis count as independent observational validation under the paper's ladder?",
+   "answer": "No. That quantity comes from the same perturbation used to select specialists, so it is neither independent of selection nor observed on unperturbed data.",
+   "rubric": [
+    "Answers no",
+    "Reason: it is perturbation-derived and tied to the selection criterion, not a clean-data quantity"
+   ],
+   "batch": 4,
+   "orig_id": "q152"
+  },
+  {
+   "id": "q153",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-p2",
+   "question": "If the validation quantity had been trial-wise relative alpha power computed only over occipital channels of the clean signal, would the analysis count as independent observational validation under the paper's ladder?",
+   "answer": "Yes. It is computed from unperturbed EEG and was not used in selection, which is what the stage requires. It would also probe a spatially structured reading that the paper's global test leaves open.",
+   "rubric": [
+    "Answers yes",
+    "Reason: it is a clean-data quantity unused in selection"
+   ],
+   "batch": 4,
+   "orig_id": "q153"
+  },
+  {
+   "id": "q154",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p3",
+   "question": "Does the specialist |r| edge over activity-matched controls in 27/27 settings mean that every individual specialist correlates with relative alpha more strongly than its matched control?",
+   "answer": "No. The count compares setting-level means. Individual specialists can fall below their matched controls while the group mean in each setting is still higher.",
+   "rubric": [
+    "Answers no",
+    "Reason: the 27/27 count refers to group means per setting, not to each latent pair"
+   ],
+   "batch": 4,
+   "orig_id": "q154"
+  },
+  {
+   "id": "q155",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p3",
+   "question": "Does the specialist |r| edge over activity-matched controls in 27/27 settings mean that, in each setting, the specialists' mean |r| exceeds the matched controls' mean |r|?",
+   "answer": "Yes. The setting is the unit of the count, so in every one of the 27 settings the specialist group's mean |r| is higher than that of its matched controls.",
+   "rubric": [
+    "Answers yes",
+    "Reason: the 27/27 count is a per-setting comparison of group means"
+   ],
+   "batch": 4,
+   "orig_id": "q155"
+  },
+  {
+   "id": "q156",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Activity-matched controls are picked one specialist at a time as the nearest unused non-specialist. Could the order in which specialists are processed affect how well they are matched, and why?",
+   "answer": "Yes. Matching is greedy and without replacement, so specialists processed early take the closest candidates. Specialists processed later can only choose from what is left, and may get poorer matches where few candidates sit near their activity level. The paper reports only group-level means, so this order dependence is not visible in the results.",
+   "rubric": [
+    "Says yes, match quality can depend on processing order.",
+    "Explains that greedy selection without replacement lets earlier specialists use up the closest candidates, leaving worse matches for later ones (especially where candidates near that activity level are scarce)."
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q157",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Under contiguous dropout, DINOv3's late-minus-early Jaccard (\u2248\u22120.35) is much larger in magnitude than CBraMod's (\u2248\u22120.19). Would this gap cleanly reflect DINOv3's vision pretraining, and why?",
+   "answer": "Not cleanly. The depth contrast inside each backbone\u2013dataset combination holds dictionary width fixed. But DINOv3's dictionaries are 4\u00d7 on MA and 8\u00d7 on BCI rather than 16\u00d7, and it receives EEG as channel-by-time images, so comparing magnitudes across backbones mixes pretraining with SAE size and input format. Most settings also have only one SAE seed.",
+   "rubric": [
+    "Says no, the cross-backbone gap is not cleanly attributable to vision pretraining.",
+    "Cites a confound from the setup: reduced dictionary width (4\u00d7/8\u00d7) on two DINOv3 datasets and/or the different image input format, plus single-seed SAEs."
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q158",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "When would a latent's high importance score |w_j|\u00b7E[c_j] overstate how much it helps the logistic probe tell classes apart, and why?",
+   "answer": "When the latent's mean-pooled activation is nearly the same on every trial and in every class. Its contribution w_j\u00b7c_j is then close to a constant offset that acts like a bias term. The score is large because it multiplies the weight by the mean activation, but the latent carries almost no class-discriminating variation.",
+   "rubric": [
+    "Identifies the condition as the latent's activation being roughly constant across trials or classes.",
+    "Explains that the term then acts like a bias or offset, so a large weight times mean activation gives high importance without discriminative information."
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q159",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would the paper's specialist-like definition tend to keep or exclude a latent whose alpha response comes from a small cluster of channels, and why?",
+   "answer": "It would tend to exclude it. Dropping those few channels would strongly change such a latent's firing, which gives it high channel-dropout fragility. Specialists must sit at or below median fragility, so the selection is biased toward spatially diffuse alpha responses before any validation runs.",
+   "rubric": [
+    "Says such a latent would tend to be excluded from the specialist set.",
+    "Explains that a spatially focal latent would be fragile to channel dropout, while specialists must be at or below median dropout fragility."
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q160",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Both distortion normalizations divide by a single global amount of removed signal. Would they bound the confound if SAE responses depended on which channels carried the removed signal rather than on how much was removed, and why?",
+   "answer": "No. The time-domain ratio ||x\u2212x\u0303||/||x|| and the removed spectral-energy fraction are both scalar totals over the whole trial. A difference in where the alpha and sham notches remove signal would pass through both denominators unchanged, so neither normalization would correct it.",
+   "rubric": [
+    "Says no, the normalizations would not bound a spatially driven confound.",
+    "Explains that both denominators are global scalar amounts that ignore how the removed signal is distributed across channels."
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q161",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The pooled raw alpha/sham |\u0394f| ratio is 7.33, but the plain average of Appendix B's three per-backbone ratios (7.4, 8.9, 5.1) is about 7.1. Why can these two figures differ?",
+   "answer": "Appendix B's ratios divide the alpha |\u0394f| averaged over nine settings by the sham |\u0394f| averaged over the same settings, which is a ratio of means. The pooled 7.33 is a setting-level mean that is bootstrapped over settings, so it averages the per-setting ratios. A mean of ratios need not equal a ratio of means: settings with a very small sham |\u0394f| produce large ratios that pull the setting-level mean up.",
+   "rubric": [
+    "States that the two figures are computed differently: per-backbone values are ratios of averaged |\u0394f|, while the pooled value averages per-setting ratios.",
+    "Explains that a mean of ratios need not equal a ratio of means (for example, settings with small sham denominators inflate the mean)."
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q162",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is a pooled spectral-normalized ratio of 0.28 roughly what one would expect if every setting simply had a raw ratio near the pooled 7.33?",
+   "answer": "Dividing 7.33 by the removed-energy ratios 57.2, 34.6 and 11.8 gives about 0.13, 0.21 and 0.62. Averaging these gives about 0.32, close to 0.28. So the collapse is mostly what the energy denominators alone predict, with no special per-setting behaviour needed.",
+   "rubric": [
+    "Shows that dividing about 7.3 by the three dataset removed-energy ratios gives values of roughly 0.13, 0.21 and 0.6, averaging about 0.3.",
+    "Concludes that the collapse is essentially explained by the energy denominators."
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q163",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is a small positive selectivity\u2013importance correlation (r = 0.107) compatible with zeroing specialist-like groups having no detectable frozen-probe cost?",
+   "answer": "An r of about 0.1 means alpha selectivity explains only about 1% of the variation in importance, so being in the top selectivity quartile barely raises expected importance. Specialists are also filtered for low dropout fragility and fire far less than fragile latents (8.9\u00d7). Importance scales with E[c_j], so specialists contribute little to the mean-pooled logits, and zeroing them changes little.",
+   "rubric": [
+    "States that the two results do not conflict.",
+    "Notes that r \u2248 0.1 means selectivity explains very little of the variation in importance.",
+    "Notes that specialists are low-activity latents, so their |w|\u00b7E[c] contributions and the effect of zeroing them are small."
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q164",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the distortion-control result alone not settle that the specialists are not alpha-representing, so that an independent clean-data check is still informative?",
+   "answer": "The two normalizations bracket the confound rather than settle it. Per unit time-domain distortion, alpha still beats sham (1.32, above one in 17/27 settings), so the verdict depends on which denominator is right. The clean-EEG correlation with relative alpha power does not depend on that choice, so it provides separate evidence.",
+   "rubric": [
+    "States that the distortion result is denominator-dependent and does not settle the question on its own.",
+    "Cites the time-normalized ratio staying above one (1.32; 17/27 settings) versus 0.28 for spectral normalization.",
+    "Notes that the observational test does not depend on choosing a denominator."
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q165",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is the raw code-overlap ratio (2.77) much smaller than the raw |\u0394f| ratio (7.33)?",
+   "answer": "Overlap loss (1 \u2212 Jaccard) cannot exceed 1, and the sham already removes about 16\u201322% of overlap (sham Jaccard 0.78\u20130.84 in Appendix B). That caps the ratio at roughly 5. In contrast, |\u0394f| has no upper bound and the sham |\u0394f| values are tiny (0.00014\u20130.00046), so its ratio can grow much larger.",
+   "rubric": [
+    "Explains that overlap loss is bounded at 1.",
+    "Notes that the sham already causes substantial overlap loss (Jaccard about 0.78\u20130.84), which caps the ratio, whereas sham |\u0394f| is tiny and unbounded."
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q166",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does 'exceeds one in 0/27 settings' add something to the spectral-normalized result beyond its 95% CI of [0.22, 0.36]?",
+   "answer": "The CI describes the pooled mean, and a mean below one could still hide some settings where alpha beats sham per unit removed energy. The 0/27 count shows that no individual setting reverses, so the collapse is not an artifact of averaging.",
+   "rubric": [
+    "States that the CI concerns only the mean across settings.",
+    "Explains that 0/27 rules out any individual setting where alpha beats sham after normalization."
+   ],
+   "batch": 5,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q167",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b5-p1",
+   "question": "Keeping the 30\u201334 Hz sham, would spectral-energy normalization make it harder, compared with the raw ratio, for a 2\u20136 Hz band-stop to beat the sham?",
+   "answer": "Yes. Because EEG power falls as 1/f, a 2\u20136 Hz notch removes much more energy than the 30\u201334 Hz sham. Its response is therefore divided by a much larger removed-energy fraction, which pushes the ratio down.",
+   "rubric": [
+    "Says yes, normalization makes it harder.",
+    "Explains that under 1/f the low-frequency notch removes far more energy than the sham, giving a large denominator."
+   ],
+   "batch": 5,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q168",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b5-p1",
+   "question": "Keeping the 30\u201334 Hz sham, would spectral-energy normalization make it harder, compared with the raw ratio, for a 40\u201344 Hz band-stop to beat the sham?",
+   "answer": "No. Under 1/f, a 40\u201344 Hz notch removes less energy than the 30\u201334 Hz sham. Dividing by its smaller removed-energy fraction raises its normalized ratio relative to the raw ratio, so normalization makes it easier to beat the sham.",
+   "rubric": [
+    "Says no, normalization would make it easier (the ratio rises).",
+    "Explains that the higher-frequency notch removes less energy than the sham under 1/f."
+   ],
+   "batch": 5,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q169",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b5-p2",
+   "question": "Using Appendix B's alpha Jaccard for REVE (0.466) and k = 32, does the alpha notch on average leave more than half of REVE's 32 active latents unchanged?",
+   "answer": "Yes. With both active sets of size 32, J = I/(64 \u2212 I), so I = 64\u00b70.466/1.466 \u2248 20 shared latents, which is more than 16. This is approximate because it uses the mean Jaccard.",
+   "rubric": [
+    "Says yes.",
+    "Uses the k = 32 set sizes to convert Jaccard 0.466 into about 20 shared latents, which exceeds 16."
+   ],
+   "batch": 5,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q170",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b5-p2",
+   "question": "Using Appendix B's alpha Jaccard for REVE (0.466) and k = 32, does the alpha notch on average leave more than three quarters of REVE's 32 active latents unchanged?",
+   "answer": "No. Jaccard 0.466 with two 32-latent sets implies about 20 shared latents, fewer than 24. Roughly 12 latents are swapped on average.",
+   "rubric": [
+    "Says no.",
+    "Converts Jaccard 0.466 into about 20 shared latents, which is below 24 (about 12 swapped)."
+   ],
+   "batch": 5,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q171",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p3",
+   "question": "A latent has |\u0394f| = 0.010 under the alpha band-stop, 0.030 under the delta band-stop and 0 under the other four bands. Is its alpha selectivity s_{j,\u03b1} positive?",
+   "answer": "Yes. The mean over the other five bands is 0.030/5 = 0.006, so s = 0.010 \u2212 0.006 = 0.004 > 0. Its alpha selectivity is positive even though its delta response is three times larger.",
+   "rubric": [
+    "Says yes, the selectivity is positive.",
+    "Shows the calculation: the mean of the other five bands is 0.006, so s = 0.004."
+   ],
+   "batch": 5,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q172",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p3",
+   "question": "A latent has |\u0394f| = 0.010 under the alpha band-stop, 0.060 under the delta band-stop and 0 under the other four bands. Is its alpha selectivity s_{j,\u03b1} positive?",
+   "answer": "No. The mean over the other five bands is 0.060/5 = 0.012, so s = 0.010 \u2212 0.012 = \u22120.002 < 0.",
+   "rubric": [
+    "Says no, the selectivity is negative.",
+    "Shows the calculation: the mean of the other five bands is 0.012, so s = \u22120.002."
+   ],
+   "batch": 5,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q173",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "The paper lists TopK rank displacement as a caveat on |\u0394f|. Would this caveat apply to an SAE with plain ReLU activations and no TopK step, and why?",
+   "answer": "No. Without TopK there is no competition for a fixed number of active slots. A latent's code then depends only on its own pre-activation, so its |\u0394f| can change only if that pre-activation changes. The input-distortion confound would still apply.",
+   "rubric": [
+    "Says the rank-displacement caveat would not apply.",
+    "Explains that, without TopK competition, each latent's code depends only on its own pre-activation."
+   ],
+   "batch": 5,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q174",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "On a new EEG dataset whose spectrum has a pronounced 8\u201312 Hz peak on top of the 1/f trend, would you expect the raw alpha/sham |\u0394f| ratio to be more or less inflated by input distortion than on the paper's datasets, and why?",
+   "answer": "More inflated. The peak adds extra power inside the alpha band, so the alpha notch removes even more energy relative to the 30\u201334 Hz sham. The removed-energy ratio grows, the raw ratio gets bigger for reasons unrelated to selectivity, and a larger raw ratio would be needed to survive spectral normalization.",
+   "rubric": [
+    "Says more inflated.",
+    "Explains that the peak increases the energy removed by the alpha notch relative to the sham, raising the removed-energy ratio."
+   ],
+   "batch": 5,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q175",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team runs only the 8\u201312 Hz alpha band-stop and the 30\u201334 Hz sham, applies both distortion normalizations and finds that alpha still wins. With no other band-stops and no channel dropout, what is the strongest Table 1 label they can assign, and why?",
+   "answer": "Only 'alpha-sensitive'. The 'alpha-selective' row requires the response to survive both distortion control and competing perturbations. Without other band-stops or channel dropout, they cannot show the latent is specific rather than broadly fragile.",
+   "rubric": [
+    "Names 'alpha-sensitive' as the strongest label.",
+    "Explains that 'alpha-selective' also requires surviving competing perturbations (other bands, channel dropout), which were not run."
+   ],
+   "batch": 5,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team compares alpha sensitivity across two backbones using the raw alpha/sham |\u0394f| ratio, but evaluates backbone A only on BCI and backbone B only on Speech. Is this a fair comparison, and why?",
+   "answer": "No. The alpha notch removes 57.2\u00d7 more energy than the sham on BCI but only 11.8\u00d7 more on Speech. Backbone A's raw ratio would be inflated far more by input distortion. They should compare the backbones on the same datasets or normalize by removed energy.",
+   "rubric": [
+    "Says the comparison is not fair.",
+    "Cites the dataset-dependent removed-energy ratios (57.2 on BCI vs 11.8 on Speech), which bias the raw ratio in A's favour."
+   ],
+   "batch": 5,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team wants to label a latent as an 'occipital feature' because dropping occipital channels changes its firing more than dropping an equal number of frontal channels. By analogy with the ladder's second stage, what must they control for before claiming selectivity?",
+   "answer": "They must check that the response survives normalization by how much signal each dropout removes, for example the time-domain distortion ||x\u2212x\u0303||/||x||. Occipital and frontal channels may carry different amounts of signal, just as the alpha notch removes more energy than the sham. They would also need specificity tests and clean-data validation for a representational label.",
+   "rubric": [
+    "Says they must normalize the response by how much signal each channel dropout removes (a distortion control).",
+    "Explains by analogy with alpha versus sham that equal-count channel sets can remove unequal signal, which confounds the raw comparison."
+   ],
+   "batch": 5,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q178",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the selectivity\u2013importance correlation had been strong (say r \u2248 0.7 in every setting), how would you expect the frozen-probe specialist ablation to compare with the random-control ablation, and why?",
+   "answer": "You would expect zeroing specialists to cost more accuracy than zeroing random controls. Specialists, being the most alpha-selective latents, would then carry large |w_j|\u00b7E[c_j] contributions. With a linear probe on mean-pooled codes, zeroing removes exactly those contributions from the logits.",
+   "rubric": [
+    "Predicts a larger frozen-probe accuracy drop for specialists than for random controls.",
+    "Explains that high importance means large |w|\u00b7E[c] terms, which zeroing removes from the linear probe's logits."
+   ],
+   "batch": 5,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q179",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Is the raw code-overlap ratio of 2.77 consistent with Appendix B's Jaccard values if code-overlap disruption is measured as 1 \u2212 Jaccard under alpha divided by 1 \u2212 Jaccard under sham?",
+   "answer": "Approximately yes. The ratios are about 0.459/0.181 \u2248 2.5 for CBraMod, 0.534/0.159 \u2248 3.4 for REVE and 0.516/0.218 \u2248 2.4 for DINOv3. These average to about 2.75, close to 2.77.",
+   "rubric": [
+    "Says yes, approximately consistent.",
+    "Shows per-backbone overlap-loss ratios of roughly 2.5, 3.4 and 2.4 that average to about 2.75."
+   ],
+   "batch": 5,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q180",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Which backbone pulls Appendix C's mean contiguous late-minus-early Jaccard (\u22120.20) toward zero, and roughly what would the mean be without it?",
+   "answer": "REVE, whose depth effect is only about \u22120.07. Each backbone contributes three combinations, so averaging DINOv3 (\u2248\u22120.35) and CBraMod (\u2248\u22120.19) alone gives about \u22120.27.",
+   "rubric": [
+    "Identifies REVE.",
+    "Gives a mean of about \u22120.27 without REVE, from averaging \u22120.35 and \u22120.19."
+   ],
+   "batch": 5,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the fragility filter were dropped and specialists were defined by top-quartile alpha selectivity alone, how would you expect their mean |r| with relative alpha power to move, and why?",
+   "answer": "It would likely rise toward the general-fragile group's 0.246. The group would now admit fragile, high-baseline latents, and the paper attributes the fragile |r| advantage to high baseline activity. That higher |r| would come from activity level, not from alpha representation.",
+   "rubric": [
+    "Predicts that mean |r| would increase (toward the fragile level).",
+    "Explains that high-activity fragile latents would enter the group, and their higher |r| is attributed to baseline activity rather than alpha."
+   ],
+   "batch": 5,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q182",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the 30\u201334 Hz sham notch leaves SAE codes essentially unchanged? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. Appendix B gives sham Jaccards of only 0.78\u20130.84 and nonzero sham |\u0394f|. That corresponds to roughly 3\u20134 of the 32 active latents changing even under the sham.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites sham Jaccard of about 0.78\u20130.84 and/or nonzero sham |\u0394f| in Appendix B."
+   ],
+   "batch": 5,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q183",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that perturbation sensitivity has no evidential value for interpreting SAE latents? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. Under Table 1, responding to alpha removal does support a label, 'alpha-sensitive'. The paper's point is only that sensitivity is the first rung and cannot by itself justify stronger labels such as alpha-representing.",
+   "rubric": [
+    "Answers contradicted.",
+    "Notes that sensitivity supports the weaker 'alpha-sensitive' label and is the first rung of the ladder, insufficient only for stronger claims."
+   ],
+   "batch": 5,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q184",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its validation ladder works for SAE latents of non-EEG biosignal foundation models? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Every experiment uses EEG datasets, and no positive control has been run even within EEG. The ladder's behaviour on other biosignals is untested.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that only EEG data were used and/or no positive control was run."
+   ],
+   "batch": 5,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q185",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show why channel-dropout robustness of SAE codes declines with depth, for example by identifying a backbone mechanism responsible? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. Appendix C reports only the observed late-minus-early Jaccard drop as a secondary observation. No analysis tests a mechanism behind it.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the depth result is only observational, with no mechanistic test."
+   ],
+   "batch": 5,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q186",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does Appendix B show that the EEG-pretrained backbones' SAE codes are more disrupted by alpha removal than DINOv3's? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled, because it depends on the metric. On the alpha/sham ratio both EEG backbones exceed DINOv3 (7.4 and 8.9 vs 5.1). But DINOv3's absolute alpha |\u0394f| (0.00169) is larger than REVE's (0.00127), and its alpha Jaccard (0.484) is lower than CBraMod's (0.541).",
+   "rubric": [
+    "Answers not settled (metric-dependent).",
+    "Cites a disagreement between metrics, e.g. DINOv3's absolute alpha |\u0394f| exceeding REVE's, or its alpha Jaccard being below CBraMod's, despite its lower ratio."
+   ],
+   "batch": 5,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that each specialist was closely matched to its own activity-matched control? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Not settled. The paper reports only group means (firing 0.374 vs 0.374, activation 0.0060 vs 0.0062). Equal means can coexist with poor individual pairs, so pairwise match quality is not shown.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that only group-level means are reported, and equal means do not guarantee close individual matches."
+   ],
+   "batch": 5,
+   "orig_id": "q33"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q28",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that specialist latents are anti-correlated with relative alpha power in every setting? Answer supported, contradicted, or not settled, and why.",
+   "answer": "Contradicted. The signed correlation is negative in 23/27 settings, not all of them, and its mean (\u22120.073) is small.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites a negative signed r in only 23 of 27 settings."
+   ],
+   "batch": 5,
+   "orig_id": "q28",
+   "reject": "near-duplicate of q41"
+  }
+ ],
+ "types": {
+  "failure": 30,
+  "why": 33,
+  "counterfactual": 34,
+  "transfer": 29,
+  "connect": 27,
+  "scope": 34
+ }
+}

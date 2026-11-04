@@ -1,0 +1,527 @@
+{
+ "claims": [
+  {
+   "id": "c1",
+   "text": "R-Judge's official F1 metric is not a valid standalone measure. An 'always unsafe' constant policy attains F1 = 2\u03c0/(1+\u03c0) = 0.690 (\u03c0 = 0.527 unsafe). That baseline outranks five discriminating models, because F1 gives no credit for correctly rejected benign traces. Balanced accuracy or the full confusion structure should be reported instead.",
+   "sections": [
+    "s0",
+    "s1",
+    "s2",
+    "s4",
+    "s7"
+   ],
+   "depends_on": []
+  },
+  {
+   "id": "c2",
+   "text": "The capability confound depends on the metric and on the panel. Capability correlates strongly with R-Judge balanced accuracy and F1 but only weakly with specificity. The specificity\u2013MMLU correlation fell from 0.85 on nine models to +0.16 at n=20. Re-measured capability anchors pass the positive control, which provider-reported anchors had failed.",
+   "sections": [
+    "s3",
+    "s4",
+    "s6"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "The broad-coverage benchmarks rank the same 18 models differently. An apparent R-Judge-specificity/AgentHarm trade-off (\u03c1 = \u22120.64 at n=7) is a small-panel artifact: \u03c1 = +0.02 at n=18, and a quarter of random size-7 subsets reach |\u03c1| \u2265 0.5. The single-factor PCA is only weak corroboration; the firm RQ1 result is the raw ranking disagreement.",
+   "sections": [
+    "s2",
+    "s4",
+    "s6",
+    "s8"
+   ],
+   "depends_on": [
+    "c2"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Held-out validity depends on the outcome. Capability predicts \u03c4\u00b2 task success (+0.60), and no safety score adds incremental validity there. Capability correlates negatively with misalignment safety (\u22120.44). The resulting interaction contrast \u0394 = \u22121.00 is robust to leave-one-organization-out, clustered bootstrap and subsampling.",
+   "sections": [
+    "s3",
+    "s4",
+    "s6",
+    "s8"
+   ],
+   "depends_on": [
+    "c2"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "On the expanded 41-model panel, the capability\u2013misalignment correlation weakens to \u22120.16 and the jailbreak correlation rises to +0.34. Neither change is significant, and the pre-specified 'hold or strengthen' prediction was not met. Organization groups differ in safety after capability adjustment, but this is observational, not causal.",
+   "sections": [
+    "s4",
+    "s5",
+    "s8"
+   ],
+   "depends_on": [
+    "c4"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "AgentHarm has the strongest held-out association: partial \u03c1 = +0.72 with three-template jailbreak safety. Because both instruments score harmful compliance, this is convergent validity rather than general safety. Selectivity over misalignment is borderline (p = 0.051 under organization resampling). The R-Judge/InjecAgent\u2013misalignment associations are exploratory.",
+   "sections": [
+    "s0",
+    "s4",
+    "s5",
+    "s6",
+    "s8"
+   ],
+   "depends_on": [
+    "c4"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "Suppose R-Judge's labels were flipped so that the benign class had the share the paper reports for the unsafe class. Apply the paper's Observation 1 formula to the new positive-class share. What would the degenerate always-positive policy score, and would it still outrank the five discriminating models the paper identifies?",
+   "answer": "With \u03c0 = 0.473, the formula gives F1 = 2(0.473)/1.473 \u2248 0.64. The five discriminating models have F1 between 0.30 and 0.57. The degenerate policy would therefore still outrank all five of them.",
+   "rubric": [
+    "Computes roughly 0.64 using 2\u03c0/(1+\u03c0) with \u03c0 \u2248 0.473",
+    "Concludes the baseline still outranks all five models",
+    "Justifies this by noting the five models' F1 range tops out at about 0.57"
+   ]
+  },
+  {
+   "id": "q2",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "A reader argues that the paper's highest-specificity R-Judge model is clearly shown to be a far better risk judge than the 'always unsafe' policy under R-Judge's official metric. Why does the paper's result undercut this argument?",
+   "answer": "Under F1, o3-mini (specificity 0.97) scores only 0.702, just 0.012 above the constant baseline's 0.690. Its lower recall is penalized, and F1 gives no credit for its excellent handling of benign traces (true negatives). The official metric therefore barely separates a strong discriminator from a policy that does no reasoning.",
+   "rubric": [
+    "States that o3-mini's F1 is only marginally (about 0.012) above the baseline",
+    "Explains that F1 ignores true negatives, so high specificity earns nothing",
+    "Notes its lower recall pulls its F1 down"
+   ]
+  },
+  {
+   "id": "q3",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "The paper rejects R-Judge's F1 for ignoring true negatives, yet represents R-Judge by specificity in its cross-benchmark and criterion analyses. Which analysis does the paper use to address this tension, and which result turned out not to survive it?",
+   "answer": "Appendix A.4 recomputes every R-Judge result under specificity, recall, balanced accuracy and F1. Most conclusions are robust to the metric choice. The R-Judge\u2013misalignment partial correlation is not: it goes from +0.41 under specificity to \u22120.46 under recall.",
+   "rubric": [
+    "Identifies the metric-sensitivity recomputation across four R-Judge metrics (App. A.4)",
+    "Names the R-Judge\u2013misalignment partial as the metric-sensitive result",
+    "Notes it changes sign (for example +0.41 under specificity vs \u22120.46 under recall)"
+   ]
+  },
+  {
+   "id": "q4",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "A reviewer cites the paper's R-Judge specificity results to argue that R-Judge as a benchmark is free of capability confounding. Using the paper's RQ2 findings, why is this conclusion unwarranted?",
+   "answer": "The paper finds the confound is a property of the metric, not the benchmark. On the same R-Judge data, balanced accuracy (+0.71 with MMLU) and F1 (+0.76) correlate strongly with capability, because they include recall on unsafe traces. Even the specificity correlation was 0.85 on the first nine models, so the weak value is panel-dependent too.",
+   "rubric": [
+    "Concludes the 'capability-free' claim does not hold for the benchmark as a whole",
+    "Cites the strong capability correlation of balanced accuracy and/or F1 on the same data",
+    "Mentions panel dependence (0.85 on nine models) or the recall-based explanation"
+   ]
+  },
+  {
+   "id": "q5",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "Had the paper stopped its RQ2 analysis at its first batch of models, what would it have concluded about capability and R-Judge specificity? How does that differ from what it finally reports?",
+   "answer": "On the first nine models, the specificity\u2013MMLU correlation was 0.85, so it would have concluded that specificity is heavily capability-confounded. At n=20 the correlation is only +0.16. The final conclusion is that specificity is weakly related to capability and that the confound moves with the panel.",
+   "rubric": [
+    "States the early estimate showed a strong correlation (about 0.85)",
+    "States the final n=20 estimate is weak (about +0.16)",
+    "Draws the lesson that the confound estimate is panel-dependent"
+   ]
+  },
+  {
+   "id": "q6",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "textbase",
+   "sections": [
+    "s3",
+    "s4",
+    "s6"
+   ],
+   "question": "The paper changed how its capability anchors were obtained partway through the work. Which pre-specified control did this change affect, and what did the paper report about its RQ2/RQ3 conclusions after the change?",
+   "answer": "Replacing provider-reported model-card numbers with uniformly measured MMLU and GPQA-Diamond scores moved the positive control from failing (MMLU loading 0.42) to passing (0.74, against the 0.6 threshold). The paper reports that every RQ2/RQ3 sign was unchanged by the switch.",
+   "rubric": [
+    "Identifies the positive control (capability-anchor loading of at least 0.6 on the first factor)",
+    "Notes it went from failing (0.42) to passing (0.74)",
+    "States that the RQ2/RQ3 signs were unchanged"
+   ]
+  },
+  {
+   "id": "q7",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "A new study evaluates seven models and finds R-Judge specificity and AgentHarm safety correlate at \u03c1 = \u22120.55, concluding that a refusal/over-flagging trade-off exists. Based on the paper's subset analysis, how much weight should this finding get?",
+   "answer": "Very little. In the paper, random size-7 subsets reached |\u03c1| \u2265 0.5 in about a quarter of draws, even though the full-panel correlation was only +0.02. A value like \u22120.55 at n=7 is therefore easily produced by sampling variability alone.",
+   "rubric": [
+    "Concludes the finding is weak or unreliable evidence",
+    "Cites that about 25% of size-7 subsets reach |\u03c1| \u2265 0.5",
+    "Notes this happens despite a near-zero full-panel correlation"
+   ]
+  },
+  {
+   "id": "q8",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "Someone claims the paper's PCA demonstrates a robust single latent factor with AgentHarm opposed to the other measures. Why does the paper treat this structure only as corroborative?",
+   "answer": "Under a rank-based (Spearman) PCA, PC1 drops to 40.8% of variance and Horn's parallel analysis retains no factor. The median between-benchmark correlation is also only 0.22. The paper's firm RQ1 result is instead the correlation-free ranking disagreement in Table 1.",
+   "rubric": [
+    "Notes the Spearman PCA sensitivity (PC1 about 40.8%, no factor retained by Horn)",
+    "Mentions the low median between-benchmark correlation (about 0.22)",
+    "States that the firm result is the raw ranking disagreement rather than the factor"
+   ]
+  },
+  {
+   "id": "q9",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "Using the paper's Table 1, compare Llama-3.1-8B and o3-mini on AgentHarm safety and R-Judge specificity. What does this pair illustrate about the paper's RQ1 claim?",
+   "answer": "Llama-3.1-8B is the top AgentHarm model (0.89) but nearly the lowest on specificity (0.04). o3-mini is the top specificity model (0.97) but only mid-pack on AgentHarm (0.77). Which model counts as 'safer' therefore depends entirely on the benchmark, so the scores cannot be quoted interchangeably.",
+   "rubric": [
+    "Reports the reversed positions (Llama high on AgentHarm and low on specificity; o3-mini the reverse or higher on specificity)",
+    "Concludes that the safety ranking is benchmark-dependent and the scores are not interchangeable"
+   ]
+  },
+  {
+   "id": "q10",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "The paper argues that item-sampling error is an unlikely explanation for Table 1's ranking disagreement. If the item-rich instruments had shown split-half consistency around 0.5 instead, how would that affect this argument?",
+   "answer": "The disagreement could then plausibly be noise in each benchmark's own rankings rather than differences in what the benchmarks measure. The paper's dismissal of item-sampling error rests on split-half consistency of at least 0.96 and rank stability of at least 0.97. Low consistency would remove that support.",
+   "rubric": [
+    "Concludes the argument would be weakened or lost",
+    "Explains that unreliable within-benchmark rankings could themselves produce the disagreement",
+    "References the paper's reliance on high split-half consistency / rank stability"
+   ]
+  },
+  {
+   "id": "q11",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "The paper finds that no safety score has a meaningful partial correlation with \u03c4\u00b2 task success after controlling capability. Why would it be wrong to conclude from this that AgentHarm is an invalid instrument?",
+   "answer": "Task success is an outcome that capability already explains well (\u03c1 = +0.60). The partials only ask whether a safety score predicts what capability leaves unexplained in an outcome that is not a safety construct. The paper explicitly says this null is not a verdict on the safety scores, and AgentHarm does show a strong partial (+0.72) on the jailbreak safety outcome.",
+   "rubric": [
+    "States the null does not show AgentHarm is invalid",
+    "Explains that capability already explains task success, which is not the construct AgentHarm targets",
+    "Optionally notes AgentHarm's strong association with the jailbreak outcome"
+   ]
+  },
+  {
+   "id": "q12",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "Using capability's correlations with the two outcomes on the paper's paired n=20 panel, reconstruct the paper's interaction contrast \u0394. What does its sign mean?",
+   "answer": "The misalignment-safety correlation is \u22120.41 and the task-success correlation is +0.60. Their difference is about \u22121.0, matching the reported \u0394 = \u22121.00. The negative sign means capability's association reverses between outcomes: positive for task success, negative for misalignment safety.",
+   "rubric": [
+    "Uses the paired-panel values (about \u22120.41 and +0.60) to get roughly \u22121.0",
+    "Interprets the negative sign as capability relating oppositely to the two outcomes"
+   ]
+  },
+  {
+   "id": "q13",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s8"
+   ],
+   "question": "If all OpenAI models were dropped from the paired panel, would the paper's capability-interaction finding still hold, according to its robustness analysis?",
+   "answer": "Yes. Omitting OpenAI gives \u0394 = \u22121.16, which is the widest swing but is even more negative. Every leave-one-organization-out value stays between about \u22120.90 and \u22121.16, and the organization-clustered bootstrap interval excludes zero.",
+   "rubric": [
+    "Concludes the finding still holds",
+    "Cites the leave-OpenAI-out value (about \u22121.16) or the leave-one-organization-out range staying strongly negative"
+   ]
+  },
+  {
+   "id": "q14",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s6",
+    "s8"
+   ],
+   "question": "A reader claims the paper establishes that R-Judge specificity and InjecAgent robustness validly predict misalignment safety beyond capability, because both partial correlations exceed the paper's effect-size threshold. Why does the paper not accept this?",
+   "answer": "The paper treats these associations as exploratory. Both confidence intervals include zero, neither survives Bonferroni correction, and power is only about 0.35. The pre-specified directional prediction named AgentHarm, not these two scores, and the R-Judge partial reverses sign under recall.",
+   "rubric": [
+    "States the associations are only exploratory or suggestive",
+    "Gives at least two reasons: CIs include zero, fails Bonferroni, low power, not the pre-specified prediction, metric sensitivity"
+   ]
+  },
+  {
+   "id": "q15",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "Compare the paper's expanded-panel capability\u2013misalignment estimate with its pre-specified confirmation threshold. Was the threshold met, and why does the paper nonetheless avoid saying the correlation disappeared?",
+   "answer": "The threshold (\u03c1 \u2264 \u22120.35 at p < 0.05) was not met: the estimate was \u22120.16 with p = 0.40. However, the 95% CI [\u22120.54, +0.22] still includes the original \u22120.44. The nested-bootstrap between-panel change is also not significant, so the paper reports a weaker estimate rather than a disappearance.",
+   "rubric": [
+    "States the threshold was not met (\u22120.16 is not \u2264 \u22120.35, and p is not significant)",
+    "Notes the CI still includes \u22120.44 and/or the between-panel change is not significant"
+   ]
+  },
+  {
+   "id": "q16",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "Someone argues that the expanded panel's weaker capability\u2013misalignment correlation is simply because its organization mix differs from the original panel. What evidence in the paper bears on this explanation?",
+   "answer": "The paper drew size-21 subsets of the expanded pool matched to the original panel's organization histogram. These give a median \u03c1 of about \u22120.17, not \u22120.44. Organization composition alone therefore does not reproduce the original value, though a generational explanation remains possible but unproven.",
+   "rubric": [
+    "Cites the organization-matched subsampling (median about \u22120.17)",
+    "Concludes that composition alone does not explain the weakening"
+   ]
+  },
+  {
+   "id": "q17",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4",
+    "s8"
+   ],
+   "question": "Why could the paper update the capability\u2013misalignment correlation on its expanded panel but not re-test the capability interaction \u0394 there?",
+   "answer": "\u0394 contrasts capability's correlation with \u03c4\u00b2 task success against its correlation with misalignment. The expansion ran only the chat- and scenario-based criteria and anchors. \u03c4\u00b2, a multi-turn tool loop, was not re-collected, so the task-success half of the contrast is missing.",
+   "rubric": [
+    "Notes that \u0394 requires the \u03c4\u00b2 task-success correlation",
+    "States that \u03c4\u00b2 was not re-collected for the expanded panel (only the chat-based criteria were run)"
+   ]
+  },
+  {
+   "id": "q18",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "A reader concludes from the paper's organization-group test that developers' safety practices cause higher safety at matched capability. Why does the paper reject this reading?",
+   "answer": "Capability is matched only on a static-knowledge composite (MMLU/GPQA), so unmeasured agentic capability could show up as an organization difference. Within-organization n is small (4\u20138), and some groups are range-restricted. The result is therefore an observational association, not causal identification.",
+   "rubric": [
+    "States the result is not causal or only observational",
+    "Cites the static capability composite possibly missing agentic capability",
+    "Mentions small per-organization n or range restriction"
+   ]
+  },
+  {
+   "id": "q19",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5"
+   ],
+   "question": "Why does the paper decline to treat AgentHarm's +0.72 partial correlation with its jailbreak outcome as evidence that AgentHarm measures agent safety in general?",
+   "answer": "AgentHarm and the StrongREJECT jailbreak outcome both score harmful compliance, so the association is largely convergent validity. AgentHarm's partial with misalignment safety is weak (+0.16, or +0.13 on the paired panel). Its selectivity for jailbreak over misalignment is only borderline (p = 0.051) under organization resampling.",
+   "rubric": [
+    "Notes that both measures score harmful compliance, making this convergent validity",
+    "Cites the weak misalignment partial and/or the borderline (p = 0.051) selectivity test"
+   ]
+  },
+  {
+   "id": "q20",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4",
+    "s8"
+   ],
+   "question": "If the paper's jailbreak outcome had used only the single AIM template, how would the AgentHarm association have differed, and why?",
+   "answer": "It would have been weaker: a partial of +0.50 instead of +0.72. Under AIM alone, 11 of 22 models refuse every request, creating a ceiling that removes discriminating variance. The three-template average leaves no model at the ceiling.",
+   "rubric": [
+    "States the association would be weaker (about +0.50)",
+    "Explains the ceiling effect (about half the models refuse everything under AIM)"
+   ]
+  },
+  {
+   "id": "q21",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "Suppose the paper's XSTest check had found AgentHarm safety strongly correlated with over-refusal of benign prompts after controlling capability. Which alternative explanation for the AgentHarm\u2013jailbreak result would that have supported?",
+   "answer": "It would support the blanket-refusal story: models score well on both AgentHarm and the jailbreak outcome simply by refusing everything, not by discriminating harm. The paper actually found \u03c1 = \u22120.01, which weighs against this explanation (though low power means it is not ruled out).",
+   "rubric": [
+    "Names the blanket-refusal / refusing-everything explanation",
+    "Contrasts this with the actual near-zero (about \u22120.01) finding that weighs against it"
+   ]
+  },
+  {
+   "id": "q22",
+   "claim": null,
+   "kind": "integration",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s0",
+    "s4",
+    "s5",
+    "s7"
+   ],
+   "question": "A model card cites only 'R-Judge F1 = 0.70' as evidence that its agent is safe. Measured against the paper's minimum requirements for a safety claim, which elements are inadequate or missing? Name a specific paper finding that shows why each of at least two of them matters.",
+   "answer": "The metric is inadequate: an always-unsafe policy reaches F1 0.690, so 0.70 says almost nothing. The target behavior is unstated: R-Judge measures risk awareness and does not predict jailbreak safety (partial \u22120.11), so it does not stand in for safety as a whole. The model panel is missing: rankings and correlations shift with panel size and composition, as in the \u22120.64 to +0.02 trade-off reversal.",
+   "rubric": [
+    "Identifies missing elements among metric, target behavior, model panel (and benchmark)",
+    "Links the metric to the 0.690 constant-baseline result",
+    "Links at least one other element to a specific finding (e.g., outcome-specific validity or small-panel instability)"
+   ]
+  },
+  {
+   "id": "q23",
+   "claim": "c4",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s6",
+    "s8"
+   ],
+   "question": "Applying the paper's Bonferroni correction over its nine RQ3 partial tests, which results survive? How does this map onto the results the paper calls firm versus exploratory?",
+   "answer": "The corrected threshold is \u03b1 \u2248 0.006. Only the capability crossover and the AgentHarm\u2192jailbreak association (both p < 0.001) survive, and these are the results the paper treats as firm. The R-Judge/InjecAgent\u2013misalignment cells (p \u2248 0.05\u20130.09) fail and are kept as exploratory.",
+   "rubric": [
+    "Names the crossover and AgentHarm\u2192jailbreak as surviving",
+    "Notes the R-Judge/InjecAgent\u2013misalignment cells fail",
+    "Maps survivors to firm and failures to exploratory"
+   ]
+  },
+  {
+   "id": "q24",
+   "claim": "c3",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "The paper uses random subsampling to judge the stability of both its early R-Judge/AgentHarm trade-off and its capability interaction \u0394. Contrast how the two behaved under subsampling, and what each result implies.",
+   "answer": "The R-Judge\u2013AgentHarm correlation reached |\u03c1| \u2265 0.5 in about 25% of size-7 draws despite a near-zero full value, so the apparent trade-off is a sampling artifact. \u0394 was negative in 100% of size-10 to size-14 draws with no sign flips (median about \u22120.95). This marks \u0394 as a stable result rather than a small-panel artifact.",
+   "rubric": [
+    "Describes the trade-off's instability (about 25% of size-7 draws with |\u03c1| \u2265 0.5)",
+    "Describes \u0394's stability (always negative, no sign flips in subsamples)",
+    "Draws the contrast: artifact vs robust finding"
+   ]
+  },
+  {
+   "id": "q25",
+   "claim": "c6",
+   "kind": "integration",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "According to the paper's power analysis, roughly how many models would be needed to test the observed R-Judge\u2013misalignment effect at 80% power? Did the paper's later model additions reach that size for this test, and what happened to the estimate?",
+   "answer": "Detecting +0.41 at 80% power requires about n \u2248 40, which the original n=18\u201320 panel was far from. The expanded 41-model panel ran only the chat-based criteria and anchors, not the audited benchmarks. The R-Judge\u2013misalignment continuation reached only n=25, where the estimate fell to +0.23 below its 0.30 threshold, so it remains a hypothesis.",
+   "rubric": [
+    "States that about 40 models are needed",
+    "Notes the test did not reach that size (the continuation went only to n = 25; the audited benchmarks were not run on the expanded panel)",
+    "Reports that the estimate dropped (to about +0.23) and is retained only as a hypothesis"
+   ]
+  }
+ ],
+ "paper": "2607.28685v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "seed": 1,
+ "prompt_version": "p2",
+ "paper_sha256": "1c5a71edff5cee6980ee4c168205006a552d5a056ef50d8433c7814632ae4ce5",
+ "problems": []
+}

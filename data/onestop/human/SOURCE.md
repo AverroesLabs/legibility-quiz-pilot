@@ -1,0 +1,1 @@
+Copied from https://github.com/berzak/onestop-qa (commit 7a058755e1ff0d3f835a67109c669c7e294d4239), human_experiments/prolific/. OneStopQA, Berzak, Malmaud and Levy (ACL 2020), CC BY-SA 4.0 (LICENSE.md).

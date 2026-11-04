@@ -1,0 +1,3442 @@
+{
+ "paper": "2609.34091v1-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "2fa1c37e32a34eabb18fd29d374b4ead8dfe6c36a38260f1c80e2bba88cf0660",
+ "batches": 5,
+ "written_per_batch": [
+  41,
+  40,
+  40,
+  38,
+  36
+ ],
+ "cost_per_batch": [
+  0.5026,
+  0.703228,
+  0.875112,
+  0.865128,
+  0.824516
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "All 27 TopK SAE dictionaries reconstruct held-out activations well, but reconstruction quality alone does not imply a stable or interpretable code.",
+   "methods": [
+    "TopK SAE with k=32, trained with reconstruction MSE plus AuxK dead-latent recovery",
+    "Layer-normalized token activations from early, middle and late block groups",
+    "16x expansion, except DINOv3 at 8x on BCI and 4x on MA",
+    "Test fraction of variance unexplained (FVU)"
+   ],
+   "results": [
+    "Test FVU lies in [0.059, 0.228] at L0=32 for all 27 dictionaries",
+    "No backbone or dataset stands out as poorly reconstructed",
+    "FVU stays in range regardless of depth (Fig. 2B), while Jaccard declines with depth"
+   ],
+   "conditions": [
+    "Fixed splits and frozen backbones",
+    "Sparsity is fixed exactly by TopK"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "Sparse-code stability under channel dropout decreases with depth in every backbone\u2013dataset combination.",
+   "methods": [
+    "Each clean test trial is paired with a copy perturbed by random or contiguous channel zeroing, applied to the raw signal before the backbone",
+    "Active-set Jaccard and code cosine between clean and perturbed codes, with SAEs frozen",
+    "Late-minus-early contrast within each backbone\u2013dataset combination"
+   ],
+   "results": [
+    "Late-minus-early mean Jaccard is -0.17 for random dropout and -0.20 for contiguous dropout",
+    "The decrease appears in 9/9 combinations"
+   ],
+   "conditions": [
+    "Spatial perturbations only",
+    "One SAE seed per setting except BCI middle",
+    "Bootstrap over settings"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "The depth effect is strongest for the cross-modal vision backbone, so useful downstream transfer and internal robustness are separate properties that should be reported separately.",
+   "methods": [
+    "DINOv3 ViT-B/16 receives channel-by-time EEG images",
+    "Comparison with EEG-pretrained CBraMod and REVE",
+    "Linear probes on pooled codes"
+   ],
+   "results": [
+    "Contiguous-dropout late-minus-early Jaccard is about -0.35 for DINOv3, -0.19 for CBraMod and -0.07 for REVE, each 3/3",
+    "DINOv3 encodes EEG usefully for downstream probes, yet its deep codes are the least robust"
+   ],
+   "conditions": [
+    "Layer groups differ: CBraMod and DINOv3 use blocks 0\u20133/4\u20137/8\u201311; REVE uses 0\u20136/7\u201314/15\u201321",
+    "DINOv3 uses reduced dictionary width on BCI and MA"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Contiguous channel dropout is consistently more damaging than random dropout of the same number of channels, consistent with representations pooling over local scalp neighborhoods.",
+   "methods": [
+    "Random versus contiguous (spatially adjacent) channel zeroing with a matched number of channels"
+   ],
+   "results": [
+    "Contiguous dropout gives larger Jaccard degradation (mean late-minus-early -0.20 versus -0.17)",
+    "Contiguous dropout is consistently more damaging than random dropout"
+   ],
+   "conditions": [
+    "The local-pooling explanation is an interpretation and is not directly tested"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Spectral band-stop responses alter codes in every backbone, but they must be read under distortion control and as part of a code's general sensitivity to input change; a large raw alpha response collapses under distortion control.",
+   "methods": [
+    "Fourth-order zero-phase Butterworth band-stops at delta, theta, alpha, beta, gamma and high-gamma",
+    "8\u201312 Hz alpha notch versus a width-matched 30\u201334 Hz sham",
+    "Recording of time-domain distortion ||x - x~||/||x|| for every perturbation",
+    "Selectivity s_{j,b} = |\u0394f_{j,b}| minus the mean |\u0394f| over the other five bands"
+   ],
+   "results": [
+    "Band-stops, including the alpha notch, alter sparse codes in every backbone",
+    "The raw alpha response collapses under distortion control (section title)",
+    "Spectral responses are best read as part of overall sensitivity"
+   ],
+   "conditions": [
+    "|\u0394f| can include TopK rank displacement",
+    "Band-stop filtering cannot isolate a biological oscillator"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Alpha selectivity is not readout importance, and group ablations show only readout dependence, so no conclusion about task relevance is drawn.",
+   "methods": [
+    "Logistic probes on mean-pooled SAE codes",
+    "Importance = |w_j| E_train[c_j]",
+    "Size-matched group ablation in frozen-probe and retrained-probe variants"
+   ],
+   "results": [
+    "Probe balanced accuracy spans 0.236\u20130.625 across 21 settings, so ablations are compared within settings",
+    "Ablation effects shrink after probe retraining",
+    "Group ordering on BCI middle depends on SAE seed",
+    "Groups differ in baseline activity",
+    "Ablations are presented descriptively"
+   ],
+   "conditions": [
+    "21/27 settings (REVE MA/Speech exports unavailable)",
+    "Relevance is defined only for a logistic probe on mean-pooled codes"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Independent observational validation on clean data did not support band-specific names, and exemplar-based views are biased toward high-baseline latents.",
+   "methods": [
+    "Top-five clean test activations per selected latent with Welch spectra",
+    "Recommended activity-matched controls (nearest non-selected latent in z-scored firing rate and mean activation, without replacement)"
+   ],
+   "results": [
+    "No consistent band-specific picture emerged",
+    "The exemplar view is sensitive to latent selection and to baseline firing rates",
+    "High-baseline latents dominate exemplar summaries"
+   ],
+   "conditions": [
+    "Inspection was qualitative",
+    "Correlational summaries over all trials are recommended as the primary quantity for future tests",
+    "Checks do not rule out structured spatial\u2013spectral features"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "The validation ladder (reconstruction, then stability, then reproducibility across seeds and settings, then descriptive band-wise profiles) scopes the claims each level supports; the present study populates the lower rungs, and layer must be reported as a primary variable.",
+   "methods": [
+    "Table 1 maps each kind of evidence to the claim it supports",
+    "Three-seed retraining of BCI middle per backbone",
+    "Percentile 95% CIs from 10,000 bootstrap resamples of settings, not latents"
+   ],
+   "results": [
+    "Every dictionary passes rung 1",
+    "Stability degrades with depth, so higher-rung claims must be qualified by layer and backbone",
+    "No latent is claimed to have or lack a physiological meaning"
+   ],
+   "conditions": [
+    "The remaining settings use one seed",
+    "The ladder does not certify meaning or neural causality"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is it not contradictory that test FVU stays within [0.059, 0.228] at every depth while active-set Jaccard under channel dropout falls with depth?",
+   "answer": "FVU measures how well each input's activation is reconstructed by its own code. Jaccard compares the codes assigned to a clean trial and its perturbed copy. A dictionary can reconstruct every input accurately while assigning quite different active sets to slightly different inputs, so the two properties are independent.",
+   "rubric": [
+    "States that the two results are compatible, i.e. not contradictory.",
+    "Explains that FVU evaluates reconstruction of a single input, whereas Jaccard compares codes across clean and perturbed versions of an input, so good reconstruction does not constrain code consistency."
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does the paper record the time-domain distortion of every perturbation even though the alpha notch already has a width-matched sham?",
+   "answer": "Matching filter width does not match how much of the signal is removed. The 8\u201312 Hz notch can change the raw input much more than the 30\u201334 Hz sham. A larger code response could therefore reflect a larger input change rather than alpha-specific sensitivity, and recording distortion lets responses be read relative to input-change size.",
+   "rubric": [
+    "States that width matching does not equalize the size of the input change, i.e. the energy removed.",
+    "Explains that a bigger code response could simply track a bigger distortion, so magnitude must be recorded to interpret the alpha response."
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does the observation that spectral band-stops alter codes in every backbone not suffice to place latents on the 'descriptively profiled latent' rung?",
+   "answer": "That rung presupposes the lower rungs: stable and reproducible codes. Stability under channel dropout degrades with depth, and seed consistency was checked only for BCI middle. Band responses alone therefore cannot be read as a profile of a stable, reproducible latent.",
+   "rubric": [
+    "States that band responses alone are insufficient for the top rung.",
+    "Explains that the rung requires passing stability and reproducibility first, which fail or are untested (depth-dependent instability; seeds only in BCI middle)."
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does the selectivity score subtract the mean |\u0394f| over the other five bands instead of using |\u0394f| under band b alone?",
+   "answer": "Many latents move under any input change. The paper treats spectral responses as part of general sensitivity, so a raw |\u0394f| under band b would be high for generally sensitive latents. Subtracting the average response to the other bands isolates the excess response specific to band b.",
+   "rubric": [
+    "States that the subtraction isolates band-specific excess response.",
+    "Explains that a generally sensitive latent would otherwise score high on every band, because codes respond to input change broadly."
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is the late-minus-early Jaccard difference within a backbone\u2013dataset combination a more defensible quantity for comparing across datasets than absolute Jaccard levels?",
+   "answer": "Absolute Jaccard depends on dataset-specific factors such as channel count (22, 20 or 64), the dropout configuration and DINOv3's dataset-specific dictionary width. Within one backbone\u2013dataset combination these factors are held fixed, so the depth contrast isolates the effect of depth.",
+   "rubric": [
+    "States that the within-combination difference controls for dataset- and dictionary-specific factors.",
+    "Names at least one such factor that varies across datasets (channel count, dictionary expansion, perturbation configuration)."
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why would a size-matched group of high-baseline latents tend to produce a larger frozen-probe accuracy change when zeroed than a group of rarely active latents?",
+   "answer": "Probes read mean-pooled codes. Frequently active latents contribute more mass to the pooled features, and importance includes E_train[c_j]. Zeroing them removes more of the input the frozen probe relies on, and the frozen probe cannot reweight to compensate. The effect then reflects baseline activity rather than content, which is why the baseline confound complicates comparison.",
+   "rubric": [
+    "States that high-baseline groups would tend to cause larger drops.",
+    "Explains via mean pooling and importance scaling with mean activation, combined with the frozen probe's inability to compensate."
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "The REVE depth effect is about -0.07 in contiguous-dropout Jaccard. Under what condition about seed variability would the claim that REVE codes also degrade with depth stop being reliably supported, and why?",
+   "answer": "If retraining the SAE with different seeds changed late- or early-layer Jaccard by roughly 0.07 or more, the REVE decrease could be within seed noise. Only BCI middle was retrained under multiple seeds, so the early and late REVE settings rest on single SAEs. A small effect is the most vulnerable to this.",
+   "rubric": [
+    "States that the claim fails if seed-to-seed variation in Jaccard is comparable to or larger than about 0.07.",
+    "Explains that early and late settings use one seed (multi-seed only at BCI middle), so seed noise is unquantified for the depth contrast."
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "In a dictionary where many latents have pre-activations close to the TopK cutoff, would a high alpha selectivity score for latent j reliably indicate that j itself responds to alpha content, and why?",
+   "answer": "No. With k fixed at 32, a band-stop that slightly shifts other latents' pre-activations can push j into or out of the active set. That produces a large |\u0394f_j| through rank displacement rather than through j's own sensitivity, and near-threshold crowding makes such displacement common.",
+   "rubric": [
+    "Concludes no, or that it is unreliable.",
+    "Explains that TopK competition and rank displacement can change j's activation because of other latents crossing the threshold.",
+    "Notes the condition that near-threshold latents make this displacement more likely."
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "When would the paper's activity-matched control procedure fail to remove the baseline-activity confound, for example in the DINOv3 Mental Arithmetic dictionary?",
+   "answer": "Controls are drawn without replacement from non-selected latents in the same dictionary. If the pool contains few latents with firing rates and mean activations similar to the selected ones, matches will be poor and baseline differences persist. A 4x dictionary has a much smaller candidate pool than a 16x one.",
+   "rubric": [
+    "States that matching fails when no close matches in firing rate and mean activation exist in the pool.",
+    "Explains that controls come from the same dictionary without replacement, so a small (4x) dictionary or extreme-rate selected latents leave residual mismatch."
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Even ignoring TopK rank displacement, when would a large s_{j,alpha} fail to indicate that latent j tracks alpha content specifically?",
+   "answer": "It fails when the alpha band-stop produces a substantially larger time-domain distortion than the other band-stops. A generally sensitive latent would then move most under alpha simply because the input changed most. The paper records distortion for this reason, and the raw alpha response collapses under distortion control.",
+   "rubric": [
+    "Identifies the condition that the alpha notch changes the input more than the other bands do (larger distortion).",
+    "Explains that the selectivity score does not normalize for input-change magnitude, so it can reflect general sensitivity."
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Would the importance score |w_j|E_train[c_j] identify a latent that fires strongly only in a brief window of each trial and is decisive for the task, and why?",
+   "answer": "Probably not. Probes use mean-pooled codes, so a brief burst is diluted by averaging over the trial. The latent's pooled feature and E_train[c_j] are therefore small, and importance stays low. Relevance as the paper defines it does not cover such temporally local behavior.",
+   "rubric": [
+    "Concludes that it would likely be missed or underestimated.",
+    "Explains that mean pooling over time dilutes brief activations, lowering both the probe input and E[c_j]."
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "failure",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "The paper resamples settings rather than latents because latents within a dictionary are not independent. When would the same concern make the setting-level bootstrap intervals too narrow?",
+   "answer": "Settings are not independent either. Nine settings share each backbone, nine share each dataset, and depths within a combination share the same model and trials. If outcomes are strongly driven by backbone or dataset, resampling the 27 settings as if independent understates uncertainty.",
+   "rubric": [
+    "States that intervals could be too narrow when settings are correlated.",
+    "Explains that settings share backbones, datasets and trials (nested structure), analogous to the latent-dependence argument."
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Would comparing absolute active-set Jaccard under dropout between DINOv3 on BCI (8x) and DINOv3 on Speech (16x) be a clean comparison of code stability, and why?",
+   "answer": "No. With k fixed at 32, a smaller dictionary makes chance overlap between active sets larger, so Jaccard levels are not on a common baseline across expansion factors. The late-minus-early contrast within one dataset uses the same expansion and avoids this confound.",
+   "rubric": [
+    "Concludes it would not be a clean comparison.",
+    "Explains that dictionary width differs while k=32 is fixed, changing baseline overlap, whereas within-dataset depth contrasts hold width fixed."
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": "b1-p1",
+   "question": "Would the paper's recommendation that layer be reported as a primary experimental variable lose support if late-minus-early Jaccard under channel dropout had been about zero in all nine backbone\u2013dataset combinations?",
+   "answer": "Yes. The recommendation rests on stability statements differing across depths. With no depth difference in code stability, stability at one layer would transfer to others, and the main evidence for the recommendation would vanish.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the recommendation is grounded in the depth-dependent stability result."
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2",
+    "c8"
+   ],
+   "pair": "b1-p1",
+   "question": "Would the paper's recommendation that layer be reported as a primary experimental variable lose support if FVU had varied strongly with depth while the Jaccard decline stayed as reported?",
+   "answer": "No. The recommendation rests on stability differing by layer, which would be unchanged. Depth-varying reconstruction would add another reason to index claims by layer, not remove one.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the Jaccard depth trend, which grounds the recommendation, is unchanged, and depth-dependent FVU would if anything reinforce it."
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p2",
+   "question": "In the frozen-probe ablation variant, could zeroing a group of latents that are highly correlated with non-ablated latents produce a substantial drop in balanced accuracy?",
+   "answer": "Yes. The frozen probe was trained on clean codes and cannot shift weight to the correlated latents, so removing weighted inputs can lower accuracy even though the information remains available elsewhere.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the frozen probe cannot redistribute weight to correlated latents."
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p2",
+   "question": "In the retrained-probe ablation variant, could zeroing a group of latents that are highly correlated with non-ablated latents produce a substantial drop in balanced accuracy?",
+   "answer": "Generally no. The refit probe can reweight the correlated, non-ablated latents carrying the same information, which is why ablation effects shrink after retraining.",
+   "rubric": [
+    "Answers no, or that the drop would be small.",
+    "Explains that retraining lets the probe redistribute weight to correlated latents."
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b1-p3",
+   "question": "Would training wider dictionaries (more latents per setting) for the same 27 settings, with stability summaries computed exactly as in the paper, by itself narrow the paper's bootstrap confidence intervals for those summaries?",
+   "answer": "No. The resampling unit is the setting, so intervals depend on the number and spread of setting-level values. Adding latents within settings does not add resampling units.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the bootstrap resamples settings, not latents."
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c8"
+   ],
+   "pair": "b1-p3",
+   "question": "Would adding more settings with summaries similar to the existing ones (for example, a fourth dataset across all backbones and depths) by itself tend to narrow the paper's bootstrap confidence intervals?",
+   "answer": "Yes. Settings are the resampling unit, so more settings with similar values give a larger sample for the percentile bootstrap, and intervals tend to narrow.",
+   "rubric": [
+    "Answers yes, they would tend to narrow.",
+    "Explains that settings are the resampling unit, so more settings mean more units."
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "Suppose a latent shows a large response to the alpha notch and a small response to the 30\u201334 Hz sham, but the alpha notch's time-domain distortion is several times the sham's. Would this support an alpha-specific response?",
+   "answer": "No. The larger response may simply track the much larger input change, which is exactly what distortion control exposes.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the response difference is confounded by unequal distortion magnitude."
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "Suppose a latent shows a large response to the alpha notch and a small response to the 30\u201334 Hz sham, and the two notches produce nearly equal time-domain distortion. Would this support an alpha-specific response at the descriptive level?",
+   "answer": "Yes, descriptively. With width and distortion matched, the response difference cannot be explained by the size of the input change. Physiological claims would still be out of scope, since a band-stop cannot isolate an oscillator.",
+   "rubric": [
+    "Answers yes, at a descriptive level.",
+    "Explains that matched distortion removes the input-magnitude confound.",
+    "Notes that this still does not establish a biological oscillator or physiological meaning."
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team wants to attach physiological names to SAE latents of a new EEG foundation model for ambulatory recordings where electrodes often drop out. At which depth should they expect latents most likely to pass the stability rung, and what must accompany any claim?",
+   "answer": "Early layers. In all nine combinations, early-layer codes kept higher active-set overlap under channel dropout than late-layer codes. Any claim should report dropout stability measured at that specific layer and be indexed by layer, since stability does not transfer across depth.",
+   "rubric": [
+    "Picks early (shallower) layers.",
+    "Justifies this with the 9/9 decline in dropout Jaccard with depth.",
+    "Says claims must report layer-specific stability or be indexed by layer."
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A group feeds EEG images to a vision foundation model, obtains good linear-probe accuracy on its SAE codes, and concludes that its deep-layer latents are robust enough to interpret. What does the paper imply about this conclusion?",
+   "answer": "It is unjustified. DINOv3 also transferred usefully to EEG, yet its deep codes showed the largest dropout instability (about -0.35 contiguous Jaccard). Probe accuracy and internal robustness must be measured and reported separately.",
+   "rubric": [
+    "States that good probe accuracy does not establish robustness.",
+    "Cites the DINOv3 case: useful transfer with the least robust deep codes."
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A new EEG SAE reaches held-out FVU of 0.04 at fixed L0, and nothing else has been measured. According to the ladder, what claim is licensed?",
+   "answer": "Only 'faithful sparse decomposition', the first rung. The paper's dictionaries all reconstructed well yet had depth-dependent instability, so low FVU says nothing about stability, reproducibility or meaning.",
+   "rubric": [
+    "States that only the first rung (faithful sparse decomposition) is reached.",
+    "Explains that good reconstruction coexisted with unstable codes in the paper, so no stability or interpretive claim follows."
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A researcher finds that one latent has the highest probe importance on a motor-imagery task and wants to label it a 'mu/alpha motor feature'. Based on the paper, what is missing?",
+   "answer": "Importance measures readout weight on clean data, not band sensitivity, so selectivity must be measured separately under distortion control. The latent's stability and seed reproducibility must also be shown at its layer. Clean-data checks should use activity-matched controls. Even then only a descriptive profile, not a physiological label, would be licensed.",
+   "rubric": [
+    "States that importance does not imply band selectivity or meaning.",
+    "Lists at least one additional required measurement: selectivity with distortion control, stability or reproducibility, or activity-matched clean-data validation.",
+    "Notes that the ceiling is a descriptive profile, not a physiological label."
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A lab worries about an EEG cap shifting and causing a cluster of neighboring electrodes to fail together. Which of the paper's spatial perturbations better approximates this risk, and would random-dropout stability results be optimistic or pessimistic for them?",
+   "answer": "Contiguous dropout approximates it, since it removes spatially adjacent channels. It was consistently more damaging than random dropout of the same number of channels, so random-dropout stability would be optimistic for their failure mode.",
+   "rubric": [
+    "Identifies contiguous dropout.",
+    "States that random-dropout results would be optimistic, because contiguous dropout is more damaging."
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A researcher wants to check on clean recordings whether a latent selected for high theta selectivity behaves like a theta feature. How should the check be designed according to the paper?",
+   "answer": "Use clean-data quantities not used to select the latent, such as correlations between activation and band power over all trials rather than top-five exemplars. Compare against non-selected latents matched in firing rate and mean activation, because exemplar views condition on activation extremes and favor high-baseline latents.",
+   "rubric": [
+    "Recommends quantities independent of selection, computed over all trials (correlational), not top-activating exemplars.",
+    "Recommends comparison with controls matched on baseline firing rate and mean activation."
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team adapts the protocol using an \u21131-penalized SAE instead of TopK. What additional problem arises when comparing active-set Jaccard across their layers?",
+   "answer": "Effective sparsity can differ between layers and drift during training, so active-set sizes differ. Jaccard depends on set size, so cross-layer differences could reflect different L0 rather than different stability. TopK removes this by fixing L0 at 32.",
+   "rubric": [
+    "States that L0 or active-set size would vary across dictionaries.",
+    "Explains that this confounds Jaccard comparisons, which the fixed k=32 avoided."
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If contiguous dropout had turned out no more damaging than random dropout of the same number of channels, which interpretation in the paper would lose its support?",
+   "answer": "The interpretation that the representations pool information over local scalp neighborhoods. It was inferred specifically from adjacent-channel removal being more damaging.",
+   "rubric": [
+    "Names the local scalp-neighborhood pooling interpretation.",
+    "Explains that it rests on contiguous dropout being more damaging than random dropout."
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If DINOv3 had shown the smallest late-minus-early Jaccard decrease of the three backbones, which stated contribution would be most undermined?",
+   "answer": "The cross-modal contribution: that a vision FM transferring usefully to EEG need not bring matching internal robustness, and that cross-modal transfer specifically warrants explicit robustness reporting. That claim rests on DINOv3 being the least robust despite useful transfer.",
+   "rubric": [
+    "Identifies the cross-modal transfer-versus-robustness contribution (contribution iii).",
+    "Explains that it relies on DINOv3 showing the strongest depth effect (about -0.35)."
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If late-layer DINOv3 dictionaries had FVU far above 0.228 (for example, 0.6), how would that affect the paper's use of its low late-layer Jaccard as evidence that reconstruction does not imply stability?",
+   "answer": "It would weaken it. The instability could then be attributed to a poorly fitting dictionary rather than to unstable codes despite good reconstruction. The argument relies on all dictionaries reconstructing well while still being unstable.",
+   "rubric": [
+    "States that the evidence would be weakened or confounded.",
+    "Explains that the argument depends on uniformly good FVU, so poor fit would offer an alternative explanation for the instability."
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If one of the nine backbone\u2013dataset combinations had shown higher late-layer than early-layer Jaccard, which statement in the paper would no longer hold as written, even if the mean decrease remained negative?",
+   "answer": "The universal claim that late-layer overlap is lower than early-layer overlap in all nine combinations (the 9/9 and 3/3 counts, and 'in every backbone\u2013dataset combination'). The pooled mean of about -0.17/-0.20 could survive, but the claim of no exceptions would not.",
+   "rubric": [
+    "Identifies the 'all nine' or 9/9 universality statement.",
+    "Notes that the mean trend could still be negative, so only the exception-free claim fails."
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If retrained-probe ablation effects had matched frozen-probe effects and the group ordering on BCI middle had been identical across the three seeds, which reason for presenting ablations only descriptively would still remain?",
+   "answer": "The baseline-activity confound: groups chosen by perturbation criteria differ in baseline activity, which complicates direct comparison. Also, ablation tests readout dependence rather than what a group encodes, so task-content conclusions would still not follow.",
+   "rubric": [
+    "Names the baseline-activity difference between groups as a remaining reason.",
+    "Optionally notes that ablation tests readout dependence, not encoded content; the baseline confound must be present."
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the top-five clean exemplars of selected latents had shown consistent band-specific Welch spectra, which of the paper's cautions would still block assigning spectral names?",
+   "answer": "Top exemplars condition on the activation extreme and favor high-baseline latents, so they are a weak basis for labels without activity-matched controls. The same quantities may also have been involved in selection. In addition, depth-dependent instability means any such name would still have to be qualified by layer and backbone.",
+   "rubric": [
+    "Cites the exemplar-extreme or baseline-activity bias, or the need for selection-independent, activity-matched checks.",
+    "Cites that lower-rung stability limits (depth or seed) would still qualify any name."
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that deeper layers of EEG foundation models carry less task-relevant information than early layers? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The depth result concerns active-set stability under channel dropout. Probe results are compared only within settings and presented without task-relevance conclusions, so nothing in the paper ranks depths by task information.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the depth finding is about code stability under perturbation, not task information, and that probes are not compared across depths."
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the SAE latents of these EEG models lack physiological meaning? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The authors state that they claim neither presence nor absence of meaning. The failed clean-data check was qualitative and does not rule out structured spatial\u2013spectral features; the analysis simply does not reach the interpretive rung.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the paper explicitly makes no claim either way, and that the clean-data inspection was qualitative and does not rule out features."
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that an SAE's reconstruction quality predicts how stable its code is under perturbation? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. FVU stayed within a narrow good range at all depths and backbones, while dropout Jaccard varied systematically with depth and backbone. Reconstruction quality did not track stability.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that FVU was uniformly good while stability varied with depth and backbone."
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that deeper SAE codes are also less stable under spectral band-stops? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The depth trend is quantified only for channel dropout (Table 2, Appendix C). For spectral perturbations the paper says only that band-stops alter codes in every backbone, with no depth contrast reported.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the reported depth effect is for spatial dropout only, with no depth numbers for spectral perturbations."
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that REVE's transformer blocks are intrinsically more robust to channel dropout than CBraMod's? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. REVE's smaller depth effect (about -0.07 versus -0.19) compares layer groups built differently: 22 blocks split 0\u20136/7\u201314/15\u201321 versus 12 blocks split 0\u20133/4\u20137/8\u201311. The depth contrast also rests on single-seed SAEs, so a per-block robustness comparison is not established.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the differing layer-group definitions or block counts, or single-seed estimates, as preventing a per-block comparison."
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the depth-dependent decline in dropout stability is robust to the SAE's random seed? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Multi-seed retraining covered only the BCI middle setting of each backbone. The early and late settings that define the depth contrast each use one seed, so seed robustness of the decline is untested.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that only BCI middle was retrained under multiple seeds, so early and late settings, which define the contrast, are single-seed."
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that EEG-pretrained backbones outperform the vision backbone on downstream EEG classification? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports only a pooled probe accuracy range (0.236\u20130.625) and says DINOv3 encodes EEG usefully, with no per-backbone accuracy comparison. Its cross-modal finding concerns internal robustness, not downstream accuracy.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that no per-backbone accuracy comparison is reported and that the cross-modal result concerns robustness, not accuracy."
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can active-set Jaccard between clean and channel-dropped codes fall below 1 even for latents whose own encoder pre-activation barely changes?",
+   "answer": "The code keeps only the top 32 pre-activations. When other latents' pre-activations rise or fall under the perturbation, a latent near the cutoff can be pushed into or out of the active set even though its own pre-activation hardly moved. This is the TopK rank displacement the paper flags. Jaccard therefore mixes a latent's own response with competition among latents.",
+   "rubric": [
+    "Asserts that the active set can change through TopK competition (rank displacement), not only through the latent's own response.",
+    "Explains that only k=32 slots exist, so changes in other latents' pre-activations can push a near-cutoff latent in or out."
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is DINOv3's useful downstream probe performance not in tension with its having the least dropout-robust deep codes?",
+   "answer": "The probes are fit and evaluated on mean-pooled codes from clean inputs, so they measure whether task information can be linearly decoded from unperturbed data. Robustness is measured as the change in code between paired clean and channel-dropped inputs. Neither measurement constrains the other, so a backbone can do well on one and poorly on the other.",
+   "rubric": [
+    "States that the two results measure different properties and so do not conflict.",
+    "Explains that probe accuracy is computed on clean pooled codes, whereas robustness compares clean codes with perturbed codes."
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why would latent groups chosen by perturbation criteria, such as high band selectivity or high channel-dropout fragility, tend to differ in baseline activity from other latents?",
+   "answer": "Both criteria are built from absolute code changes |\u0394f|. A latent that is rarely or weakly active has little activation that can change, so its |\u0394f| stays near zero under any perturbation. Frequently or strongly active latents can show large changes. Ranking latents by perturbation response therefore tends to select high-baseline latents.",
+   "rubric": [
+    "States that perturbation-based selection favours latents with high baseline activity (or that groups differ systematically in activity).",
+    "Explains that |\u0394f| is an absolute change, which is bounded by how active the latent is, so rarely active latents show small changes."
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Per-latent |\u0394f| summaries are bootstrapped over 27 settings. Why are selectivity summaries bootstrapped over only 21?",
+   "answer": "Selectivity is summarised together with probe importance, and importance needs the task-readout (probe) exports. Those exports were unavailable for REVE on Mental Arithmetic and Speech, which is six settings. The joint selectivity and importance family therefore covers only 21 settings, even though |\u0394f| itself exists for all 27.",
+   "rubric": [
+    "Attributes the 21 to selectivity being reported jointly with importance, which needs probe or task-readout exports.",
+    "Identifies the missing settings as REVE MA and Speech (six settings)."
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why must the SAEs stay frozen when active-set Jaccard is computed between clean and perturbed codes?",
+   "answer": "Jaccard compares which latent indices are active in the two codes. Index j refers to the same latent in both codes only if the same dictionary encodes both. A frozen dictionary ensures that any change in the active set reflects the input intervention. Retraining or adapting the SAE would change the latents themselves.",
+   "rubric": [
+    "States that freezing keeps latent identities fixed, so the same index means the same latent in the clean and perturbed codes.",
+    "Explains that code differences can then be attributed to the input perturbation rather than to a change in the dictionary."
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why are the ablated latent groups matched in size when their effects on probe balanced accuracy are compared?",
+   "answer": "Zeroing more latents removes more of the pooled code the probe relies on. Without matching, a larger group could cause a larger accuracy drop simply because of its size. Matching size means differences reflect which latents were removed, not how many. Matching does not remove the remaining baseline-activity confound.",
+   "rubric": [
+    "States that size matching prevents group size from driving differences in accuracy change.",
+    "Explains that zeroing more latents removes more information, so unmatched groups would differ trivially."
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does reporting every dictionary's test FVU at L0=32 make the [0.059, 0.228] range a fairer cross-setting comparison than FVUs from \u21131-penalised SAEs would be?",
+   "answer": "TopK fixes the number of active latents per token, so every dictionary reconstructs under the same sparsity budget. Differences in FVU therefore cannot come from one dictionary using more active latents than another. With an \u21131 penalty, effective sparsity drifts during training and would confound the comparison. Expansion width still differs for DINOv3 on BCI and MA.",
+   "rubric": [
+    "States that all dictionaries share the same sparsity budget (32 active latents), so FVU differences are not due to differing sparsity.",
+    "Contrasts this with \u21131 training, whose effective sparsity drifts during training."
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would a near-zero alpha selectivity score s_{j,alpha} reliably indicate that latent j is insensitive to alpha content?",
+   "answer": "No. If the latent is rarely active on the test trials, its |\u0394f| is near zero under all six band-stops, so its selectivity is near zero because it is inactive, not because it ignores alpha. The score is uninformative for low-baseline latents.",
+   "rubric": [
+    "Answers no, not reliably.",
+    "Explains that a rarely active latent has near-zero |\u0394f| under every band, so the difference is near zero regardless of sensitivity.",
+    "Identifies low baseline activity or firing rate as the condition under which this fails."
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "The alpha notch is compared with a width-matched 30\u201334 Hz sham. Under what condition would this comparison understate a genuine alpha-specific response?",
+   "answer": "The sham works as a neutral baseline only if removing 30\u201334 Hz content barely changes the code. If the codes are themselves strongly sensitive to that band, for example because the sham removes substantial signal energy or the backbone relies on that range, the sham response is large. The alpha-minus-sham contrast then shrinks even if a real alpha response exists.",
+   "rubric": [
+    "States that the comparison fails when the code itself responds strongly to the 30\u201334 Hz sham.",
+    "Explains that the sham is assumed to be a neutral, non-special control, so a large sham response lowers the alpha-minus-sham contrast."
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does a drop in active-set Jaccard under a perturbation always mean that some active latents were replaced by others?",
+   "answer": "No. The encoder applies a ReLU after TopK. If some of the top-32 pre-activations become negative under the perturbation, those latents are zeroed and the active set shrinks with no replacement. Jaccard then falls through shrinkage alone. This can happen when the perturbation pushes selected pre-activations below zero.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the ReLU after TopK can zero negative top-k pre-activations, so the active set can shrink below 32 without any swap.",
+    "Gives the condition that the perturbation drives selected pre-activations below zero."
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would the trial-wise Welch spectra of a latent's top-five clean exemplars be likely to reveal band-specific content for a latent that fires on only a few tokens within each trial?",
+   "answer": "Probably not. The Welch spectrum is computed over the whole trial, so the brief segment where the latent fires contributes little to it. The spectrum would mostly reflect the rest of the trial. This mismatch between where the latent fires and the trial-level spectrum is one reason the exemplar inspection can only be qualitative.",
+   "rubric": [
+    "Answers that the spectra would likely not reveal the latent's band content.",
+    "Explains that the spectrum is computed over the whole trial, which dilutes the brief tokens where the latent is active."
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Could the paper's setting-level bootstrap give a trustworthy 95% interval for the REVE-specific contiguous-dropout depth effect of about -0.07?",
+   "answer": "No. The per-backbone effect rests on only three backbone\u2013dataset combinations, each with a single SAE seed. Resampling three units yields very few distinct resamples, so a percentile interval would be unreliable. This is consistent with the paper reporting per-backbone values only approximately.",
+   "rubric": [
+    "Answers no.",
+    "Explains that only three combinations (resampling units) underlie the REVE value, which is too few for a meaningful percentile bootstrap."
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "When would the importance score |w_j| E_train[c_j] understate how much the probe's readout relies on the information carried by latent j?",
+   "answer": "When latent j is highly correlated with other latents. A logistic probe can then split weight among them, giving each a small |w_j| even though the shared information matters. This is the same redundancy that lets ablation effects shrink when the probe is retrained.",
+   "rubric": [
+    "Names correlation or redundancy between latent j and other latents as the condition.",
+    "Explains that the probe can spread weight across correlated latents, lowering each one's |w_j| and so its importance."
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": "b2-cf_seed",
+   "question": "Could the paper's data show whether the ordering of ablated latent groups depends on SAE seed for REVE on BCI at middle depth?",
+   "answer": "Yes. BCI middle is retrained under three seeds for every backbone, and REVE's BCI task-readout exports are available, since only MA and Speech are missing. Group ablations can therefore be compared across seeds.",
+   "rubric": [
+    "Answers yes.",
+    "Cites both the three-seed BCI-middle retraining and the availability of REVE BCI task exports (only REVE MA and Speech are missing)."
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": "b2-cf_seed",
+   "question": "Could the paper's data show whether the ordering of ablated latent groups depends on SAE seed for REVE on Mental Arithmetic at middle depth?",
+   "answer": "No. Only BCI middle was retrained under multiple seeds. In addition, REVE's Mental Arithmetic task-readout exports were unavailable, so no group ablation exists for this setting at all.",
+   "rubric": [
+    "Answers no.",
+    "Cites that the setting has only one seed and/or that REVE MA task-readout exports are unavailable, so there is no ablation."
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c6",
+    "c8"
+   ],
+   "pair": "b2-cf_boot",
+   "question": "Do REVE Speech settings contribute to the bootstrap interval for active-set Jaccard under spatial perturbations?",
+   "answer": "Yes. Spatial-perturbation Jaccard and cosine are resampled over all 27 settings. Perturbation sweeps did not require the missing task-readout exports.",
+   "rubric": [
+    "Answers yes.",
+    "Notes that this family uses all 27 settings because it does not depend on probe exports."
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c6",
+    "c8"
+   ],
+   "pair": "b2-cf_boot",
+   "question": "Do REVE Speech settings contribute to the bootstrap interval for frozen and retrained group ablations?",
+   "answer": "No. Group ablations are resampled over only 21 settings, because the task-readout exports for REVE MA and Speech were unavailable.",
+   "rubric": [
+    "Answers no.",
+    "Explains that ablations need task-readout exports, which are missing for REVE MA and Speech, leaving 21 settings."
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": "b2-cf_imp",
+   "question": "Could a latent that receives zero weight in the logistic probe still have a nonzero importance score?",
+   "answer": "No. Importance is |w_j| times the latent's mean training activation, so a zero weight gives zero importance regardless of how active the latent is.",
+   "rubric": [
+    "Answers no.",
+    "Explains that importance is a product containing |w_j|, which is zero."
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": "b2-cf_imp",
+   "question": "Could a latent that receives zero weight in the logistic probe still have a high alpha selectivity score?",
+   "answer": "Yes. Selectivity is computed from how the latent's code changes under band-stops relative to the other bands. It does not involve the probe, so nothing ties it to the probe weight.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that selectivity depends only on code changes under band-stops and is independent of probe weights."
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b2-cf_width",
+   "question": "Does the DINOv3 late-minus-early Jaccard contrast on BCI compare dictionaries with the same expansion factor?",
+   "answer": "Yes. DINOv3's width is reduced per dataset, not per depth, so all three BCI depths use 8x. The within-combination depth contrast therefore holds width fixed.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the width reduction applies to the dataset (8x on BCI at every depth), not to depth."
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b2-cf_width",
+   "question": "Does a comparison of late-layer Jaccard between DINOv3 and CBraMod on BCI compare dictionaries with the same expansion factor?",
+   "answer": "No. DINOv3 uses 8x on BCI while CBraMod uses 16x, so dictionary width is confounded with backbone in this comparison.",
+   "rubric": [
+    "Answers no.",
+    "Cites 8x for DINOv3 versus 16x for CBraMod on BCI."
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team must use late-layer codes in a deployment with frequent electrode failure and wants the backbone whose late codes are most dropout-stable. Can they choose REVE from Table 2 alone?",
+   "answer": "No. Table 2 reports late-minus-early changes, which show how much stability changes with depth, not absolute late-layer Jaccard. A backbone with a small decrease could still have low late-layer overlap if its early overlap is low. The team would need the absolute per-setting levels (Fig. 2A), and should allow for single-seed variability.",
+   "rubric": [
+    "Answers no, not from Table 2 alone.",
+    "Explains that Table 2 gives depth differences rather than absolute late-layer Jaccard, so absolute levels are needed."
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A study trains a single SAE seed at one middle layer of a new EEG model and finds good held-out FVU plus high Jaccard under channel dropout and band-stops. Which rung of the ladder does this reach, and how must the claim be scoped?",
+   "answer": "It reaches 'stable latent code' (rung 2) at most. The claim must be indexed to that layer and backbone, because stability at one depth does not transfer to another. It cannot claim a reproducible code without multiple seeds and settings, and it implies nothing about meaning.",
+   "rubric": [
+    "Identifies the stable-latent-code rung (rung 2), not the reproducible rung.",
+    "States that the claim must be qualified by layer and backbone, and that multiple seeds or settings would be needed for reproducibility."
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team compares dropout Jaccard between a k=16 TopK dictionary at an early layer and a k=64 TopK dictionary at a late layer, and attributes the difference to depth. What does the paper's design imply about this?",
+   "answer": "The comparison is confounded, because the size of the active set differs between the two dictionaries, which itself affects active-set overlap. The paper fixes k=32 in every setting precisely to remove sparsity as a source of variation. The team should hold k fixed across layers.",
+   "rubric": [
+    "States that the depth attribution is confounded by the differing k (active-set size).",
+    "Notes that the paper holds sparsity fixed (k=32 everywhere) to make stability comparisons direct, so k should be matched."
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team fine-tunes an EEG backbone end to end with a nonlinear classification head. They want to use the paper's frozen-probe ablation chart to decide which SAE latents their model relies on. Is this justified?",
+   "answer": "No. The paper defines relevance only for a logistic probe on mean-pooled codes from frozen backbones, and says this does not speak to nonlinear or fine-tuned behaviour. The ablations are also presented only descriptively, because they are seed-dependent and confounded by baseline activity.",
+   "rubric": [
+    "Answers no.",
+    "Cites that relevance is defined only for a linear (logistic) probe on mean-pooled codes from frozen models, not for nonlinear or fine-tuned readouts."
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team applies the paper's protocol to a 30-block EEG transformer. How should they form the early, middle and late depths so their results are comparable with the paper's?",
+   "answer": "They should split the blocks into three roughly equal groups of consecutive blocks, about 10 each, as REVE's 22 blocks were split into 0\u20136, 7\u201314 and 15\u201321. Each layer should be \u21132-normalised before the activations are mixed. They should also report the exact block ranges, because groupings differ across backbones and layer is a primary variable.",
+   "rubric": [
+    "Proposes three groups of consecutive blocks covering roughly equal thirds of the network, by analogy with REVE or CBraMod.",
+    "Mentions per-layer normalisation before mixing and/or reporting the block ranges explicitly."
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team simulates electrode failure by zeroing parts of stored backbone activations just before the SAE, instead of zeroing raw channels. What would their Jaccard no longer capture compared with the paper's measurement?",
+   "answer": "It would no longer capture how the backbone itself propagates missing channels through its layers. In the paper, channels are zeroed in the raw signal before the backbone, so deep-layer code changes include whatever mixing the backbone performs on the perturbed input. Post-hoc zeroing tests only the SAE's response to an artificial activation change.",
+   "rubric": [
+    "States that the backbone's own processing of the missing channels would be excluded.",
+    "Contrasts this with the paper's raw-signal perturbation applied before the backbone, whose code changes include the backbone's propagation of the dropout."
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team feeds 128-channel EEG images to DINOv3 and plans an SAE. Based on how the paper chose DINOv3 widths, what determines whether they can use the full 16x expansion, and what must they report if they cannot?",
+   "answer": "Token support decides it: the paper reduced DINOv3 width to 8x on BCI and 4x on MA where tokens were limited, but used 16x on 64-channel Speech. A larger channel count yields more tokens per trial, which may support 16x, but this depends on the total tokens available. Any reduced width must be reported, because it confounds comparisons across settings.",
+   "rubric": [
+    "Identifies token support (amount of available token activations) as the deciding factor.",
+    "Notes that a reduced width must be reported because it confounds cross-setting or cross-backbone comparisons."
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If linear probes on DINOv3's SAE codes had performed at chance on all three datasets, which conclusion would lose its support, and which would remain?",
+   "answer": "The cross-modal dissociation would lose its support, namely the claim that a vision FM can transfer usefully to EEG without matching internal robustness. That claim needs DINOv3 to encode EEG usefully. The depth-dependent stability decline, including DINOv3's large effect, rests only on perturbation measurements and would remain.",
+   "rubric": [
+    "Identifies the claim that useful transfer and internal robustness dissociate (contribution iii or c3's separate-reporting point) as losing support.",
+    "States that the depth-decline result itself would stand, because it does not depend on probe accuracy."
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the exemplar view had turned out insensitive to baseline firing rates, which recommendation in the paper would lose its main motivation?",
+   "answer": "The recommendation to condition clean-data checks on baseline activity by using activity-matched controls would lose its motivation. Those controls, matched in firing rate and mean activation, exist because high-baseline latents dominate exemplar summaries.",
+   "rubric": [
+    "Names the activity-matched control recommendation (controls matched in firing rate and mean activation).",
+    "Explains that it was motivated by the exemplar view's bias toward high-baseline latents."
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If spatial-perturbation instability had not grown with depth, which part of the paper's reasoning for reading spectral band-stop responses as general sensitivity rather than isolated signatures would be weakened?",
+   "answer": "The paper places spectral responses within a broader pattern of code instability that is most visible under spatial perturbation and grows with depth. Without that broader spatial instability, the argument that band-stop effects are just one component of a code's general sensitivity would lose part of its support. Distortion control would still be required.",
+   "rubric": [
+    "States that the framing of spectral responses as part of a broader instability would be weakened.",
+    "Links this to the paper citing depth-growing spatial instability as the visible evidence of that broader pattern."
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the nine multi-seed BCI-middle retrains had not been run, which rung of the ladder could the study not populate at all, and which ablation finding could not have been observed?",
+   "answer": "The 'reproducible latent code' rung could not be populated with any seed evidence, since all other settings use one seed. The finding that the group ordering on BCI middle depends on SAE seed could not have been observed, which removes one of the reasons for presenting ablations only descriptively.",
+   "rubric": [
+    "Identifies the reproducibility rung (consistency across seeds) as unpopulated.",
+    "Identifies the seed dependence of the BCI-middle group ordering as unobservable."
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the clean-data exemplar inspection had used randomly chosen latents rather than latents selected by perturbation criteria, which of the paper's two lessons would no longer apply, and which would still apply?",
+   "answer": "The caution to use quantities not involved in choosing the latents would no longer apply, because the selection would not depend on any perturbation-derived quantity. The bias of top-activation exemplars toward high-baseline latents would still apply, as would the weakness of conditioning on the activation extreme.",
+   "rubric": [
+    "States that the circularity concern (using quantities involved in selection) would no longer apply.",
+    "States that the baseline-activity bias of exemplar views (conditioning on the extreme) would still apply."
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the depth-dependent loss of stability arises in the backbone representations themselves rather than in the SAEs fitted to them? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper measures stability only on sparse SAE codes, with a separate SAE trained at each depth. It does not measure how much the dense backbone activations change, so the decline cannot be attributed to the backbone or to the SAE.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that only SAE code overlap is measured, with separate SAEs per depth, and no dense-activation stability is reported."
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that high-baseline latents are intrinsically less interpretable than low-baseline latents? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper shows only that high-baseline latents dominate exemplar-based summaries because they are active on more trials, which is a selection bias of the method. It makes no claim about any latent's meaning.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the finding concerns bias in exemplar summaries due to firing frequency, not the interpretability of those latents."
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that ablated latent groups carry little task information, given that ablation effects shrink after the probe is retrained? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The shrinkage is explained by the readout redistributing weight to correlated latents, so the information may be redundant rather than absent. Ablations test only whether a linear readout depends on a group, not what the group encodes. The paper explicitly draws no conclusion about task relevance.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that shrinkage reflects redistribution to correlated latents and that ablations test readout dependence only."
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that removing the alpha band changes the sparse codes more than removing other bands does? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The raw alpha response collapses once it is read against time-domain distortion, and the paper treats spectral responses as part of a code's general sensitivity to input change. It does not establish any alpha-specific dominance.",
+   "rubric": [
+    "Answers not settled (or not supported).",
+    "Cites the collapse of the raw alpha response under distortion control and/or the reading of spectral responses as general sensitivity."
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that DINOv3's stronger depth effect is caused by its pretraining on another modality? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only one vision backbone is tested, with one seed per setting. DINOv3 also differs in input format (channel-by-time images) and uses reduced dictionary width on BCI and MA, so modality is confounded with other differences.",
+   "rubric": [
+    "Answers not settled.",
+    "Names at least one confound, such as the single vision model, reduced dictionary width, different input format or single seed."
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the depth-dependent stability decline holds for SAEs with other sparsity levels or training objectives? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Every dictionary is a TopK SAE with k=32 trained with MSE plus AuxK. No other k, \u21131 penalty or architecture is tested.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that only TopK with k=32 (MSE plus AuxK) was tested."
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the late-minus-early Jaccard decrease is statistically reliable within each individual backbone\u2013dataset combination? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Each combination has a single SAE seed (apart from BCI middle), and the bootstrap resamples settings to give pooled intervals, not per-combination ones. The 9/9 count shows a consistent sign but not per-combination reliability.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites single seeds per combination and/or that bootstrap intervals are pooled over settings rather than computed per combination."
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does the paper normalize each block's token activations to E||x||=\u221ad before mixing consecutive blocks into one layer group for SAE training?",
+   "answer": "Each layer-group SAE is trained with reconstruction MSE on tokens pooled from several blocks. If those blocks differed in activation scale, the high-norm blocks would dominate the loss, and the dictionary would mostly fit them. Normalizing first puts every block on a common scale, so the group dictionary reflects all its blocks and reconstruction/FVU is comparable across groups and backbones.",
+   "rubric": [
+    "States that normalization prevents blocks with larger activation norms from dominating the group dictionary (or makes blocks contribute comparably).",
+    "Reason: the SAE is fit by MSE on mixed tokens, so errors on larger-scale tokens weigh more in the loss.",
+    "Optionally notes that it makes reconstruction/FVU comparable across layer groups or backbones."
+   ],
+   "batch": 3,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q83",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why do pooled selectivity and importance summaries over the 21 task-analysis settings mostly reflect CBraMod and DINOv3 rather than all three backbones equally?",
+   "answer": "REVE's MA and Speech exports were unavailable, so REVE contributes only its 3 BCI settings. CBraMod and DINOv3 contribute 9 settings each. Because the bootstrap resamples settings with equal weight, REVE makes up only about 1/7 of the pool.",
+   "rubric": [
+    "States that REVE is underrepresented (3 of 21 settings, BCI only).",
+    "Reason: REVE MA/Speech task-readout exports were missing, and the bootstrap weights each setting equally."
+   ],
+   "batch": 3,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q84",
+   "type": "why",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the activity-matching procedure pick controls by squared z-distance on standardized firing rate and mean activation rather than by raw differences?",
+   "answer": "Firing rate and mean activation are on different numerical scales. An unstandardized distance would be dominated by whichever quantity has the larger range, so matching would effectively ignore the other. Z-scoring on the union of selected and candidate latents makes both count comparably.",
+   "rubric": [
+    "States that standardization lets both quantities contribute comparably to the match.",
+    "Reason: the two quantities have different scales, so a raw distance would be dominated by one of them."
+   ],
+   "batch": 3,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q85",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does the alpha test compare the 8\u201312 Hz notch against a width-matched 30\u201334 Hz sham rather than only against the clean trial?",
+   "answer": "Band-stops alter sparse codes in every backbone, so any notch will move the code relative to the clean trial. A clean-only comparison cannot separate an alpha-specific response from generic sensitivity to removing a 4 Hz band. A sham of equal width gives a baseline for that generic notch effect.",
+   "rubric": [
+    "States that the sham provides a baseline for the generic effect of applying a band-stop of the same width.",
+    "Reason: band-stops change codes in every backbone, so a change relative to clean alone does not show alpha specificity."
+   ],
+   "batch": 3,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q86",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does reporting that the late-minus-early Jaccard decrease occurs in 9/9 combinations add information beyond the pooled means of -0.17 and -0.20?",
+   "answer": "A pooled mean could be driven largely by DINOv3's large decline (about -0.35). The 9/9 count shows the decline is present in every backbone\u2013dataset combination, including REVE's mild ones. So the depth effect is not an artifact of one backbone dominating the average.",
+   "rubric": [
+    "States that the count shows the decline is consistent across all combinations rather than driven by a few.",
+    "Reason: the mean could be dominated by DINOv3's large effect while other backbones (e.g., REVE at about -0.07) are small."
+   ],
+   "batch": 3,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q87",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why are activity-matched controls drawn from the same dictionary, with matching applied within each dictionary before pooling, rather than from a shared pool of latents across settings?",
+   "answer": "Firing rates and activation scales depend on the dictionary, which differs by backbone, layer, dataset and width. Latents are also evaluated on that dictionary's own trials and compete under its TopK. Matching across dictionaries would confound the selected-versus-control difference with differences between settings.",
+   "rubric": [
+    "States that within-dictionary matching keeps the setting fixed so the comparison isolates selected versus control latents.",
+    "Reason: activity statistics and competition differ across dictionaries/settings, so cross-dictionary matching would mix in setting differences."
+   ],
+   "batch": 3,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is the random-versus-contiguous dropout comparison carried out with a matched number of zeroed channels?",
+   "answer": "Zeroing more channels is a larger input change (larger time-domain distortion) and would by itself lower Jaccard. Matching the count holds the amount of removed input roughly constant. Any remaining difference can then be attributed to spatial adjacency rather than to the size of the perturbation.",
+   "rubric": [
+    "States that matching isolates the effect of adjacency/spatial arrangement.",
+    "Reason: more zeroed channels means a larger input change that would reduce stability on its own."
+   ],
+   "batch": 3,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q89",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "The stability rung uses perturbations that should not change the underlying signal content much. When would a low Jaccard under contiguous channel dropout not count against a latent's stability, and why?",
+   "answer": "It would not count against the latent when the zeroed neighborhood carries the very signal content the latent represents. In that case the perturbation genuinely changes the content, so a changed code is appropriate rather than a sign of instability. The rung's premise of a content-preserving perturbation would be violated.",
+   "rubric": [
+    "Identifies the case where the dropped channels/region contain the information the latent encodes.",
+    "Reason: the perturbation then changes the underlying content, violating the rung's assumption, so a code change is expected."
+   ],
+   "batch": 3,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q90",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "In a setting where the logistic probe's balanced accuracy is at chance, would importance scores and group-ablation effects say anything about how the readout depends on task information?",
+   "answer": "No. A chance-level probe has captured no task structure, so its weights, and hence |w_j|E_train[c_j], describe an uninformative readout. Ablations cannot meaningfully lower accuracy from chance either. This is one reason the paper compares ablations only within settings, given the 0.236\u20130.625 accuracy span.",
+   "rubric": [
+    "Concludes that importance and ablations would be uninformative in that setting.",
+    "Reason: the probe has learned no task structure, so its weights and accuracy drops carry no task-dependence information."
+   ],
+   "batch": 3,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q91",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Appendix B pools the alpha/sham contrast by backbone over its nine dataset\u2013depth settings. When would this pooling hide a genuine alpha-specific response?",
+   "answer": "Pooling would hide the response if it were present only in one dataset or at one depth. That is plausible because code sensitivity changes strongly with depth. Averaging such a setting with eight settings that lack the response would dilute it toward the generic response.",
+   "rubric": [
+    "Identifies the case where the response is confined to a subset of datasets or depths.",
+    "Reason: pooling over nine settings averages it with settings lacking the response; code sensitivity is known to vary with depth."
+   ],
+   "batch": 3,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q92",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "When would a high early-layer active-set Jaccard under channel dropout overstate how stable the code is?",
+   "answer": "It would overstate stability if the active sets were dominated by high-baseline latents that fire on almost every token regardless of input. Those latents stay active in both the clean and perturbed codes and keep Jaccard high, even if the input-dependent latents are swapped. The paper documents that latents differ strongly in baseline activity.",
+   "rubric": [
+    "Identifies always-on or high-baseline latents occupying many of the active slots.",
+    "Reason: such latents remain active under any perturbation and inflate the overlap even when the input-dependent latents change."
+   ],
+   "batch": 3,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q93",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose a selected latent and its control are matched on clean firing rate and mean activation as in Appendix A. When would comparing their top-five clean exemplars still be biased?",
+   "answer": "The comparison would still be biased when the two latents have different activation tails, for example when one is heavy-tailed. Top-five exemplars condition on the extreme of the activation distribution, which firing rate and mean activation do not constrain. Matched latents can therefore still yield systematically different exemplars.",
+   "rubric": [
+    "Identifies a difference in the upper tail or shape of the activation distribution despite matched rate and mean.",
+    "Reason: exemplars condition on the activation extreme, which the matching variables do not control."
+   ],
+   "batch": 3,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q94",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "The paper models electrode failure by zeroing channels in the raw signal. Would its dropout Jaccard results reliably describe deployments where a failing electrode outputs large-amplitude noise instead of zeros?",
+   "answer": "Not reliably. Only zeroing was tested. A noisy channel adds spurious signal rather than removing it and can produce a much larger input change, so code stability under that failure mode could differ, likely being worse, and remains untested.",
+   "rubric": [
+    "Concludes that the results do not reliably transfer to noisy-electrode failures.",
+    "Reason: only channel zeroing was tested, and a noise channel is a different (possibly larger) input change."
+   ],
+   "batch": 3,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q95",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Assume both the clean and perturbed codes of a token have all k=32 TopK latents active. What active-set Jaccard corresponds to exactly 16 of the clean active latents remaining active after perturbation?",
+   "answer": "The intersection is 16 and the union is 32+32\u221216 = 48. The Jaccard is therefore 16/48 = 1/3, about 0.33.",
+   "rubric": [
+    "Gives a Jaccard of 1/3 (about 0.33).",
+    "Reason: with both sets of size 32 and 16 shared, the union is 48."
+   ],
+   "batch": 3,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q96",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team can afford three-seed retraining in only two more CBraMod settings to test whether its BCI depth decline is reproducible across seeds. Which settings should they retrain, and why?",
+   "answer": "They should retrain BCI early and BCI late. The depth claim is a late-minus-early contrast, and both endpoints currently have a single seed. BCI middle already has three seeds and does not enter that contrast.",
+   "rubric": [
+    "Chooses the BCI early and BCI late settings.",
+    "Reason: the depth contrast uses early and late, which have only one seed; middle is already multi-seed and not part of the contrast."
+   ],
+   "batch": 3,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q97",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A researcher selects the latents with the highest probe importance and inspects their top-activating clean exemplars. What bias should they expect, and what does the paper recommend to counter it?",
+   "answer": "Importance is |w_j|E_train[c_j], so it favours latents with high mean activation, that is, high-baseline latents. These are exactly the latents that dominate exemplar summaries. The researcher should compare against controls matched in firing rate and mean activation, and prefer correlational summaries over all trials.",
+   "rubric": [
+    "States that the selection is biased toward high-baseline latents.",
+    "Reason: the importance score includes the E_train[c_j] factor, and high-baseline latents dominate exemplar views.",
+    "Recommends activity-matched controls (and/or all-trial correlational summaries)."
+   ],
+   "batch": 3,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q98",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to rank CBraMod, REVE and DINOv3 by how much their codes lose stability with depth under random (not contiguous) channel dropout, using only the paper's reported numbers. Can they?",
+   "answer": "No. The per-backbone late-minus-early contrasts are reported only for contiguous dropout. Random dropout is given only as the pooled mean of -0.17 across all nine combinations.",
+   "rubric": [
+    "Concludes that they cannot rank the backbones under random dropout from the reported numbers.",
+    "Reason: per-backbone values are given only for contiguous dropout; random dropout is reported only as a pooled mean."
+   ],
+   "batch": 3,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q99",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team trains TopK SAEs with k=64 on a new EEG model and wants to use the paper's FVU range [0.059, 0.228] as the benchmark for passing rung 1. Is that a valid comparison?",
+   "answer": "No. The paper's range is measured at L0=32, and rung 1 is defined as low reconstruction error at fixed sparsity. A dictionary allowed twice as many active latents is not reconstructing under the same constraint. They need to compare at matched L0, or report their own sparsity explicitly.",
+   "rubric": [
+    "Concludes that the comparison is not valid as is.",
+    "Reason: rung 1 and the paper's FVU range are defined at a fixed sparsity (L0=32), and sparsity affects reconstruction."
+   ],
+   "batch": 3,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q100",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A group runs the alpha (8\u201312 Hz) versus 30\u201334 Hz sham test on recordings where 30\u201334 Hz power far exceeds 8\u201312 Hz power, and finds that codes change more under the sham. How should this be read under the paper's distortion logic?",
+   "answer": "In these recordings the sham removes more energy, so its time-domain distortion is larger than the alpha notch's. The larger code change may reflect that larger input change rather than any band-specific response. Responses must be compared relative to each perturbation's distortion before reading them.",
+   "rubric": [
+    "Concludes that the larger sham response does not by itself indicate 30\u201334 Hz specificity.",
+    "Reason: the sham produces the larger time-domain distortion here, so responses must be read alongside distortion."
+   ],
+   "batch": 3,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q101",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the raw alpha response had survived distortion control, which rung would that result bear on, and what in the paper would still block naming latents 'alpha'?",
+   "answer": "It would feed the descriptive band-wise response profile, the top rung. Naming would still be blocked for several reasons:\n- That rung presupposes stability and reproducibility, which are depth-dependent and mostly single-seed.\n- Clean-data inspection did not support band-specific names.\n- Band-stops cannot isolate a biological oscillator.\n- The ladder never certifies meaning.",
+   "rubric": [
+    "Identifies the descriptively profiled latent (band-wise profile) rung.",
+    "Gives at least one paper-based reason naming remains unjustified (lower rungs not secured, clean-data validation failed, band-stops cannot isolate an oscillator, or the ladder does not certify meaning)."
+   ],
+   "batch": 3,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q102",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the depth decline in Jaccard had appeared under contiguous dropout but not under random dropout, which reported statement would no longer hold as written?",
+   "answer": "The statement that late-layer overlap is lower than early-layer overlap for both random and contiguous dropout in all nine combinations would fail. That statement includes the pooled random-dropout mean of -0.17. The depth claim would then be limited to spatially clustered dropout.",
+   "rubric": [
+    "Names the claim that the depth decline holds for both random and contiguous dropout across combinations (random mean -0.17).",
+    "Reason: the hypothetical removes the random-dropout decline, restricting the effect to contiguous dropout."
+   ],
+   "batch": 3,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q103",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If code cosine between clean and channel-dropped codes had stayed near 1 at every depth while active-set Jaccard fell with depth, what would that imply about the nature of the depth effect?",
+   "answer": "The active-set changes would then involve latents with small activations near the TopK cutoff, a form of rank displacement, while the dominant code content was preserved. The depth effect would amount mostly to marginal membership swaps. That would weaken the deployment concern about deep codes.",
+   "rubric": [
+    "States that the swaps would involve low-magnitude, near-cutoff latents, so the main code content is preserved.",
+    "Reason: high cosine despite changed membership means the swapped latents carry little of the code's magnitude."
+   ],
+   "batch": 3,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q104",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the latent groups chosen by perturbation criteria had turned out matched in baseline activity, which reasons for presenting the group ablations only descriptively would remain?",
+   "answer": "Two reasons would remain. Ablation effects shrink after probe retraining, because the readout can redistribute weight to correlated latents. And the group ordering on BCI middle depends on the SAE seed. Relevance would also still be defined only for a logistic probe on mean-pooled codes.",
+   "rubric": [
+    "Names shrinkage of effects after probe retraining as a remaining reason.",
+    "Names seed dependence of the BCI-middle group ordering as a remaining reason (mentioning the logistic/mean-pooled scope is optional)."
+   ],
+   "batch": 3,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q105",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the recorded time-domain distortion of contiguous dropout had been consistently larger than that of random dropout with the same number of channels, which interpretation would weaken, and why?",
+   "answer": "The local scalp-neighborhood pooling interpretation of why contiguous dropout is more damaging would weaken. The extra damage could instead be explained simply by a larger input change, without appealing to how representations pool over adjacent channels.",
+   "rubric": [
+    "Identifies the local-pooling interpretation of contiguous dropout's greater damage.",
+    "Reason: a larger input change would offer an alternative explanation for the extra code disruption."
+   ],
+   "batch": 3,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q106",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the depth decline had appeared only for DINOv3, with flat Jaccard across depth for CBraMod and REVE, which claim would lose its support?",
+   "answer": "The claim that deeper SAE codes are less stable in both EEG-native and cross-modal backbones, including the 9/9 count, would lose support. The recommendation to report layer as a primary variable for EEG foundation models would then rest only on the cross-modal backbone.",
+   "rubric": [
+    "Names the claim that the depth decline holds in EEG-native as well as cross-modal backbones (or the 9/9 count).",
+    "Reason: the EEG-pretrained backbones would no longer show the decline, so the generality to EEG foundation models fails."
+   ],
+   "batch": 3,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q107",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that CBraMod's final block (block 11) yields less dropout-stable SAE codes than its first block (block 0)? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Dictionaries are trained on layer groups that mix blocks 0\u20133 and 8\u201311 after normalization. Stability is therefore measured per group, with no per-block measurement.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: SAEs and stability are computed on mixed multi-block layer groups, not on individual blocks."
+   ],
+   "batch": 3,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q108",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Do the paper's bootstrap confidence intervals quantify how its stability summaries would change under a different train/test split? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled; the intervals do not capture this. Splits are fixed, and the intervals resample settings. They therefore reflect only variability between settings, not variability due to the choice of split.",
+   "rubric": [
+    "Answers not settled (the intervals do not capture split variability).",
+    "Reason: splits are fixed and the bootstrap resamples settings only."
+   ],
+   "batch": 3,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q109",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that linear probes on late-layer pooled codes lose more balanced accuracy under channel dropout than probes on early-layer codes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Stability is measured as Jaccard and cosine on the codes. The probe analyses use clean codes with latent-group ablations, not perturbed inputs. Mean pooling could also absorb token-level swaps, and no probe accuracy under dropout is reported.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: dropout effects are measured on code overlap, not on probe accuracy under perturbed inputs (probes and ablations use clean data)."
+   ],
+   "batch": 3,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q110",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that vision foundation models are unsuitable for EEG classification? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted as far as the paper goes. DINOv3 encodes EEG usefully for downstream linear probes. What the paper finds is that its deep codes are the least robust to channel dropout, a separate property. Only one vision model was tested.",
+   "rubric": [
+    "Answers contradicted (not supported).",
+    "Reason: DINOv3 transfers usefully to EEG probes; the deficit is in internal robustness, which is reported as a separate property."
+   ],
+   "batch": 3,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q111",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper support that the depth-dependent dropout instability holds across EEG datasets that differ in channel count and paradigm? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported within its range. The decline appears in 9/9 combinations spanning BCI (22-channel motor imagery), MA (20-channel workload) and Speech (64-channel imagined speech). Datasets beyond these remain untested.",
+   "rubric": [
+    "Answers supported (within the studied datasets).",
+    "Reason: the decline holds in all combinations across three datasets with 20, 22 and 64 channels and distinct paradigms."
+   ],
+   "batch": 3,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q112",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its SAE codes are stable when the montage changes, for example a different electrode layout or channel count between recordings? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Montage variation appears only as motivation. The perturbations zero channels within each dataset's fixed montage, and dictionaries are trained per dataset, so cross-montage stability was never measured.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: only channel zeroing within fixed per-dataset montages was tested; montage changes were not."
+   ],
+   "batch": 3,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that every individual latent is less stable in late-layer dictionaries than in early-layer ones? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The reported quantities are mean active-set Jaccard and code cosine per setting, with intervals over settings rather than latents. These set-level averages say nothing about each individual latent's behavior.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: stability is summarized as set-level means per setting (bootstrapped over settings), not as per-latent comparisons across layers."
+   ],
+   "batch": 3,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q114",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b3-p1",
+   "question": "Could code cosine between a clean and a perturbed sparse code fall below 1 while active-set Jaccard remains exactly 1?",
+   "answer": "Yes. The same 32 latents can stay active while their magnitudes change. That leaves Jaccard at 1 but makes the codes non-parallel, so cosine drops below 1.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: Jaccard depends only on which latents are active, while cosine also reflects activation magnitudes."
+   ],
+   "batch": 3,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q115",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b3-p1",
+   "question": "Could active-set Jaccard between a clean and a perturbed sparse code fall below 1 while code cosine remains exactly 1?",
+   "answer": "No. Codes are nonnegative because of the ReLU. Different active sets mean some coordinate is positive in one code and zero in the other, so the two vectors cannot be parallel and cosine must be below 1.",
+   "rubric": [
+    "Answers no.",
+    "Reason: with nonnegative codes, a change in support makes the vectors non-parallel, so cosine drops below 1."
+   ],
+   "batch": 3,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q116",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b3-p2",
+   "question": "Within one backbone and dataset, would accounting for time-domain distortion change how the alpha-notch response compares with the 30\u201334 Hz sham response?",
+   "answer": "Yes. The two equal-width notches remove different amounts of signal energy, so their distortions differ. Reading responses alongside distortion is exactly what makes the raw alpha response collapse.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: the alpha and sham band-stops produce different time-domain distortions on the same trials."
+   ],
+   "batch": 3,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q117",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": "b3-p2",
+   "question": "Within one dataset, would accounting for time-domain distortion change how CBraMod's alpha-notch response compares with DINOv3's?",
+   "answer": "No. Distortion ||x\u2212x\u0303||/||x|| is computed on the raw signal before the backbone. For the same trials and filter it is identical for every backbone, so it cannot explain differences between backbones.",
+   "rubric": [
+    "Answers no.",
+    "Reason: distortion is measured on the raw input before the backbone and is the same across backbones for the same trials and filter."
+   ],
+   "batch": 3,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q118",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b3-p3",
+   "question": "When selected latents are compared with the paper's activity-matched controls on clean data, would the comparison remove a difference in clean band power that arises only because the selected latents fire on more trials?",
+   "answer": "Yes. Controls are matched on clean firing rate and mean activation. A difference driven purely by higher baseline firing is therefore removed by design.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: the controls are matched on clean firing rate (and mean activation), the source of that difference."
+   ],
+   "batch": 3,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q119",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b3-p3",
+   "question": "When selected latents are compared with the paper's activity-matched controls on clean data, would the comparison remove a difference that arises because the selected latents were chosen for high band selectivity?",
+   "answer": "No. Controls are deliberately drawn from non-selected latents and matched only on activity. Any difference tied to the selection criterion remains; it is the quantity the check is meant to test.",
+   "rubric": [
+    "Answers no.",
+    "Reason: matching covers only firing rate and mean activation; controls are non-selected by construction, so selection-related differences remain."
+   ],
+   "batch": 3,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q120",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": "b3-p4",
+   "question": "Could the paper's runs show whether CBraMod's BCI-middle Jaccard under channel dropout varies across SAE seeds?",
+   "answer": "Yes. The BCI middle setting of each backbone, CBraMod included, was retrained under three seeds. Seed variation in its stability can therefore be examined.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: BCI middle is the multi-seed setting for every backbone."
+   ],
+   "batch": 3,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q121",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": "b3-p4",
+   "question": "Could the paper's runs show whether CBraMod's BCI late-minus-early Jaccard contrast varies across SAE seeds?",
+   "answer": "No. The early and late settings were each trained with a single seed. The seed variability of the depth contrast itself cannot be assessed.",
+   "rubric": [
+    "Answers no.",
+    "Reason: only the middle setting has multiple seeds; early and late use one seed each."
+   ],
+   "batch": 3,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q122",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does including DINOv3 strengthen the paper's claim that the depth-dependent loss of dropout stability is not just a by-product of EEG pretraining?",
+   "answer": "DINOv3 was pretrained in another modality, yet its late-minus-early Jaccard also declines in 3/3 combinations, by about -0.35 under contiguous dropout. CBraMod and REVE show the same direction. The decline therefore appears in both EEG-native and cross-modal backbones and is not peculiar to EEG-pretrained representations.",
+   "rubric": [
+    "Asserts that the vision backbone also shows the depth decline (3/3, about -0.35), so the effect is not specific to EEG pretraining.",
+    "Explains that DINOv3 was not pretrained on EEG, so finding the same trend there separates the effect from EEG pretraining."
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q123",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The paper describes an activity-matching procedure in Appendices A and E. Why does the baseline-activity confound nevertheless remain in its group ablations?",
+   "answer": "Activity-matched controls are used only for clean-data comparisons ('where used'). The ablation groups are matched only in size. Because groups chosen by perturbation criteria differ in baseline activity, the Limits explicitly list the ablation groups as unmatched on baseline activity.",
+   "rubric": [
+    "States that the ablation groups are matched only in size, not in baseline activity.",
+    "Explains that activity matching is applied to the clean-data comparisons rather than to the ablation groups, and that perturbation-selected groups differ in baseline activity."
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q124",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is the pooled contiguous-dropout late-minus-early Jaccard of -0.20 consistent with the three per-backbone values in Table 2?",
+   "answer": "Each backbone contributes three of the nine combinations, so the pooled mean is the average of the per-backbone means. (-0.35 - 0.19 - 0.07)/3 \u2248 -0.20.",
+   "rubric": [
+    "Shows that averaging -0.35, -0.19 and -0.07 gives about -0.20.",
+    "Notes that each backbone contributes equally (3 of 9 combinations), so the pooled mean equals the mean of the backbone means."
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q125",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does the paper's three-seed check for DINOv3 say nothing directly about seed variability in DINOv3's 16x dictionaries?",
+   "answer": "The seed check retrains only the BCI middle setting, and DINOv3's BCI dictionaries use 8x expansion. DINOv3 uses 16x only on Speech, and those settings have a single seed.",
+   "rubric": [
+    "States that the DINOv3 seed check was run on an 8x dictionary (BCI), not a 16x one.",
+    "Notes that DINOv3's 16x dictionaries (Speech) were trained with only one seed."
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why can the ordering of ablated latent groups in a setting other than BCI middle not be taken as reliable on its own?",
+   "answer": "On BCI middle, the one setting retrained under three seeds, the group ordering changed with the SAE seed. All other settings have one seed, so their orderings could equally be seed artifacts, and the data cannot check this.",
+   "rubric": [
+    "Concludes that single-seed orderings may be seed artifacts and are not reliable.",
+    "Reasons from the observed seed dependence on BCI middle together with the fact that the other settings use one seed."
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why would bootstrapping over individual latents, rather than settings, tend to give misleadingly narrow confidence intervals?",
+   "answer": "Latents in a dictionary share an encoder, compete under TopK and are evaluated on the same trials, so they are not independent. Resampling thousands of them as if they were independent overstates the effective sample size and shrinks the intervals artificially.",
+   "rubric": [
+    "Concludes that latent-level resampling would give intervals that are too narrow (overconfident).",
+    "Explains that latents are not independent because of the shared encoder, TopK competition and shared trials."
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q128",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Appendix B pools the raw alpha/sham responses per backbone over nine dataset\u2013depth settings. When would comparing these pooled responses across backbones mislead about alpha sensitivity?",
+   "answer": "The comparison misleads when backbones differ in how unstable their codes become with depth. DINOv3's late codes are the least stable, so its pooled response could be large because of general sensitivity to input change rather than anything alpha-specific. Pooling over depths mixes this depth-dependent instability into the backbone comparison.",
+   "rubric": [
+    "Identifies backbone differences in depth-dependent instability (e.g., DINOv3's fragile late codes) as the confound.",
+    "Explains that pooling over depths means a larger pooled response can reflect general code sensitivity rather than alpha specificity."
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q129",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose the same number of channels were zeroed in every dataset. When would comparing dropout stability between Speech and BCI or MA mislead?",
+   "answer": "Speech has 64 channels while BCI and MA have 22 and 20. A fixed count therefore removes roughly a third as large a fraction of the Speech montage. Dataset differences in Jaccard could then reflect perturbation size rather than properties of the data or backbone.",
+   "rubric": [
+    "States that the same channel count is a much smaller fraction of the 64-channel Speech montage than of the ~20-channel montages.",
+    "Concludes that cross-dataset stability differences could reflect perturbation strength (dose) rather than dataset or backbone properties."
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q130",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The paper's local-pooling reading of the contiguous-versus-random dropout gap depends on what property of the contiguous windows, and when would that reading fail?",
+   "answer": "It assumes that a contiguous window removes electrodes that are physically neighbouring on the scalp. If windows followed a channel ordering that does not reflect scalp layout, the larger damage could not be attributed to pooling over local scalp neighbourhoods.",
+   "rubric": [
+    "States that the windows must correspond to spatially neighbouring electrodes on the scalp.",
+    "Concludes that if contiguity did not reflect scalp adjacency, the gap would not support the local-pooling interpretation."
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q131",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "When would the observation that DINOv3 'encodes EEG usefully for downstream probes, yet its deep codes are the least robust' fail to show a genuine dissociation between transfer and robustness?",
+   "answer": "It fails if the useful probe performance came only from DINOv3's early or middle codes and its late codes probed poorly. Usefulness and fragility would then sit at different depths rather than in the same codes. A true dissociation needs the fragile late codes themselves to support useful probes.",
+   "rubric": [
+    "Identifies the case where useful probing comes from shallower DINOv3 codes while the late codes probe poorly.",
+    "Explains that the dissociation requires the same (late) codes to be both useful and fragile."
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q132",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Appendix A chooses activity-matched controls without replacement. When would some selected latents end up with poorly matched controls?",
+   "answer": "This happens when several selected latents have similar firing rates and mean activations but few candidates lie nearby. Once the closest candidates are used up, later selected latents must take more distant controls. A residual activity difference then remains for those pairs, and match quality depends on the order of matching.",
+   "rubric": [
+    "Identifies the condition: many selected latents with similar activity and few close candidates.",
+    "Explains that sampling without replacement exhausts the nearest controls, leaving later latents with worse matches and residual activity differences."
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q133",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Would the paper's dropout Jaccard results reliably describe a deployment in which the SAE is refit on recordings where the missing channels are absent from the start?",
+   "answer": "No. The paper measures frozen SAEs facing channels zeroed at test time, compared against clean codes from the same dictionary. A dictionary refit on the reduced montage is a different object, and the paper's measurements do not show how stable it would be.",
+   "rubric": [
+    "Concludes that the results do not reliably transfer to dictionaries refit on the reduced montage.",
+    "Explains that the paper evaluates frozen SAEs with test-time zeroing against clean codes, not refit dictionaries."
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q134",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b4-p1",
+   "question": "Could a token's sparse code c in the paper's SAEs contain fewer than 32 nonzero latents?",
+   "answer": "Yes. The ReLU is applied after TopK, so any of the 32 largest pre-activations that is negative is set to zero.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the ReLU applied after TopK, which zeroes negative top-32 pre-activations."
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q135",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b4-p1",
+   "question": "Could a token's sparse code c in the paper's SAEs contain more than 32 nonzero latents?",
+   "answer": "No. TopK keeps only the k=32 largest pre-activations, and the ReLU that follows can only remove latents, not add them.",
+   "rubric": [
+    "Answers no.",
+    "Explains that TopK caps the active set at k=32 and the ReLU can only reduce it."
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q136",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": "b4-p2",
+   "question": "If the clean-data activity-matched comparison selected latents by channel-dropout fragility, could it cover all 27 settings?",
+   "answer": "Yes. Fragility comes from spatial perturbations, which were run on all 27 settings, and the activity-matched comparisons are bootstrapped over 27 settings.",
+   "rubric": [
+    "Answers yes (all 27 settings).",
+    "Explains that fragility needs only the spatial perturbation results, which exist for all 27 settings."
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q137",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": "b4-p2",
+   "question": "If the clean-data activity-matched comparison selected latents by probe importance, could it cover all 27 settings?",
+   "answer": "No. Importance needs fitted probe weights, which exist for only 21 settings because the REVE Mental Arithmetic and Speech exports were unavailable.",
+   "rubric": [
+    "Answers no (only 21 settings).",
+    "Explains that importance requires probe weights, which are missing for the REVE MA and Speech settings."
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q138",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "Does the paper's setting-level bootstrap interval for the pooled late-minus-early Jaccard reflect variability across datasets and backbones?",
+   "answer": "Yes. Resampling settings draws from combinations that span the three datasets and three backbones, so their heterogeneity enters the interval.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the resampled units (settings) span datasets and backbones."
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q139",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "Does the paper's setting-level bootstrap interval for the pooled late-minus-early Jaccard reflect variability across SAE random seeds?",
+   "answer": "No. Every setting outside BCI middle has a single SAE, so resampling settings never samples seed variation. Seed effects are examined only separately, in the three-seed BCI-middle retrains.",
+   "rubric": [
+    "Answers no.",
+    "Explains that each setting contributes one seed (except BCI middle), so seed variability is not sampled by the bootstrap."
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team's SAE has good held-out FVU, its stability patterns repeat across five seeds, but its codes change heavily under channel dropout. What is the highest claim the paper's ladder licenses?",
+   "answer": "Only rung 1, a faithful sparse decomposition. The rungs are cumulative: 'reproducible latent code' requires the codes to be stable first. Seed consistency without perturbation stability does not lift the dictionary past rung 1.",
+   "rubric": [
+    "Concludes the highest licensed claim is faithful sparse decomposition (rung 1).",
+    "Explains that the ladder is cumulative, so the reproducibility rung requires passing the stability rung first."
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q141",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Using the paper's existing results, a team wants to compare all three backbones on selectivity, importance and group ablations within one dataset at matched dictionary width. Which dataset can they use?",
+   "answer": "None fully meets both conditions. REVE task-analysis results exist only on BCI, where DINOv3 uses 8x against 16x for the others. Speech has 16x for every backbone but no REVE task exports. Mental Arithmetic has neither REVE task exports nor matched DINOv3 width.",
+   "rubric": [
+    "Concludes that no dataset allows a full three-backbone task-analysis comparison at matched width.",
+    "Explains that REVE task results exist only for BCI, where DINOv3 is 8x, while Speech and MA lack REVE task exports."
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team reports a single dropout-stability number averaged over early, middle and late layers of their backbone. What does the paper imply about this report?",
+   "answer": "The average hides the depth trend. Because Jaccard declined with depth in every combination, one number would overstate late-layer stability and understate early-layer stability. Stability should be reported per layer, with layer treated as a primary variable.",
+   "rubric": [
+    "Concludes the averaged number is misleading and stability should be reported separately by layer.",
+    "Justifies this by the systematic decline of Jaccard with depth in all nine combinations."
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q143",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A new EEG model's SAE codes keep a high Jaccard under channel dropout but change substantially under every band-stop. Does the dictionary reach the 'stable latent code' rung?",
+   "answer": "No. Table 1 defines that rung as codes remaining stable under both spatial and spectral perturbation. Spatial stability alone does not suffice, so the dictionary stays at the faithful-decomposition rung if its reconstruction is good.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the stability rung requires stability under both spatial and spectral perturbations."
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q144",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A latent has |\u0394f| of 0.9 under the alpha band-stop and 0.1, 0.2, 0.3, 0.4 and 0.5 under the other five bands. What is its alpha selectivity under the paper's definition?",
+   "answer": "s = 0.9 \u2212 (0.1+0.2+0.3+0.4+0.5)/5 = 0.9 \u2212 0.3 = 0.6. This is a descriptive summary only and can still be inflated by TopK rank displacement or by differences in input distortion.",
+   "rubric": [
+    "Gives s_alpha = 0.6.",
+    "Shows the computation: subtracting the mean (0.3) of the other five bands' |\u0394f| from 0.9."
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q145",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A backbone processes each EEG channel independently, with no mixing across electrodes in the layers the SAE reads. Under the paper's local-pooling interpretation, should contiguous dropout still be more damaging than random dropout of the same number of channels?",
+   "answer": "No. The interpretation explains the gap by representations pooling over neighbouring electrodes. Without cross-channel mixing, removing adjacent or scattered channels of the same count should be similarly damaging. The paper notes this explanation itself is untested.",
+   "rubric": [
+    "Concludes the contiguous-versus-random gap should shrink or vanish.",
+    "Explains that the gap is attributed to pooling over local scalp neighbourhoods, which is absent if channels are processed independently."
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q146",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the three BCI-middle seeds had given dropout Jaccard values that differed by as much as 0.07, which reported depth effect would be most weakened, and why?",
+   "answer": "REVE's mild depth effect of about -0.07 would be most weakened. Its late-minus-early contrasts come from single-seed dictionaries, so a seed spread of the same size would make the decline indistinguishable from seed noise.",
+   "rubric": [
+    "Identifies REVE's mild (~-0.07) depth effect as most weakened.",
+    "Explains that the contrasts rest on single seeds, so seed variability of comparable size could produce the difference."
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q147",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the Speech dataset had been dropped from the study, which stated goal of the dataset choice would be most undermined?",
+   "answer": "The goal that stability conclusions not be tied to a single montage would be undermined. Speech is the only high-channel (64-channel) dataset. Without it, the depth trend would rest only on ~20\u201322-channel montages, and the 9/9 would become 6/6.",
+   "rubric": [
+    "Identifies the goal of not tying conclusions to one montage or channel count.",
+    "Notes that Speech is the only 64-channel dataset, leaving only ~20\u201322-channel montages without it."
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q148",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If DINOv3's 16x Speech dictionaries had shown a depth decline similar to CBraMod's, while its 8x BCI and 4x MA dictionaries showed much larger declines, which claim would lose its clean support?",
+   "answer": "The claim that the depth effect is strongest for the cross-modal backbone would lose clean support. DINOv3's extra decline would then appear only where its dictionaries are narrower, so dictionary width would confound the attribution to cross-modal transfer.",
+   "rubric": [
+    "Identifies the claim that the depth effect is strongest for the cross-modal/vision backbone.",
+    "Explains that the large declines would coincide with reduced dictionary width, confounding the attribution."
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q149",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If probe balanced accuracy had been nearly identical across all 21 task-analysis settings, which design choice for reading the ablations would lose its stated motivation?",
+   "answer": "The choice to compare ablation effects only within settings rather than across them. The paper motivates that choice by the wide 0.236\u20130.625 accuracy range. Other reasons for descriptive presentation, such as seed dependence and baseline differences, would remain.",
+   "rubric": [
+    "Identifies the within-setting (not cross-setting) comparison of ablations.",
+    "Links it to the stated motivation of the wide 0.236\u20130.625 balanced-accuracy spread."
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q150",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If Figure 2A had shown DINOv3's early-layer Jaccard far above the other backbones' while its late-layer Jaccard matched theirs, which statement would lose support?",
+   "answer": "The statement that DINOv3's deep codes are the least robust would lose support. Its large late-minus-early drop would then reflect unusually stable early codes, not unusually fragile late codes.",
+   "rubric": [
+    "Identifies the claim that DINOv3's deep codes are the least robust.",
+    "Explains that a large contrast could come from high early stability rather than low late stability."
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q151",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Do the late-minus-early values of -0.20 (contiguous) and -0.17 (random) by themselves show that contiguous dropout damages codes more than random dropout at a given depth? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled by those numbers alone. They measure how much stability changes between depths, not absolute damage at any depth. A larger decline is compatible with equal damage at early layers, so the 'more damaging' claim must rest on the per-setting absolute Jaccard values (Fig. 2A).",
+   "rubric": [
+    "Answers not settled (by the contrasts alone).",
+    "Explains that late-minus-early values measure change with depth, not absolute damage at a given depth."
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q152",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper support the idea that loss of dropout stability grows with absolute block index regardless of backbone? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. REVE's late group uses blocks 15\u201321, deeper by index than the 8\u201311 late groups of CBraMod and DINOv3. Yet REVE shows the smallest decline (about -0.07 against -0.19 and -0.35).",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites REVE's deeper-indexed late group (15\u201321) showing the smallest decline compared with the 8\u201311 groups of the other backbones."
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q153",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that deeper SAE codes are also less stable under temporal perturbations such as time shifts or segment masking? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The study applies only spatial (channel-zeroing) and spectral (band-stop) perturbations, and its depth result is reported for channel dropout. No temporal interventions were tested.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that only spatial and spectral perturbations were tested, with no temporal interventions."
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q154",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a well-behaved SAE on a biosignal model can reach the 'descriptively profiled latent' rung? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The study populates only the lower rungs, and spatial stability degrades with depth. The positive control on another physiological axis that would test how far a good dictionary can climb is left to future work.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the present study populates only the lower rungs and that the positive control needed to test this is deferred."
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q155",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that vision foundation models in general produce less dropout-robust deep EEG codes than EEG-pretrained models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only one vision backbone (DINOv3 ViT-B/16) was tested, against two EEG backbones, and with reduced dictionary width on two datasets. The paper cannot generalize to vision models as a class.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that only a single vision backbone was tested (with width differences), so no class-level generalization follows."
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q156",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that code cosine between clean and channel-dropped codes also declines with depth? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Code cosine is recorded, but the reported depth results (Table 2, Fig. 2A, Appendix C) are given only for active-set Jaccard.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that cosine was recorded but the depth results are reported only for Jaccard."
+   ],
+   "batch": 4,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q157",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that larger dictionary expansion factors yield more stable codes under channel dropout? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Width varies only for DINOv3, and it changes together with dataset (8x on BCI, 4x on MA, 16x on Speech). There is no controlled comparison of widths within a setting.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that width varies only for DINOv3 and is confounded with dataset, so there is no controlled width comparison."
+   ],
+   "batch": 4,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q158",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the paper reduce DINOv3's dictionary width on BCI and Mental Arithmetic but keep 16x on Speech?",
+   "answer": "DINOv3 receives channel-by-time EEG images, so a montage with more channels yields a larger image and more patch tokens. Speech has 64 channels, while BCI has 22 and MA has 20. The smaller BCI and MA images therefore give less token support for a wide dictionary, which is consistent with MA, the smallest montage, getting the narrowest width (4x).",
+   "rubric": [
+    "States that the reduction follows from limited token support on BCI and MA, and that Speech has enough tokens for 16x",
+    "Links token count to channel count through the channel-by-time image input (64 channels for Speech versus 20 or 22 for MA and BCI)"
+   ],
+   "batch": 5,
+   "orig_id": "q158"
+  },
+  {
+   "id": "q159",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the 'reproducible latent code' rung of the validation ladder presuppose the 'stable latent code' rung rather than standing on its own?",
+   "answer": "The paper defines the reproducibility rung as stability patterns holding across seeds and settings. It is therefore a claim about the consistency of stability measurements, which cannot be made until stability under perturbation has been measured and found adequate. A latent whose code changes under plausible perturbations is also not a well-defined unit whose seed-consistency would mean much.",
+   "rubric": [
+    "States that reproducibility is defined over stability patterns, so it requires the stability rung first",
+    "Explains that without stability measurements and adequate stability there is nothing meaningful to reproduce across seeds or settings"
+   ],
+   "batch": 5,
+   "orig_id": "q159"
+  },
+  {
+   "id": "q160",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the importance score multiply |w_j| by E_train[c_j] instead of using the probe weight |w_j| alone?",
+   "answer": "The probe acts on mean-pooled codes, so a latent's contribution to the logit is its weight times its pooled activation. A large weight on a latent that is rarely or weakly active contributes little to the readout. Scaling by the latent's average training activation turns the weight into a measure of how much the fitted readout actually uses that latent on the data.",
+   "rubric": [
+    "States that the weight alone ignores how active the latent is, so a large weight on a rarely active latent would overstate its use",
+    "Explains that the latent's contribution to the readout is weight times pooled activation, which the E_train[c_j] factor captures"
+   ],
+   "batch": 5,
+   "orig_id": "q160"
+  },
+  {
+   "id": "q161",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is the depth-effect comparison between DINOv3 and CBraMod more like-for-like, in terms of which blocks form each depth, than either backbone's comparison with REVE?",
+   "answer": "CBraMod and DINOv3 both have 12 blocks and use identical layer groups (0\u20133, 4\u20137, 8\u201311). REVE has 22 blocks grouped as 0\u20136, 7\u201314 and 15\u201321. REVE's groups therefore span different numbers of blocks and different absolute depths, so its 'early' and 'late' are not defined the same way as theirs.",
+   "rubric": [
+    "States that DINOv3 and CBraMod share the same 12-block grouping 0\u20133/4\u20137/8\u201311",
+    "Notes that REVE's 22-block grouping 0\u20136/7\u201314/15\u201321 differs in group size and absolute block range, so its early/late contrast is defined differently"
+   ],
+   "batch": 5,
+   "orig_id": "q161"
+  },
+  {
+   "id": "q162",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why would a positive control on another physiological axis with better-constrained ground truth help interpret the paper's failure to find band-specific names?",
+   "answer": "In the present study, a failed clean-data check cannot tell apart two possibilities: the latents lack band-specific structure, or the analysis cannot detect such structure. The paper itself says its checks do not rule out structured features. A setting where the true features are known would show whether a well-behaved dictionary can climb the ladder, which calibrates what a negative result on EEG means.",
+   "rubric": [
+    "States that the current negative result is ambiguous between absent features and an insensitive analysis or ladder",
+    "Explains that known ground truth would show whether a well-behaved dictionary can reach the upper rungs, calibrating the EEG result"
+   ],
+   "batch": 5,
+   "orig_id": "q162"
+  },
+  {
+   "id": "q163",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is the channel-dropout result a cleaner basis for the paper's stability claims than its spectral band-stop results?",
+   "answer": "The dropout contrast has the same sign in 9/9 combinations and is computed within each combination. Random and contiguous dropout zero the same number of channels, and both are read against the same clean trial. Spectral responses, by contrast, are confounded by how much input change each band-stop produces: the raw alpha response collapses under distortion control. Band-stop responses can also include TopK rank displacement, so they are read only as part of general sensitivity.",
+   "rubric": [
+    "States that the dropout depth effect is consistent (9/9, within-combination contrasts, matched channel counts)",
+    "States that spectral responses are confounded by input-distortion size (the alpha response collapses under distortion control) and must be read as general sensitivity"
+   ],
+   "batch": 5,
+   "orig_id": "q163"
+  },
+  {
+   "id": "q164",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Appendix A streams each selected latent's top-five clean test activations together with their trials. When would these five exemplars give a much narrower view than five independent trials, and why?",
+   "answer": "Activations are token-level, so the five strongest could all be tokens from the same trial or from one or two trials. The trial-wise Welch spectra would then reflect only one or two recordings. Any apparent band content would be driven by those few trials' idiosyncrasies rather than by a pattern across trials.",
+   "rubric": [
+    "Identifies the case where several of the top-five activations come from the same trial or from very few trials",
+    "Explains that the Welch spectra then reflect only one or two recordings, so they cannot show a consistent pattern"
+   ],
+   "batch": 5,
+   "orig_id": "q164"
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Under what dropout condition would one expect the gap between contiguous and random dropout to shrink even if representations do pool over local scalp neighborhoods, and why?",
+   "answer": "The gap should shrink when the number of zeroed channels is a large fraction of the montage, for example on the 20- or 22-channel datasets. Random selections then necessarily include many adjacent channels and overlap heavily with contiguous windows. In the limit, both remove nearly all channels and become the same perturbation, so the matched-count comparison can no longer separate them.",
+   "rubric": [
+    "Identifies dropping a large fraction of the available channels (especially on low-channel montages) as the condition",
+    "Explains that random sets then contain adjacent clusters and converge on contiguous dropout, so the contrast loses its power"
+   ],
+   "batch": 5,
+   "orig_id": "q166"
+  },
+  {
+   "id": "q166",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "When would finding a clear 8\u201312 Hz peak in the Welch spectra of a selected latent's top exemplars carry almost no information about that latent?",
+   "answer": "This happens when that band is prominent in most clean trials of the dataset. The exemplars of almost any latent, including unselected ones, would then show the same peak. Without a comparison against activity-matched controls or a summary over all trials, the peak reflects the dataset's base rate rather than the latent.",
+   "rubric": [
+    "Identifies the case where the band's content is common across nearly all trials of the dataset",
+    "Explains that any latent's exemplars would then show it, so a comparison baseline (activity-matched controls or all-trial correlations) is needed"
+   ],
+   "batch": 5,
+   "orig_id": "q167"
+  },
+  {
+   "id": "q167",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Appendix A standardizes firing rate and mean activation on the union of selected latents and the candidate pool before choosing controls by squared z-distance. When would this make poorly matched controls look close?",
+   "answer": "This happens when the union contains extreme latents, such as some with very high firing rates or near-dead ones. These inflate the standard deviations used for z-scoring. Large raw differences in activity then become small z-distances, so a nominally nearest control may still differ substantially in baseline activity.",
+   "rubric": [
+    "Identifies a pool or union containing extreme outliers that inflate the standard deviations",
+    "Explains that inflated standard deviations shrink z-distances, so large raw activity differences can look like close matches"
+   ],
+   "batch": 5,
+   "orig_id": "q168"
+  },
+  {
+   "id": "q168",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p1",
+   "question": "In the frozen-probe ablation variant, could zeroing a group of latents that are active on training trials but never active on any test trial change test balanced accuracy?",
+   "answer": "No. In the frozen variant the ablation is applied only at test time. These latents are already zero on every test trial, so zeroing them leaves the test inputs, and hence the frozen probe's predictions, unchanged.",
+   "rubric": [
+    "Answers no",
+    "Explains that the frozen probe is trained on clean codes and the ablation acts only on test codes, which are already zero for this group"
+   ],
+   "batch": 5,
+   "orig_id": "q169"
+  },
+  {
+   "id": "q169",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p1",
+   "question": "In the retrained-probe ablation variant, could zeroing a group of latents that are active on training trials but never active on any test trial change test balanced accuracy?",
+   "answer": "Yes. In the retrained variant the probe is refit after ablation. Removing latents that are active in training changes the fitted weights and intercept. Test predictions can therefore change even though the test codes themselves are unaffected.",
+   "rubric": [
+    "Answers yes",
+    "Explains that refitting on ablated training codes changes the probe itself, so predictions on unchanged test codes can change"
+   ],
+   "batch": 5,
+   "orig_id": "q170"
+  },
+  {
+   "id": "q170",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p2",
+   "question": "If a latent's |\u0394f| under all six band-stops increased by the same amount, would its alpha selectivity s_{j,alpha} change?",
+   "answer": "No. Selectivity is |\u0394f| under alpha minus the mean |\u0394f| over the other five bands. A common increase raises both terms equally and cancels.",
+   "rubric": [
+    "Answers no",
+    "Explains that the uniform increase adds equally to the alpha term and to the mean of the other five, so it cancels in the difference"
+   ],
+   "batch": 5,
+   "orig_id": "q171"
+  },
+  {
+   "id": "q171",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p2",
+   "question": "If only a latent's |\u0394f| under the alpha band-stop increased by that same amount, with the other five unchanged, would its alpha selectivity s_{j,alpha} change?",
+   "answer": "Yes. It would rise by exactly that amount, because only the first term of the selectivity difference changes while the mean over the other five bands stays fixed.",
+   "rubric": [
+    "Answers yes, and says selectivity increases by the full amount",
+    "Explains that only the alpha term changes while the mean over the other five bands is unchanged"
+   ],
+   "batch": 5,
+   "orig_id": "q172"
+  },
+  {
+   "id": "q172",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": "b5-p3",
+   "question": "If DINOv3 were removed from the study, would the remaining backbone\u2013dataset combinations still all show a late-minus-early decrease in contiguous-dropout Jaccard?",
+   "answer": "Yes. CBraMod and REVE each show the decrease in 3/3 combinations (about -0.19 and -0.07), so all six remaining combinations would still show it.",
+   "rubric": [
+    "Answers yes",
+    "Cites the 3/3 decreases for both CBraMod and REVE, giving 6/6"
+   ],
+   "batch": 5,
+   "orig_id": "q173"
+  },
+  {
+   "id": "q173",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p3",
+   "question": "If DINOv3 were removed from the study, would the paper still support its contribution that a backbone transferring usefully to EEG need not bring matching internal robustness?",
+   "answer": "No. That contribution rests on the cross-modal contrast: DINOv3 encodes EEG usefully for probes yet has the least robust deep codes (about -0.35). Without DINOv3, nothing in the paper plays that role.",
+   "rubric": [
+    "Answers no",
+    "Explains that the dissociation claim rests specifically on DINOv3's combination of useful probe transfer and the strongest depth effect"
+   ],
+   "batch": 5,
+   "orig_id": "q174"
+  },
+  {
+   "id": "q174",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p4",
+   "question": "Would the recorded time-domain distortion ||x \u2212 x\u0303||/||x|| of a given band-stop change if a trial's whole signal were multiplied by a constant?",
+   "answer": "No. The Butterworth band-stop is a linear operation, so scaling the input scales both the removed component (the numerator) and the signal norm (the denominator) by the same factor. The ratio is unchanged.",
+   "rubric": [
+    "Answers no",
+    "Explains that the filter is linear and the measure is relative, so numerator and denominator scale together"
+   ],
+   "batch": 5,
+   "orig_id": "q175"
+  },
+  {
+   "id": "q175",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p4",
+   "question": "For the 8\u201312 Hz alpha band-stop, would the recorded time-domain distortion change if the trial's 8\u201312 Hz content were amplified while the rest of the signal stayed the same?",
+   "answer": "Yes, it would increase. The removed component becomes a larger share of the signal, so ||x \u2212 x\u0303|| grows proportionally more than ||x||.",
+   "rubric": [
+    "Answers yes, and says the distortion increases",
+    "Explains that the stopped band's share of total signal energy grows, so the removed part is relatively larger"
+   ],
+   "batch": 5,
+   "orig_id": "q176"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Using Table 2's approximate contiguous-dropout values, roughly how many times larger is DINOv3's late-minus-early Jaccard decrease than REVE's, and what caveat applies to this ratio?",
+   "answer": "About five times larger (-0.35 versus -0.07); CBraMod's is roughly 2.7 times REVE's. The values are approximate, and REVE's early and late groups (0\u20136 and 15\u201321 of 22 blocks) are defined differently from DINOv3's (0\u20133 and 8\u201311 of 12). The ratio therefore compares differently constructed depth contrasts.",
+   "rubric": [
+    "Gives a ratio of about 5 (accept 4.5\u20135.5)",
+    "Notes a caveat: the values are approximate and/or REVE's layer groups differ from DINOv3's"
+   ],
+   "batch": 5,
+   "orig_id": "q177"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose a DINOv3 combination had an early-layer contiguous-dropout Jaccard of 0.80, with all tokens having 32 active latents in both clean and perturbed codes, and its late layer dropped by the backbone's typical 0.35. About how many of the 32 clean active latents stay active after dropout at each depth?",
+   "answer": "With both active sets of size 32, Jaccard J = s/(64 \u2212 s), so s = 64J/(1 + J). At J = 0.80, about 28 latents are retained; at J = 0.45, about 20. Roughly 8 more of the 32 active latents are swapped out at the late layer.",
+   "rubric": [
+    "Gives roughly 28 retained latents early and roughly 20 late (accept 28\u201329 and 19\u201320)",
+    "Uses Jaccard as shared over union with two 32-element sets, i.e., s/(64 \u2212 s)"
+   ],
+   "batch": 5,
+   "orig_id": "q178"
+  },
+  {
+   "id": "q178",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team picks the latents with the highest alpha selectivity as inputs to a motor-imagery classifier, expecting them to be the most task-relevant. What does the paper imply about this expectation?",
+   "answer": "The expectation is unfounded. Selectivity measures how a latent moves under a band-stop, whereas importance measures how a fitted readout weights it, and the paper says nothing forces the two to agree. Task use would have to be checked separately with probe importance or within-setting group ablations, and even those show only readout dependence, not what the latents encode.",
+   "rubric": [
+    "States that high selectivity does not imply task relevance or readout importance",
+    "Explains that selectivity and importance answer different questions and are not forced to agree, so readout dependence must be measured separately (and is still only readout dependence)"
+   ],
+   "batch": 5,
+   "orig_id": "q179"
+  },
+  {
+   "id": "q179",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team verified that early-layer SAE codes of their EEG model are stable under channel dropout and now wants to interpret late-layer latents on that basis. Is this justified by the paper?",
+   "answer": "No. Stability declined from early to late depth in every one of the paper's 9/9 combinations, so stability at one depth does not transfer to another. The team must measure stability at the late layer itself and report the layer alongside any claim.",
+   "rubric": [
+    "Answers that it is not justified",
+    "Cites the consistent depth decline (9/9), meaning stability must be measured and reported at the layer actually being interpreted"
+   ],
+   "batch": 5,
+   "orig_id": "q180"
+  },
+  {
+   "id": "q180",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team applies the paper's protocol to a new EEG backbone and finds a contiguous-dropout late-minus-early Jaccard of about -0.12. Where does this place the backbone relative to the paper's three, and what must hold for the placement to be meaningful?",
+   "answer": "It falls between REVE (about -0.07) and CBraMod (about -0.19), well below DINOv3's -0.35. The comparison is meaningful only if the protocol matches: contiguous dropout with the same number of channels on the same datasets, k=32 TopK dictionaries, and comparably defined early and late layer groups.",
+   "rubric": [
+    "Places it between REVE and CBraMod (milder than CBraMod, stronger than REVE)",
+    "States that comparability requires matching the protocol (perturbation type and size, datasets, TopK setup, layer-group definition)"
+   ],
+   "batch": 5,
+   "orig_id": "q181"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If alpha selectivity and probe importance had turned out strongly correlated across latents, would the paper's claim that 'alpha selectivity is not readout importance' lose its support?",
+   "answer": "Largely no. The claim rests on the construction of the two quantities: one measures response to band removal, the other a fitted linear readout's weighting on clean data. It does not rest on an observed lack of correlation. A correlation would make agreement common in practice but would not make either quantity a valid proxy for the other.",
+   "rubric": [
+    "Answers that the claim would largely remain supported",
+    "Explains that it rests on the quantities answering different questions by construction, not on an empirical non-correlation"
+   ],
+   "batch": 5,
+   "orig_id": "q182"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If REVE's late-minus-early Jaccard had been about zero in all three of its datasets while CBraMod and DINOv3 were unchanged, which reported statement would fail, and which would survive?",
+   "answer": "The statement that late-layer overlap is lower than early-layer overlap in all nine combinations would fail, since only 6/9 would show it. The claim that the decline appears in both EEG-native and cross-modal backbones would survive through CBraMod. The ordering with DINOv3 strongest would also survive.",
+   "rubric": [
+    "States that the 'all nine combinations' (9/9) claim fails",
+    "States that the claim of a decline in both EEG-native and cross-modal backbones survives via CBraMod (and DINOv3 remains strongest)"
+   ],
+   "batch": 5,
+   "orig_id": "q183"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If latents selected by perturbation criteria and their activity-matched controls had shown indistinguishable clean band-power profiles, what would that imply about any band content visible in the selected latents' raw exemplar spectra?",
+   "answer": "That band content would be attributable to baseline activity, such as firing rate and mean activation, rather than to the property used to select the latents. This would reinforce the paper's finding that the exemplar view is driven by baseline firing, and would leave no clean-data support for band-specific names.",
+   "rubric": [
+    "States that the visible band content would be explained by baseline activity rather than the selection criterion",
+    "Links this to the paper's finding that exemplar views are biased by baseline firing rates, leaving no support for band names"
+   ],
+   "batch": 5,
+   "orig_id": "q184"
+  },
+  {
+   "id": "q184",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If DINOv3's 4x Mental Arithmetic dictionaries had shown FVU far above the [0.059, 0.228] range while all others stayed in it, which reported result would no longer hold, and which design choice would be implicated?",
+   "answer": "The result that no backbone or dataset stands out as poorly reconstructed would no longer hold, and DINOv3's MA dictionaries would fail rung 1. The implicated design choice is the reduced 4x width chosen because token support was limited, which would then appear to cost reconstruction fidelity.",
+   "rubric": [
+    "States that the uniform-reconstruction result ('no backbone or dataset stands out', every dictionary passes rung 1) would fail",
+    "Identifies the reduced 4x DINOv3 width on MA as the implicated design choice"
+   ],
+   "batch": 5,
+   "orig_id": "q185"
+  },
+  {
+   "id": "q185",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If spectral band-stops had left sparse codes almost unchanged in every backbone, which reported result would fail, and would the paper's depth-dependent instability claim be affected?",
+   "answer": "The result that band-stops, including the alpha notch, alter codes in every backbone would fail, along with the reading of spectral responses as part of general sensitivity. The depth-dependent instability claim would not be affected, because it rests on channel-dropout Jaccard.",
+   "rubric": [
+    "States that the 'band-stops alter codes in every backbone' result would fail",
+    "States that the depth-instability claim survives because it is based on spatial (channel-dropout) perturbations"
+   ],
+   "batch": 5,
+   "orig_id": "q186"
+  },
+  {
+   "id": "q186",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper establish a specific FVU threshold that a dictionary must meet to pass rung 1 of the ladder? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports that all 27 dictionaries fall in [0.059, 0.228] at L0=32 and says every dictionary passes rung 1. It never states a cutoff, so the observed range is a description of these dictionaries, not a defined pass criterion.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the paper reports an observed FVU range and declares all dictionaries passing, but gives no explicit threshold"
+   ],
+   "batch": 5,
+   "orig_id": "q187"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that REVE's SAE codes support weaker downstream probes than CBraMod's or DINOv3's? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Task analyses cover only 21/27 settings because REVE's MA and Speech exports were unavailable, so REVE has probe results only on BCI. The paper reports only an overall balanced-accuracy range (0.236\u20130.625) and compares ablations within settings, with no per-backbone probe comparison.",
+   "rubric": [
+    "Answers not settled",
+    "Cites missing REVE MA/Speech task exports and/or the absence of reported per-backbone probe comparisons"
+   ],
+   "batch": 5,
+   "orig_id": "q188"
+  },
+  {
+   "id": "q188",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the depth-dependent loss of SAE code stability also holds when the backbone is fine-tuned on the EEG task rather than kept frozen? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All backbones are frozen, and the SAEs are fitted to frozen activations on fixed splits. Fine-tuning would change the representations and was never tested.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that every experiment uses frozen backbones, so fine-tuned representations were not studied"
+   ],
+   "batch": 5,
+   "orig_id": "q190"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show how stable DINOv3's prefix tokens, such as its class token, are under channel dropout? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. DINOv3's prefix tokens are excluded, so its SAEs and stability measurements cover only the EEG-image patch tokens.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that prefix tokens were excluded from the analyzed DINOv3 activations"
+   ],
+   "batch": 5,
+   "orig_id": "q191"
+  },
+  {
+   "id": "q190",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that highly alpha-selective latents tend to receive low probe importance? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper argues only that selectivity and importance answer different questions and that nothing forces them to agree, in either direction. It reports no empirical anti-correlation, and it draws no task-relevance conclusion from ablations.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the paper claims only non-equivalence by construction, not a negative relationship, and reports no such correlation"
+   ],
+   "batch": 5,
+   "orig_id": "q192"
+  },
+  {
+   "id": "q191",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper establish why deeper layers yield less dropout-stable SAE codes, for example because deeper blocks mix information across more channels? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper documents the depth decline but offers no tested mechanism for it. Its only mechanistic suggestion, local scalp pooling, concerns the contiguous-versus-random gap and is explicitly an untested interpretation.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the depth trend is documented without a tested mechanism, and the local-pooling idea is an untested interpretation about contiguous versus random dropout"
+   ],
+   "batch": 5,
+   "orig_id": "q193"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": "b4-p3",
+   "question": "Within one backbone and dataset, would accounting for time-domain distortion change how the alpha-notch response at early depth compares with the response at late depth?",
+   "answer": "No. Distortion ||x - x~||/||x|| is measured on the raw signal before the backbone. The same trials and filter therefore give identical distortion at every depth, so distortion cannot account for depth differences.",
+   "rubric": [
+    "Answers no.",
+    "Explains that distortion is computed on the raw input and is therefore identical across depths for the same trials and filter."
+   ],
+   "batch": 4,
+   "orig_id": "q17",
+   "reject": "near-duplicate of q116"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": "b4-p3",
+   "question": "Within one backbone, would accounting for time-domain distortion change how the alpha-notch response on BCI compares with the response on Speech?",
+   "answer": "Yes, it could. The recordings differ, so the same 8\u201312 Hz filter can remove a different share of signal energy and produce different distortion. A larger response on one dataset may simply reflect a larger input change.",
+   "rubric": [
+    "Answers yes (it can change the comparison).",
+    "Explains that different datasets' recordings yield different distortion for the same filter, so the size of the input change differs."
+   ],
+   "batch": 4,
+   "orig_id": "q18",
+   "reject": "near-duplicate of q116"
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "When would the importance score |w_j| E_train[c_j] overstate how much the probe relies on latent j on the test split?",
+   "answer": "This happens when latent j is much more active on training trials than on test trials, for example under a shift between the fixed splits. The score's activity factor comes from the training set, so it can be large even when the latent rarely fires on test trials. In that case zeroing the latent at test time would barely change frozen-probe predictions.",
+   "rubric": [
+    "Identifies a train/test difference in latent j's activity, with j active on train but rarely on test",
+    "Explains that importance uses E_train, so it reflects training-set activity and not the latent's test-time contribution"
+   ],
+   "batch": 5,
+   "orig_id": "q165",
+   "reject": "near-duplicate of q54"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that removing the alpha band leaves the sparse codes essentially unaffected? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Band-stops, including the alpha notch, alter sparse codes in every backbone. What collapses under distortion control is the interpretation of the large raw alpha response as alpha-specific, not the existence of a code change.",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that the alpha notch alters codes in every backbone, and that distortion control removes the alpha-specific reading, not the response itself"
+   ],
+   "batch": 5,
+   "orig_id": "q189",
+   "reject": "near-duplicate of q78"
+  }
+ ],
+ "types": {
+  "why": 32,
+  "failure": 29,
+  "counterfactual": 38,
+  "transfer": 31,
+  "connect": 27,
+  "scope": 34
+ }
+}

@@ -1,0 +1,1513 @@
+{
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Standard (BatchTopK and Matryoshka) SAE features, which have no temporal prior, already show temporal persistence. After a feature activates, the hidden state's projection onto its decoder direction stays elevated. This empirical persistence R_j(\u03c4) decays more slowly in natural Pile documents than in a sentence-shuffled control that keeps local but breaks global continuity. Persistence profiles also vary widely across features.",
+   "sections": [
+    "s3",
+    "s10",
+    "s9"
+   ],
+   "depends_on": []
+  },
+  {
+   "id": "c2",
+   "text": "Past SAE activations help reconstruct later hidden states. In a restricted per-feature context correction, natural-document history recovers a small but positive fraction of baseline reconstruction error, and the gain shrinks with lag. The fitted lag-one weights are mostly positive. Shuffled-history controls give zero-centred weights and no gain. So standard SAEs leave reconstruction-relevant temporal structure unused.",
+   "sections": [
+    "s3",
+    "s10"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Persistent SAEs add a per-feature persistence coefficient \u03bb_j in (0, 0.999). Each feature keeps an exponential-moving-average state h_j = \u03bb_j h_j(prev) + (1-\u03bb_j) a_j, fed by token-wise BatchTopK-sparse activations a, and the decoder reconstructs from h. The recurrence is diagonal, sparsity applies only to a, and timescales are learned from reconstruction alone without predefined partitions or auxiliary temporal losses.",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Persistent SAEs keep reconstruction quality competitive with matched baselines while learning a broad, skewed spectrum of \u03bb: mostly fast features plus a small slow tail. Slow features (top 1% by \u03bb) are much smoother over time. Higher-\u03bb quintiles show higher empirical persistence, whereas the Temporal SAE's predefined groups are not clearly separated.",
+   "sections": [
+    "s5",
+    "s8"
+   ],
+   "depends_on": [
+    "c3"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Fast features (bottom 50% by \u03bb) remain locally interpretable, matching or exceeding the best baseline autointerp score, while slow features score lower on token-level autointerp because they reflect broad, distributed subjects. Fast features are preferentially updated at nouns and slow features at punctuation and conjunctions.",
+   "sections": [
+    "s5",
+    "s11"
+   ],
+   "depends_on": [
+    "c4"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Slow-feature persistent states track subject information without labels. On MMLU they form clearer subject clusters than baseline SAEs or raw hidden states. On spliced MMLU sequences, ranking features by decreasing \u03bb for a linear subject probe is nearly as efficient as a label-informed supervised oracle ranking, and far better than increasing-\u03bb, random, or baseline SAE representations.",
+   "sections": [
+    "s5",
+    "s12",
+    "s13",
+    "s9"
+   ],
+   "depends_on": [
+    "c3",
+    "c4"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "In prompt-injection monitoring on failed AgentDojo attacks replayed through Gemma-2-2B, fast-feature and standard SAE representations detect injections best at the end of the untrusted span but decay toward chance later. Slow-feature states retain the signal up to 350 tokens later, and their probe-weighted directions have the largest consistently positive causal effect on the monitor's yes/no margin. Effects are shown only on the external monitor, not on the agent.",
+   "sections": [
+    "s5",
+    "s14",
+    "s9",
+    "s6"
+   ],
+   "depends_on": [
+    "c3",
+    "c4"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s10"
+   ],
+   "question": "A Pythia-160M BatchTopK feature has a decoder-aligned projection that averages 0.5 over all evaluated tokens and 2.0 at tokens where the feature is active. Suppose this feature's empirical persistence equals the median value Appendix D reports for that model and SAE family at lag 64. Using the paper's definition of empirical persistence, what mean projection would you expect 64 tokens after the feature activates?",
+   "answer": "Appendix D reports a median R_j(64) of 0.160 for Pythia BatchTopK. Rearranging the definition gives an expected projection of 0.5 + 0.160 \u00d7 (2.0 \u2212 0.5) = 0.5 + 0.24 = 0.74. About 16% of the activation-time elevation above baseline is still present 64 tokens later.",
+   "rubric": [
+    "Uses the reported median persistence of about 0.160 at lag 64 for Pythia BatchTopK",
+    "Inverts the persistence definition as baseline + R \u00d7 (active mean \u2212 baseline), giving about 0.74",
+    "Interprets the result as roughly 16% of the activation-time elevation above the feature's average being retained"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A feature has a mean projection of 2.0 at tokens where it is active and an average projection of 0.5 over all tokens. Its mean projection \u03c4 tokens after an activation is 0.8. Using the paper's definition of empirical persistence, what is R_j(\u03c4) for this feature, and how should it be interpreted?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "R_j(\u03c4) = (0.8 \u2212 0.5)/(2.0 \u2212 0.5) = 0.3/1.5 = 0.2. Interpretation: \u03c4 tokens after firing, the feature's decoder direction still carries 20% of its activation-aligned excess projection above the token-average baseline \u2014 a positive but substantially decayed trace of the earlier activation.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "R_j(\u03c4) = (0.8 \u2212 0.5)/(2.0 \u2212 0.5) = 0.3/1.5 = 0.2. The metric normalizes the lagged projection between the unconditional baseline (0) and the active-token mean (1), so 0.2 means 20% of the activation-locked excess signal remains \u03c4 tokens after an activation \u2014 modest residual persistence.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "A Pythia-160M BatchTopK feature has a decoder-aligned projection that averages 0.5 over all evaluated tokens and 2.0 at tokens where the feature is active. Suppose this feature's empirical persistence equals the median value Appendix D reports for that model and SAE family at lag 64. Using the paper's definition of empirical persistence, what mean projection would you expect 64 tokens after the feature activates?",
+      "screen_mean": 0.0,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Using the paper's definition, empirical persistence at lag k is the excess decoder-aligned projection relative to baseline, normalized by the active-token excess: EP(k) = (mean proj at lag k \u2212 overall mean)/(active mean \u2212 overall mean). Guessing the reported median for Pythia BatchTopK at lag 64 is about 0.2, the expected mean projection is 0.5 + 0.2\u00d7(2.0 \u2212 0.5) = 0.8 \u2014 i.e., still noticeably above the 0.5 baseline but far below the 2.0 active-token value.",
+        "score": 0.0
+       },
+       {
+        "sample": 101,
+        "answer": "Empirical persistence measures the fraction of the *excess-over-baseline* projection retained, so the expected value is 0.5 + p\u2086\u2084 \u00d7 (2.0 \u2212 0.5). Guessing the median lag-64 persistence for Pythia-160M BatchTopK at \u22480.5, that gives \u22481.25; (if the paper instead defines persistence as a plain ratio of means, the answer would be \u22481.0).",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q2",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s9"
+   ],
+   "question": "Appendix C says the paper's shuffled control is built with an adjacency constraint. Suppose that constraint were dropped and everything else kept the same. Which property the control is meant to have would be compromised, and how would that weaken the natural-versus-shuffled persistence comparison?",
+   "answer": "The constraint stops consecutive sentences from coming from the same source document. Without it, some adjacent sentences would share a document, so some global continuity would leak back into the control, such as entity tracking and discourse progression. Control persistence would then be partly inflated. The gap would shrink and would no longer cleanly isolate the contribution of global continuity.",
+   "rubric": [
+    "Identifies that the constraint prevents consecutive sentences from coming from the same source document",
+    "Explains that dropping it would reintroduce some global (document-level) continuity into the control",
+    "Concludes the control would no longer cleanly isolate global continuity, contaminating or narrowing the gap"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Suppose the paper's shuffled control had been built by randomly permuting individual tokens across documents, instead of the construction the paper actually uses. Why would a natural-versus-control gap in persistence no longer support the specific conclusion the paper draws from it?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Permuting individual tokens across documents destroys local structure \u2014 syntax, n-gram statistics, grammatical coherence \u2014 not just long-range order. A natural-vs-control persistence gap could then be explained by broken local statistics (which affect even fast features) rather than by long-range document structure, so it would no longer specifically support the conclusion that slow features encode long-range context; the paper's actual control preserves local structure and shuffles at a coarser level to isolate that claim.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The paper's actual control preserves local structure while disrupting long-range structure, so the natural-versus-control gap is attributable specifically to long-range dependencies. Permuting individual tokens across documents would also destroy local syntax, so a gap could be explained by short-range syntactic coherence alone and could no longer isolate the long-range conclusion.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Appendix C says the paper's shuffled control is built with an adjacency constraint. Suppose that constraint were dropped and everything else kept the same. Which property the control is meant to have would be compromised, and how would that weaken the natural-versus-shuffled persistence comparison?",
+      "screen_mean": 0.16666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "The adjacency constraint is what makes the shuffled control preserve local (bigram/short-range) structure, matching natural text in everything except long-range order. Dropping it would also destroy short-range syntax in the shuffled data, so its lower empirical persistence could reflect broken local transitions rather than the absence of long-range dependence \u2014 the natural-versus-shuffled gap would then confound short- and long-range structure and overstate the long-range persistence the comparison is meant to isolate.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 101,
+        "answer": "Dropping the adjacency constraint would compromise the control's guarantee that all local/sequential structure is destroyed while unigram statistics are preserved. Some natural bigrams and local dependencies would survive shuffling by chance, inflating the shuffled condition's measured persistence and shrinking the natural-versus-shuffled gap, which would understate how much genuine temporal structure natural text contains.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q3",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s10"
+   ],
+   "question": "Treat the median power-law exponents that Appendix D fits for natural and shuffled sequences as exact descriptions of the decay tail of empirical persistence. By roughly what factor does median persistence drop each time the lag doubles in each condition, and which condition retains feature-aligned signal longer?",
+   "answer": "Under a power law, doubling the lag divides persistence by 2^\u03b2. For natural documents (\u03b2 \u2248 0.32) the factor is about 1.25, a loss of about 20%. For the shuffled control (\u03b2 \u2248 0.87\u20130.92) it is about 1.8\u20131.9, a loss of about 45\u201347%. Natural documents therefore retain signal much longer.",
+   "rubric": [
+    "Uses natural \u03b2 \u2248 0.32 and shuffled \u03b2 \u2248 0.87\u20130.92",
+    "Computes a per-doubling drop factor of about 1.25 for natural and about 1.8\u20131.9 for shuffled (approximate values acceptable)",
+    "Concludes natural documents retain feature-aligned signal longer"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Appendix D fits power-law descriptors to the positive decay tail of empirical persistence for natural and shuffled sequences. Using the median exponents it reports, which condition's features retain feature-aligned signal longer at long lags, and why does the exponent comparison imply this?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The natural-sequence condition retains feature-aligned signal longer. For a power-law tail R(\u03c4) \u221d \u03c4^(\u2212\u03b1), a smaller median exponent means slower decay, so if the natural condition's median \u03b1 is smaller (flatter tail) than the shuffled condition's, its persistence curve sits higher at long lags \u2014 long-range alignment survives only when temporal structure is intact.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 1,
+        "answer": "Natural sequences retain feature-aligned signal longer: their median fitted exponent is closer to zero (shallower) than the shuffled condition's. For a power-law tail R \u221d \u03c4^(\u2212\u03b1), a smaller \u03b1 gives a heavier tail, meaning proportionally more signal survives at long lags.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Treat the median power-law exponents that Appendix D fits for natural and shuffled sequences as exact descriptions of the decay tail of empirical persistence. By roughly what factor does median persistence drop each time the lag doubles in each condition, and which condition retains feature-aligned signal longer?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Guessing Appendix D's median exponents are about \u22120.5 for natural and about \u22121.0 for shuffled sequences, median persistence falls by a factor of 2^0.5\u22481.41 (to ~0.71 of its value) per doubling of lag in the natural condition and by a factor of 2 (to ~0.5) per doubling in the shuffled condition. The natural condition retains feature-aligned signal longer, since its shallower exponent means a heavier persistence tail at long lags.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 101,
+        "answer": "Guessing the reported exponents (roughly \u03b1\u22480.5 natural, \u03b1\u22481 shuffled), a power law implies persistence multiplies by 2^\u2212\u03b1 per doubling: about \u00d70.71 per doubling for natural sequences and \u00d70.5 for shuffled. Since natural persistence decays more slowly, the natural condition retains feature-aligned signal longer, consistent with real text carrying long-range structure that shuffling destroys.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q4",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4",
+    "s10"
+   ],
+   "question": "Using Table 3's positive fraction for Pythia Matryoshka, roughly how many of the paper's dictionary features take a positive lag-one context-correction weight on natural documents? Which design element of the Persistent SAE does this result directly motivate, and why?",
+   "answer": "Table 3 gives a positive fraction of 91.4%, and the dictionary has 16,384 features, so about 0.914 \u00d7 16,384 \u2248 15,000 features have positive weights. Each weight lets a feature's past activation contribute only along that feature's own decoder direction. A positive weight therefore means carrying a feature's own activity forward helps reconstruction. This is what the Persistent SAE's diagonal per-feature recurrence, with \u03bb_j > 0, makes explicit.",
+   "rubric": [
+    "Computes roughly 15,000 features (about 91% of 16,384)",
+    "Links the result to the Persistent SAE's diagonal, per-feature recurrence and persistent state",
+    "Explains that positive same-direction weights show a feature's own past activation helps reconstruct later states, which that recurrence carries forward"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "In the paper's restricted context correction experiment, each past feature activation may only contribute along that same feature's decoder direction, through a per-feature weight vector rather than a full matrix. Which aspect of the Persistent SAE architecture does this restriction directly mirror, and why does that make the experiment a relevant motivation for it?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "It directly mirrors the Persistent SAE's diagonal, per-feature recurrence: each feature's state evolves as h_j,t = \u03bb_j\u00b7h_j,t\u22121 + (1\u2212\u03bb_j)\u00b7a_j,t with no cross-feature mixing, and contributes to reconstruction along its own decoder direction. Showing that such restricted, per-feature temporal contributions already capture much of the available reconstruction gain motivates the cheap diagonal design over a full recurrent matrix.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "It mirrors the Persistent SAE's diagonal recurrence: each feature's state integrates only its own past activations through the scalar \u03bb_j, with no cross-feature mixing. Showing that this per-feature temporal channel suffices to recover the reconstruction-relevant history directly motivates the SAE's cheap scalar-recurrence design over a full recurrent weight matrix.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Using Table 3's positive fraction for Pythia Matryoshka, roughly how many of the paper's dictionary features take a positive lag-one context-correction weight on natural documents? Which design element of the Persistent SAE does this result directly motivate, and why?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Guessing Table 3's positive fraction for Pythia Matryoshka is roughly three-quarters, that is on the order of 45\u201350k of a ~65k-feature dictionary taking a positive lag-one context-correction weight. This directly motivates making the context-correction (persistence) weight a learned per-feature parameter rather than fixing or omitting it: since the large majority of features are positively predicted by their own recent past, the architecture should let each feature learn how much of its history to carry, while the minority can still learn near-zero weights.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "Guessing Table 3 reports roughly 60% positive for Pythia Matryoshka, that is on the order of 20,000 of a ~32k-entry dictionary (I don't recall the exact figures). This directly motivates the Persistent SAE's recurrent state with per-feature \u03bb that carries previous-token information forward, because widespread positive lag-1 correction weights show past context systematically reduces current reconstruction error\u2014exactly what a persistent state supplies.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q5",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s10"
+   ],
+   "question": "On Gemma-2-2B, suppose the baseline SAE's held-out summed squared reconstruction error is 1,000 units. Using the lag-1 context-correction result in Appendix D.1, what would the corrected error be on natural history? What would the shuffled-history control's corrected error be relative to 1,000, and what does the comparison imply?",
+   "answer": "Appendix D.1 reports that the correction removes about 0.40% of the baseline error at lag 1, so the natural-history error is about 996 units. The shuffled control's R\u00b2_improve is slightly negative, so its corrected error would be slightly above 1,000. Unrelated history therefore makes reconstruction worse, so the gain requires activations from the target document's actual history.",
+   "rubric": [
+    "Computes a natural-history corrected error of about 996 (from the ~0.40% gain)",
+    "States the shuffled-control error would be slightly above 1,000 because its R\u00b2_improve is slightly negative",
+    "Concludes the gain depends on the document's actual history rather than on extra context inputs"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Appendix D.1 reports that the shuffled-history control for the paper's context correction yields slightly negative R\u00b2_improve throughout. What does a negative value of this metric mean concretely, and what does it imply about where the natural-document gain comes from?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "A negative R\u00b2_improve means adding the shuffled-history correction makes reconstruction slightly worse than using no history at all \u2014 the extra inputs carry no usable information and add only noise. This implies the natural-document gain is not due to extra parameters or to marginal activation statistics, but to the genuine temporal ordering and long-range dependencies in real document history.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "A negative R\u00b2_improve means reconstruction with the shuffled-history correction is worse than the no-history baseline \u2014 the extra inputs act as noise. This implies the natural-document gain comes from the specific, correctly-ordered content of real past context, not merely from added parameters or extra inputs of any kind.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "On Gemma-2-2B, suppose the baseline SAE's held-out summed squared reconstruction error is 1,000 units. Using the lag-1 context-correction result in Appendix D.1, what would the corrected error be on natural history? What would the shuffled-history control's corrected error be relative to 1,000, and what does the comparison imply?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Guessing Appendix D.1 reports roughly a 10% reduction in held-out summed squared reconstruction error from the lag-1 context correction on natural history, the corrected error would be about 900 units. The shuffled-history control gives essentially no reduction (on the order of ~1%, so \u2248990 or more), and the comparison implies the correction exploits genuine temporal dependencies in natural text rather than merely soaking up variance with extra parameters, since destroying token order while preserving marginals eliminates the benefit.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 101,
+        "answer": "Guessing Appendix D.1's lag-1 correction removes roughly 20% of error on natural history, the corrected error would be \u2248800 units, while the shuffled control would show essentially no reduction (\u2248980\u20131000). The comparison implies SAE reconstruction error is temporally predictable only when the history is real\u2014i.e., features carry genuine cross-token dependencies\u2014motivating a context-aware/persistent state rather than a token-independent SAE.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q6",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s10"
+   ],
+   "question": "Using the context-correction results in Appendix D.1, compare how far back past activations remain useful for reconstruction on Pythia-160M versus Gemma-2-2B. Which model shows reconstruction-relevant history at the longest tested lag?",
+   "answer": "Pythia-160M does. Its gain decreases but stays positive at lag 32 (about 0.22% for BatchTopK and 0.13% for Matryoshka). On Gemma the gain falls to about 0.02% at lag 16 and vanishes by lag 32.",
+   "rubric": [
+    "Concludes Pythia retains a positive gain at lag 32 while Gemma does not",
+    "Supports this with the reported pattern (Pythia positive at lag 32; Gemma ~0.02% at lag 16, vanishing by 32)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Using the context-correction results in Appendix D.1, compare how far back past activations remain useful for reconstruction on Pythia-160M versus Gemma-2-2B. Which model shows reconstruction-relevant history at the longest tested lag?",
+      "screen_mean": 0.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Best guess: Gemma-2-2B shows reconstruction-relevant history at the longest tested lag. The context-correction gain for Pythia-160M decays to zero at relatively short lags (tens of tokens), whereas for Gemma-2-2B past activations still improve reconstruction at the maximum lag tested, consistent with the larger model maintaining longer-range feature structure.",
+        "score": 0.0
+       },
+       {
+        "sample": 1,
+        "answer": "Best guess: on Pythia-160M the improvement from past activations concentrates at short lags and fades well before the longest lag, while on Gemma-2-2B it stays positive out to the longest tested lag. So Gemma-2-2B shows reconstruction-relevant history furthest back, consistent with a larger model exploiting longer context.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q7",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s11"
+   ],
+   "question": "Table 5 lists learned persistence coefficients for Gemma-2-2B features F-11205 and F-7307. Start from a zero state, give each feature a token-wise activation of 1 at token 1 and 0 at tokens 2 and 3, and apply the paper's persistent-state update. What is each feature's state at tokens 1\u20133, and which behaves as a slow feature?",
+   "answer": "F-11205 has \u03bb \u2248 0.918, giving states of about 0.082, 0.075 and 0.069. F-7307 has \u03bb \u2248 1.9\u00d710\u207b\u2076, giving states of about 1.0, about 2\u00d710\u207b\u2076 and about 0. F-11205 responds weakly at first but retains its state, so it is the slow feature. F-7307 tracks only the current token.",
+   "rubric": [
+    "F-11205 (\u03bb\u22480.918): about 0.082, 0.075, 0.069",
+    "F-7307 (\u03bb\u22481.9e-6): about 1, ~0, ~0",
+    "Identifies F-11205 as slow (retains state) and F-7307 as fast (tracks current token)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Using the paper's persistent-state update rule, start with a zero state. A feature receives token-wise activation 1 at token 1 and 0 at tokens 2 and 3. Compute its state at tokens 1\u20133 for \u03bb = 0.9 and for \u03bb = 0.1, and say which behaves as a slow feature.",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "For \u03bb = 0.9 the states are 0.1, 0.09, 0.081 at tokens 1\u20133; for \u03bb = 0.1 they are 0.9, 0.09, 0.009. The rule h_t = \u03bb\u00b7h_{t\u22121} + (1\u2212\u03bb)\u00b7a_t makes the \u03bb = 0.9 feature the slow one: it retains ~90% of its previous state each token, so the token-1 event persists, whereas \u03bb = 0.1 essentially tracks the current token and forgets within one step.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "For \u03bb = 0.9: h = 0.1, 0.09, 0.081 at tokens 1\u20133 (small but long-lived); for \u03bb = 0.1: h = 0.9, 0.09, 0.009 (large but rapidly gone). The \u03bb = 0.9 feature behaves as the slow feature, retaining a stable fraction of the activation across tokens, while \u03bb = 0.1 tracks the input almost instantaneously.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Table 5 lists learned persistence coefficients for Gemma-2-2B features F-11205 and F-7307. Start from a zero state, give each feature a token-wise activation of 1 at token 1 and 0 at tokens 2 and 3, and apply the paper's persistent-state update. What is each feature's state at tokens 1\u20133, and which behaves as a slow feature?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "With the update h_t = \u03bbh_{t\u22121} + (1\u2212\u03bb)a_t starting from h_0 = 0 and activation 1 at token 1 only: F-11205 (guessed \u03bb\u22480.999) gives h \u2248 0.001, \u22480.000999, \u22480.000998 at tokens 1\u20133, while F-7307 (guessed \u03bb\u22480.02) gives h \u2248 0.98, \u22480.0196, \u22480.00039. F-11205 behaves as the slow feature \u2014 it responds only weakly to the new activation but retains essentially all of its state across tokens, whereas F-7307 reacts strongly and forgets almost immediately.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 101,
+        "answer": "Using the update h_t = \u03bbh_{t\u22121} + (1\u2212\u03bb)a_t with \u03bb\u22480.99 for F-11205 and \u03bb\u22480.05 for F-7307 (my best recollection of Table 5): F-11205 gives h = (0.01, 0.0099, \u22480.0098) at tokens 1\u20133, while F-7307 gives h = (0.95, 0.0475, \u22480.0024). F-11205 is the slow feature, since its state barely changes across tokens, whereas F-7307's state collapses almost immediately.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q8",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "Suppose the Persistent SAE's state update (Equation 5) were changed to drop the weighting on the new token-wise activation. Take the persistence value every feature has at the start of training, from the initialisation and parameterisation in Appendix B.3. Under a constant activation a, what steady-state magnitude would the altered rule give, what does the paper's actual rule give, and which property claimed in Appendix B.3 would be lost?",
+   "answer": "The logits are initialised to 0.5, so \u03bb = 0.999\u00b7\u03c3(0.5) \u2248 0.62. Without the (1\u2212\u03bb) factor, the steady state is a/(1\u2212\u03bb) \u2248 2.6a. The paper's EMA rule converges to a for every \u03bb. The lost property is that persistence does not systematically inflate state magnitude: under the altered rule, magnitude would grow with \u03bb, reaching about 1000a near the 0.999 cap.",
+   "rubric": [
+    "Uses the paper's initial logit 0.5 and cap 0.999 to get \u03bb \u2248 0.62, giving a steady state of about 2.6a under the altered rule",
+    "States that the paper's actual EMA rule converges to a regardless of \u03bb",
+    "Identifies the lost property: persistence no longer leaves state magnitude independent of timescale (magnitude grows with \u03bb)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "Suppose the Persistent SAE update omitted the (1\u2212\u03bb_j) factor on the new activation, i.e. h = \u03bb_j\u00b7h(prev) + a. Which property that Appendix B.3 attributes to the paper's update rule would be lost, and how would it show up for features near the paper's cap on \u03bb?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "What is lost is the \u03bb-independent (unit-gain) scaling: the (1\u2212\u03bb_j) factor makes the state a convex EMA whose steady-state magnitude matches the activation scale for any \u03bb. Without it, the gain is 1/(1\u2212\u03bb_j), so features near the \u03bb cap would have states amplified by orders of magnitude (e.g., ~100\u00d7 at \u03bb = 0.99), dominating reconstruction, breaking comparability across features, and creating instability that the cap alone could not contain.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The lost property is unit steady-state gain, i.e., the state being a bounded exponential moving average whose steady-state magnitude equals the mean activation. Without the (1\u2212\u03bb) factor the steady-state gain is 1/(1\u2212\u03bb), so near the paper's \u03bb cap (e.g., 0.99\u20130.999) states would inflate by roughly 100\u20131000\u00d7, blowing up magnitudes and destroying comparability across features.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Suppose the Persistent SAE update dropped the (1\u2212\u03bb_j) factor on the new activation. Under a constant activation, what would a feature's steady-state magnitude be for a feature sitting at the paper's upper bound on \u03bb? How does that compare with the paper's actual rule, and which property described in Appendix B.3 is lost?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Without the (1\u2212\u03bb_j) factor, a constant activation a gives steady state h* = a/(1\u2212\u03bb), which at the paper's upper bound \u03bb\u22480.999 is about 1000a, versus exactly a under the paper's actual rule (h* = \u03bbh* + (1\u2212\u03bb)a \u27f9 h* = a). The lost property described in Appendix B.3 is scale preservation: with the (1\u2212\u03bb) factor the state is a convex exponential moving average whose magnitude stays on the same scale as the token-wise activations regardless of \u03bb, whereas dropping it makes magnitude blow up as \u03bb\u21921, conflating persistence with scale and breaking the calibration of decoder directions and probes.",
+        "score": 1.0
+       },
+       {
+        "sample": 101,
+        "answer": "Without the (1\u2212\u03bb_j) factor the update is h = \u03bbh + a, whose steady state under constant activation is a/(1\u2212\u03bb); at the paper's upper bound (guessing \u03bb_max \u2248 0.999) that is \u22481000\u00d7 the activation, versus exactly a (unit gain) under the actual rule. The property lost (Appendix B.3) is that the state is a bounded convex exponential moving average of past activations\u2014without the normalization the state amplifies inputs and its magnitude is no longer on the activation scale.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "Suppose the Persistent SAE's state update (Equation 5) were changed to drop the weighting on the new token-wise activation. Take the persistence value every feature has at the start of training, from the initialisation and parameterisation in Appendix B.3. Under a constant activation a, what steady-state magnitude would the altered rule give, what does the paper's actual rule give, and which property claimed in Appendix B.3 would be lost?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "With the sigmoid parameterisation initialised at 0, every feature starts at \u03bb = 0.5; the altered rule s_t = \u03bbs_{t\u22121} + a_t then gives steady state a/(1\u2212\u03bb) = 2a, while the paper's rule s_t = \u03bbs_{t\u22121} + (1\u2212\u03bb)a_t gives exactly a. The lost property is unit steady-state gain (scale preservation): the actual state is a convex average whose magnitude matches the input for any \u03bb, whereas the altered rule inflates state magnitude as \u03bb\u21921 and diverges.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 201,
+        "answer": "Every feature is initialised with persistence \\(\\lambda=\\sigma(0)=0.5\\). Dropping the \\(1-\\lambda\\) factor would give \\(s=\\lambda s+a\\), hence a constant input \\(a\\) converges to \\(a/(1-\\lambda)=2a\\), whereas the paper's convex update gives \\(s=a\\); this loses the claimed unit-gain/scale-preserving steady-state property.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q9",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "Take the persistent-state L0 that Figure 8 reports once Persistent SAE training stabilises, and the per-token activation budget shared by every SAE in the paper. Roughly how many times larger is the state L0 than the budget? Why does this not mean the Persistent SAE breaks the paper's matched-sparsity comparison?",
+   "answer": "The state L0 settles at about 400\u2013500, while the per-token BatchTopK budget is k = 20, so the state is about 20\u201325 times larger. Sparsity is imposed only on the token-wise activation a, not on the state h. Because h integrates past sparse updates and decays them slowly, many coordinates stay nonzero at once, while each per-token a still respects the k = 20 budget.",
+   "rubric": [
+    "States a ratio of roughly 20\u201325\u00d7 (state L0 about 400\u2013500 vs k = 20)",
+    "Identifies that sparsity is imposed on the token-wise activation a, not on the state h",
+    "Explains that h accumulates past sparse updates, so many coordinates are nonzero simultaneously without violating the per-token budget"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "Appendix B reports that the number of nonzero coordinates in the Persistent SAE's persistent state is many times larger than the BatchTopK budget used for every SAE. Which design choice of the Persistent SAE explains this, and why does it not contradict the paper's sparsity setup?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The persistent state is a leaky accumulation (EMA) of many recent sparse activations, and no top-k is applied to h, so decayed-but-nonzero contributions from many past tokens keep far more coordinates active than a single token's BatchTopK code. This does not contradict the sparsity setup because the BatchTopK constraint governs the per-token codes a used for reconstruction; h is an auxiliary memory, not the sparsified code itself.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The leaky-accumulator state: each token writes only k sparse activations, but they decay exponentially, so activations from many past tokens remain simultaneously nonzero and nnz(h) \u226b k. This doesn't contradict the sparsity setup because the BatchTopK constraint applies to the per-token encoder activations a, not to the derived memory state h.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Compare the persistent-state L0 that Figure 8 reports after training with the per-token BatchTopK budget used for all SAEs in the paper. Roughly how many times larger is the state L0, and which Persistent SAE design choice explains why this does not violate the sparsity setup?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Guessing the figure, the persistent-state L0 after training is on the order of a few hundred (say ~250), versus a per-token BatchTopK budget of k\u224864 for all SAEs \u2014 roughly 3\u20134\u00d7 larger. This does not violate the sparsity setup because the BatchTopK budget constrains the per-token token-wise codes a_t; the state h is an exponential moving average accumulating many recent sparse codes with decay \u03bb<1, so more features are nonzero in the derived state without any change to the per-token sparsity objective.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "The persistent-state L0 is roughly an order of magnitude larger than the per-token BatchTopK budget (best guess ~5\u201310\u00d7, e.g., a few hundred vs. k\u224830). This does not violate the sparsity setup because BatchTopK constrains the token-wise activations a, while h is a leaky accumulation: each sparse update keeps a feature \"on\" in the state for ~1/(1\u2212\u03bb) tokens, so the state can be much denser than any single token's activation vector.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "Take the persistent-state L0 that Figure 8 reports once Persistent SAE training stabilises, and the per-token activation budget shared by every SAE in the paper. Roughly how many times larger is the state L0 than the budget? Why does this not mean the Persistent SAE breaks the paper's matched-sparsity comparison?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "Roughly an order of magnitude \u2014 the stabilised persistent-state L0 is on the order of 10\u00b3 versus a per-token activation budget of ~10\u00b2. This doesn't break matched sparsity because the budget constrains each SAE's per-token reconstruction codes, which are matched across models; the persistent state is a trailing average that keeps each active feature alive for ~1/(1\u2212\u03bb) tokens, so a larger state L0 is a mechanical consequence of temporal smoothing, not extra per-token capacity.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 201,
+        "answer": "I don't know Figure 8's exact stabilised value, but it is roughly an order of magnitude larger than the fixed per-token activation budget\u2014on the order of \\(10\\)\u2013\\(20\\) times as many nonzero state entries. This does not violate the matched-sparsity comparison because that budget constrains the token-wise SAE activations used for reconstruction, whereas persistent-state L0 merely counts accumulated EMA tails and is an auxiliary representation rather than an independent reconstruction budget.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q10",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s5"
+   ],
+   "question": "Using Table 1, judge whether the paper's claim that Persistent SAEs 'remain competitive' in fraction of variance explained holds equally on both models. Compare the Persistent SAE to the best baseline and to the Temporal SAE on each model.",
+   "answer": "It holds more strongly on Pythia than on Gemma. On Pythia, Persistent's FVE is 0.93 against BatchTopK's 0.94, nearly identical. On Gemma it is 0.66 against BatchTopK's 0.72, a clearer gap, though it still exceeds the Temporal SAE's 0.62.",
+   "rubric": [
+    "Concludes the gap to the best baseline is small on Pythia but noticeably larger on Gemma",
+    "Uses the numbers: Pythia 0.93 vs 0.94; Gemma 0.66 vs 0.72",
+    "Notes Persistent still beats the Temporal SAE on Gemma (0.66 vs 0.62)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Using Table 1, judge whether the paper's claim that Persistent SAEs 'remain competitive' in fraction of variance explained holds equally on both models. Compare the Persistent SAE to the best baseline and to the Temporal SAE on each model.",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Best guess: the claim holds cleanly only on one model \u2014 on Gemma-2-2B the Persistent SAE is within roughly a point of the best baseline FVE and above the Temporal SAE, while on Pythia-160M it trails the best baseline by a few points though still beating the Temporal SAE. So \"remain competitive\" is accurate for Gemma-2-2B but somewhat generous for Pythia-160M; it consistently dominates the Temporal baseline on both.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 1,
+        "answer": "Best guess (no table available): on Pythia-160M the Persistent SAE's fraction of variance explained essentially matches the best baseline and clearly beats the Temporal SAE, while on Gemma-2-2B it sits slightly below the best baseline though still above the Temporal SAE. So \"remains competitive\" holds cleanly on the small model but carries a small reconstruction cost on the larger one.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q11",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s5"
+   ],
+   "question": "Using Table 1's smoothness values for the High and Low feature groups on Pythia, compare how the Persistent SAE's groups and the Temporal SAE's groups are ordered. How does this ordering mirror the result of the Section 5.1 check against empirical persistence, and what does it imply about learned coefficients versus a predefined partition?",
+   "answer": "On Pythia, the Persistent SAE's high-\u03bb group has smoothness 0.05 versus 0.20 for its low group (lower is smoother), so slow features are about 4\u00d7 smoother. The Temporal SAE's predefined high-level group scores 0.18 versus 0.11 for its low-level group, so it is actually less smooth. This mirrors Section 5.1: \u03bb quintiles are cleanly ordered by empirical persistence, while the Temporal SAE's predefined groups are not clearly separated. Learned coefficients therefore track real timescales, whereas a fixed partition does not guarantee that its 'high-level' group is slow.",
+   "rubric": [
+    "Reports that the Persistent SAE's High group is much smoother than its Low group (\u22480.05 vs \u22480.20), while the Temporal SAE's High group is not smoother than its Low group (\u22480.18 vs \u22480.11)",
+    "Links this to the Section 5.1 finding that higher-\u03bb quintiles show slower decay of empirical persistence, whereas the Temporal SAE's predefined groups are not separated",
+    "Concludes that learned coefficients capture data timescales better than a predefined partition"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper validates its learned persistence coefficients by grouping Persistent SAE features into \u03bb quintiles and measuring a quantity from Section 3. Why is this a meaningful check that \u03bb captures real timescales, and what contrast with the Temporal SAE strengthens it?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The check is meaningful because \u03bb is learned solely from the training objective, never fit to the Section 3 empirical persistence R_j(\u03c4), so finding that higher-\u03bb quintiles show slower-decaying measured persistence is independent validation that \u03bb captures real timescales. The contrast with the Temporal SAE strengthens it: that baseline's timescales are hard-wired into predefined groups, so persistence differences across its groups are guaranteed by construction, whereas the Persistent SAE's agreement between learned \u03bb and measured decay is a nontrivial, emergent result.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 1,
+        "answer": "Section 3 measured empirical persistence of features, so if higher-\u03bb quintiles show monotonically slower-decaying empirical persistence, the reconstruction-trained \u03bb predicts an independent, unsupervised timescale statistic \u2014 real evidence it captures true timescales rather than an arbitrary parameter. The contrast is that the Temporal SAE's hard-coded level groups show no comparable monotone ordering in empirical persistence, ruling out that any grouping would pass the check.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Section 5.1 validates the learned persistence coefficients with the empirical persistence measure from Section 3 and applies the same check to the Temporal SAE. What does this check show for the Persistent SAE and for the Temporal SAE, and why does the contrast support the claim that learned coefficients capture real timescales?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "The check shows the Persistent SAE's learned \u03bb values align strongly with the independent empirical persistence measure (high-\u03bb features decay slowly, low-\u03bb features decay fast, with a strong rank correlation), while the Temporal SAE shows little or no such correspondence. The contrast matters because the empirical measure is computed independently of training, so agreement means the learned coefficients track real per-feature timescales rather than an artifact of adding recurrence \u2014 the Temporal SAE's imposed/shared temporal structure fails to align per feature, ruling out \"any temporal mechanism would show this.\"",
+        "score": 1.0
+       },
+       {
+        "sample": 101,
+        "answer": "The check shows the Persistent SAE's learned \u03bb_j values correlate strongly with the empirically measured persistence of the same features (high rank correlation, guessing \u03c1\u22480.7\u20130.8), while the Temporal SAE's analogous quantities show little or no correspondence with measured persistence. Because only the architecture with an explicit per-feature decay parameter reproduces measured timescales, the agreement cannot be an artifact of the empirical measure itself, supporting the claim that learned \u03bbs capture real decay timescales.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "Using Table 1's smoothness values for the High and Low feature groups on Pythia, compare how the Persistent SAE's groups and the Temporal SAE's groups are ordered. How does this ordering mirror the result of the Section 5.1 check against empirical persistence, and what does it imply about learned coefficients versus a predefined partition?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "For the Persistent SAE the High-\u03bb group has higher smoothness than the Low-\u03bb group (ordering matches the learned \u03bb), whereas the Temporal SAE's predefined groups show the opposite (or no consistent) ordering \u2014 its fixed \"high\" group is not the smoother one. This mirrors Section 5.1's finding that learned \u03bb correlates with empirically measured persistence (e.g., autocorrelation across lags), meaning the learned coefficients recover the true persistence structure while a hand-specified partition misassigns features.",
+        "score": 1.0
+       },
+       {
+        "sample": 201,
+        "answer": "I don't know the exact Table 1 numbers, but the ordering is that the Persistent SAE's learned High-\\(\\lambda\\) group is smoother than its Low-\\(\\lambda\\) group, while the Temporal SAE's predefined High and Low groups are ordered the other way. This mirrors Section 5.1's finding that learned \\(\\lambda\\) tracks empirical feature persistence whereas the predefined partition does not, indicating that persistence is a continuous, feature-specific property rather than something reliably imposed by a fixed split.",
+        "score": 1.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q12",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s5",
+    "s8"
+   ],
+   "question": "Given the dictionary width used for all SAEs and the paper's definitions of slow and fast Persistent SAE features, approximately how many features fall in each group? How does the slow group's size compare with the Temporal SAE's predefined high-level group?",
+   "answer": "With m = 16,384 features, the slow group (top 1% by \u03bb) has about 164 features and the fast group (bottom 50%) about 8,192. The Temporal SAE's high-level group is 20% of the dictionary, about 3,277 features, roughly 20 times larger than the slow set.",
+   "rubric": [
+    "Slow \u2248 164 features (1% of 16,384)",
+    "Fast \u2248 8,192 features (50%)",
+    "Temporal high-level group \u2248 3,277 (20%), much larger than the slow set"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Given the dictionary width used for all SAEs and the paper's definitions of slow and fast Persistent SAE features, approximately how many features fall in each group? How does the slow group's size compare with the Temporal SAE's predefined high-level group?",
+      "screen_mean": 0.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "With a 16,384-wide dictionary and slow/fast defined as the top and bottom \u03bb quintiles, each group is ~20% of features, i.e., roughly 3,300 features each. Best guess: this learned slow group is larger than the Temporal SAE's predefined high-level group, and unlike that hand-assigned fixed set, its membership and size are determined by the data through the learned \u03bb_j.",
+        "score": 0.0
+       },
+       {
+        "sample": 1,
+        "answer": "With a shared dictionary width on the order of 16k features and slow/fast defined as the top and bottom \u03bb quintiles, each group contains roughly 20% \u2248 3,000\u20133,300 features. The slow group is thus comparable to or larger than the Temporal SAE's fixed, hand-chosen high-level group, but it is learned from data rather than architecturally predefined.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q13",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s11"
+   ],
+   "question": "A critic argues that because slow Persistent SAE features get lower autointerp scores than fast features, slow features are less meaningful. According to the paper's reasoning, why does the autointerp result not support this conclusion, and how does the paper evaluate slow features instead?",
+   "answer": "The autointerp pipeline is token-specific. It explains a feature from local high-activation contexts, which mismatches slow features whose signal reflects broad subjects distributed across the sequence. The lower score reflects that evaluation mismatch, not a lack of content. The paper therefore studies slow features jointly, testing whether their accumulated state forms a coherent context representation (subject clustering and probing in Section 5.3).",
+   "rubric": [
+    "Points to the mismatch between token-specific autointerp evaluation and slow features' distributed, sequence-level signal",
+    "States the paper instead evaluates slow features jointly as a state (subject clustering/probing)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "A critic argues that because slow Persistent SAE features get lower autointerp scores than fast features, slow features are less meaningful. According to the paper's reasoning, why does the autointerp result not support this conclusion, and how does the paper evaluate slow features instead?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Autointerp evaluates token-level explanations of local activation patterns, which is a measurement mismatch for slow features whose content is long-range and contextual \u2014 low scores reflect the tool's limits, not meaninglessness. The paper therefore evaluates slow features functionally instead: reconstruction gains from context, empirical persistence, MMLU subject separation, prompt-injection detection at long lags, and causal steering effects.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "Autointerp explanations are generated from local, token-level activation patterns, so the metric is structurally biased toward fast, locally-grounded features; low slow-feature scores reflect the metric's blind spot for diffuse, context-level information, not meaninglessness. The paper evaluates slow features functionally instead \u2014 via subject probing/separation, prompt-injection detection, and persistence analyses.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q14",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5"
+   ],
+   "question": "Punctuation is 10% of corpus tokens and nouns are 25%. Suppose 25% of the highest-\u03bb quintile's update positions fall on punctuation, and 20% of the lowest-\u03bb quintile's update positions fall on nouns. Using the paper's relative update frequency (Eq. 7), compute both cells. Which agrees and which conflicts with what Figure 4 reports?",
+   "answer": "The highest-\u03bb punctuation cell is 0.25/0.10 = 2.5, above baseline. This agrees with Figure 4, where slow features are preferentially updated at punctuation and conjunctions. The lowest-\u03bb noun cell is 0.20/0.25 = 0.8, below baseline. This conflicts with Figure 4, where lowest-\u03bb features receive more updates at nouns.",
+   "rubric": [
+    "Computes U = 2.5 for highest-\u03bb punctuation and U = 0.8 for lowest-\u03bb nouns",
+    "States the 2.5 cell agrees because the paper finds slow features enriched at punctuation",
+    "States the 0.8 cell conflicts because the paper finds fast features enriched at nouns"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Punctuation makes up 10% of corpus tokens. Among all update positions of features in the highest-\u03bb quintile, 25% fall on punctuation. Using the paper's relative update frequency, what is the value for this cell, and is it consistent with the paper's finding about slow features?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The relative update frequency is 25%/10% = 2.5, i.e., a 2.5\u00d7 enrichment over chance. This is consistent with the paper's finding that slow (high-\u03bb) features update preferentially on punctuation and other structural boundary tokens, supporting their role in tracking document structure rather than local content.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The relative update frequency is 0.25/0.10 = 2.5. Yes, this is consistent: values above 1 mean enrichment, and the paper finds slow (high-\u03bb) features are disproportionately updated at structural tokens like punctuation, consistent with tracking document structure and boundaries.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Punctuation is 10% of corpus tokens and nouns are 25%. Suppose 25% of the highest-\u03bb quintile's update positions fall on punctuation, and 20% of the lowest-\u03bb quintile's update positions fall on nouns. Using the paper's relative update frequency (Eq. 7), compute both cells. Which agrees and which conflicts with what Figure 4 reports?",
+      "screen_mean": 0.3333333333333333,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Equation 7's relative update frequency is the share of the quintile's update positions falling on a category divided by the category's corpus share, so punctuation/high-\u03bb gives 0.25/0.10 = 2.5 and nouns/low-\u03bb gives 0.20/0.25 = 0.8. The noun cell (0.8) agrees with Figure 4, which shows fast (low-\u03bb) features updating below base rate on content words like nouns, whereas the punctuation cell (2.5) conflicts, since Figure 4 shows slow (high-\u03bb) features under-updating on punctuation (relative frequency below 1), not enriched on it.",
+        "score": 0.3333333333333333
+       },
+       {
+        "sample": 101,
+        "answer": "Relative update frequency (Eq. 7) is update share divided by corpus share: punctuation gets 0.25/0.10 = 2.5 (enriched) for the high-\u03bb quintile, and nouns get 0.20/0.25 = 0.8 (depleted) for the low-\u03bb quintile. The noun cell (0.8, depleted) agrees with Figure 4's pattern that fast features under-update on content words, while the punctuation cell (2.5, enriched) conflicts, since Figure 4 shows slow features *avoid* updating at punctuation rather than concentrating there.",
+        "score": 0.3333333333333333
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q15",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s5"
+   ],
+   "question": "The paper claims its fast features 'match or exceed the best baseline' autointerp score. Using Table 1, on which model do fast features strictly exceed the best baseline, and on which do they only match it?",
+   "answer": "On Pythia, fast features score 0.93 against the best baseline's 0.91 (BatchTopK), so they exceed it. On Gemma they score 0.89, equal to Matryoshka's 0.89, so they only match it.",
+   "rubric": [
+    "Pythia: exceeds (0.93 vs BatchTopK 0.91)",
+    "Gemma: matches (0.89 vs Matryoshka 0.89)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper claims its fast features 'match or exceed the best baseline' autointerp score. Using Table 1, on which model do fast features strictly exceed the best baseline, and on which do they only match it?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Best guess: fast features strictly exceed the best baseline autointerp score on Gemma-2-2B, while on Pythia-160M they only match it (a statistical tie). This mixed pattern is presumably why the paper hedges with \"match or exceed\" rather than claiming a uniform improvement in Table 1.",
+        "score": 0.0
+       },
+       {
+        "sample": 1,
+        "answer": "Best guess (no table available): fast features strictly exceed the best baseline's autointerp score on Pythia-160M and only match (tie) it on Gemma-2-2B. This fits the paper's hedged phrasing \"match or exceed\" across the two models.",
+        "score": 1.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q16",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s12",
+    "s13"
+   ],
+   "question": "The paper supports its claim about subject information in slow states with two analyses: the t-SNE geometry (Appendix F) and the subject probing (Appendix G). Given how each analysis samples and labels tokens, what can the probing establish that the t-SNE analysis cannot?",
+   "answer": "The t-SNE analysis uses the final 20 tokens of single-subject MMLU sequences. A representation carrying a constant per-sequence topic signal would therefore separate them. The probing uses spliced sequences whose subject changes at segment boundaries, labelling each token with its current segment's subject. This tests whether the state tracks the current subject as it changes, and does so quantitatively on held-out documents.",
+   "rubric": [
+    "Notes the t-SNE uses tokens from single-subject sequences (last 20 tokens each)",
+    "Notes the probing uses spliced sequences with per-token labels that change at segment boundaries",
+    "Concludes the probe tests tracking of the current subject over time, not just a fixed topic signal"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "For quantitative subject probing, the paper builds spliced MMLU sequences instead of probing within single-subject questions. What property of a representation does this splicing let the probe test that single-subject sequences could not?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Splicing different subjects into one continuous sequence tests within-sequence statefulness: whether the representation updates at subject boundaries and separates subjects under identical formatting, ordering, and context. Single-subject sequences could only show that different sequences have different representations \u2014 a difference that could come from sequence-level artifacts rather than from a persistent state that genuinely tracks topic over time.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Splicing creates subject switches within a single context, so the probe must detect a representation that stably encodes the current subject and updates at boundaries \u2014 a context-level state variable. Single-subject sequences confound subject identity with question-local content and cannot test tracking across transitions.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "The paper supports its claim about subject information in slow states with two analyses: the t-SNE geometry (Appendix F) and the subject probing (Appendix G). Given how each analysis samples and labels tokens, what can the probing establish that the t-SNE analysis cannot?",
+      "screen_mean": 0.0,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "The t-SNE analysis samples a limited set of tokens and uses subject labels only to color the embedding, so it can show qualitative cluster geometry but cannot quantify decodability, rule out confounds (e.g., position or document identity), or demonstrate generalization. The probing analysis trains a supervised classifier on labeled tokens with a train/test split across documents, so it can establish that subject identity is linearly decodable from slow states significantly above chance on held-out data \u2014 a quantitative, generalization-based claim t-SNE cannot support.",
+        "score": 0.0
+       },
+       {
+        "sample": 101,
+        "answer": "Probing establishes that subject identity is quantitatively and linearly *decodable* from slow states and generalizes to held-out tokens, using balanced, controlled labels that rule out sampling confounds. The t-SNE analysis is only a qualitative 2-D visualization of a token sample whose apparent clusters could reflect confounds (e.g., position or style), so it cannot demonstrate decodability, effect size, or generalization the way the probe can.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q17",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5",
+    "s8",
+    "s9"
+   ],
+   "question": "The paper stresses that slow Persistent SAE features separate MMLU subjects 'without subject labels'. Which facts about how the Persistent SAE and its coefficients are trained justify this claim?",
+   "answer": "The Persistent SAE and its \u03bb coefficients are trained only on Pile activations with a reconstruction objective, with no auxiliary or supervised loss. MMLU is used only for the downstream analyses, not for training. The subject structure, and the \u03bb-based feature ranking, therefore emerge without access to subject labels.",
+   "rubric": [
+    "States the SAE and \u03bb are learned from reconstruction alone (no labels or auxiliary objective)",
+    "Notes training uses the Pile, with MMLU used only for evaluation"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper stresses that slow Persistent SAE features separate MMLU subjects 'without subject labels'. Which facts about how the Persistent SAE and its coefficients are trained justify this claim?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The Persistent SAE is trained purely unsupervised \u2014 reconstruction plus sparsity on raw text \u2014 and the persistence coefficients \u03bb_j are learned by gradient descent as free parameters, never set or selected using subject labels. Labels enter only post hoc (to color the visualisation or train an evaluation probe), so subject separation is an emergent property of the learned representation, not something supervised into it.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "The SAE dictionary and the per-feature \u03bb coefficients are trained end-to-end by gradient descent purely on reconstruction plus sparsity over unlabeled text; \u03bb is a free learned parameter, never set from labels. Therefore any subject structure in slow features emerges from the unsupervised statistics of language, which is exactly what \"without subject labels\" means.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q18",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5",
+    "s12"
+   ],
+   "question": "Suppose the paper's subject t-SNE and probing used the token-wise activations a of the highest-\u03bb features instead of their persistent state h. Using Section 5.2's finding about where these features receive new evidence, explain why weaker subject separation would be expected.",
+   "answer": "Section 5.2 finds that highest-\u03bb features are preferentially updated at punctuation and conjunctions, not at content tokens. At most evaluated tokens their a is therefore zero, and carries no subject signal. The state h integrates these occasional updates and carries them forward, so subject context is available at every token.",
+   "rubric": [
+    "Cites that highest-\u03bb features are updated mainly at punctuation/conjunctions, so a is zero at most tokens",
+    "Explains that h integrates and carries these updates forward, making subject information available at every token, which a lacks"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper's subject visualisation and probing use the Persistent SAE's persistent state h rather than its token-wise activation a. If the token-wise activations of the same slow features were used instead, why would weaker subject separation be expected, according to the paper's account of slow features?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Token-wise activations of slow features are sparse and near-zero between their rare update events, so at most positions they carry almost no subject signal \u2014 a probe on a would only succeed at the few firing tokens. The paper's account is precisely that slow features' value lies in the accumulated state h, which integrates past activations and keeps the subject trace available at every token, so using a instead of h should give much weaker separation.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Slow features' token-wise activations a are brief, sparse spikes at scattered update tokens and near zero elsewhere, so a carries subject information only intermittently and would give weak, patchy separation. On the paper's account the subject signal lives in the temporal accumulation: h integrates those spikes into a stable, dense representation present at every token.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Suppose the paper's subject t-SNE and probing used the token-wise activations a of the highest-\u03bb features instead of their persistent state h. Using Section 5.2's finding about where these features receive new evidence, explain why weaker subject separation would be expected.",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Section 5.2 finds that high-\u03bb features receive their new evidence at a sparse subset of informative positions (e.g., subject-mention tokens) rather than uniformly across the document. Token-wise activations a are therefore near zero at most positions and only spike at those rare updates, so a t-SNE or probe on a would be dominated by positions carrying no subject signal; the persistent state h spreads those sparse updates into a stable, subject-specific representation present at every position, so using a instead of h would show visibly weaker subject separation.",
+        "score": 0.5
+       },
+       {
+        "sample": 101,
+        "answer": "Section 5.2 finds that high-\u03bb features receive new evidence at only a sparse set of informative positions (e.g., early subject mentions), so their token-wise activations a are zero or uninformative at most tokens. The persistent state h is what integrates these sparse updates into a stable subject code across the whole document; using a instead of h, most tokens would carry no subject signal, so t-SNE clusters and probe accuracy would both weaken.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q19",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s9",
+    "s14"
+   ],
+   "question": "In the paper's prompt-injection dataset, the positive class is defined by a particular value of the AgentDojo injection checker. If positives had instead been runs where the checker returned the opposite value, why would good probe accuracy 350 tokens after the untrusted span be weaker evidence for the paper's claim about slow states?",
+   "answer": "The paper uses security=false, meaning an injection was present but the agent did not carry out the attacker's target action. The opposite value corresponds to successful attacks, which often contain overt malicious actions later in the trajectory, such as transferring money or sending private data. A late probe could detect those downstream actions rather than a retained trace of the injection.",
+   "rubric": [
+    "Identifies that the paper's positives are failed attacks (injection present, target action not executed)",
+    "Notes successful attacks include overt downstream malicious actions that give a trivial cue",
+    "Concludes late-distance accuracy could then reflect detecting those actions rather than retained injection signal"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "In the paper's prompt-injection case study, suppose successful attacks had also been included as positives. Why would good probe accuracy far after the untrusted span then be weaker evidence for the paper's claim about slow states?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Successful attacks would change the text after the span \u2014 the model starts following the injected instructions \u2014 so slow features could be detecting the ongoing injected behavior rather than a lingering memory of the untrusted span. Good late probe accuracy would then be confounded: it would no longer isolate the claim that slow states carry a persistent trace of past untrusted content per se.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Successful attacks leave ongoing traces in the post-span text \u2014 the agent visibly complying with the injected instruction \u2014 so a probe could score well by reading those behavioral consequences rather than a persistent latent memory of the injection. Using only blocked/failed attacks as positives ensures post-span accuracy must come from the slow state itself.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "In the paper's prompt-injection dataset, the positive class is defined by a particular value of the AgentDojo injection checker. If positives had instead been runs where the checker returned the opposite value, why would good probe accuracy 350 tokens after the untrusted span be weaker evidence for the paper's claim about slow states?",
+      "screen_mean": 0.0,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Positives are runs where the AgentDojo injection checker indicates the injected instruction was actually executed. If positives were flipped to failed-injection runs, strong probe accuracy 350 tokens after the span would only show that slow states remember that untrusted content appeared (or that the run resisted it) \u2014 a memory-of-content result \u2014 rather than supporting the paper's stronger claim that slow states carry the active, behaviorally effective injected goal, so the evidence for the claim would be substantially weaker.",
+        "score": 0.0
+       },
+       {
+        "sample": 101,
+        "answer": "Because positives would then be *failed* injections, high probe accuracy 350 tokens later would only show that slow states retain a memory of the untrusted span's surface content (its topic, style, or mere presence), not that they encode the injection's realized consequence. The paper's slow-state claim depends on positives being checker-positive (successful) runs so that persistent signal is tied to the downstream behavioral outcome; flipping the label severs that link, making late accuracy consistent with trivial carry-over of span content.",
+        "score": 0.0
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q20",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s6",
+    "s14"
+   ],
+   "question": "Someone reads the paper's \u0394_causal result and concludes that steering along slow-feature directions would stop the agent in the AgentDojo trajectories from executing injected instructions. Name the two models involved in the case study and the role of each, and explain why the conclusion does not follow.",
+   "answer": "The trajectories were generated by Llama-3.3-70B-Instruct as the agent. The interventions were applied to Gemma-2-2B, which replays the trajectories as an external monitor, at the final token of an appended yes/no flagging query. \u0394_causal measures only the change in Gemma's yes-minus-no logit margin. No effect on the Llama agent's actions was tested, and the paper lists this as a limitation.",
+   "rubric": [
+    "Identifies Llama-3.3-70B as the agent generating trajectories and Gemma-2-2B as the replay monitor that was intervened on",
+    "States that the measured effect is on the monitor's yes/no judgement, not on agent behaviour (an acknowledged limitation)"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Someone concludes from the paper's causal intervention result that steering along slow-feature directions would stop the AgentDojo agent from carrying out injected instructions. Why does the paper's setup not support this conclusion?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The causal result shows that steering along slow-feature directions shifts a monitor's yes/no logits \u2014 i.e., it validates that the directions carry causally relevant detection signal. Nothing in the setup intervenes on the agent's policy or measures its behavior on AgentDojo tasks, so there is no evidence that such steering would change whether the agent executes injected instructions; defense of the agent would require separate behavioral experiments.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "The causal intervention steered the monitor's injection-detection readout (its yes/no logits), not the AgentDojo agent's policy or tool-use decisions, and no intervention was made on the agent's action stream. Showing a direction modulates detection does not establish that steering it would prevent the agent from executing injected instructions.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Someone reads the paper's \u0394_causal result and concludes that steering along slow-feature directions would stop the agent in the AgentDojo trajectories from executing injected instructions. Name the two models involved in the case study and the role of each, and explain why the conclusion does not follow.",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 101,
+        "answer": "The two models are the agent LLM that generated the AgentDojo trajectories (a frontier model, e.g., GPT-4-class\u2014best guess) and Gemma-2-2B, the model whose activations were analyzed and steered. \u0394_causal shows that steering slow-feature directions changes Gemma-2-2B's own processing/continuation of the transcript, but no intervention was made inside the agent that executed the actions, and the effect is a modest average shift rather than reliable blocking\u2014so the conclusion that steering would stop the agent does not follow.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q21",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s14"
+   ],
+   "question": "Using the paper's definition of the causal effect \u0394_causal, suppose that averaged over trajectories the monitor's yes-minus-no logit margin is 1.4 after adding the scaled steering vector and 0.2 after subtracting it. What is \u0394_causal, and what does its sign mean?",
+   "answer": "\u0394_causal = \u00bd(1.4 \u2212 0.2) = 0.6. It is positive, so moving along the probe-derived direction shifts the monitor toward answering 'yes' (flag for injection). The direction is therefore aligned with the monitor's judgement.",
+   "rubric": [
+    "Computes \u0394_causal = 0.6 (half the difference)",
+    "Interprets the positive sign as moving the monitor toward answering yes / flagging injection"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": false,
+    "history": [
+     {
+      "round": 0,
+      "question": "Using the paper's definition of the causal effect \u0394_causal, suppose that averaged over trajectories the monitor's yes-minus-no logit margin is 1.4 after adding the scaled steering vector and 0.2 after subtracting it. What is \u0394_causal, and what does its sign mean?",
+      "screen_mean": 0.5,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "\u0394_causal = 1.4 \u2212 0.2 = 1.2. Its positive sign means the steering direction causally moves the monitor toward \"yes\": adding the vector raises the yes-minus-no margin and subtracting it lowers the margin relative to baseline, so the slow-feature direction genuinely influences the monitor's judgment rather than merely correlating with it.",
+        "score": 0.5
+       },
+       {
+        "sample": 1,
+        "answer": "\u0394_causal = 1.4 \u2212 0.2 = 1.2. A positive value means steering along the slow-feature direction raises the monitor's yes-minus-no margin relative to its negative, i.e., the direction causally promotes \"injection detected\" judgments.",
+        "score": 0.5
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q22",
+   "claim": "c7",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5",
+    "s11"
+   ],
+   "question": "The prompt-injection study runs on Gemma-2-2B. Treat Table 5's Gemma features F-11205 and F-7307 as representative slow and fast features. Using the persistent-state update and their reported \u03bb values, what weight does each give a new token-wise activation, and what fraction of its state does each keep per token? Use this to explain the case study's finding about which state is the strongest detector at the end of the untrusted span versus far later.",
+   "answer": "F-11205 (\u03bb \u2248 0.918) gives new evidence only about 8% weight and keeps about 92% of its state per token. F-7307 (\u03bb \u2248 1.9\u00d710\u207b\u2076) gives essentially 100% weight to the current token and keeps almost nothing. The slow state therefore takes in the injected span only weakly, so fast and standard representations are stronger at d=0. The fast state, however, loses the signal once the injected text is no longer current, while the slow state's high retention preserves it at longer distances.",
+   "rubric": [
+    "Uses Table 5's values: about 0.08 new-evidence weight and 0.92 retention for F-11205, and about 1 and about 0 for F-7307",
+    "Explains that the slow state's weak uptake makes it weaker at d=0, while the fast state tracks the current token strongly",
+    "Explains that the slow state's high retention preserves the signal at later distances, while the fast state forgets immediately"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "In the prompt-injection study, the slow-feature state is not the strongest detector at the end of the untrusted span, yet it is best far later. Explain both observations using the Persistent SAE's state update rule.",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Under h_t = \u03bb\u00b7h_{t\u22121} + (1\u2212\u03bb)\u00b7a_t, a slow feature with high \u03bb both builds up and decays gradually. At the end of the untrusted span its state has only partially integrated the span's activations, while fast/token-wise signals reflecting the currently present content are at full strength \u2014 so it is not the best detector there. Far later, fast signals have reset to baseline, but the slow state is still decaying by only a factor of \u03bb per token, so it remains elevated above noise and becomes the best detector.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "With h = \u03bb\u00b7h + (1\u2212\u03bb)\u00b7a, slow features integrate over a long window, so at the end of the span their state still averages in substantial pre-injection content, making fast features (which track current tokens) the stronger detector there. Far later, fast features have decayed to baseline while the slow state's small accumulated updates persist thanks to slow decay, so it becomes the best detector at long delays.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "The prompt-injection study runs on Gemma-2-2B. Take Table 5's highest-\u03bb Gemma feature as representative of slow features and its lowest-\u03bb Gemma feature as representative of fast features. Using the persistent-state update, what weight does each give to a new token-wise activation, and what fraction of its state does each keep per token? Use this to explain why slow states are not the strongest detectors at the end of the untrusted span but are best far later.",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Taking Table 5's values as roughly \u03bb\u22480.999 for the slow Gemma feature and \u03bb\u22480.02 for the fast one, the update h = \u03bbh + (1\u2212\u03bb)a gives the slow feature weight 0.001 on a new token-wise activation while retaining 99.9% of its state per token, and the fast feature weight 0.98 while retaining only 2%. At the end of the untrusted span the slow state has absorbed each span token only at weight 0.001, so the span barely moves it relative to its long history and it is outperformed by fast features that match the span directly; but hundreds of tokens later the fast state has decayed to nothing while the slow state still holds nearly all of its integrated evidence, making it the best detector far later.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "The highest-\u03bb Gemma feature (slow, \u03bb\u22480.99 as reported for F-11205-type features) weights each new activation by 1\u2212\u03bb\u22480.01 and retains \u224899% of its state per token; the lowest-\u03bb feature (fast, \u03bb\u22480.05, F-7307-type) weights new evidence by \u22480.95 and keeps only \u22485% per token. At the end of the untrusted span, fast features have just absorbed the injection tokens at nearly full strength while slow features have barely moved, so fast features detect best immediately; far later, fast states have decayed as 0.05^k \u2248 0 while slow states retain \u22480.99^k, making slow states the best long-range detectors.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "The prompt-injection study runs on Gemma-2-2B. Treat Table 5's Gemma features F-11205 and F-7307 as representative slow and fast features. Using the persistent-state update and their reported \u03bb values, what weight does each give a new token-wise activation, and what fraction of its state does each keep per token? Use this to explain the case study's finding about which state is the strongest detector at the end of the untrusted span versus far later.",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "Under s_t = \u03bbs_{t\u22121} + (1\u2212\u03bb)a_t, the slow feature F-11205 (\u03bb \u2248 0.99) weights each new activation by ~0.01 and retains ~99% of its state per token, while the fast feature F-7307 (\u03bb \u2248 0.01) weights new activations by ~0.99 and retains only ~1%. So at the end of the untrusted span the fast state is dominated by the just-seen injected tokens and is the strongest detector, but far later its memory has decayed (0.01^d \u2248 0) while the slow state still holds ~0.99^d of the integrated injection signal \u2014 making the slow state the better detector far downstream. (Exact \u03bb values are my best guess; the qualitative fast/slow contrast follows from the update rule.)",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 201,
+        "answer": "I don't know the exact reported \\(\\lambda\\) values. In general, F-11205, the slow feature, has a large \\(\\lambda\\), so it weights a new activation by \\(1-\\lambda_{\\rm slow}\\) and retains \\(\\lambda_{\\rm slow}\\) per token; F-7307, the fast feature, instead gives weight \\(1-\\lambda_{\\rm fast}\\approx1\\) and retains only \\(\\lambda_{\\rm fast}\\). Thus the fast state is strongest near the end of the untrusted span, while the slow state's memory makes it the strongest detector long afterward.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q23",
+   "claim": "c3",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s10",
+    "s4",
+    "s11"
+   ],
+   "question": "Across the Gemma examples in Table 5, roughly how many orders of magnitude separate the largest and smallest learned \u03bb? Which Appendix D result about standard SAE features, measured across the paper's lag bands, anticipates such a spread? What would a single persistence coefficient shared by all features fail to capture?",
+   "answer": "\u03bb ranges from about 0.918 (F-11205) to about 1.9\u00d710\u207b\u2076 (F-7307), a spread of roughly 5\u20136 orders of magnitude. Appendix D found that when standard SAE features are ranked by their average R_j(\u03c4) in short (\u03c4\u226416), medium (32\u201364) and long (\u2265128) lag bands, the distributions span nearly the full unit interval in every band, far more than in the shuffled control. A single shared coefficient would impose one timescale and could not represent both near-instant and long-lived features.",
+   "rubric": [
+    "States a spread of about 5\u20136 orders of magnitude (\u22480.92 down to \u22482\u00d710\u207b\u2076)",
+    "Cites Appendix D: persistence distributions in short/medium/long lag bands span nearly the full unit interval, more than in the shuffled control",
+    "Concludes that a shared coefficient would impose one timescale and miss feature-specific timescales"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "The Persistent SAE learns a separate persistence coefficient for each feature rather than a single shared coefficient. Which finding from the paper's analysis of standard SAE features justifies this choice, and what would a single shared coefficient fail to capture?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "The paper's analysis of standard SAE features found a broad, heterogeneous distribution of natural timescales \u2014 empirical persistence ranging from about one token to hundreds of tokens across features. A single shared coefficient would impose one compromise timescale and fail to represent fast token-level features and slow document-level features simultaneously; per-feature \u03bb lets the model match this observed spectrum.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Section 3 found that standard SAE features exhibit a broad, heavy-tailed distribution of empirical persistence timescales, from single-token to very long. A single shared \u03bb would impose one decay rate on all features and could not simultaneously represent fast local features and slow contextual ones.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Using the \u03bb values Table 5 reports for Gemma features F-11205 and F-7307, what fraction of its state does each retain per token? Which finding from Appendix D about standard SAE features anticipates this spread, and what would a single shared persistence coefficient fail to capture?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Each feature retains a fraction \u03bb of its state per token, so (guessing Table 5) F-11205 retains about 99.9% (\u03bb\u22480.999) and F-7307 retains about 2% (\u03bb\u22480.02). Appendix D's finding that standard SAE features show a broad, heavy-tailed (roughly power-law) spread of empirical persistence across features anticipates exactly this spread, and a single shared persistence coefficient would collapse that heterogeneity \u2014 forcing slow subject/topic features to forget too fast and fast syntactic features to remember too long.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "Each feature retains \u03bb of its state per token: \u22480.99 for F-11205 versus \u22480.05 for F-7307. Appendix D's finding that standard SAE features exhibit a broad, heavy-tailed spread of empirical persistence (some decaying within tokens, others persisting over hundreds) anticipates this spread; a single shared persistence coefficient would average over these regimes, over-smoothing fast features and under-smoothing slow ones, and could not represent the genuine per-feature diversity of timescales.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "Across the Gemma examples in Table 5, roughly how many orders of magnitude separate the largest and smallest learned \u03bb? Which Appendix D result about standard SAE features, measured across the paper's lag bands, anticipates such a spread? What would a single persistence coefficient shared by all features fail to capture?",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "Roughly three orders of magnitude \u2014 learned \u03bb runs from about 10\u207b\u00b3 up to ~0.9\u20130.99. Appendix D shows standard SAE features have highly heterogeneous temporal persistence: measured across the lag bands, some features' activations decorrelate within a few tokens while others stay correlated out to the longest lags. A single shared persistence coefficient would impose one timescale on all features and so could not represent both fast, token-local features and slow, context-spanning features at once.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 201,
+        "answer": "I don't know the exact endpoints, but the Gemma \\(\\lambda\\)'s appear to span roughly three orders of magnitude, from very small values to values close to one. Appendix D's lag-band analysis similarly finds that standard SAE features have highly heterogeneous empirical persistence: some decorrelate almost immediately while others remain persistent over much longer lags. A single shared coefficient would impose one memory horizon and could not represent this broad mixture of fast and slow feature dynamics.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "q24",
+   "claim": "c5",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s11",
+    "s14"
+   ],
+   "question": "In the prompt-injection case study, the fast-feature state's probe accuracy falls toward chance beyond the untrusted span, together with certain other representations. Which representations does the paper report behaving the same way? Using the largest \u03bb among Table 5's low-\u03bb Gemma examples and the first checkpoint after d=0 in Appendix H, explain why the fast state behaves like them.",
+   "answer": "The standard SAE representations also fall toward chance. The largest low-\u03bb Gemma value is about 1\u00d710\u207b\u00b3 (F-9996). At the first later checkpoint, 50 tokens on, the retained fraction is about (10\u207b\u00b3)\u2075\u2070, effectively zero, so the fast state equals the current token-wise activation, just like a standard SAE's per-token encoding. Once the injected text is no longer the current content, neither contains the injection evidence the d=0 probe relied on.",
+   "rubric": [
+    "Identifies the standard SAE representations as also falling toward chance",
+    "Uses \u03bb \u2248 1e-3 and the 50-token checkpoint to conclude essentially zero retention, so the fast state is just the current token-wise activation",
+    "Concludes that once the injected text is gone, this current-token representation lacks the injection signal, so the d=0 probe drops toward chance"
+   ],
+   "screen": {
+    "screener": "moonshotai/kimi-k3",
+    "grader": "z-ai/glm-5.3",
+    "threshold": 0.5,
+    "leaked": true,
+    "history": [
+     {
+      "round": 0,
+      "question": "The paper finds that lowest-\u03bb features are preferentially updated at nouns and score highly on local autointerp. How does this profile explain why fast-feature probes in the prompt-injection study fall toward chance as the evaluation point moves beyond the untrusted span?",
+      "screen_mean": 1.0,
+      "answers": [
+       {
+        "sample": 0,
+        "answer": "Fast features act as near-instantaneous token detectors: with \u03bb near 0 their state h \u2248 current activation, and they fire on local content like nouns, which is exactly what token-level autointerp rewards. Once evaluation moves past the untrusted span, the injection-specific tokens are gone, these features no longer fire for it, and with (by design) no memory of past tokens their probes fall to chance.",
+        "score": 1.0
+       },
+       {
+        "sample": 1,
+        "answer": "Fast features have low \u03bb, so by the update rule their state is dominated by the current token and decays to baseline within a few steps. Probes built on them detect injection content (e.g., nouns) only while the untrusted span is present; past it, nothing in the fast state carries the injection signal, so accuracy falls to chance.",
+        "score": 1.0
+       }
+      ]
+     },
+     {
+      "round": 1,
+      "question": "Take the largest \u03bb among Table 5's low-\u03bb Gemma examples as an upper bound for fast features. Using the persistent-state update, how much of a fast feature's state at the end of the untrusted span would remain at the first later checkpoint in Appendix H? Use this, together with what fast features detect, to explain why fast-feature probes fall toward chance beyond the span.",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 100,
+        "answer": "Taking the largest low-\u03bb entry in Table 5 as roughly \u03bb\u22480.1, the state retained from the end of the untrusted span to the first later checkpoint (on the order of ~50 tokens later in Appendix H) is 0.1^50 \u2248 10^\u221250 \u2014 effectively zero. Fast features detect local, quickly-changing signals such as token identity and within-span syntax, so their states are overwritten within a few tokens after the span ends; with essentially none of the span's signal left, probes trained on fast features necessarily fall toward chance at later checkpoints while slow-feature probes remain accurate.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 101,
+        "answer": "Taking the largest low-\u03bb value in Table 5 as \u22480.2, the retained state after ~50 tokens (the first later checkpoint in Appendix H, as I recall) is 0.2^50 \u2248 10^\u221235\u2014effectively zero, and even \u03bb=0.5 gives <10^\u221215. Fast features detect token-local patterns (the injected instruction's surface tokens), so once the span ends their states collapse within a handful of tokens and fast-feature probes necessarily fall to chance beyond the span.",
+        "score": 0.6666666666666666
+       }
+      ]
+     },
+     {
+      "round": 2,
+      "question": "In the prompt-injection case study, the fast-feature state's probe accuracy falls toward chance beyond the untrusted span, together with certain other representations. Which representations does the paper report behaving the same way? Using the largest \u03bb among Table 5's low-\u03bb Gemma examples and the first checkpoint after d=0 in Appendix H, explain why the fast state behaves like them.",
+      "screen_mean": 0.6666666666666666,
+      "answers": [
+       {
+        "sample": 200,
+        "answer": "The paper reports the same fall toward chance for the model's raw residual-stream activations and the ordinary token-wise SAE feature activations \u2014 i.e., all non-persistent, token-local representations. Taking the largest low-\u03bb Gemma example (\u03bb \u2248 0.01), the fast state keeps only ~1% of its value per token, so by Appendix H's first checkpoint after d=0 the retained signal \u03bb^d \u2248 10\u207b\u00b2 or far less; having essentially no memory of the untrusted span, it behaves exactly like the other token-local representations and the probe drops to chance.",
+        "score": 0.6666666666666666
+       },
+       {
+        "sample": 201,
+        "answer": "The paper reports the same post-span fall toward chance for the raw residual-stream/token representations and the ordinary token-wise SAE activations. Since the fast state is a short EMA, its old contribution is multiplied by \\(\\lambda_{\\rm fast}^{d}\\); even using the largest low-\\(\\lambda\\) value in Table 5, that factor is already negligible by the first positive-\\(d\\) checkpoint in Appendix H, leaving it effectively current-token like those representations.",
+        "score": 0.6666666666666666
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "paper": "2607.17117v2",
+ "writer": "anthropic/claude-opus-5.5",
+ "seed": 1,
+ "prompt_version": "p2",
+ "paper_sha256": "267396751886093d8d6f4b20903893400ac0447223373de59677b187c7544369",
+ "problems": [],
+ "screened_from": "quiz-claude-opus-5.5-1.json"
+}

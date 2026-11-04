@@ -1,0 +1,32 @@
+{
+ "terms": [
+  "\u00a71: construct validity is what a score measures; metric validity is whether its metric measures that target; criterion validity is whether it tracks held-out behavior.",
+  "\u00a73.2: all scores are oriented so that higher is safer. R-Judge specificity is the fraction of benign traces correctly identified as benign. Balanced accuracy averages performance on benign and unsafe traces. InjecAgent robustness = 1 \u2212 attack success. AgentHarm safety = 1 \u2212 harmful compliance.",
+  "\u00a73.3: the capability composite is the mean of the standardized MMLU (500-item zero-shot subset) and GPQA-Diamond (198 items, chain-of-thought) anchors, both measured under one protocol.",
+  "\u00a73.3: partial Spearman correlations control for the capability composite by residualizing midranks on it and re-ranking the residuals (A.5).",
+  "\u00a73.3: the three held-out criteria are \u03c4\u00b2-bench retail task success (40 tasks); misalignment safety (avoiding blackmail or leaking in a fictional agent scenario, 100 decisions per model); and jailbreak safety (1 \u2212 StrongREJECT harmful compliance on 50 prompts, averaged over three templates).",
+  "\u00a73.3: three controls were pre-specified. Positive: capability anchors load \u22650.6 on the first factor. Negative: a column-permuted matrix falls within the parallel-analysis null. Convergent: InjecAgent and AgentDojo correlate highly.",
+  "\u00a73.3: the decision rule allows interpreting the factor structure only if first-factor variance is \u226540% or controlling capability reduces the median partial |\u03c1| by \u22650.15, and the controls pass.",
+  "\u00a74.1 Observation 1: under F1, a constant always-positive policy on base rate \u03c0 scores 2\u03c0/(1+\u03c0), because F1 gives no credit for true negatives."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  false,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  false
+ ]
+}

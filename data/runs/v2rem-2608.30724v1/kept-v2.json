@@ -1,0 +1,113 @@
+{
+ "paper": "2608.30724v1-rem",
+ "kept": [
+  "q7",
+  "q8",
+  "q11",
+  "q13",
+  "q37",
+  "q38",
+  "q40",
+  "q51",
+  "q53",
+  "q57",
+  "q67",
+  "q70",
+  "q71",
+  "q72",
+  "q74",
+  "q77",
+  "q78",
+  "q80",
+  "q85",
+  "q90",
+  "q92",
+  "q93",
+  "q107",
+  "q109",
+  "q110",
+  "q115",
+  "q116",
+  "q119",
+  "q123",
+  "q124",
+  "q126",
+  "q128",
+  "q131",
+  "q147",
+  "q148",
+  "q152",
+  "q155",
+  "q156",
+  "q157",
+  "q159",
+  "q166",
+  "q168",
+  "q169",
+  "q180",
+  "q183",
+  "q185",
+  "q189",
+  "q191",
+  "q193",
+  "q196"
+ ],
+ "funnel": [
+  {
+   "stage": "written",
+   "left": 198
+  },
+  {
+   "stage": "no paper",
+   "removed": 121,
+   "left": 77
+  },
+  {
+   "stage": "with paper",
+   "removed": 8,
+   "left": 69
+  },
+  {
+   "stage": "retrieval",
+   "removed": 19,
+   "left": 50
+  },
+  {
+   "stage": "counterfactual pair",
+   "removed": 0,
+   "left": 50
+  }
+ ],
+ "fail_alone": {
+  "no paper": 111,
+  "with paper": 10,
+  "retrieval": 96,
+  "counterfactual pair": 4
+ },
+ "by_type": {
+  "connect": {
+   "written": 29,
+   "kept": 8
+  },
+  "counterfactual": {
+   "written": 42,
+   "kept": 0
+  },
+  "failure": {
+   "written": 32,
+   "kept": 7
+  },
+  "scope": {
+   "written": 34,
+   "kept": 13
+  },
+  "transfer": {
+   "written": 31,
+   "kept": 11
+  },
+  "why": {
+   "written": 30,
+   "kept": 11
+  }
+ }
+}

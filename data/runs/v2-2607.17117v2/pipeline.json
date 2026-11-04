@@ -1,0 +1,24 @@
+{
+ "paper": "2607.17117v2",
+ "status": "done",
+ "error": null,
+ "finished": "2026-11-04T02:57:39Z",
+ "seconds": 8841,
+ "logged_cost": {
+  "glossary": 0.0798,
+  "write_v2": 3.5166,
+  "comp": 0.7138,
+  "filter_retrieval": 1.1608,
+  "grade": 0.8824,
+  "filter_withpaper": 1.0696,
+  "filter_nopaper": 1.4356,
+  "obf": 4.6697,
+  "take_none": 0.5475,
+  "take_orig": 0.8501,
+  "take_obf": 0.9084,
+  "take_comp": 0.5492,
+  "take_compobf": 0.6137,
+  "grade_v2": 1.6074
+ },
+ "note": "logged_cost excludes failed calls and includes any earlier runs in this directory"
+}

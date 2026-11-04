@@ -1,0 +1,25 @@
+{
+  "abstract": "Large language models increasingly operate as persistent assistants in user-facing, shared-session, and tool-augmented settings. When users disclose sensitive information during an active conversation, that information may remain behaviorally recoverable through later prompts even after the dialogue shifts to unrelated topics. We introduce PrivDrift, a benchmark for auditing whether user-disclosed secrets remain recoverable after conversational topic drift and persuasion-based probing. PrivDrift contains 1,000 controlled multi-turn dialogues with seeded secrets, content-dense drift turns, and standardized extraction probes. Across three LLMs with extended context windows, dialogue-level hybrid leakage remains substantial, ranging from 38.7% to 54.6%, and varies strongly by model, secret type, and persuasion intensity. Within the tested drift window, additional topic drift does not reliably reduce leakage, suggesting that privacy risk in active LLM contexts should be evaluated as a persistent behavioral failure mode rather than only as training-data memorization or immediate jailbreak behavior.",
+  "arxiv_id": "2609.30094",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Luciano Maldonado"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 6,
+  "hidden_style_hits": 0,
+  "html_sha256": "3141763c39eeb026d999cad183cfab965b7c5799f05d5d5c528c662333a87b96",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.AI",
+  "published": "2026-09-24T16:39:18Z",
+  "rank": "04ab9af1bbb310ce48c2f800f74f14a9b1a466804be3f6ad55dd742b30e9457a",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2609.30094v2",
+  "stratum": "B",
+  "text_sha256": "036fd1254f0e68f8e0d91537a568b47ac21aaf54d7af0e4af6a0f1a4cc732f2b",
+  "title": "PrivDrift: Auditing User-Secret Leakage Under Topic Drift in Active LLM Conversations",
+  "version": 2,
+  "words": 4019
+}

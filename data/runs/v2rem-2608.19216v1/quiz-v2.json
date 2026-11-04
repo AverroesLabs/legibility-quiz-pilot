@@ -1,0 +1,3551 @@
+{
+ "paper": "2608.19216v1-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "392dbedff97a531dddebc7295273d888c5e335e8137bd748653ab205d20da25d",
+ "batches": 5,
+ "written_per_batch": [
+  40,
+  40,
+  41,
+  40,
+  39
+ ],
+ "cost_per_batch": [
+  0.408704,
+  0.512604,
+  0.559796,
+  0.563904,
+  0.790044
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "In regulated deployment, a control protocol becomes part of a wider oversight system (model validation, internal audit, supervisory reporting, incident management, board accountability). Pricing the control tax therefore requires attention to that system: Layer 2, institutional embedding, and not only Layer 1, protocol design.",
+   "methods": [
+    "Two-layer framing (protocol design vs institutional embedding)",
+    "Literature synthesis across AI control, scalable oversight, sovereign AI, compute governance and structural asymmetry",
+    "Illustrative stress scenario feeding monitor flags into incident management"
+   ],
+   "results": [
+    "Three recurring distinctions: monitoring vs acting on monitoring; detecting vs explaining; improving safety vs preserving usefulness",
+    "Stress scenario: a monitor flag leads to operations triage, then the model risk function, case-record review, a vendor ticket, scope-narrowing and regulator-notification decisions"
+   ],
+   "conditions": [
+    "Applies to regulated deployers that consume vendor models via API or managed endpoints"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "The AI stack can be described for a regulated deployer through four layers: data, model, infrastructure and interaction. An import-dependent deployer typically retains its own data, lacks model access, has partial infrastructure access, and has interaction access that depends on its own application architecture.",
+   "methods": [
+    "Adaptation of the four-pillar sovereign-AI framework, replacing the operational pillar with an interaction layer (prompts, outputs, tool calls, records)",
+    "Access audit in the payments case"
+   ],
+   "results": [
+    "Typical access: weights, architecture and activations are vendor-held; serving uses a foreign-operated cloud region, sometimes with a residency rider",
+    "Case audit: Data shared, Model vendor-led, Infrastructure shared, Interaction operator-led"
+   ],
+   "conditions": [
+    "Offered as a descriptive aid, not a settled taxonomy"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "For a regulated deployer, the practical questions raised by control protocols are largely organisational: who calibrates the monitor, who reviews flags, how behaviour is documented, and cost and latency.",
+   "methods": [
+    "Protocol-considerations table",
+    "Protocol feasibility discussion in the case"
+   ],
+   "results": [
+    "Output monitoring: calibration and documentation, thresholds justified to model risk",
+    "Activation-level monitoring needs scarce specialist expertise",
+    "Defer-to-trusted: workflow and customer-treatment design",
+    "Resampling: cost and latency against service levels",
+    "Human audit: staffing and escalation",
+    "Weights patching is handled through the vendor",
+    "Operator treats activation-level and interpretability monitoring as longer-term possibilities"
+   ],
+   "conditions": [
+    "Model access is absent under API or managed endpoints"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "The realised control tax equals instrumented-control cost plus sovereignty discount cost, where the latter is an informal umbrella for procurement, legal and vendor-management frictions that overlap third-party risk management. Oversight costs tend to shift between budget lines rather than disappear.",
+   "methods": [
+    "Conceptual decomposition (not an accounting identity)",
+    "Four spend categories in the case: contractual, architectural, capacity, scope decisions"
+   ],
+   "results": [
+    "Control tax is expected to be experienced as an extension of existing third-party and model risk budgets",
+    "Relying on vendor attestations lowers validation effort but raises contract management",
+    "Narrowing scope lowers monitoring effort but raises manual processing"
+   ],
+   "conditions": [
+    "Sovereignty discount is not operationalised or estimated by the simulator"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "The paper adopts Position C (calibrated or bounded control) as a working frame, because Positions A (safety-maximalist) and B (sovereignty-maximalist) are not actionable on relevant timescales. It guides oversight with a six-consideration rubric that is not a weighted formula.",
+   "methods": [
+    "Comparison of three positions",
+    "Six considerations: severity and reversibility, protocol maturity, vendor concentration, absorptive capacity, cost vs value, coalition paths"
+   ],
+   "results": [
+    "A implies abstention from committed deployments; B implies capability investment many states cannot make this decade",
+    "Against strong A: deployers already govern uninspectable services",
+    "Against strong B: proportionate oversight can do meaningful work",
+    "Pax Silica is cited as evidence that supply may be tied to political alignment"
+   ],
+   "conditions": [
+    "Weights of the considerations vary by sector and remain an open question"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "A synthetic payments-dispute simulation environment provides reusable tooling and construct validation. It is not real-world evidence, and no quantitative conclusions are drawn from it.",
+   "methods": [
+    "20 curated access profiles, 10 protocols, 3 agents (honest, careless, stealthy access-aware), thresholds 0.35/0.55/0.75, audit budgets 2%/5%/20%, 5 seeds, 50 cases per condition",
+    "Catastrophic classes C1 to C4 as labels",
+    "Unitless decomposed cost proxy"
+   ],
+   "results": [
+    "27,000 condition rows and 1,350,000 case simulations completed, with all metrics produced",
+    "No causal attribution to individual settings because configurations are curated, not full-factorial",
+    "Scripted access-aware agent is far weaker than a capable red team",
+    "No sovereignty-discount estimates reported"
+   ],
+   "conditions": [
+    "Human factors and institutional overheads are not modelled",
+    "A full-factorial design is supported by the code"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Evaluation for regulated settings should report prevention, diagnosis, usefulness and cost together. Joint safety-plus-usefulness targets guard against counting usefulness loss, for example from scope restriction, as a free safety gain.",
+   "methods": [
+    "Metric set including task success, failure by class, diagnosis success and cost proxy",
+    "Target-reachability template (\u22641% failure and \u226575% usefulness)",
+    "Minimum task-success variant of the threshold utility",
+    "Safety-usefulness-cost frontier"
+   ],
+   "results": [
+    "Scope restriction trades capability for safety",
+    "No single protocol should be presented as a complete answer",
+    "Diagnosis is treated as a first-class outcome alongside prevention"
+   ],
+   "conditions": [
+    "The reachability table is a template, not findings"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "In the anonymised national payments case, catastrophic actions rank by severity C1 < C2 < C3 < C4. Payments is comparatively favourable terrain for oversight, so the case does not straightforwardly generalise to other sectors.",
+   "methods": [
+    "Illustrative case interpretation",
+    "Generalisability discussion"
+   ],
+   "results": [
+    "C1: individual hold or release; C2: systematic mis-triage propagating across cases; C3: exposure of protected data; C4: disturbing settlement",
+    "Favourable because catastrophes are crisp, tool surfaces can be narrowed, and incident management is mature",
+    "Healthcare, public administration and enterprise may have fuzzier catastrophes and wider action surfaces"
+   ],
+   "conditions": [
+    "Descriptive framework is sector-agnostic; the case is not"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The payments case treats excluding C4-adjacent action paths as a manageable scope decision. Would scope restriction remain as workable an oversight lever in a general enterprise deployment, and why?",
+   "answer": "Probably not as workable. Scope restriction relies on a narrowable tool surface and a crisp definition of catastrophic actions, both of which the paper cites as features of payments. Enterprise deployments may have wide action surfaces and fuzzy catastrophe definitions, so it is harder to know which actions to exclude without losing much usefulness.",
+   "rubric": [
+    "Says scope restriction would be less workable / harder to apply",
+    "Reason: it depends on narrowable tool surfaces and/or crisply defined catastrophes, which enterprise settings may lack"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Under what organisational condition would adding the human audit protocol on top of an output monitor add little real oversight, and why?",
+   "answer": "It would add little when the organisation lacks the staffing or escalation paths to review flagged cases in time. The paper stresses that a flag has value only if there is a process for acting on it, and that human audit depends on review budget and the timeliness of escalation.",
+   "rubric": [
+    "Identifies insufficient review capacity, staffing, or escalation process as the condition",
+    "Reason: monitoring has value only if flagged cases are acted on (monitoring vs acting distinction / audit capacity dependence)"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose a user's run of the environment showed complete I/O logs improving diagnosis success. Would that gain carry over to a real institution whose staff lack the expertise to review the logs, and why?",
+   "answer": "No, it would not necessarily carry over. The simulator does not model human factors, and the paper notes that records retained but never reviewed, or misread by staff without expertise, contribute little to oversight.",
+   "rubric": [
+    "Says the gain would not (reliably) carry over",
+    "Reason: the environment does not model human capacity to use records, and unreviewed or misinterpreted logs add little oversight"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If a deployer validates its vendor model once before go-live, when would that validation stop supporting its model risk obligations, and why?",
+   "answer": "It stops being reliable when the model is unpinned and the vendor changes it on its own schedule. Model risk practice assumes validating and monitoring a specific model, so an unannounced update leaves the validated object no longer the one in production.",
+   "rubric": [
+    "Identifies vendor model updates under unpinned (or un-notified) version control as the condition",
+    "Reason: validation applies to a specific model version, so changes on the vendor's schedule invalidate it"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Would the resampling protocol remain attractive for the Operator's dispute triage if dispute-handling deadlines were very tight, and why?",
+   "answer": "It would be less attractive. Resampling generates additional candidate actions, which adds model queries, cost and latency. That conflicts with throughput and with scheme-rule or regulatory timelines for dispute handling.",
+   "rubric": [
+    "Says it would be less attractive / problematic",
+    "Reason: extra queries add latency and cost that conflict with service-level or scheme-rule deadlines"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "In a configuration where vendor support is set to none, would the vendor escalation protocol be expected to improve diagnosis, and why?",
+   "answer": "No. Vendor escalation works by requesting delayed or guaranteed vendor support for diagnosis or attestation, and the paper says protocols relying on vendor support depend on its terms and responsiveness. With no support available, there is nothing to escalate to.",
+   "rubric": [
+    "Says no / little improvement expected",
+    "Reason: the protocol's effect depends on available vendor support terms, which are absent"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the size of the run (27,000 condition rows) not allow the paper to estimate the effect of the pre-execution gateway?",
+   "answer": "The 20 access profiles were curated to span many arrangements, not varied one factor at a time. The gateway setting is therefore confounded with other settings. More seeds, thresholds or cases add replication, not identification, so a full-factorial design would be needed.",
+   "rubric": [
+    "States that the configurations are curated, not full-factorial, so gateway is confounded with other factors",
+    "Notes that more rows or replications do not fix this design limitation"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is it useful for this paper's purposes to replace the operational pillar with an interaction layer when adapting the four-pillar framework?",
+   "answer": "The interaction layer (prompts, outputs, tool calls, records) is where an import-dependent deployer actually has control: the Operator's interaction layer is operator-led while the model is vendor-led. It is also where deployable controls such as gateways, logging and output monitoring sit, so the layer captures the deployer's main lever for oversight.",
+   "rubric": [
+    "Says the interaction layer is the one the deployer controls (e.g., operator-led vs vendor-led model)",
+    "Links it to where implementable controls such as logging, gateway, and output monitoring reside"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Under the balancing framework, why would C4 justify more oversight investment than C1 in the payments case?",
+   "answer": "Severity and reversibility is the first consideration. C1 is a bounded, reversible error on one transaction, whereas C4 can disturb settlement, a systemic and hard-to-reverse failure. Higher severity and lower reversibility justify greater oversight.",
+   "rubric": [
+    "States C4 warrants more oversight",
+    "Reason: C1 is bounded and reversible while C4 is systemic or irreversible, per the severity/reversibility consideration"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is activation-level trusted monitoring especially hard for the Operator, beyond the shortage of specialist skills?",
+   "answer": "The Operator's access audit shows the model layer is vendor-led, and under managed-endpoint access activations are vendor-held. The internal signals the protocol needs are therefore not available to the Operator without the vendor.",
+   "rubric": [
+    "Points to lack of model access: activations or internal signals are vendor-held under API or managed endpoint",
+    "Connects this to the model layer being vendor-led in the case"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why is the macro-shutdown protocol particularly suited to the C2 failure class rather than C1?",
+   "answer": "Macro-shutdown acts on clusters after repeated suspiciousness, and C2 is by definition a systematic mis-triage pattern across a case cluster. Per-case checks may let each individual error pass while the pattern propagates, whereas C1 is a single-case error.",
+   "rubric": [
+    "Says macro-shutdown matches C2",
+    "Reason: it operates on clusters / repeated signals, and C2 is a cross-case pattern rather than an individual error"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the stress scenario of a slow elevation in hold recommendations for one merchant category represent a C2 risk rather than a C1 risk?",
+   "answer": "The concern is a systematic pattern spread across many cases in a category that builds before detection, which matches C2's definition. C1 concerns an incorrect hold or release on a single transaction.",
+   "rubric": [
+    "Identifies it as C2",
+    "Reason: it is a pattern across many cases propagating before detection, not a single-case error"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p1",
+   "question": "If the number of random seeds in the large run were doubled to 10, would the number of aggregate condition rows change?",
+   "answer": "Yes. Seeds are a factor in the condition grid, so rows would double from 27,000 to 54,000, and case simulations would double to 2.7 million.",
+   "rubric": [
+    "Says yes, rows change",
+    "Gives 54,000 rows (or explains seeds multiply the condition count)"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p1",
+   "question": "If the number of synthetic cases per condition in the large run were doubled to 100, would the number of aggregate condition rows change?",
+   "answer": "No. Cases per condition are aggregated within each row, so the row count stays at 27,000. Only case simulations rise, to 2.7 million.",
+   "rubric": [
+    "Says no, rows stay at 27,000",
+    "Reason: cases are within-condition; only the simulation count (2.7M) changes"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c3",
+    "c8"
+   ],
+   "pair": "b1-p2",
+   "question": "Under the Operator's access arrangement in the case, is output-level trusted monitoring feasible for the Operator to implement in-house?",
+   "answer": "Yes. It scores outputs and actions, which flow through the Operator-led interaction layer. The main requirements are calibration, documentation and validation through existing model risk processes.",
+   "rubric": [
+    "Says yes, feasible",
+    "Reason: it relies on outputs in the operator-controlled interaction layer, needing calibration and documentation rather than model access"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c3",
+    "c8"
+   ],
+   "pair": "b1-p2",
+   "question": "Under the Operator's access arrangement in the case, is trace/activation-level trusted monitoring feasible for the Operator to implement in-house?",
+   "answer": "No. It needs internal model signals, which are vendor-held under the managed endpoint, plus scarce expertise. The Operator would treat it as a longer-term possibility dependent on the vendor's roadmap.",
+   "rubric": [
+    "Says no, not feasible in-house now",
+    "Reason: activations are vendor-held (model layer vendor-led) and/or specialist expertise is lacking"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b1-p3",
+   "question": "In the target-reachability analysis, would a profile that achieves 0.5% failure by restricting scope so that usefulness falls to 60% count as reaching the target?",
+   "answer": "No. The target jointly requires \u22641% failure and \u226575% usefulness, and 60% usefulness fails the second condition despite the low failure rate.",
+   "rubric": [
+    "Says no",
+    "Reason: usefulness of 60% is below the 75% requirement of the joint target"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b1-p3",
+   "question": "In the target-reachability analysis, would a profile with 0.8% failure and 80% usefulness count as reaching the target?",
+   "answer": "Yes. It meets both conditions: failure is at or below 1% and usefulness is at or above 75%.",
+   "rubric": [
+    "Says yes",
+    "Reason: satisfies both \u22641% failure and \u226575% usefulness"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p4",
+   "question": "In the paper's decomposition of the realised control tax, would the cost of additional legal review of vendor contracts fall under sovereignty discount cost?",
+   "answer": "Yes. Legal review and procurement frictions arising from reliance on externally supplied AI are exactly what the informal sovereignty discount umbrella covers.",
+   "rubric": [
+    "Says yes, sovereignty discount cost",
+    "Reason: it is an institutional or contractual friction from vendor reliance, not a protocol-level cost"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": "b1-p4",
+   "question": "In the paper's decomposition of the realised control tax, would the cost of extra monitor calls per case fall under sovereignty discount cost?",
+   "answer": "No. Monitor calls are protocol-level costs of the control mechanism itself, which belong to instrumented-control cost; the simulator's proxy captures them as monitoring cost.",
+   "rubric": [
+    "Says no, it is instrumented-control cost",
+    "Reason: it is a protocol-level monitoring cost (as in the simulator's cost proxy), not an institutional friction"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Of two deployers, one facing a single viable frontier-model vendor and one facing several substitutable vendors, which is better placed to secure terms that make the vendor escalation protocol useful, and why?",
+   "answer": "The deployer with several substitutable vendors. Vendor concentration affects bargaining power over terms of supply, such as guaranteed support. Vendor escalation's usefulness depends on those terms and on the vendor's responsiveness.",
+   "rubric": [
+    "Chooses the deployer with several vendors",
+    "Reason: greater bargaining power yields better support terms, on which vendor escalation depends"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Several small payment operators in one jurisdiction each cannot afford staff able to interpret monitor outputs. Which considerations in the balancing framework point to a remedy, and what is it?",
+   "answer": "Absorptive capacity identifies the problem: oversight is useful only if someone can interpret monitor outputs. Coalition paths offer the remedy: shared audit consortia or regional arrangements amortise the cost of oversight capability across deployers.",
+   "rubric": [
+    "Proposes a coalition path (e.g., shared audit consortium) to pool capability",
+    "Links it to the absorptive-capacity concern and/or cost amortisation across deployers"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If a user reran the large-run configuration adding a fourth monitor threshold (0.95), keeping everything else the same, how many condition rows and case simulations would result?",
+   "answer": "20 \u00d7 10 \u00d7 3 \u00d7 4 \u00d7 3 \u00d7 5 gives 36,000 condition rows. At 50 cases each, that is 1,800,000 case simulations.",
+   "rubric": [
+    "Gives 36,000 condition rows",
+    "Gives 1,800,000 case simulations"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Under the paper's framework, how much oversight investment should a deployer give a vendor model that only drafts internal, easily corrected notes, and why?",
+   "answer": "Relatively light oversight. The possible errors are low-severity and reversible, and the cost-versus-value consideration recognises that some use cases do not justify heavy monitoring and audit regimes.",
+   "rubric": [
+    "Says light / proportionately low oversight",
+    "Reason: low severity and high reversibility, and/or oversight cost should be weighed against use-case value"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A regulated deployer runs an open-weight model on its own in-jurisdiction hardware. Which protocols in the paper's protocol table that the Operator lacked become available in principle, and what constraint still remains?",
+   "answer": "With model access, activation-level monitoring and in-house weights patching become possible rather than vendor-mediated. However, interpreting internal signals still needs specialist expertise that is scarce in regulated institutions.",
+   "rubric": [
+    "Names activation/trace-level monitoring and/or in-house weights patching as newly feasible",
+    "Notes the remaining constraint of scarce specialist expertise"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team adds a protocol to the environment that blocks all recommend_hold and recommend_release actions. How should they report it so the result is not misleading, and why?",
+   "answer": "They should report usefulness or task success, and ideally a joint target with a minimum task-success requirement, alongside failure. Blocking those actions will cut failures largely by disabling useful work, which a failure-only report would count as a free safety gain.",
+   "rubric": [
+    "Recommends reporting usefulness / a joint safety-plus-usefulness target (or minimum task-success variant), not failure alone",
+    "Reason: disabling actions lowers failure trivially by sacrificing useful work"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A deployer tells its regulator that narrowing an AI assistant's scope reduced both failures and monitoring costs. What should the regulator ask about to test the efficiency claim, and why?",
+   "answer": "The regulator should ask about forgone usefulness and the added manual processing for excluded actions. The paper argues that oversight costs are typically shifted rather than eliminated, and narrowing scope lowers monitoring effort but raises manual processing.",
+   "rubric": [
+    "Asks about manual processing burden and/or lost usefulness",
+    "Reason: costs shift between budget lines rather than disappear"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the case's access audit had found the interaction layer vendor-led rather than operator-led, which of the paper's feasibility conclusions about the Operator would be undermined?",
+   "answer": "The conclusion that the Operator can implement output monitoring, defer-to-trusted routing, gateways, record-keeping and escalation through its own application and governance machinery. Those rely on the Operator designing and operating the surrounding workflow and case records.",
+   "rubric": [
+    "Identifies the Operator's ability to implement application-level controls (output monitoring, gateway, logging, defer-to-trusted) in-house",
+    "Reason: these depend on operator control of the interaction layer and workflow"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If regulated deployers had no existing practices for governing technology services whose internals they cannot inspect, which of the paper's arguments would lose its support?",
+   "answer": "The argument against a strong reading of Position A. That rebuttal rests on deployers already managing uninspectable services, into whose governance partial-assurance control protocols could be incorporated.",
+   "rubric": [
+    "Names the rebuttal of (strong) Position A / safety-maximalism",
+    "Reason: it relies on existing governance of uninspectable services"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the four oversight spend categories in the case had proved unlike ordinary critical third-party technology governance costs, which conclusion would lose support?",
+   "answer": "The conclusion that, for many regulated deployers, the control tax will be experienced as an extension of existing third-party and model risk budgets rather than as a novel line item. That conclusion rests on the resemblance of the categories to third-party governance costs.",
+   "rubric": [
+    "Names the conclusion that the control tax is an extension of existing TPRM/MRM budgets, not a novel line item",
+    "Reason: it rests on the categories resembling third-party governance costs"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the large run had not completed all condition rows with full metrics, which of the paper's empirical claims would lose its support?",
+   "answer": "The claim that the environment executes end to end at scale across the full grid. Because the paper draws no quantitative conclusions, that demonstration is the main empirical result of the run.",
+   "rubric": [
+    "Names the claim that the environment executes end to end / at scale",
+    "Notes this is the run's main empirical contribution since no quantitative conclusions are drawn"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the simulator had modelled procurement, legal review, vendor management and supervisory engagement, which deliberate omission in the results would no longer be justified on the paper's stated grounds?",
+   "answer": "The refusal to report sovereignty-discount estimates from the threshold-comparison utility. That refusal is justified by the simulator not modelling those institutional frictions.",
+   "rubric": [
+    "Names the omission of sovereignty-discount estimates (threshold-comparison utility values)",
+    "Reason: it was justified by the frictions being unmodelled"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If evidence showed the AI-importing position would soon be erased by market competition, which use of the structural-asymmetry literature in the paper would be undermined?",
+   "answer": "The paper's treatment of AI-importing jurisdictions' dependence as a persistent feature of the deployment landscape. That treatment motivates developing a dedicated bounded-sovereignty vocabulary and calibrated control rather than waiting for the problem to disappear.",
+   "rubric": [
+    "Identifies the premise that the importing position is durable or persistent",
+    "Links it to the motivation for the bounded-sovereignty framing or calibrated approach"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the Pax Silica framework had imposed no political conditions on infrastructure supply, which position's argument would lose its cited demonstration?",
+   "answer": "Position B, sovereignty-maximalism. It cites Pax Silica-style conditional access as showing that foreign-dependent supply can be tied to political alignment and is therefore fragile.",
+   "rubric": [
+    "Names Position B / sovereignty-maximalist",
+    "Reason: Pax Silica was cited to show supply can be politically conditioned, hence fragile"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that trusted monitoring reduces catastrophic failures in real national payment systems? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The simulation is synthetic, uses scripted agents and simplified protocols, and the paper explicitly draws no quantitative conclusions and disclaims real-world payment evidence.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: synthetic tooling exercise with no quantitative or real-world conclusions"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that scope restriction is the best protocol because it lowers catastrophic failures? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper argues that the safest protocol is not automatically best, since scope restriction buys safety by giving up usefulness, and that no single protocol is a complete answer.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: scope restriction trades usefulness for safety; safest is not automatically best"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that full-stack sovereign capability is necessary for responsible AI deployment by regulated institutions? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted, in the sense that the paper argues against it. Against a strong Position B, it argues that proportionate oversight, workflow design and incident management can do meaningful work without full-stack sovereignty, while also noting that vendor-dependent arrangements are fragile.",
+   "rubric": [
+    "Answers contradicted (the paper argues against necessity)",
+    "Reason: proportionate oversight and workflow design can enable responsible deployment without full-stack sovereignty"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its payments-case conclusions apply equally to hospital deployments? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The descriptive framework is sector-agnostic, but the case is not: payments is favourable terrain with crisp catastrophes, narrow tools and mature incident management, while healthcare may differ. A second sector case is listed as future work.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: case conclusions depend on payments-specific favourable features, and no other sector was studied"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that complete logging improves oversight outcomes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper draws no quantitative conclusions about individual components, the curated configurations do not support causal attribution, and the human factors that determine whether logs are used are not modelled.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: no causal or quantitative component conclusions and/or human factors not modelled"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its six-consideration balancing framework produces a ranking of how much oversight each use case needs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper calls the considerations a rubric, not a weighted formula, and says their relative weights vary by context and remain an open question, so no ranking is produced.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: rubric rather than weighted formula; weights are open or context-dependent"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the Operator's dispute-triage deployment, under what condition would defer-to-trusted routing fail to provide a safe replacement for a suspicious recommendation, and why?",
+   "answer": "It would fail where the Operator has not defined an acceptable fallback action for a given case type. The protocol replaces suspicious actions only 'when possible', and the replacement must be consistent with operational procedures and customer-treatment rules. Without a designed fallback, the suspicious action either cannot be replaced or is replaced by something that mistreats the customer.",
+   "rubric": [
+    "Asserts it fails when no appropriate fallback is defined for the case type (or when the fallback conflicts with procedures or customer-treatment rules).",
+    "Explains that the protocol depends on workflow design: replacement only works 'when possible' and must fit operational procedures and customer-treatment rules."
+   ],
+   "batch": 2,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If a user reran the environment with a full-factorial design, would its outputs then be usable as policy estimates for real payment institutions, and why?",
+   "answer": "No. A full-factorial run would remove only the curated-configuration obstacle to attributing effects to individual settings within the simulator. The environment would still be synthetic, the agents scripted and far weaker than a red team, the costs unitless proxies, and human factors and institutional overheads unmodelled.",
+   "rubric": [
+    "Concludes no, the outputs would still not be real-world policy estimates.",
+    "Explains that full-factorial design addresses only causal attribution inside the simulator, while synthetic data, scripted agents, unitless cost proxies and unmodelled human or institutional factors remain."
+   ],
+   "batch": 2,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "In the stress scenario, suppose the Operator had no agreed vendor support process. Which of the paper's recurring distinctions would the Operator struggle to satisfy, and why?",
+   "answer": "It would struggle with the distinction between detecting and explaining. Its own monitor and case records can detect and describe the drift in hold recommendations. Explaining a model-side cause, however, requires the vendor, because model development, updates and internals are vendor-led and the Operator has no model access.",
+   "rubric": [
+    "Identifies detecting vs explaining (diagnosis or root-cause explanation) as the distinction that fails.",
+    "Explains that the model layer is vendor-led with no Operator access to internals, so model-side explanation depends on the vendor ticket path."
+   ],
+   "batch": 2,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would a target-reachability analysis using a '\u22641% catastrophic failure' threshold be as meaningful for a hospital deployment as for the payments case, and why?",
+   "answer": "Probably not. The threshold presupposes that catastrophic failures can be labelled crisply, as C1 to C4 are in payments. The paper notes that healthcare may have fuzzier definitions of catastrophe, so the failure rate being thresholded would itself be ill-defined or contestable.",
+   "rubric": [
+    "Concludes the threshold would be less meaningful or harder to apply in the hospital setting.",
+    "Explains that the failure-rate target relies on crisply defined catastrophe classes, which payments has but healthcare may lack."
+   ],
+   "batch": 2,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Relying on vendor attestations is said to reduce internal validation effort. When would this reliance fail to deliver real oversight, and why?",
+   "answer": "It fails when the deployer lacks the absorptive capacity to challenge those attestations. The balancing framework says oversight is useful only if the deployer can exercise it, including the ability to challenge vendor attestations. Without that skill, the deployer swaps its own validation for unexamined claims while still paying more in contract management.",
+   "rubric": [
+    "Identifies the condition: the deployer lacks the skills or capacity to scrutinise or challenge vendor attestations.",
+    "Links this to the absorptive-capacity consideration, and notes that the cost merely shifts to contract management without assurance being gained."
+   ],
+   "batch": 2,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "The Operator's contractual spend includes change-notification clauses. Would such clauses guarantee that every behaviour-relevant vendor change is surfaced, and why?",
+   "answer": "No. The paper frames the deployer\u2013vendor relationship as incomplete contracting under principal-agent conditions. Contracts cannot specify all contingencies, the vendor holds private information about the model, and verification is costly and asymmetric, so some relevant changes may fall outside what the clauses capture or can be verified.",
+   "rubric": [
+    "Concludes no, the clauses would not guarantee full coverage.",
+    "Cites incomplete contracting: contracts cannot specify all contingencies, the vendor holds private information, and verification is costly or asymmetric."
+   ],
+   "batch": 2,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose a team calibrated output-monitor thresholds using the environment's scripted agents and then carried those thresholds into a production LLM deployment. Would that calibration justify the thresholds to a model risk function, and why?",
+   "answer": "No. The scripted agents do not capture the ambiguity of real model outputs, and the paper says an LLM-in-the-loop version would be needed to examine monitor calibration. Thresholds justified to model risk would need calibration against realistic outputs.",
+   "rubric": [
+    "Concludes the synthetic calibration would not adequately justify production thresholds.",
+    "Explains that scripted agents lack the ambiguity of real model outputs, so monitor calibration requires an LLM-in-the-loop or realistic setting."
+   ],
+   "batch": 2,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why would reporting only catastrophic failure rate understate the value of the trace-access and model-version-control settings in the environment?",
+   "answer": "The paper frames these settings as mattering for diagnosis after failure: tracing a failure back to its origin. A prevention metric such as failure rate does not capture that value. Diagnosis success therefore has to be reported as a first-class outcome alongside prevention.",
+   "rubric": [
+    "States that the value of these settings lies mainly in diagnosis or post-failure traceability, not prevention.",
+    "Concludes that a failure-rate-only metric misses this, so diagnosis success must be reported as well."
+   ],
+   "batch": 2,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why is the false-positive rate, not just the flag rate, an important metric for a regulated deployer considering trusted monitoring with human audit?",
+   "answer": "Flags are only valuable if someone acts on them, and the flagged cases go to capacity-limited reviewers whose staffing must be planned and resourced. False positives use up that scarce review capacity without catching failures, which affects the staffing and escalation costs the deployer must justify.",
+   "rubric": [
+    "States that false positives consume limited human-review or audit capacity.",
+    "Connects this to the staffing or escalation planning of human audit, or to the monitoring vs acting-on-monitoring distinction."
+   ],
+   "batch": 2,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the stress scenario, why should narrowing the assistant's scope for the affected merchant category pending investigation not be treated as cost-free containment?",
+   "answer": "Narrowing scope trades capability for safety. The excluded work does not disappear; it moves to manual processing or becomes forgone usefulness. This is the paper's cost-shifting point: oversight costs move between budget lines rather than vanishing.",
+   "rubric": [
+    "States that the containment has a real cost: lost usefulness or added manual processing.",
+    "Ties this to the paper's claim that costs shift between budget lines rather than disappear."
+   ],
+   "batch": 2,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the careless agent pose a particular problem for oversight that depends on the agent choosing the escalate_to_human action itself?",
+   "answer": "The careless agent is overconfident and less likely to escalate uncertain cases. Uncertain cases that should reach a human therefore tend to proceed without escalation. Oversight then has to come from external protocols such as monitors or human audit rather than from agent self-escalation.",
+   "rubric": [
+    "States that the careless agent rarely escalates uncertain cases because it is overconfident.",
+    "Concludes that self-escalation therefore misses those cases and external protocols are needed."
+   ],
+   "batch": 2,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why would Position A, applied to the Operator, effectively imply not deploying the assistant at all?",
+   "answer": "Position A says a protocol not fully verifiable as operating as intended should not count as safety assurance. The Operator lacks model access (weights and activations are vendor-held) and depends on vendor-run serving, so it cannot fully verify its controls. Under A it would have no assurance and should abstain, which the paper calls not actionable because the deployment is already committed.",
+   "rubric": [
+    "States that under A the Operator's controls would not count as assurance, implying abstention.",
+    "Grounds this in the Operator's lack of model access or vendor-run serving, which prevents full verification."
+   ],
+   "batch": 2,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is sweeping monitor thresholds (0.35, 0.55, 0.75) useful for the kind of documentation a regulated deployer's model risk function expects?",
+   "answer": "Monitor thresholds must be justified to model risk and audit functions and reviewed periodically. Showing how failure, flag, audit and usefulness metrics respond across thresholds gives a basis for explaining why a particular threshold was chosen, rather than presenting one arbitrary setting.",
+   "rubric": [
+    "States that thresholds must be justified to, or reviewed by, the model risk function.",
+    "Explains that a sweep shows the sensitivity of the metrics to the threshold, supporting that justification."
+   ],
+   "batch": 2,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the pre-execution gateway bear on the prevention dimension rather than the diagnosis dimension?",
+   "answer": "The gateway sits between the agent's recommended action and mock execution, where it can hold, replace, escalate or pass the action. It therefore stops risky actions before they execute, which is prevention. Diagnosis concerns tracing a failure after the fact, which depends on records and trace access.",
+   "rubric": [
+    "States that the gateway acts before execution and so serves prevention.",
+    "Contrasts this with diagnosis as after-the-fact tracing that depends on logs or traces."
+   ],
+   "batch": 2,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q55",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If a user ran the full-factorial version of the access settings (all level combinations of the seven factors), keeping protocols, agents, thresholds, audit budgets, seeds and cases per condition as in the large run, how many condition rows and case simulations would result?",
+   "answer": "The seven factors have 3, 3, 2, 3, 3, 3 and 2 levels, which gives 972 access profiles. Each profile is crossed with 10 protocols, 3 agents, 3 thresholds, 3 audit budgets and 5 seeds, which is 1,350 rows per profile. That makes 1,312,200 condition rows and, at 50 cases each, 65,610,000 case simulations.",
+   "rubric": [
+    "Gives 972 profiles, or equivalently 1,312,200 condition rows.",
+    "Gives 65,610,000 case simulations (rows \u00d7 50)."
+   ],
+   "batch": 2,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q56",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A deployer replaces a 20% human-audit budget with guaranteed vendor escalation. In terms of the environment's cost proxy and the paper's cost-shifting observation, how should the change in cost be described?",
+   "answer": "It should be described as a shift, not a pure saving. Human-audit cost falls, but vendor-assurance cost rises, and so do the contract-management or vendor-management efforts the paper associates with relying on vendors. Reporting only the audit line would misleadingly suggest efficiency.",
+   "rubric": [
+    "States that human-audit cost falls while vendor-assurance or contract-management cost rises (a shift, not elimination).",
+    "Notes that reporting a single cost category would give a misleading impression of efficiency."
+   ],
+   "batch": 2,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q57",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Which of the environment's ten protocols most directly addresses C3 failures in mock investigation reports, and why?",
+   "answer": "Trusted editing. C3 is a sensitive-field exposure marker in a mock report, and trusted editing edits or redacts risky draft outputs. It works on the report content itself rather than on hold or release actions.",
+   "rubric": [
+    "Names trusted editing.",
+    "Explains that C3 concerns exposure in draft reports and trusted editing redacts or edits those outputs."
+   ],
+   "batch": 2,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q58",
+   "type": "transfer",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "An insurer deploys a vendor model to triage claims. Catastrophic actions are crisply defined, the tool set can be narrowed, and claims incident handling is mature. Would the payments-case interpretation transfer better here than to public administration, and why?",
+   "answer": "Yes, it would transfer more readily. The paper attributes payments' favourable terrain to crisp catastrophes, narrowable tool surfaces and mature incident management. This insurer shares those features, whereas public administration may have fuzzier catastrophes, wider action surfaces and less established oversight practice.",
+   "rubric": [
+    "Concludes it transfers better to the insurer than to public administration.",
+    "Cites the three favourable features (crisp catastrophes, narrowable tools, mature incident management) as the basis."
+   ],
+   "batch": 2,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q59",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "For near-term oversight of a vendor model accessed by API, should a regulated deployer rely primarily on output-level monitoring or on interpretability-supported auditing, given the paper's protocol considerations and balancing framework?",
+   "answer": "It should rely primarily on output-level monitoring. Interpretability and activation approaches need model access the deployer lacks and scarce expertise (absorptive capacity), and they are less mature. Output monitoring operates on outputs the deployer can see and fits existing calibration and documentation practice.",
+   "rubric": [
+    "Chooses output-level monitoring for the near term.",
+    "Justifies with at least one of: no model access under API, protocol maturity, or absorptive capacity or scarce expertise for interpretability."
+   ],
+   "batch": 2,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q60",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A risk manager wants to turn the environment's decomposed cost proxy into a currency budget for a board paper. What would be needed, and what would still be missing even then?",
+   "answer": "The unitless proxies would need expert calibration, such as practitioner ranges for audit capacity, vendor response times, record-retention cost, latency cost and acceptable failure thresholds. Even then, the proxy omits the institutional overheads (procurement, legal, vendor management, supervisory engagement) that dominate real oversight budgets.",
+   "rubric": [
+    "States that expert calibration of the proxy categories is needed because the proxies are unitless.",
+    "Notes that institutional overheads, the sovereignty-discount-type costs, would still be missing."
+   ],
+   "batch": 2,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q61",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If payments operators' incident-management procedures were immature, which lesson the paper draws from the stress scenario would be weakened?",
+   "answer": "The lesson that control protocols are most useful when their outputs feed cleanly into established incident-management procedures would be weakened. So would the related claim that payments is favourable terrain, since mature incident management is one of its stated reasons. A monitor flag would have no well-defined path from triage to model risk, the vendor and the regulator.",
+   "rubric": [
+    "Identifies the stress-scenario lesson that protocols are useful when they feed into established incident procedures (or the favourable-terrain claim).",
+    "Explains that the flag-to-action chain depends on mature procedures (monitoring vs acting on monitoring)."
+   ],
+   "batch": 2,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q62",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the adversarial results showing monitors as attack surfaces and attack selection degrading safety had come out the other way, which consideration in the balancing framework would favour heavier reliance on trusted monitoring?",
+   "answer": "Maturity of available protocols. Those results are part of why control recommendations are still evolving. If they had gone the other way, trusted monitoring would have a stronger evidence base, justifying more reliance on it.",
+   "rubric": [
+    "Names protocol maturity (the evidence base behind a protocol).",
+    "Explains that the adversarial results currently weaken that evidence base or show recommendations still evolving."
+   ],
+   "batch": 2,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q63",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the Operator's deployment had no data-residency rider, which entry in the case access audit would lose its stated basis, and in what direction would it likely move?",
+   "answer": "The Infrastructure entry, rated 'Shared'. Its basis is that the residency rider governs storage location while serving is vendor- and cloud-run. Without the rider, the Operator would have no contractual say over location either, so the entry would move toward vendor-led.",
+   "rubric": [
+    "Identifies the Infrastructure layer's 'Shared' rating.",
+    "Explains that the rider is the Operator's share, so without it the rating moves toward vendor-led."
+   ],
+   "batch": 2,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q64",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If it turned out that the Operator's monitoring and incident process could not detect or act on patterns like the slow elevation in hold recommendations, which of the paper's arguments against a strong reading of a position would be weakened?",
+   "answer": "The argument against strong Position B: that full-stack sovereignty is not the only route and that proportionate oversight, workflow design and incident management can do meaningful work in the near term. The stress scenario is the paper's illustration of that bounded oversight working.",
+   "rubric": [
+    "Identifies the argument against strong Position B (that proportionate oversight can do meaningful work).",
+    "Explains that the stress scenario illustrates bounded oversight functioning, so its failure undercuts the argument."
+   ],
+   "batch": 2,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q65",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If oversight capacity (staff time, audit attention, interpretive knowledge) were abundant rather than scarce, which two considerations in the balancing framework would lose most of their force?",
+   "answer": "Regulatory maturity and absorptive capacity, and the availability of coalition paths. The paper borrows from scalable oversight the observation that oversight capacity is scarce. Absorptive capacity matters because skills are limited, and coalition paths matter because they amortise the cost of building scarce capability across deployers.",
+   "rubric": [
+    "Names absorptive capacity and coalition paths.",
+    "Explains that both rest on oversight capacity being scarce: limited skills, and amortising costly capability."
+   ],
+   "batch": 2,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q66",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If AI-importing regions had substantial domestic data-centre capacity, which entry in the four-layer typology's description of typical access would lose empirical support?",
+   "answer": "The infrastructure-layer description: 'partial at best', typically a foreign-operated cloud region. It rests on evidence such as Africa hosting under one percent of global data-centre capacity and much of South and Southeast Asia and Latin America depending on externally owned infrastructure.",
+   "rubric": [
+    "Identifies the infrastructure-layer typical access (partial, foreign-operated cloud).",
+    "Links it to the compute-distribution evidence (e.g., Africa under 1% of capacity, external dependence)."
+   ],
+   "batch": 2,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q67",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the stealthy access-aware agent's behaviour reflects how a misaligned frontier model would behave against the Operator's controls? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The agent is scripted, strategic only inside the synthetic environment, and described as far weaker than a capable red team. The paper says no conclusions about adversarial robustness should be drawn from it, and that its agents are not frontier models.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites that the agent is scripted, far weaker than a capable red team, and not a frontier model."
+   ],
+   "batch": 2,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q68",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that, for regulated deployers, the control tax will mainly appear as a new and separate budget category? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The case interpretation suggests that the control tax will be experienced as an extension of existing third-party and model risk management budgets, not a novel line item. This is because its four spend categories resemble the costs of governing any critical third-party technology service.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the expectation that it extends existing third-party or model risk budgets because the spend categories resemble existing third-party governance."
+   ],
+   "batch": 2,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q69",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Positions A and B are mistaken because it adopts Position C? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper adopts C as a working frame explicitly 'not as a claim that A or B is wrong'. It also notes points in support of both, namely that single-deployer assurance is limited and that vendor-dependent arrangements can change, and says the question is not settled.",
+   "rubric": [
+    "Answers contradicted.",
+    "Notes that C is adopted as a working frame and that the paper acknowledges support for A and B or leaves the question unsettled."
+   ],
+   "batch": 2,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q70",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a data-residency rider gives the Operator infrastructure sovereignty? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The rider governs only storage location. Serving operations remain run by the vendor and cloud provider, which is why the infrastructure layer is rated 'Shared' and typical access is described as 'partial at best'.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that the rider covers storage location only, while serving remains vendor- or cloud-operated, so the layer is shared or partial."
+   ],
+   "batch": 2,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q71",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper, citing the Pax Silica framework, recommend that AI-importing jurisdictions change their trade or export-control policy? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Pax Silica is cited only as evidence for Position B's concern that supply may be tied to political alignment. The paper's scope boundary explicitly makes no export-control, trade-policy or industrial-policy recommendation.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the explicit scope boundary (no trade or export-control recommendation) and the limited evidential role of Pax Silica."
+   ],
+   "batch": 2,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q72",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that compute-governance mechanisms such as compute KYC can substitute for deployment-time AI control for a regulated deployer? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper notes that compute governance and deployment-time control operate at different levels: who trains and runs models versus how a deployer safely runs one. It explicitly does not attempt a synthesis, so it makes no claim about substitution.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the two operate at different levels and the paper explicitly declines to synthesise them."
+   ],
+   "batch": 2,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q73",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "In a configuration where tool-call logs are set to none, could the environment's tool monitor protocol score the agent's proposed tool use?",
+   "answer": "No. The tool monitor scores proposed tool or action use only when tool visibility exists, and with no tool-call logs there is no tool visibility to score.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the tool monitor requires tool visibility, which tool-call logs set to none removes."
+   ],
+   "batch": 2,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q74",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "In a configuration where tool-call logs are set to complete, could the environment's tool monitor protocol score the agent's proposed tool use?",
+   "answer": "Yes. With complete tool-call logs, tool visibility exists, which is the condition under which the tool monitor scores proposed tool or action use.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that complete tool-call logs provide the tool visibility the protocol requires."
+   ],
+   "batch": 2,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q75",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p2",
+   "question": "In the environment, would weakening monitoring change which synthetic failure modes the stealthy access-aware agent tends to produce?",
+   "answer": "Yes. This agent chooses lower-visibility synthetic failure modes when monitoring is weak, so its behaviour responds to the monitoring configuration.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the stealthy agent selects lower-visibility failures when monitoring is weak."
+   ],
+   "batch": 2,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q76",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p2",
+   "question": "In the environment, would weakening monitoring change which failure modes the honest agent tends to produce?",
+   "answer": "No. The honest agent usually follows the ground truth and makes only occasional mistakes; its behaviour is not described as conditioned on monitoring strength.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the honest agent's errors are ordinary mistakes, not strategic responses to monitoring."
+   ],
+   "batch": 2,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q77",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": "b2-p3",
+   "question": "Under the model-version-control setting 'pinned', could a vendor update on the vendor's own schedule change the model a deployer has validated without the deployer's involvement?",
+   "answer": "No. Pinning fixes the model version, so the validated model does not change on the vendor's schedule. This fits model risk practice of validating a specific model.",
+   "rubric": [
+    "Answers no.",
+    "Explains that pinning fixes the version, preserving the specific model that was validated."
+   ],
+   "batch": 2,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q78",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": "b2-p3",
+   "question": "Under the model-version-control setting 'unpinned', could a vendor update on the vendor's own schedule change the model a deployer has validated without the deployer's involvement?",
+   "answer": "Yes. Unpinned means the underlying system can change on the vendor's schedule, which is exactly the situation the paper says requires adapting validation and monitoring practices built for in-house models.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that unpinned versions can change on the vendor's schedule, undermining validation of a specific model."
+   ],
+   "batch": 2,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q79",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": "b2-p4",
+   "question": "Under Position A, should the Operator count its output-level trusted monitor as safety assurance, given it cannot fully verify that the monitor works as intended?",
+   "answer": "No. Position A holds that a protocol that cannot be fully verified as operating as intended should not be treated as safety assurance.",
+   "rubric": [
+    "Answers no.",
+    "Cites Position A's requirement of full verification before treating a protocol as assurance."
+   ],
+   "batch": 2,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q80",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": "b2-p4",
+   "question": "Under Position C, should the Operator count its output-level trusted monitor as part of its oversight assurance, given it cannot fully verify that the monitor works as intended?",
+   "answer": "Yes, as partial assurance. Position C proportions oversight to risk severity rather than demanding full control. The paper argues that control protocols can be incorporated into existing governance practices even if the resulting assurance is partial.",
+   "rubric": [
+    "Answers yes (as partial or bounded assurance).",
+    "Explains that Position C proportions oversight to severity and accepts partial assurance integrated into existing governance."
+   ],
+   "batch": 2,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q81",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "When would adopting a legibility protocol add to the Operator's documentation burden rather than reduce it?",
+   "answer": "It would add to the burden when the legible reasoning it produces does not fit the Operator's existing record-keeping and retention requirements. The paper's protocol table says legible reasoning may support or complicate record-keeping. A mismatched output becomes one more artefact that has to be reconciled, retained and explained to validators and supervisors.",
+   "rubric": [
+    "States that legibility can increase documentation burden (it is not automatically helpful).",
+    "Reason: legible outputs must fit existing documentation/record-keeping rules, and the paper notes they may complicate them.",
+    "Condition: when the legible reasoning format does not match the existing record-keeping or retention requirements."
+   ],
+   "batch": 3,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the Operator mapped a pre-deployment control evaluation onto its validation framework, but the evaluation's red team was as weak as the environment's scripted access-aware agent, would the evaluation support the Operator's validation sign-off, and why?",
+   "answer": "No. A control evaluation is only meaningful against a worst-case subversive model. The scripted agent is far weaker than a capable red team. The paper also cites results showing that attack selection can degrade safety substantially at realistic audit budgets, so such an evaluation would likely overstate the protocol's safety.",
+   "rubric": [
+    "Concludes the evaluation would not adequately support sign-off, or would overstate safety.",
+    "Reason: control evaluations assume a worst-case red team, and the scripted agent is far weaker; stronger attack selection degrades safety at realistic budgets."
+   ],
+   "batch": 3,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A user finds high diagnosis success in the environment under the oracle trace-access setting. Would that level of diagnosis be expected for the Operator's real deployment, and why?",
+   "answer": "No. The oracle setting is a synthetic idealisation that fully exposes internal state and has no real-world counterpart. The Operator's model layer is vendor-led: weights and activations are vendor-held under managed-endpoint access. The Operator would have nothing like oracle-level access to trace failures.",
+   "rubric": [
+    "Concludes the result would not carry over to the Operator.",
+    "Reason: oracle trace is an idealisation with no real-world counterpart, and the Operator lacks model/activation access because the model is vendor-held."
+   ],
+   "batch": 3,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Would results for the human audit protocol at the 20% audit budget be a good guide to the Operator's deployment if its review staff could only examine a small fraction of cases, and why?",
+   "answer": "No. In the environment, human audit sends flagged cases to a capacity-limited reviewer, so results depend on the budget. The paper also stresses that review capacity must be staffed and resourced. With only a small fraction reviewable, the Operator is in the low-budget regime, where the cited adversarial work finds that attack selection substantially degrades safety.",
+   "rubric": [
+    "Concludes the 20%-budget results would not be a good guide.",
+    "Reason: the human audit protocol's effect depends on reviewer capacity/budget, and low budgets are where safety degrades (attack selection, limited review).",
+    "Condition: when actual staffing supports only a small audit fraction."
+   ],
+   "batch": 3,
+   "orig_id": "q84"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does Position C always end with a decision to deploy a use case under some proportionate oversight? Under what condition would it not?",
+   "answer": "No. The cost-versus-value consideration in the balancing framework says some use cases may not justify deployment at all. If the oversight that a use case's severity requires would cost more than the use case is operationally worth, calibrated control points to not deploying.",
+   "rubric": [
+    "States that Position C does not always lead to deployment.",
+    "Reason/condition: when the expected cost of oversight that severity requires exceeds the operational value of the use case (the cost-vs-value consideration)."
+   ],
+   "batch": 3,
+   "orig_id": "q85"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose the Operator used the vendor's own model, rather than a separate trusted model, to monitor the assistant's outputs. When would that arrangement fail to support a safety case, and why?",
+   "answer": "It would fail whenever the Operator cannot justify explicit assumptions about how the monitoring model might collude with the monitored model. The paper cites work showing that untrusted monitoring requires such collusion-strategy assumptions to support a safety case. The Operator cannot inspect the vendor's model, so it would have no basis for verifying them.",
+   "rubric": [
+    "Concludes this untrusted-monitoring arrangement would not support a safety case.",
+    "Reason: untrusted monitoring needs explicit collusion-strategy assumptions to support a safety case.",
+    "Condition: the Operator lacks model access, so it cannot verify those assumptions."
+   ],
+   "batch": 3,
+   "orig_id": "q86"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The Operator justifies its choice of output monitor and thresholds to its model risk function using current control research. When would that justification stop holding, and why?",
+   "answer": "It would stop holding once control research moves on, for example as new results show monitors can be attacked or that safety degrades under attack selection. The paper notes that control recommendations will continue to evolve while regulated deployers must justify oversight choices over multi-year horizons. The justification therefore needs periodic review rather than a one-time sign-off.",
+   "rubric": [
+    "States that the justification can become outdated.",
+    "Reason: control research is evolving (e.g., monitors as attack surfaces), while deployers document choices over multi-year horizons.",
+    "Condition: when new research changes the recommendations; periodic review of thresholds is required."
+   ],
+   "batch": 3,
+   "orig_id": "q87"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is it useful that the environment records severity-weighted loss in addition to catastrophic failure rate?",
+   "answer": "The four catastrophic classes are ranked by severity, C1 < C2 < C3 < C4. A raw failure rate counts an individual mis-hold the same as a settlement-critical marker. A protocol that reduced cheap C1 failures but let more C4 failures through could look better on the raw rate. Severity-weighted loss reflects the balancing framework's point that higher severity justifies more oversight.",
+   "rubric": [
+    "States that the raw failure rate treats all classes as equal, although they differ in severity.",
+    "Reason: C1\u2013C4 rank by severity, so a protocol could lower raw failures while shifting them toward severe classes; weighting captures this."
+   ],
+   "batch": 3,
+   "orig_id": "q88"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the environment's cost proxy need a residual incident-loss component for comparisons across protocols to be meaningful?",
+   "answer": "Without it, the no-control protocol would look cheapest, because it incurs no monitoring, audit, logging or gateway costs. The incident-loss component charges a protocol for the failures it lets through. Otherwise the cost axis would reward doing nothing.",
+   "rubric": [
+    "States that without the incident-loss term, weak or no control would appear cheapest.",
+    "Reason: the other components count only control spending; residual incident loss captures the cost of the failures a protocol does not prevent."
+   ],
+   "batch": 3,
+   "orig_id": "q89"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Under the two-layer framing, why might the protocol that performs best at Layer 1 not be the right choice for the Operator?",
+   "answer": "Layer 1 asks only whether a protocol reduces unsafe behaviour against a worst-case model. Layer 2 asks whether it can be embedded in the Operator's governance. A protocol strong at Layer 1 may be infeasible or costly at Layer 2. Examples are activation-level monitoring, which needs model access and scarce expertise, and resampling, which strains service levels.",
+   "rubric": [
+    "States that Layer-1 performance does not settle the choice for the Operator.",
+    "Reason: Layer-2 embedding constraints (access, expertise, staffing, latency/SLAs, documentation) can make a Layer-1-strong protocol infeasible or costly, e.g., activation monitoring."
+   ],
+   "batch": 3,
+   "orig_id": "q90"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why do the compute-distribution figures the paper reports bear on its choice of Position C over Position B?",
+   "answer": "They show that large regions host very little AI infrastructure; Africa, for example, has under 1% of data-centre capacity for about 18% of the world's population, and much of South Asia, Southeast Asia and Latin America relies on externally operated infrastructure. Position B demands full-stack domestic capability, including domestic compute. These figures support the claim that many states cannot make that investment this decade, which makes B non-actionable.",
+   "rubric": [
+    "States that the figures support the claim that Position B is not actionable on relevant timescales.",
+    "Reason: they show thin domestic compute in many regions, while B requires full-stack domestic capability including compute."
+   ],
+   "batch": 3,
+   "orig_id": "q91"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Under the balancing framework's severity-and-reversibility consideration, why is it consistent for the case to rank C3 (protected-data exposure) above C2 (systematic mis-triage)?",
+   "answer": "Mis-triage can be corrected after detection: the stress scenario has the Operator remediate customers affected by incorrect holds. Exposure of protected financial data cannot be undone once it has happened. The framework names mass data exposure as an example of an irreversible outcome, and lower reversibility justifies higher severity.",
+   "rubric": [
+    "States that C3 is less reversible than C2.",
+    "Reason: mis-triage can be remediated (e.g., customer remediation), while exposed data cannot be recalled; the framework treats irreversible outcomes such as data exposure as more severe."
+   ],
+   "batch": 3,
+   "orig_id": "q92"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the timeliness of escalation matter more for C2 failures than for C1 failures in a protocol that relies on human review?",
+   "answer": "C2 is mis-triage that propagates across many cases before it is detected. Every delay in escalating and reviewing lets the pattern spread to more cases. A C1 failure is confined to one transaction, so a delay does not multiply the harm in the same way.",
+   "rubric": [
+    "States that delay is more costly for C2.",
+    "Reason: C2 propagates across many cases until detected, so slow escalation enlarges the harm, whereas C1 is confined to an individual case."
+   ],
+   "batch": 3,
+   "orig_id": "q93"
+  },
+  {
+   "id": "q94",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": "b3-p1",
+   "question": "In the environment, would raising the audit budget from 2% to 20% be expected to increase the human-audit cost component for the human audit protocol?",
+   "answer": "Yes. The human audit protocol sends flagged cases to a capacity-limited reviewer. A larger budget lets more flagged cases be reviewed, which raises the human-audit count and therefore the human-audit cost component.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: the protocol sends flagged cases to a budget-limited reviewer, so a larger budget means more audits and higher human-audit cost (given enough flagged cases)."
+   ],
+   "batch": 3,
+   "orig_id": "q94"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": "b3-p1",
+   "question": "In the environment, would raising the audit budget from 2% to 20% be expected to increase the human-audit cost component for the no-control protocol?",
+   "answer": "No. The no-control protocol simply accepts the agent's proposed mock action and sends nothing to a reviewer. The audit budget is never used, so the human-audit cost does not change.",
+   "rubric": [
+    "Answers no.",
+    "Reason: no control accepts every action and routes nothing to human audit, so the audit budget has no effect on its audit cost."
+   ],
+   "batch": 3,
+   "orig_id": "q95"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "Given the typology and the case access audit, could the Operator audit the provenance of the case and transaction data it supplies for fine-tuning?",
+   "answer": "Yes. The data layer is shared. The Operator governs its own case and transaction data, and the typology says import-dependent deployers usually retain control over their own fine-tuning data.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: the Operator governs its own transactional/fine-tuning data (its part of the shared data layer)."
+   ],
+   "batch": 3,
+   "orig_id": "q96"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "Given the typology and the case access audit, could the Operator audit the provenance of the vendor's base-model training data?",
+   "answer": "No. Base-model training is the vendor's responsibility, and the typology says import-dependent deployers have no visibility into base-model training data.",
+   "rubric": [
+    "Answers no.",
+    "Reason: base-model training is vendor-held, so deployers have no visibility into its training data."
+   ],
+   "batch": 3,
+   "orig_id": "q97"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p3",
+   "question": "If a user added a fourth trace-access level to the environment but kept the same 20 curated access profiles and all other large-run settings, would the number of aggregate condition rows change?",
+   "answer": "No. Condition rows are generated from the 20 curated profiles crossed with protocols, agents, thresholds, audit budgets and seeds. Adding a factor level that no profile uses leaves the total at 27,000.",
+   "rubric": [
+    "Answers no; stays at 27,000.",
+    "Reason: rows depend on the number of curated profiles (not on available factor levels) times the other sweep dimensions."
+   ],
+   "batch": 3,
+   "orig_id": "q98"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p3",
+   "question": "If a user added two new curated access profiles, making 22, and kept all other large-run settings, would the number of aggregate condition rows change?",
+   "answer": "Yes. Each profile contributes 10 \u00d7 3 \u00d7 3 \u00d7 3 \u00d7 5 = 1,350 rows. Twenty-two profiles give 29,700 rows and, at 50 cases per condition, 1,485,000 case simulations.",
+   "rubric": [
+    "Answers yes.",
+    "Gives 29,700 rows (and/or 1,485,000 case simulations), reasoning that each profile adds 1,350 rows."
+   ],
+   "batch": 3,
+   "orig_id": "q99"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "In the stress scenario, does the Operator depend on the vendor to narrow the assistant's scope for the affected merchant category?",
+   "answer": "No. The interaction layer is operator-led: the Operator designs the application, the workflow and the tool surface. Scope narrowing is therefore a decision it can make and carry out itself.",
+   "rubric": [
+    "Answers no.",
+    "Reason: the interaction layer (workflow, tool surface, escalation) is operator-led, so scope changes are within the Operator's control."
+   ],
+   "batch": 3,
+   "orig_id": "q100"
+  },
+  {
+   "id": "q101",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "In the stress scenario, does the Operator depend on the vendor to correct the model's underlying behaviour that produces the elevated holds?",
+   "answer": "Yes. The model layer is vendor-led, and weights patching is handled through vendor processes. The Operator has to go through its support ticket with the vendor.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: the model is vendor-led and patching/remediation by model modification goes through the vendor."
+   ],
+   "batch": 3,
+   "orig_id": "q101"
+  },
+  {
+   "id": "q102",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": "b3-p5",
+   "question": "Is the usefulness forgone through scope restriction represented in the environment's decomposed cost proxy?",
+   "answer": "Yes. The cost proxy includes an explicit scope-restriction cost component alongside inference, monitoring, audit and the other components.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: scope-restriction cost is one of the cost proxy's components."
+   ],
+   "batch": 3,
+   "orig_id": "q102"
+  },
+  {
+   "id": "q103",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": "b3-p5",
+   "question": "Is procurement overhead for the vendor contract represented in the environment's decomposed cost proxy?",
+   "answer": "No. Procurement belongs to the sovereignty-discount frictions, which the simulator does not model. The cost proxy omits the institutional overheads that dominate real oversight budgets.",
+   "rubric": [
+    "Answers no.",
+    "Reason: procurement is a sovereignty-discount/institutional friction that the simulator does not model."
+   ],
+   "batch": 3,
+   "orig_id": "q103"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A small payment operator has no staff able to review monitor flags and no partners to share oversight with. Between trusted monitoring with human audit and scope restriction, which is the more realistic main lever, and what must it accept?",
+   "answer": "Scope restriction. Under the absorptive-capacity consideration, oversight is useful only if someone can exercise it, and monitoring plus human audit needs staffed review and escalation. Scope restriction is a long-standing operational-risk tool that does not depend on interpreting monitor outputs. The operator must accept, and document, the usefulness it gives up.",
+   "rubric": [
+    "Chooses scope restriction as the more realistic lever.",
+    "Reason: monitoring/human audit requires review capacity the operator lacks (absorptive capacity), while scope restriction does not.",
+    "Notes the trade-off: lost usefulness must be acknowledged and justified."
+   ],
+   "batch": 3,
+   "orig_id": "q104"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A deployer switches from a pinned model version to an unpinned one to get vendor improvements automatically. Using the paper's cost-shifting observation, how should the effect on oversight cost be described?",
+   "answer": "Oversight cost is moved rather than removed. Version-management effort may fall, but the model can now change on the vendor's schedule. More effort goes into drift monitoring and revalidation, which model risk functions use to keep validation current, and into change-notification contract management.",
+   "rubric": [
+    "Describes the effect as cost-shifting rather than saving.",
+    "Identifies where costs move: revalidation/drift monitoring and/or contract (change-notification) management, because the model can change on the vendor's schedule."
+   ],
+   "batch": 3,
+   "orig_id": "q105"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "In the environment, a protocol sharply reduces C1 failures but slightly increases C4 markers compared with the alternative. How should the Operator judge it, and on which metric?",
+   "answer": "On severity-weighted loss rather than raw failure rate, and with caution. C4, a disturbance to settlement, is the most severe and least reversible class, and the balancing framework gives such outcomes the most weight. Even a small rise in C4 can outweigh a large drop in C1.",
+   "rubric": [
+    "Says to judge by severity-weighted loss (not raw failure count), and is cautious or unfavourable toward the protocol.",
+    "Reason: C4 is the highest-severity, least reversible class, so small increases can outweigh large C1 reductions."
+   ],
+   "batch": 3,
+   "orig_id": "q106"
+  },
+  {
+   "id": "q107",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A deployer considers buying a guaranteed vendor-support tier as its main new control. Which of prevention, diagnosis and usefulness does this primarily strengthen, and which does it leave unaddressed?",
+   "answer": "It mainly strengthens diagnosis. In the environment, vendor escalation requests support for diagnosis or attestation after the fact. It does nothing to stop risky actions before execution, so prevention needs other protocols. Its cost appears as vendor-assurance and contract cost.",
+   "rubric": [
+    "Identifies diagnosis (and attestation) as the main benefit.",
+    "States that prevention is not addressed, because vendor support acts after the fact rather than before mock execution."
+   ],
+   "batch": 3,
+   "orig_id": "q107"
+  },
+  {
+   "id": "q108",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An electricity grid operator's AI use has crisp catastrophic actions and a tool surface that can be narrowed, but its incident-management procedures are immature. Would the payments case transfer fully, and why?",
+   "answer": "Only partly. Two of the three features that make payments favourable terrain are present, but the third is missing. The case's lesson is that control helps most when monitor outputs feed cleanly into established incident procedures, and without those procedures flags may not be acted on.",
+   "rubric": [
+    "Concludes the transfer is partial, not full.",
+    "Reason: mature incident management is one of the three favourable features, and control outputs need established procedures to be acted on (monitoring vs acting)."
+   ],
+   "batch": 3,
+   "orig_id": "q108"
+  },
+  {
+   "id": "q109",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Of the environment's monitor thresholds 0.35 and 0.75, which would place greater demand on the Operator's human-audit staffing and escalation paths if carried into production, and why?",
+   "answer": "The 0.35 threshold. A lower suspicion cutoff flags more cases, including more false positives. More flags must be reviewed and escalated, which raises the staffing needs the paper ties to human audit.",
+   "rubric": [
+    "Chooses 0.35.",
+    "Reason: a lower threshold flags more cases (more false positives), increasing review and escalation workload."
+   ],
+   "batch": 3,
+   "orig_id": "q109"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the Operator kept only partial records of prompts, outputs and tool calls, which steps of the stress-scenario investigation would be weakened?",
+   "answer": "The investigators' review of case records and their comparison of recent recommendations against historical patterns. Both rely on the interaction-layer records the Operator controls. Gaps in those records would hinder detection and also the explanation of the slow elevation in holds.",
+   "rubric": [
+    "Identifies the case-record review and/or the comparison with historical patterns as weakened.",
+    "Reason: these steps depend on interaction-layer records (prompts, outputs, tool calls), so gaps impair explaining the incident."
+   ],
+   "batch": 3,
+   "orig_id": "q110"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If catastrophic actions in payments could not be defined crisply, which design feature of the synthetic environment would lose its grounding?",
+   "answer": "The four labelled catastrophic classes C1 to C4, and the metrics built on them: failure rate by class and severity-weighted loss. These classes mirror the case's crisp catastrophes. Without that crispness, the labels and the class-based reporting would have no clear real-world counterpart.",
+   "rubric": [
+    "Identifies the C1\u2013C4 labelled classes (and/or failure-by-class or severity-weighted metrics).",
+    "Reason: these classes mirror the case's crisply defined catastrophes, which is what grounds them."
+   ],
+   "batch": 3,
+   "orig_id": "q111"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the environment reported only catastrophic failure rate, which two of the paper's three recurring distinctions could its outputs no longer illustrate?",
+   "answer": "Detecting versus explaining, because there would be no diagnosis-success metric. And improving safety versus preserving usefulness, because there would be no task-success measure to show what scope restriction or other blocking costs.",
+   "rubric": [
+    "Names detecting vs explaining (diagnosis) as lost.",
+    "Names improving safety vs preserving usefulness as lost, because no usefulness/task-success measure would be reported."
+   ],
+   "batch": 3,
+   "orig_id": "q112"
+  },
+  {
+   "id": "q113",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the regulator did not expect documented validation, ongoing monitoring and auditability for material models, which considerations in the paper's protocol table would lose most of their force?",
+   "answer": "Those tied to validation and documentation. These are the need to justify output-monitor thresholds to model risk and audit functions, and the need to map pre-deployment evaluation results onto the existing validation framework. Both exist because the Operator's model risk expectations require that validation and audit.",
+   "rubric": [
+    "Identifies the threshold-justification/calibration-documentation consideration and/or validation alignment of pre-deployment evaluations.",
+    "Reason: these considerations stem from supervisory model risk expectations for validation and audit."
+   ],
+   "batch": 3,
+   "orig_id": "q113"
+  },
+  {
+   "id": "q114",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If vendors held no private information about their models and verifying model behaviour were cheap, which parts of the paper's framework would lose their motivation?",
+   "answer": "The incomplete-contracting and principal-agent framing used to motivate Position C. Position A's worry that the deployer cannot verify that protocols work as intended would also weaken. Much of the sovereignty-discount friction, such as extra legal review and challenge of vendor attestations, would lose its motivation too.",
+   "rubric": [
+    "Identifies the principal-agent/incomplete-contracting framing and/or Position A's verifiability concern.",
+    "Reason: these rest on vendor-held private information and costly, asymmetric verification (which also drives sovereignty-discount frictions)."
+   ],
+   "batch": 3,
+   "orig_id": "q114"
+  },
+  {
+   "id": "q115",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If interpretability-supported auditing became mature and vendors offered it readily, which of the Operator's protocol-feasibility judgements would weaken, and which consideration would still hold it back?",
+   "answer": "The judgement to treat activation-level and interpretability monitoring as longer-term possibilities would weaken, since that judgement rests partly on protocol maturity and on the vendor's roadmap. Absorptive capacity would still hold it back: interpreting internal signals requires scarce specialist skills.",
+   "rubric": [
+    "Identifies the judgement treating activation/interpretability monitoring as longer-term as weakened.",
+    "Names absorptive capacity / scarce specialist expertise as the remaining constraint."
+   ],
+   "batch": 3,
+   "orig_id": "q115"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the control tax is higher for deployers in AI-importing jurisdictions than for frontier laboratories? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Sovereignty discount cost is an informal umbrella term that the paper does not operationalise or estimate. The simulator's cost proxy is unitless, omits institutional overheads, and is not compared against laboratory settings.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: there is no estimate of sovereignty discount cost and the cost proxy is unitless and excludes institutional overheads, so no comparison is made."
+   ],
+   "batch": 3,
+   "orig_id": "q116"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a 20% human-audit budget is sufficient to keep a strategic model safe? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper draws no quantitative conclusions from the run. Its only strategic agent is scripted and far weaker than a capable red team. The paper also cites work showing that attack selection can substantially degrade safety at realistic audit budgets.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: no quantitative conclusions are drawn and the scripted agent cannot stand in for a capable adversary (and cited work warns about attack selection)."
+   ],
+   "batch": 3,
+   "orig_id": "q117"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that compute governance and deployment-time AI control should be merged into a single framework for regulated deployers? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper notes that the two literatures operate at different levels and rarely address each other. It explicitly declines to attempt a synthesis, mentioning them only to situate regulated deployers, who are affected by both.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the paper explicitly does not attempt a synthesis and only notes the two conversations."
+   ],
+   "batch": 3,
+   "orig_id": "q119"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that well-calibrated output-level trusted monitoring alone would give the Operator adequate oversight assurance? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper says no single protocol should be presented to a board or regulator as a complete answer. Monitoring also has value only if flags are acted on through staffed review and incident processes, and evaluation must cover diagnosis, usefulness and cost as well as prevention.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: the paper states that no single protocol is a complete answer and that monitoring needs action and review processes (and multi-dimensional evaluation)."
+   ],
+   "batch": 3,
+   "orig_id": "q120"
+  },
+  {
+   "id": "q120",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the data-colonialism account of AI asymmetries is correct? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper uses the structural-asymmetry literature narrowly, to motivate treating the position of AI-importing jurisdictions as persistent. It explicitly does not advance a normative theory of colonialism or adjudicate broader moral claims.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the literature is used only narrowly to motivate persistence of the importing position, and the paper explicitly declines to adjudicate the theory."
+   ],
+   "batch": 3,
+   "orig_id": "q121"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "The pre-execution gateway is treated as an architectural element of the deployer's own application. Would it provide any prevention for a deployer whose vendor-hosted agent executes tool calls directly against internal systems, without passing through the deployer's application, and why?",
+   "answer": "No. The gateway works by holding, replacing, escalating or passing a recommended action at a point between recommendation and execution inside the deployer's own application. If execution bypasses that application, there is no point at which the gateway can intervene. Interaction access depends on the deployer's own application architecture.",
+   "rubric": [
+    "Concludes the gateway would provide little or no prevention in this setup",
+    "Reasons that the gateway can only act (hold/replace/escalate/pass) at a review step between recommendation and execution located in the deployer's application, which is bypassed here",
+    "Notes that interaction-layer control depends on the deployer's own application architecture or routing"
+   ],
+   "batch": 4,
+   "orig_id": "q121"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The macro-shutdown protocol escalates or puts clusters into safe mode after repeated suspiciousness. When would it fail to stop a C2 pattern like the stress scenario's slow elevation in hold recommendations, and why?",
+   "answer": "It fails when the per-case monitor does not score the individual biased recommendations as suspicious, because each one looks plausible on its own. Macro-shutdown only triggers on accumulated suspicious signals. Without them, the mis-triage keeps propagating across many cases before it is detected.",
+   "rubric": [
+    "Identifies the failure condition as individual recommendations not being flagged or scored as suspicious by the monitor",
+    "Reasons that macro-shutdown depends on repeated suspiciousness signals, so a pattern made of individually unflagged cases never triggers it and propagates (the C2 harm)"
+   ],
+   "batch": 4,
+   "orig_id": "q122"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose the Operator secures the 'notified' model-version-control setting rather than 'pinned'. When would this fail to preserve the validated status of the model the Operator relies on, and why?",
+   "answer": "It fails when the Operator lacks the capacity to revalidate before or promptly after the notified change takes effect. Notification only tells the Operator that the vendor-held model is changing on the vendor's schedule; it does not stop the change. Whether the notice protects anything depends on absorptive capacity: staff able to re-run validation and monitoring.",
+   "rubric": [
+    "Identifies the failure condition as the Operator lacking capacity to revalidate or re-monitor in time (or the change proceeding regardless)",
+    "Reasons that 'notified' informs the Operator but does not stop the model changing on the vendor's schedule, so it protects validation only if the Operator can act on it (absorptive capacity)"
+   ],
+   "batch": 4,
+   "orig_id": "q123"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "With tool-call logs set to partial, when would the tool monitor protocol leave C3-type exposures unscored, and why?",
+   "answer": "It would miss them when the tool calls that expose sensitive fields fall outside the partially logged portion. The tool monitor can only score tool or action use where tool visibility exists. In the case, C3 is defined as exposure through tool calls or outputs, so unlogged calls are a blind spot.",
+   "rubric": [
+    "Identifies the condition as the exposing tool calls not being among those captured by partial logging",
+    "Reasons that the tool monitor scores only tool use that is visible to it, and C3 can arise through tool calls"
+   ],
+   "batch": 4,
+   "orig_id": "q124"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Against the stealthy access-aware agent, when would raising the human audit protocol's budget from 2% to 20% fail to improve safety much, and why?",
+   "answer": "It would help little when monitoring is weak. In that condition the stealthy agent picks lower-visibility failure modes that are not flagged. The human audit protocol reviews only flagged cases, so a larger budget just reviews more of the wrong, or innocuous, flagged cases. Audit capacity is only as good as the flags that feed it.",
+   "rubric": [
+    "Identifies weak monitoring (the agent's failures not being flagged) as the condition",
+    "Reasons that human audit only reviews flagged cases and the stealthy agent chooses lower-visibility failures when monitoring is weak, so extra audit budget does not reach them"
+   ],
+   "batch": 4,
+   "orig_id": "q125"
+  },
+  {
+   "id": "q126",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "For what kind of jurisdiction would the paper's reason for setting aside Position B in favour of Position C stop holding, and why?",
+   "answer": "It stops holding for a jurisdiction that can actually make full-stack capability investments on the relevant timescale: domestic models, compute and control. The paper sets B aside only because it is not actionable this decade for many states, not because it is wrong. Where B is actionable, that rationale lapses.",
+   "rubric": [
+    "Identifies a jurisdiction able to build full-stack sovereign capability (domestic models, compute, control) on relevant timescales",
+    "Reasons that Position C was adopted because B is not actionable for many states, not because B is shown wrong"
+   ],
+   "batch": 4,
+   "orig_id": "q126"
+  },
+  {
+   "id": "q127",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "When would even a well-drafted guaranteed vendor-support tier stop giving the Operator reliable diagnosis support, and why?",
+   "answer": "It stops when the vendor, or a state actor behind the supply, revokes, degrades or modifies the terms of supply, for example because supply becomes tied to political alignment as with Pax Silica. Arrangements that depend on vendor cooperation are subject to change. Contracts also cannot specify all contingencies.",
+   "rubric": [
+    "Identifies the condition as supply terms being revoked, degraded or changed by the vendor or a state actor (e.g., politically conditioned supply)",
+    "Reasons that vendor-dependent arrangements are fragile and change-prone, and/or that contracts are incomplete"
+   ],
+   "batch": 4,
+   "orig_id": "q127"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is tool scope classed as a 'deployment design substitute' rather than assigned to one of the four sovereignty layers like the other experimental factors?",
+   "answer": "Restricting tool scope requires no access to the model, its traces or vendor support. The deployer can do it in its own workflow design. It substitutes for missing visibility and control by removing risky actions outright instead of detecting them.",
+   "rubric": [
+    "States that scope restriction does not depend on access to any stack layer (model, infrastructure, etc.) but is something the deployer can do in its own design",
+    "Explains it substitutes for missing oversight access by removing risky actions rather than monitoring or diagnosing them"
+   ],
+   "batch": 4,
+   "orig_id": "q128"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the paper expect reliance on vendor attestations to increase contract-management effort even as it reduces internal validation effort?",
+   "answer": "The attestations have to be secured and enforced through contract. Audit and attestation provisions, change-notification and incident clauses all sit in the contractual spend category, and they need negotiation and ongoing management. So the oversight work moves from the validation budget line to the contract-management line rather than disappearing.",
+   "rubric": [
+    "Explains that attestations must be obtained through contractual provisions (audit/attestation clauses) that need negotiation and management",
+    "Links this to the paper's cost-shifting view: effort moves between budget lines rather than being eliminated"
+   ],
+   "batch": 4,
+   "orig_id": "q129"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the environment model vendor support as a configurable setting (none, delayed, guaranteed) rather than assuming a single fixed level?",
+   "answer": "Under the paper's incomplete-contracting and bargaining-power view, vendor support depends on the terms negotiated. Vendor concentration varies, and contracts cannot cover every contingency. Different deployers will therefore end up with very different support levels, and protocols like vendor escalation depend on those terms.",
+   "rubric": [
+    "Explains that vendor support depends on negotiated terms that vary with bargaining power or vendor concentration and incomplete contracts",
+    "Notes that protocols relying on vendor support (e.g., vendor escalation) therefore vary in usefulness with those terms"
+   ],
+   "batch": 4,
+   "orig_id": "q130"
+  },
+  {
+   "id": "q131",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why would evaluating the environment's protocols with only the honest agent fall short of what the AI control framework requires?",
+   "answer": "Control is evaluated against a worst-case, deliberately subversive model, not just against routine mistakes. The honest agent only gives a baseline of ordinary error. Protocol performance against strategic behaviour that exploits weak monitoring would go untested. That is why the stealthy access-aware agent is included, even though it is crude.",
+   "rubric": [
+    "States that AI control requires safety against a worst-case or strategic untrusted model, not only ordinary errors",
+    "Explains the honest agent only represents ordinary error, so strategic exploitation would be untested"
+   ],
+   "batch": 4,
+   "orig_id": "q131"
+  },
+  {
+   "id": "q132",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why do results showing that untrusted monitoring needs explicit collusion-strategy assumptions to support a safety case lend support to Position A?",
+   "answer": "Position A holds that a protocol a deployer cannot fully verify should not count as safety assurance. If a monitoring safety case rests on collusion assumptions that cannot be verified, a deployer cannot confirm the protocol works as intended. That is exactly the verifiability gap Position A objects to.",
+   "rubric": [
+    "States Position A's criterion: protocols that cannot be fully verified should not count as safety assurance",
+    "Explains that unverifiable collusion assumptions make the monitor's assurance unverifiable, fitting A's objection"
+   ],
+   "batch": 4,
+   "orig_id": "q132"
+  },
+  {
+   "id": "q133",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the Operator's contractual spend need to include regulator-access provisions?",
+   "answer": "The regulator expects documented validation, monitoring and auditability for material models. But the model, its documentation and the serving operations are vendor-held. Supervisory examination of the system therefore depends on contractual rights for the regulator to reach vendor information.",
+   "rubric": [
+    "Notes the regulator's expectations of auditability and supervision of material models",
+    "Explains that because the model and serving are vendor-controlled, regulator access must be secured by contract"
+   ],
+   "batch": 4,
+   "orig_id": "q133"
+  },
+  {
+   "id": "q134",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": "b4-p1",
+   "question": "Under the Operator's access arrangement in the case, could the Operator implement a pre-execution gateway in-house?",
+   "answer": "Yes. The gateway is a review step within the deployer's own application, and the interaction layer is operator-led. The Operator designs and runs the surrounding application, workflow and tool interfaces.",
+   "rubric": [
+    "Answers yes",
+    "Reasons that the gateway sits in the deployer's own application and the Operator leads the interaction layer (application, workflow, tool interfaces)"
+   ],
+   "batch": 4,
+   "orig_id": "q134"
+  },
+  {
+   "id": "q135",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": "b4-p1",
+   "question": "Under the Operator's access arrangement in the case, could the Operator implement weights escrow or patching in-house?",
+   "answer": "No. The model layer is vendor-led and weights are vendor-held under managed-endpoint access. Weights patching is typically handled through vendor processes.",
+   "rubric": [
+    "Answers no",
+    "Reasons that weights are vendor-held or the model layer is vendor-led, so patching goes through the vendor"
+   ],
+   "batch": 4,
+   "orig_id": "q135"
+  },
+  {
+   "id": "q136",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p2",
+   "question": "Does the large run's configuration set allow the paper to attribute differences in diagnosis success to the trace-access setting?",
+   "answer": "No. The 20 access profiles are curated, not full-factorial, so trace access varies together with other settings. The simplified protocols were also not designed for causal identification.",
+   "rubric": [
+    "Answers no",
+    "Reasons that the curated, non-full-factorial configurations confound settings and do not support causal attribution"
+   ],
+   "batch": 4,
+   "orig_id": "q136"
+  },
+  {
+   "id": "q137",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p2",
+   "question": "Does the large run allow the paper to claim that the environment produces the diagnosis-success metric for every access configuration it covers?",
+   "answer": "Yes. The run completed all 27,000 condition rows and produced the full metric set, including diagnosis success, for every row. That is the kind of execution claim the run is designed to support.",
+   "rubric": [
+    "Answers yes",
+    "Reasons that all condition rows completed with all metrics produced, which is a tooling or execution claim rather than a causal one"
+   ],
+   "batch": 4,
+   "orig_id": "q137"
+  },
+  {
+   "id": "q138",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": "b4-p3",
+   "question": "Could the paper's four-layer access typology be used to describe a hospital's deployment of a vendor model?",
+   "answer": "Yes. The descriptive framework is sector-agnostic and is offered as an aid for any regulated deployer's position across data, model, infrastructure and interaction.",
+   "rubric": [
+    "Answers yes",
+    "Reasons that the descriptive framework is sector-agnostic"
+   ],
+   "batch": 4,
+   "orig_id": "q138"
+  },
+  {
+   "id": "q139",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c2"
+   ],
+   "pair": "b4-p3",
+   "question": "Could the payments case's C1\u2013C4 catastrophic-action classes be adopted directly as a hospital deployment's catastrophic-action classes?",
+   "answer": "No. The C1\u2013C4 classes are specific to payments: holds, mis-triage, financial data and settlement. The case interpretation is not sector-agnostic, and healthcare may have fuzzier catastrophes and wider action surfaces.",
+   "rubric": [
+    "Answers no",
+    "Reasons that the classes are payments-specific and the case is not sector-agnostic, with other sectors having fuzzier catastrophes or wider action surfaces"
+   ],
+   "batch": 4,
+   "orig_id": "q139"
+  },
+  {
+   "id": "q140",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": "b4-p4",
+   "question": "Under the paper's cost-shifting observation, is narrowing an AI assistant's scope expected to increase manual-processing effort?",
+   "answer": "Yes. The paper's example is that narrowing scope may reduce monitoring effort but increase manual processing. The work the model no longer does has to be done by people.",
+   "rubric": [
+    "Answers yes",
+    "Reasons with the cost-shifting example that excluded work moves to manual processing"
+   ],
+   "batch": 4,
+   "orig_id": "q140"
+  },
+  {
+   "id": "q141",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": "b4-p4",
+   "question": "Under the paper's cost-shifting observation, is narrowing an AI assistant's scope expected to increase monitoring effort?",
+   "answer": "No. The paper expects narrowing scope to reduce monitoring effort, because fewer, less risky actions need to be watched. The cost reappears elsewhere, as manual processing.",
+   "rubric": [
+    "Answers no (it is expected to reduce monitoring effort)",
+    "Reasons that there are fewer risky actions to monitor and the cost shifts to other lines such as manual processing"
+   ],
+   "batch": 4,
+   "orig_id": "q141"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A user reruns the large-run configuration but keeps only the stealthy access-aware agent and only the 20% audit budget, leaving everything else unchanged. How many condition rows and case simulations result?",
+   "answer": "The calculation is 20 profiles \u00d7 10 protocols \u00d7 1 agent \u00d7 3 thresholds \u00d7 1 audit budget \u00d7 5 seeds = 3,000 condition rows. At 50 cases per condition, that gives 150,000 case simulations.",
+   "rubric": [
+    "Gives 3,000 condition rows",
+    "Gives 150,000 case simulations (3,000 \u00d7 50)"
+   ],
+   "batch": 4,
+   "orig_id": "q142"
+  },
+  {
+   "id": "q143",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A deployer has very few staff able to review flagged cases but generous latency and compute budgets. Between resampling and output monitoring with human audit, which fits its constraints better, and why?",
+   "answer": "Resampling fits better. Its main regulated-deployer consideration is cost and latency, which this deployer can absorb. Human audit depends on staffing and escalation capacity, which it lacks. Even so, resampling should not be presented as a complete answer.",
+   "rubric": [
+    "Chooses resampling",
+    "Reasons that resampling's constraint is cost or latency (available here) whereas human audit's is staffing or escalation (scarce here)",
+    "Optionally notes no single protocol is a complete answer"
+   ],
+   "batch": 4,
+   "orig_id": "q143"
+  },
+  {
+   "id": "q144",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A deployer's vendor product tier provides only partial input/output logs. Which layer of the typology does this affect, which instruments could improve it, and which outcome dimension is most at risk?",
+   "answer": "It affects the interaction layer. That layer can be improved through product tier or contract terms, or by having the deployer's own application architecture record prompts, outputs and tool calls. Diagnosis, meaning the ability to reconstruct failures after the fact, is most at risk.",
+   "rubric": [
+    "Identifies the interaction layer",
+    "Names product tier/contract and/or the deployer's own application architecture as levers",
+    "Identifies diagnosis or after-the-fact reconstruction as the dimension most at risk"
+   ],
+   "batch": 4,
+   "orig_id": "q144"
+  },
+  {
+   "id": "q145",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A bank deploys a well-calibrated output monitor, but its regulator has little experience interpreting AI monitor outputs or challenging vendor attestations. What does the balancing framework imply about supervisory oversight here, and what remedy does it point to?",
+   "answer": "The absorptive-capacity consideration applies to the regulator as well as the deployer. Oversight is only useful if it can be exercised, so supervisory oversight will be weak despite the good monitor. Coalition paths such as regional regulatory colleges could pool and amortise the needed capability.",
+   "rubric": [
+    "Concludes supervisory oversight is limited because the absorptive-capacity consideration covers the regulator too",
+    "Points to coalition paths (e.g., regional regulatory colleges or shared arrangements) as a remedy"
+   ],
+   "batch": 4,
+   "orig_id": "q145"
+  },
+  {
+   "id": "q146",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A deployer considers making a newly proposed control protocol, backed by a single recent study, a central pillar of its oversight. What does the balancing framework advise, and why?",
+   "answer": "It advises placing limited reliance on the protocol and combining it with better-established controls. The protocol-maturity consideration says reliance should track the evidence base, and a single recent study is thin. Because control recommendations evolve, the deployer would also struggle to justify the choice to validators over multi-year horizons.",
+   "rubric": [
+    "Advises limited reliance (or not making it central)",
+    "Reasons via protocol maturity: reliance should match the evidence base, which is thin here",
+    "Optionally notes evolving research complicates multi-year justification"
+   ],
+   "batch": 4,
+   "orig_id": "q146"
+  },
+  {
+   "id": "q147",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A vendor pitches a built-in monitor that flags nearly all unsafe outputs. Which two of the paper's recurring distinctions does this claim leave unaddressed for a regulated deployer?",
+   "answer": "First, it leaves open monitoring versus acting on monitoring: flags have value only if the deployer has staff and a process to handle them. Second, it leaves open detecting versus explaining: flagging does not show whether failures can be traced to their origin for post-incident review.",
+   "rubric": [
+    "Names monitoring vs acting on monitoring, with the point that flags need a handling process or staff",
+    "Names detecting vs explaining, with the point that flagging does not provide diagnosis or post-incident reconstruction"
+   ],
+   "batch": 4,
+   "orig_id": "q147"
+  },
+  {
+   "id": "q148",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the control tax as priced by Terekhov et al. had already included procurement, legal review and vendor-management frictions, which part of the paper's decomposition would lose its rationale as a separate term?",
+   "answer": "The sovereignty discount cost would lose its rationale as a separate term. It is added to the instrumented-control cost precisely to capture the institutional overheads that protocol-level pricing (monitoring, auditing, the safety-usefulness trade-off) leaves out.",
+   "rubric": [
+    "Identifies the sovereignty discount cost term",
+    "Explains it exists to capture institutional frictions omitted from protocol-level control-tax pricing"
+   ],
+   "batch": 4,
+   "orig_id": "q148"
+  },
+  {
+   "id": "q149",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If a deployer could readily switch between many substitutable frontier-model vendors, which parts of the paper's normative discussion would lose much of their force?",
+   "answer": "Two parts would weaken. The vendor-concentration and bargaining-power consideration would matter less. Position B's argument that foreign-dependent arrangements are fragile, because a supplier can revoke or degrade terms, would also lose force, since switching would blunt any single supplier's leverage.",
+   "rubric": [
+    "Names the vendor concentration/bargaining power consideration",
+    "Names Position B's fragility or revocation argument as weakened, because substitutability limits a supplier's leverage"
+   ],
+   "batch": 4,
+   "orig_id": "q149"
+  },
+  {
+   "id": "q150",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the environment's stealthy access-aware agent were replaced by a capable LLM red team, which caveat about the run's outputs would weaken, and which would still prevent treating them as real-world evidence?",
+   "answer": "The caveat against drawing adversarial-robustness conclusions from a scripted, weak agent would weaken. But the outputs would still not be real-world evidence. The data and workflow are synthetic, configurations are curated rather than full-factorial, and human factors and institutional overheads are not modelled.",
+   "rubric": [
+    "Identifies the adversarial-robustness caveat (scripted agent far weaker than a red team) as weakened",
+    "Names at least one remaining barrier: synthetic data or workflow, curated non-factorial configurations, or unmodelled human/institutional factors"
+   ],
+   "batch": 4,
+   "orig_id": "q150"
+  },
+  {
+   "id": "q151",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the environment's latency proxy were removed, which practical concern about a specific protocol in the payments case could the environment no longer represent?",
+   "answer": "It could no longer represent the cost-and-latency concern about resampling. Additional queries affect throughput and service levels, and dispute-handling timelines are set by scheme rules or regulation. Without a latency measure, resampling's main regulated-deployer drawback would be invisible.",
+   "rubric": [
+    "Identifies resampling's cost/latency concern",
+    "Links it to service levels or dispute-handling timelines set by scheme rules or regulation"
+   ],
+   "batch": 4,
+   "orig_id": "q151"
+  },
+  {
+   "id": "q152",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the Operator's tool set could not be narrowed (for example, because the vendor's agent exposed fixed tools), which elements of the paper would lose support?",
+   "answer": "Three elements would lose support. Scope decisions, meaning excluding C4-adjacent paths and constraining tools, would stop being an available spend category and lever. The claim that payments is favourable terrain partly because tool surfaces can be narrowed would weaken. Scope restriction as a practical protocol for the case would also go.",
+   "rubric": [
+    "Names the scope-decisions spend category or scope restriction lever as lost",
+    "Names the favourable-terrain reason that tool surfaces can be narrowed as weakened"
+   ],
+   "batch": 4,
+   "orig_id": "q152"
+  },
+  {
+   "id": "q153",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the Operator's vendor refused any change-notification clause, which environment setting would represent the Operator's situation, and which case requirement would be put under strain?",
+   "answer": "The model-version-control setting 'unpinned' would represent the situation, because the model changes on the vendor's schedule without notice. This would strain the model risk function's practice of validating a specific model and monitoring it for drift, including the periodic revalidation the case expects.",
+   "rubric": [
+    "Identifies the 'unpinned' model-version-control setting",
+    "Identifies strain on validation of a specific model, drift monitoring or revalidation by the model risk function"
+   ],
+   "batch": 4,
+   "orig_id": "q153"
+  },
+  {
+   "id": "q154",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that import-dependent regulated deployers typically lead their own interaction layer? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The typology says interaction access varies with product tier, contract and the deployer's application architecture. The operator-led finding comes from a single illustrative, anonymised case, not from a survey of deployers.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that the typology says interaction access varies with product tier, contract and architecture, and the operator-led result is from one illustrative case"
+   ],
+   "batch": 4,
+   "orig_id": "q154"
+  },
+  {
+   "id": "q155",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that resampling is unsuitable for payments-dispute workflows? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper only flags cost and latency questions against service levels and scheme-rule timelines, which a deployer must weigh. The environment's results are not used to draw quantitative conclusions about any protocol.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that the paper raises cost/latency considerations without a verdict and draws no quantitative protocol conclusions from the simulation"
+   ],
+   "batch": 4,
+   "orig_id": "q155"
+  },
+  {
+   "id": "q156",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that vendor escalation with guaranteed support outperforms human audit? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The environment can run both protocols, but the paper deliberately draws no quantitative or protocol-ranking conclusions, because the protocols are simplified, the agents scripted and the configurations curated. It also stresses that no single protocol is a complete answer.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that no quantitative or ranking conclusions are drawn from the simplified, curated synthetic run"
+   ],
+   "batch": 4,
+   "orig_id": "q156"
+  },
+  {
+   "id": "q157",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the C1\u2013C4 classes are ordered by reversibility as well as by severity? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The case ranks the classes by severity only. The balancing framework's reversibility examples contrast a bounded, reversible single-transaction error with irreversible settlement failure or mass data exposure, but it never ranks C2 against C3 on reversibility.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that the ordering is stated by severity and reversibility is only illustrated at the extremes, not ranked across all classes"
+   ],
+   "batch": 4,
+   "orig_id": "q157"
+  },
+  {
+   "id": "q158",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that coalition arrangements such as shared audit consortia or South-South cooperation reduce deployers' oversight costs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Coalition paths appear only as one consideration in a rubric that 'can' amortise oversight costs. The paper offers no evidence on their effect, and the cost proxy does not model them.",
+   "rubric": [
+    "Answers not settled",
+    "Reasons that coalition paths are proposed as a consideration without supporting evidence or modelling"
+   ],
+   "batch": 4,
+   "orig_id": "q158"
+  },
+  {
+   "id": "q159",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that AI control protocols provide no meaningful oversight for deployers without model access? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper treats output-level monitoring, defer-to-trusted routing, human audit and scope restriction as feasible without model access. Against a strong Position B, it argues that proportionate oversight, workflow design and incident management can do meaningful work, even if the assurance is partial.",
+   "rubric": [
+    "Answers contradicted",
+    "Reasons that several protocols are feasible without model access and the paper argues proportionate oversight can do meaningful (if partial) work"
+   ],
+   "batch": 4,
+   "orig_id": "q159"
+  },
+  {
+   "id": "q160",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that interpretability-supported auditing cannot become part of the Operator's oversight regime? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The Operator treats activation-level and interpretability-supported monitoring as longer-term possibilities. Their availability depends on the vendor's product roadmap and the Operator's interpretive capacity, rather than being ruled out.",
+   "rubric": [
+    "Answers contradicted",
+    "Reasons that these are framed as longer-term possibilities contingent on the vendor roadmap and Operator capacity, not excluded"
+   ],
+   "batch": 4,
+   "orig_id": "q160"
+  },
+  {
+   "id": "q161",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "In an environment configuration with the pre-execution gateway present, would pairing it with the no-control protocol be expected to provide any prevention, and why?",
+   "answer": "No. The gateway is only a review point between the agent's recommended action and mock execution, where the active protocol may hold, replace, escalate or pass the action. The no-control protocol accepts the agent's proposed action, so every recommendation passes through to execution. Prevention comes from what a protocol does at the gateway, not from the gateway alone.",
+   "rubric": [
+    "Concludes that the gateway paired with no control gives no (or negligible) prevention.",
+    "Explains that the gateway is just a point where a protocol can hold, replace, escalate or pass actions, and that no control accepts or passes every proposed action."
+   ],
+   "batch": 5,
+   "orig_id": "q161"
+  },
+  {
+   "id": "q162",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The Operator's model risk function approves output-monitor thresholds at go-live. Under which model-version-control setting would those thresholds most likely stop being justified even if the monitor itself is unchanged, and why?",
+   "answer": "Under the unpinned setting. There the vendor can change the underlying model on its own schedule, and the outputs being scored shift with it. A threshold calibrated on the validated model's outputs, with its implied flag and error behaviour, then no longer describes the model actually running, so it needs review and recalibration.",
+   "rubric": [
+    "Identifies the unpinned setting, or equivalently vendor updates made without the deployer's involvement.",
+    "Explains that thresholds are calibrated against a specific model's outputs, so a changed model can invalidate the calibration (flag, false-positive or false-negative behaviour) even with the same monitor."
+   ],
+   "batch": 5,
+   "orig_id": "q162"
+  },
+  {
+   "id": "q163",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Under the coalition-paths consideration, several small operators share an audit consortium that reviews their flagged cases. Under what condition would this add little real oversight for a member operator, and why?",
+   "answer": "It would add little when the member has no internal incident process, or no authority or capacity, to act on the consortium's findings. Acting means triage, scope narrowing, customer remediation and regulator notification. A flag has value only if the organisation can act on it, and the member stays accountable to its own regulator and board. A consortium spreads the cost of reviewing flags but cannot run the member's own incident management.",
+   "rubric": [
+    "States the condition: the member lacks its own process, capacity or authority to act on what the consortium finds.",
+    "Explains with the distinction between monitoring and acting on monitoring, or with the fact that accountability and incident response stay with the member while the consortium only shares review cost."
+   ],
+   "batch": 5,
+   "orig_id": "q163"
+  },
+  {
+   "id": "q164",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Would the resampling protocol's protection hold against a C2 failure such as the stress scenario's slow elevation in hold recommendations for one merchant category, and why?",
+   "answer": "Not reliably. Resampling works case by case: it picks the lowest-risk acceptable action among candidates for each individual action. A C2 failure is a pattern that only shows up across many cases, and each individual recommendation may look acceptable. The candidates also come from the same model and may share its bias. Catching C2 needs detection at the level of patterns or clusters.",
+   "rubric": [
+    "Concludes that resampling would not reliably prevent or catch the C2 pattern.",
+    "Explains that resampling operates on individual actions or cases, while C2 is only visible as a pattern across many cases."
+   ],
+   "batch": 5,
+   "orig_id": "q164"
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "When would the Operator's data-residency rider provide no protection against a C3 event, and why?",
+   "answer": "It gives no protection when protected data is exposed through tool calls or outputs, which is how the case defines C3. The rider only governs where data is stored, which is part of the infrastructure arrangement. It says nothing about what the model returns or which tools it calls. Mitigation for C3 lies in the interaction layer, through controlled tool interfaces, monitoring and editing of outputs.",
+   "rubric": [
+    "States that the rider does not protect against exposure through outputs or tool calls (the case's C3 route).",
+    "Explains that the rider governs storage location (infrastructure) and not the interaction-layer behaviour through which C3 occurs."
+   ],
+   "batch": 5,
+   "orig_id": "q165"
+  },
+  {
+   "id": "q166",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "The case suggests the control tax will be experienced as an extension of existing third-party and model risk budgets. For what kind of deployer would this expectation fail, and why?",
+   "answer": "It would fail for deployers without established third-party and model risk governance, such as settings with less established oversight practice like parts of public administration or general enterprise. The expectation rests on the case's spend categories closely resembling costs already incurred to govern critical third-party technology services. Where that machinery does not exist, the costs would arrive as new budget lines rather than extensions of existing ones.",
+   "rubric": [
+    "Identifies deployers lacking mature third-party and model risk management (for example, sectors with less established oversight practice).",
+    "Explains that the expectation depends on the oversight spend resembling existing third-party governance budgets, so without them the costs would be genuinely new."
+   ],
+   "batch": 5,
+   "orig_id": "q166"
+  },
+  {
+   "id": "q167",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the case require that actions replaced under defer-to-trusted routing be recorded for later review?",
+   "answer": "Post-incident review is central to regulated accountability: detection alone is not enough, and failures must also be explained. Without a record of what the model proposed and what replaced it, investigators could not reconstruct how a case was handled. They also could not check customer treatment or show validators and supervisors how the protocol behaved.",
+   "rubric": [
+    "States that the records allow later reconstruction or diagnosis of what happened in the case.",
+    "Links this to regulated accountability, for example the distinction between detecting and explaining, audit and supervisory review, or checking customer treatment."
+   ],
+   "batch": 5,
+   "orig_id": "q167"
+  },
+  {
+   "id": "q168",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the stress scenario, why must the Operator plan customer remediation even though the incident is a C2 pattern rather than a single incorrect hold?",
+   "answer": "A C2 failure is made up of many incorrect individual hold decisions that spread across cases before detection, so each affected customer has suffered a C1-type harm. Narrowing scope and fixing the root cause stop further harm. They do not undo holds already placed on those customers.",
+   "rubric": [
+    "States that the C2 pattern consists of many individual incorrect holds affecting real customers.",
+    "Explains that containment or root-cause fixes do not reverse holds already applied, so affected customers need separate remediation."
+   ],
+   "batch": 5,
+   "orig_id": "q168"
+  },
+  {
+   "id": "q169",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the Operator weigh narrowing the assistant's scope for the affected merchant category in parallel with the vendor ticket, rather than waiting for the vendor's response?",
+   "answer": "C2 errors keep spreading across cases until they are contained. The fix to the model is vendor-led, and its timing depends on the support terms. Scope narrowing falls within the Operator's own interaction layer, so it can halt further spread immediately. The Operator accepts lost usefulness, and more manual processing, while the investigation runs.",
+   "rubric": [
+    "Explains that waiting would let the C2 pattern keep spreading because the model fix depends on the vendor and its timing.",
+    "Notes that scope narrowing is within the Operator's own control (operator-led interaction layer) and can act immediately, at a usefulness cost."
+   ],
+   "batch": 5,
+   "orig_id": "q169"
+  },
+  {
+   "id": "q170",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "The environment's workflow is transaction-adjacent rather than settlement-operational. Why does it still include a C4 class?",
+   "answer": "The case defines C4 as any action path that could disturb settlement, and even a dispute-triage workflow can make recommendations on settlement-critical cases. Synthetic cases therefore carry a settlement-critical marker, and such recommendations are labelled C4. This lets the environment represent the highest-severity class, and test controls such as excluding those paths, without connecting to settlement at all.",
+   "rubric": [
+    "States that recommendations in a transaction-adjacent workflow can still touch settlement-critical cases, matching the case's definition of C4 as any action path that could disturb settlement.",
+    "Notes that C4 is a synthetic label (settlement-critical marker) that lets the highest-severity class and related controls be studied without real settlement access."
+   ],
+   "batch": 5,
+   "orig_id": "q170"
+  },
+  {
+   "id": "q171",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the environment need the honest agent, given that AI control is concerned with worst-case behaviour?",
+   "answer": "The honest agent provides a baseline of ordinary error. Against it, a protocol's effect on routine mistakes, and its costs during normal operation, can be seen. Those costs include false positives, audit load and lost task success. Regulated deployers judge controls on usefulness and cost as well as prevention, so they need to know how a protocol behaves when the model is not attacking.",
+   "rubric": [
+    "States that the honest agent gives a baseline of ordinary error or routine operation.",
+    "Explains that this reveals protocols' costs under normal operation (false positives, audit burden, usefulness loss), which regulated deployers must weigh alongside worst-case safety."
+   ],
+   "batch": 5,
+   "orig_id": "q171"
+  },
+  {
+   "id": "q172",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does defer-to-trusted routing tend to carry a usefulness cost, beyond its workflow-design cost?",
+   "answer": "Flagged actions are replaced by a weaker trusted model's output or a conservative fallback, which may be less accurate or helpful than the original. Some flags are false positives, and in those cases a good recommendation is swapped for a worse one. Safety is bought partly with usefulness.",
+   "rubric": [
+    "Concludes that replacement can reduce task success or usefulness.",
+    "Explains that the replacement comes from a weaker or conservative trusted fallback, and that false-positive flags cause good recommendations to be replaced."
+   ],
+   "batch": 5,
+   "orig_id": "q172"
+  },
+  {
+   "id": "q173",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is it reasonable for the Operator to evaluate its controls against a worst-case untrusted model, even though its vendor is a commercial partner with no evident intent to harm it?",
+   "answer": "AI control is designed for cases where a model's alignment cannot be verified, and the Operator has no model access: weights, architecture and activations are vendor-held. The vendor also holds private information under incomplete contracts, and verification is costly and asymmetric. The Operator therefore cannot confirm the model's behaviour directly, and planning for the worst case keeps its controls valid whatever the model's actual tendencies.",
+   "rubric": [
+    "Concludes that worst-case evaluation is reasonable because the Operator cannot verify the model's alignment or behaviour.",
+    "Grounds this in the Operator's lack of model-layer access and/or the vendor's private information and costly, asymmetric verification."
+   ],
+   "batch": 5,
+   "orig_id": "q173"
+  },
+  {
+   "id": "q174",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A deployer with too few reviewers replaces human auditing of flagged cases with an AI auditor. Which practical consideration does this ease, and what does it bring in instead?",
+   "answer": "It eases staffing and review capacity. The AI auditor, however, is another model, so it must be calibrated, documented, validated and justified to the model risk function, as an output monitor must be. Escalation paths are still needed. The cost shifts from staffing to validation rather than disappearing.",
+   "rubric": [
+    "States that it eases the staffing or review-capacity consideration.",
+    "States that it introduces calibration, documentation and validation burdens (model risk justification) for the AI auditor, so cost shifts rather than disappears."
+   ],
+   "batch": 5,
+   "orig_id": "q174"
+  },
+  {
+   "id": "q175",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Which environment protocol and setting best represent the audit-and-attestation provisions in the Operator's contractual spend, and what part of that spend does the environment not capture?",
+   "answer": "The vendor escalation protocol represents them: it requests vendor support for diagnosis or attestation. The vendor-support setting (none, delayed, guaranteed) stands in for what the contract secures. Usage appears as vendor-request count and vendor-assurance cost. The cost of negotiating and legally reviewing the provisions is an institutional friction the simulator does not model.",
+   "rubric": [
+    "Identifies the vendor escalation protocol together with the vendor-support setting.",
+    "Notes that negotiation, legal review or procurement cost of the provisions is not captured by the simulator."
+   ],
+   "batch": 5,
+   "orig_id": "q175"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Of the case's four oversight spend categories, which has the weakest counterpart in the environment's decomposed cost proxy, and why?",
+   "answer": "Contractual spend. Architectural spend maps to the logging, gateway and monitoring components. Capacity spend maps partly to human-audit cost. Scope decisions map to scope-restriction cost. Contractual spend, by contrast, means negotiating service, notification, audit and regulator-access terms, and the simulator does not model these procurement and legal frictions. Only per-request vendor-assurance cost touches it.",
+   "rubric": [
+    "Identifies contractual spend.",
+    "Explains that the other categories have proxy components (logging, gateway, monitoring, human audit, scope-restriction cost), while contract negotiation and legal review are unmodelled institutional frictions."
+   ],
+   "batch": 5,
+   "orig_id": "q176"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Which decision in the stress scenario corresponds most closely to the environment's macro-shutdown protocol, and what cost does that decision carry?",
+   "answer": "Narrowing the assistant's scope for the affected merchant category pending investigation. Like macro-shutdown, it puts a suspicious cluster into safe mode after repeated suspicious signals. Its cost is the usefulness lost for that whole category, which moves work into manual processing.",
+   "rubric": [
+    "Identifies the decision to narrow scope for the affected merchant category (safe-moding the cluster).",
+    "States the cost as lost usefulness for the cluster, shifted to manual processing."
+   ],
+   "batch": 5,
+   "orig_id": "q177"
+  },
+  {
+   "id": "q178",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A supervisor wants evaluations to measure whether staff could explain a failure's root cause to the supervisor. How should a user adapt the environment, and what would it still fail to capture?",
+   "answer": "The user should substitute a richer definition of diagnosis success. The environment's operationalisation is deliberately simple and designed to be replaced. Even so, the environment does not model human factors such as staff expertise or whether records are actually reviewed, and its data are synthetic. It still could not show whether real staff could explain a failure.",
+   "rubric": [
+    "States that the user should replace the simple diagnosis-success definition with a richer one suited to the setting.",
+    "Notes that human factors (staff expertise, actual review) and real data remain unmodelled, so the result is still not a real-world estimate."
+   ],
+   "batch": 5,
+   "orig_id": "q178"
+  },
+  {
+   "id": "q179",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A payments operator plans to extend its assistant from dispute triage to directly initiating settlement adjustments. What does the paper's framework imply for oversight of that extension?",
+   "answer": "The extension opens C4 action paths, which are the most severe and least reversible class, so it would justify the greatest oversight investment. It also removes the lever the case relies on, which is excluding C4-adjacent paths as a scope decision. That weakens what makes payments favourable terrain. Under the cost-versus-value consideration, the extension may not justify deployment at all.",
+   "rubric": [
+    "Concludes that the extension would require much heavier oversight, or might not be justified at all.",
+    "Explains that it opens C4 (highest severity, least reversible) action paths and removes the scope-restriction lever of excluding C4-adjacent paths."
+   ],
+   "batch": 5,
+   "orig_id": "q179"
+  },
+  {
+   "id": "q180",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If oversight costs simply added up, with no design choice moving cost from one budget line to another, which evaluation recommendation would lose one of its stated motivations?",
+   "answer": "It would weaken the warning that frameworks reporting only one cost category give a misleading impression of efficiency, which motivates reporting decomposed cost alongside the other dimensions. That warning rests on cost-shifting. Examples are scope narrowing lowering monitoring effort while raising manual processing, and vendor attestations lowering validation while raising contract management.",
+   "rubric": [
+    "Identifies the recommendation against single-cost-category reporting, or in favour of decomposed or joint cost reporting.",
+    "Explains that it is motivated by costs shifting between lines (for example, scope narrowing raising manual processing, attestations raising contract management)."
+   ],
+   "batch": 5,
+   "orig_id": "q180"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If vendor cooperation and supply terms were guaranteed never to change, which part of the paper's concession 'in support of both A and B' would lose force, and which part would remain?",
+   "answer": "The part about arrangements that depend on vendor cooperation being subject to change would lose force; it backs Position B's fragility argument. The other part would remain: the assurance available to any single deployer is limited, which supports Position A, because the deployer still lacks model access and cannot verify the model directly.",
+   "rubric": [
+    "Identifies that the point about vendor-dependent arrangements being subject to change (B's fragility argument) loses force.",
+    "States that the limited assurance available to a single deployer (supporting A) remains, because model access and verification are still absent."
+   ],
+   "batch": 5,
+   "orig_id": "q181"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the four-pillar sovereignty formulation were a settled, peer-reviewed academic taxonomy, which hedge about the paper's four-layer typology would lose part of its stated basis?",
+   "answer": "It would weaken the hedge that the typology is offered as a descriptive aid rather than a settled taxonomy. The paper bases that hedge partly on the sovereign-AI literature being fast-moving, partly non-peer-reviewed, and a policy and industry construct. The hedge would not vanish entirely, because the paper also modifies the framework by replacing the operational pillar with an interaction layer.",
+   "rubric": [
+    "Identifies the hedge that the typology is a descriptive aid rather than a settled taxonomy.",
+    "Links that hedge to the source framework being a fast-moving, partly non-peer-reviewed policy and industry construct (optionally noting the paper's own modification still keeps it unsettled)."
+   ],
+   "batch": 5,
+   "orig_id": "q182"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the environment's human-audit reviewer had unlimited capacity, which practical consideration from the protocol table could the environment no longer represent?",
+   "answer": "It could no longer represent staffing and escalation: review capacity that must be planned and resourced. With an unlimited reviewer, the human-audit protocol would no longer depend on audit budget and capacity limits. The environment would then miss the constraint the case links to capacity spend and to resourced escalation paths.",
+   "rubric": [
+    "Identifies the staffing and escalation (review capacity) consideration for human auditing.",
+    "Explains that the capacity-limited reviewer is what makes audit budget and review resourcing matter in the environment."
+   ],
+   "batch": 5,
+   "orig_id": "q183"
+  },
+  {
+   "id": "q184",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the environment's cost proxy omitted the scope-restriction cost component, how could the safety-usefulness-cost frontier mislead about the scope restriction protocol?",
+   "answer": "Scope restriction would appear both safe and cheap, with a small cost marker. The usefulness given up by removing actions would be missing from its total control cost. This is the free-safety-gain impression that joint reporting is meant to prevent. The paper treats forgone usefulness as a real oversight cost; it appears as one of the case's spend categories.",
+   "rubric": [
+    "States that scope restriction would look cheap or nearly costless as well as safe.",
+    "Explains that the forgone usefulness, which the paper treats as an oversight cost (scope decisions), would drop out of the cost total, encouraging the free-safety-gain reading."
+   ],
+   "batch": 5,
+   "orig_id": "q184"
+  },
+  {
+   "id": "q185",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If a regulated deployer could transfer accountability for a vendor model's behaviour entirely to the vendor, which central argument of the paper would lose support?",
+   "answer": "The argument that control protocols become part of the deployer's wider oversight system, and that pricing the control tax requires attention to Layer 2 institutional embedding. That argument rests on the deployer staying accountable to its regulator, customers and board for a model it does not own. That accountability is what forces controls into its validation, audit and incident processes.",
+   "rubric": [
+    "Identifies the Layer 2 / wider-oversight-system argument (pricing the control tax requires attention to institutional embedding).",
+    "Explains that it rests on the deployer remaining accountable to its regulator, board or customers despite not owning the model."
+   ],
+   "batch": 5,
+   "orig_id": "q185"
+  },
+  {
+   "id": "q186",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": "b5-p1",
+   "question": "Would an LLM-in-the-loop version of the environment allow the paper to report sovereignty-discount estimates?",
+   "answer": "No. Sovereignty discount refers to procurement, legal review, vendor-management and supervisory frictions that the simulator does not model at all. Swapping scripted agents for an LLM changes the agents' behaviour, not those institutional overheads.",
+   "rubric": [
+    "Answers no.",
+    "Explains that sovereignty discount consists of institutional frictions the simulator does not model, which agent realism does not add."
+   ],
+   "batch": 5,
+   "orig_id": "q186"
+  },
+  {
+   "id": "q187",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": "b5-p1",
+   "question": "Would an LLM-in-the-loop version of the environment make its flag and false-positive rates more informative about monitor calibration?",
+   "answer": "Yes. The scripted agents lack the ambiguity of real model outputs, which is exactly what monitor calibration must handle. An LLM in the loop would produce realistic outputs, so threshold, flag and false-positive results would bear more directly on calibration.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that scripted agents lack real output ambiguity, which monitor calibration depends on, and an LLM would supply it."
+   ],
+   "batch": 5,
+   "orig_id": "q187"
+  },
+  {
+   "id": "q188",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": "b5-p2",
+   "question": "In the target-reachability template, would a profile meeting \u22641% failure and \u226575% usefulness for a given agent count as reaching the target even if its cost proxy were very high?",
+   "answer": "Yes. The joint target is defined only by failure and usefulness thresholds, so cost does not enter whether a profile is counted. Cost has to be read separately, for example from the safety-usefulness-cost frontier.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the target uses only failure and usefulness criteria, so cost is not part of reachability."
+   ],
+   "batch": 5,
+   "orig_id": "q188"
+  },
+  {
+   "id": "q189",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": "b5-p2",
+   "question": "In the target-reachability template, would a profile that meets \u22641% failure and \u226575% usefulness against the honest agent thereby count as reaching the target for the stealthy access-aware agent?",
+   "answer": "No. Reachability is computed and reported separately for each synthetic agent. The same profile can fail the target against the stealthy agent, which chooses lower-visibility failures when monitoring is weak.",
+   "rubric": [
+    "Answers no.",
+    "Explains that reachability is reported per agent, and that the stealthy agent's behaviour differs, so meeting the target for one agent does not carry over."
+   ],
+   "batch": 5,
+   "orig_id": "q189"
+  },
+  {
+   "id": "q190",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p3",
+   "question": "Would Position A's objection apply to a domestic deployer that runs a domestically built model whose behaviour it likewise cannot fully verify?",
+   "answer": "Yes. Position A turns on verifiability: if the deployer cannot fully verify that a protocol works as intended, it should not count it as safety assurance. That concern does not depend on whether the model or supplier is foreign.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that Position A rests on verifiability, not on foreign dependency."
+   ],
+   "batch": 5,
+   "orig_id": "q190"
+  },
+  {
+   "id": "q191",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p3",
+   "question": "Would Position B's objection apply to a domestic deployer that runs a domestically built model on domestic compute under its own control?",
+   "answer": "No. Position B objects to fragility from foreign dependency, where a vendor or state can revoke or change supply terms. Full-stack domestic capability is precisely the solution Position B endorses.",
+   "rubric": [
+    "Answers no.",
+    "Explains that Position B targets foreign-dependency fragility, and that domestic models, compute and control are what it calls for."
+   ],
+   "batch": 5,
+   "orig_id": "q191"
+  },
+  {
+   "id": "q192",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p4",
+   "question": "Under the balancing framework, would the availability of a regional regulatory college reduce the case for heavy oversight of a use case whose catastrophic action is severe and irreversible?",
+   "answer": "No. The case for heavy oversight comes from the severity-and-reversibility consideration, which coalition availability does not change. Coalitions only change how the cost of oversight capability is shared.",
+   "rubric": [
+    "Answers no.",
+    "Explains that oversight need is driven by severity and reversibility, which coalition paths do not alter."
+   ],
+   "batch": 5,
+   "orig_id": "q192"
+  },
+  {
+   "id": "q193",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p4",
+   "question": "Under the balancing framework, would the availability of a regional regulatory college make heavy oversight of such a use case more affordable for an individual deployer?",
+   "answer": "Yes. Coalition paths such as regional regulatory colleges amortise the cost of building oversight capability across multiple deployers. This lowers each deployer's share of the cost.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that coalitions spread the cost of oversight capability across multiple deployers."
+   ],
+   "batch": 5,
+   "orig_id": "q193"
+  },
+  {
+   "id": "q194",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a configuration reaching its target-reachability threshold (\u22641% failure and \u226575% usefulness) is the one a deployer should adopt? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The reachability table is a template, not findings, and is computed on synthetic data with scripted agents. The target also excludes cost, which the paper insists be reported together with prevention, diagnosis and usefulness. Meeting the target therefore says nothing about affordability or real-world suitability.",
+   "rubric": [
+    "Answers not settled (or not supported).",
+    "Gives a reason: the target omits cost and/or diagnosis, and the table is a template on synthetic outputs rather than findings."
+   ],
+   "batch": 5,
+   "orig_id": "q194"
+  },
+  {
+   "id": "q195",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that an import-dependent regulated deployer such as the Operator has no sovereignty over its AI deployment? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The case access audit finds the Operator leads the interaction layer and shares the data and infrastructure layers, and is vendor-led only at the model layer. The framing treats sovereignty as distributed across layers, not binary.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the access audit: interaction is operator-led, data and infrastructure are shared, only the model layer is vendor-led (sovereignty is partial or layered, not absent)."
+   ],
+   "batch": 5,
+   "orig_id": "q195"
+  },
+  {
+   "id": "q196",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the control tax is smaller for regulated deployers because existing third-party and model risk budgets absorb it? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper says the control tax is likely to be experienced as an extension of existing budgets, which describes where it appears rather than how large it is. It notes that costs tend to shift rather than disappear, and it produces no real cost estimates.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that being folded into existing budgets concerns where cost appears, not its size; costs shift rather than vanish, and no real cost estimates are given."
+   ],
+   "batch": 5,
+   "orig_id": "q196"
+  },
+  {
+   "id": "q197",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that bounded control gives the Operator adequate oversight of its dispute-triage deployment? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Position C is adopted only as a working frame, and the paper says its adequacy must be judged case by case according to severity. The case is illustrative and anonymised, and the simulation provides no real evidence of safety levels.",
+   "rubric": [
+    "Answers not settled.",
+    "Gives a reason: Position C is a working frame whose adequacy is case by case, and the case and simulation are illustrative or synthetic rather than evidence."
+   ],
+   "batch": 5,
+   "orig_id": "q197"
+  },
+  {
+   "id": "q198",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show, through its simulation, that control-protocol outputs feed effectively into a regulated deployer's incident-management procedures? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The simulator does not model human factors or institutional processes, so it cannot test integration with incident management. The paper's account of monitor flags flowing into triage, model risk review and vendor tickets comes from an illustrative stress scenario, not from measured results.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the simulator omits human factors and institutional processes, and that the incident-management flow comes only from an illustrative scenario."
+   ],
+   "batch": 5,
+   "orig_id": "q198"
+  },
+  {
+   "id": "q199",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that weak supervisors cannot reliably oversee stronger AI systems? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper says it does not technically extend scalable oversight. It borrows only the structural observation that oversight capacity is a scarce resource whose adequacy can be analysed, and it makes no claim about whether weak-to-strong oversight succeeds.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the paper only borrows the scarcity-of-oversight-capacity observation and does not test or extend scalable oversight."
+   ],
+   "batch": 5,
+   "orig_id": "q199"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that bounded control is adequate for regulated deployers in AI-importing jurisdictions? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper adopts Position C only as a working frame. It says bounded control is a pragmatic position whose adequacy must be judged case by case according to severity. It concedes that the assurance any single deployer can obtain is limited and that vendor-dependent arrangements may change.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: Position C is a working frame whose adequacy is judged case by case; the paper concedes that assurance is limited."
+   ],
+   "batch": 3,
+   "orig_id": "q118",
+   "reject": "near-duplicate of q116"
+  }
+ ],
+ "types": {
+  "failure": 33,
+  "why": 32,
+  "counterfactual": 42,
+  "transfer": 31,
+  "connect": 31,
+  "scope": 30
+ }
+}

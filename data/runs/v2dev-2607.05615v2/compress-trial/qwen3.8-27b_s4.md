@@ -1,0 +1,14 @@
+#### Setup.
+We evaluate toxicity reduction (suppression; RealToxicityPrompts) and emotion steering (elicitation; GoEmotions), targeting fear/sadness from mapped fine-grained annotations. Models: open-weight LLaMA-3.1-8B and Gemma-2 2B (distinct families and scales). Steering uses an intermediate-layer SAE encoding high-level semantic concepts; SBS uses $W\in\{32,64\}$. All methods use norm preservation, activation clamping, and a decoding repetition penalty. Appendix C.
+
+#### Baselines and Metrics.
+Compare STS and SBS with No Steering (unmodified), Full Steering (every token, $p{=}1$), and Prompting (prepended task-specific safety/emotion instruction; Appendix B). Effectiveness: mean toxicity reduction (classifier toxicity decrease vs no steering) and mean probability gain (target-emotion probability increase vs unsteered), scored by a RoBERTa toxicity classifier and a DistilRoBERTa emotion classifier (Appendix C). Quality: GPT-2 perplexity and Rep-$n$, fraction of recurring $n$-grams.
+
+### 4.1 Sparse Steering Effectiveness
+Figure 1: effectiveness vs intervention ratio for toxicity reduction and fear/sadness steering. $\alpha$ is calibrated at $p{=}1$ and fixed (Appendix D.1). LLaMA-3.1-8B: STS at $p{=}0.5$ recovers >95% of full-steering toxicity reduction and >75% of full-steering gains on both emotion tasks by $p{=}0.7$; dense per-token interventions are mostly redundant. STS beats prompting in 5/6 model–task settings: $p\!\approx\!0.5$ or below (at least half unperturbed) for toxicity (both models) and fear (LLaMA-3.1-8B); higher $p\!\approx\!0.7$ for sadness (LLaMA-3.1-8B). Exception: sadness (Gemma-2 2B), where prompting stays ahead over tested ratios. Behavioral signal need not be present at every step. STS shifts behavior more than SBS at matched nominal $p$, clearest for emotion: fear (LLaMA-3.1-8B), STS at $p{=}0.5$ roughly doubles SBS gain ($W{=}32$); same ordering for Gemma-2 2B.
+
+### 4.2 Fluency Under Sparse and Dense Steering
+Figure 2: perplexity and Rep-$3$/Rep-$4$ vs $p$ for Gemma-2 2B on toxicity reduction, full steering as reference. Both rise monotonically with steering density; full steering is high on both. Points below $p{=}1$ generally have lower fluency cost. Required ratio is task dependent (smaller for toxicity than emotion steering, Sec. 4.1); sparse points generally sit below full-steering cost across SBS window sizes, not a method-specific artifact. Figure 2’s shaded bands show standard deviation.
+
+### 4.3 Steering Magnitude and Intervention Ratio
+Figure 3 (GoEmotions-fear): best-performing $\alpha^{*}$ vs $p$ for both models; at each $p$, $\alpha^{*}$ maximizes behavioral shift (target-emotion probability gain) subject to fluency preservation. $\alpha^{*}$ tends to rise as $p$ falls. At fixed $\alpha$, behavioral effect increases with $p$; required $p$ for a target effect decreases as $\alpha$ increases. Appx. D.3: normalized residual-stream displacement grows with $\alpha$ and $p$.

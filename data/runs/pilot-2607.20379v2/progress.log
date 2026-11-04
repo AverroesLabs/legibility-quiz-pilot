@@ -1,0 +1,117 @@
+06:51 usage $42.6263272 before write
+/home/agent/legibility-quiz/data/runs/pilot-2607.20379v2/quiz-claude-opus-5.5-1.json 6 claims 28 items; problems: [] cost $0.397
+06:53 usage $42.6263272 before screen
+grade FAILED q19 no JSON object
+grade FAILED q25 z-ai/glm-5.3 failed: empty content, finish=length
+round 0: 15 of 28 items leaked
+grade FAILED q4 z-ai/glm-5.3 failed: empty content, finish=length
+round 1: 5 of 15 items leaked
+grade FAILED q16 z-ai/glm-5.3 failed: empty content, finish=length
+round 2: 1 of 5 items leaked
+data/runs/pilot-2607.20379v2/quiz-claude-opus-5.5-1-screened.json 1 of 28 items still leak; problems: []; run dir spend $3.079
+08:00 usage $57.87972228 before obfuscate
+{"paper": "2607.20379v2", "quiz": "quiz-claude-opus-5.5-1-screened.json", "section": "s6", "title": "6 Probe-Based Monitoring", "eligible": ["s2", "s3", "s4", "s5", "s6", "s10", "s11", "s12", "s13", "s14", "s15", "s17", "s18", "s19", "s20"], "rewriter": "moonshotai/kimi-k3", "prompt_version": "p2", "call": "717eb59b74da486f1fc6d608a7599bea4a6a977d123eb97a22871b14a33f9182", "finish": "stop", "chars_before": 4263, "chars_after": 4560} 5 items tagged cost $0.126
+08:04 usage $59.19429072 before take
+24 sittings, 0 failed. Spend in this run dir: $4.442
+08:06 usage $60.822027595 before take-retrieved
+2 sittings, 0 failed. Spend in this run dir: $4.846
+08:08 usage $61.51954829 before grade
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+FAILED z-ai/glm-5.3 failed: empty content, finish=length
+728 grades, 10 failed. Spend in this run dir: $10.396
+08:47 usage $81.95633775 before summary
+# Summary, grader z-ai/glm-5.3
+
+## Mean score by reader and condition (mean over items and samples; share missing in brackets)
+
+| Reader | none | paper | obf | rem | retrieved |
+|---|---|---|---|---|---|
+| google/gemma-4-31b-it | 0.00 (0%) | 0.87 (0%) | 0.84 (2%) | 0.84 (0%) |  |
+| mistralai/ministral-8b-2512 | 0.15 (0%) | 0.67 (0%) | 0.73 (0%) | 0.70 (0%) |  |
+| openai/gpt-5.6-sol | 0.45 (0%) | 0.96 (0%) | 0.97 (0%) | 0.96 (0%) | 0.64 (0%) |
+
+## Per item (mean score, all readers in the row group, primary grader)
+
+### Writer anthropic/claude-opus-5.5, seed 1
+
+| Item | kind | form | gemma-4-31b-:non | gemma-4-31b-:pap | ministral-8b:non | ministral-8b:pap | gpt-5.6-sol:non | gpt-5.6-sol:pap |
+|---|---|---|---|---|---|---|---|---|
+| q1 | cla | change-con | 0.00 | 0.67 | 0.00 | 0.67 | 0.17 | 1.00 |
+| q2 | cla | apply-new- | 0.00 | 1.00 | 0.00 | 0.50 | 0.50 | 1.00 |
+| q3 | cla | change-con | 0.00 | 0.50 | 0.25 | 0.50 | 0.50 | 0.50 |
+| q4 | cla | spot-wrong | 0.00 | 0.33 | 0.17 | 0.33 | 0.33 | 1.00 |
+| q5 | cla | change-con | 0.00 | 1.00 | 0.00 | 1.00 | 0.50 | 1.00 |
+| q6 | cla | connect-se | 0.00 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 |
+| q7 | cla | apply-new- | 0.00 | 1.00 | 0.17 | 0.67 | 1.00 | 1.00 |
+| q8 | cla | connect-se | 0.00 | 1.00 | 0.25 | 0.00 | 0.25 | 1.00 |
+| q9 | cla | apply-new- | 0.00 | 0.67 | 0.17 | 0.83 | 0.67 | 0.83 |
+| q10 | cla | apply-new- | 0.00 | 1.00 | 0.50 | 1.00 | 0.50 | 1.00 |
+| q11 | cla | spot-wrong | 0.00 | 1.00 | 0.00 | 1.00 | 0.50 | 1.00 |
+| q12 | cla | change-con | 0.00 | 0.67 | 0.33 | 0.67 | 0.50 | 1.00 |
+| q13 | cla | apply-new- | 0.00 | 0.50 | 0.25 | 0.75 | 0.50 | 1.00 |
+| q14 | cla | spot-wrong | 0.00 | 1.00 | 0.67 | 0.67 | 0.67 | 0.67 |
+| q15 | cla | connect-se | 0.00 | 1.00 | 0.00 | 0.50 | 0.00 | 1.00 |
+| q16 | cla | change-con | 0.00 | 0.83 | 0.00 | 0.17 | 0.83 | 1.00 |
+| q17 | cla | apply-new- | 0.00 | 1.00 | 0.00 | 0.67 | 0.33 | 1.00 |
+| q18 | cla | apply-new- | 0.00 | 1.00 | 0.00 | 1.00 | 0.50 | 1.00 |
+| q19 | cla | connect-se | 0.00 | 1.00 | 0.00 | 1.00 | 0.25 | 1.00 |
+| q20 | cla | apply-new- | 0.00 | 0.83 | 0.33 | 0.67 | 0.33 | 1.00 |
+| q21 | cla | connect-se | 0.00 | 0.67 | 0.00 | 1.00 | 0.50 | 1.00 |
+| q22 | cla | change-con | 0.00 | 1.00 | 0.00 | 1.00 | 0.50 | 1.00 |
+| q23 | cla | spot-wrong | 0.00 | 1.00 | 0.00 | 1.00 | 0.25 | 1.00 |
+| q24 | cla | apply-new- | 0.00 | 1.00 | 0.50 | 0.50 | 0.50 | 1.00 |
+| q25 | int | spot-wrong | 0.00 | 1.00 | 0.00 | 0.75 | 1.00 | 1.00 |
+| q26 | int | connect-se | 0.00 | 0.75 | 0.50 | 0.75 | 0.75 | 1.00 |
+| q27 | int | apply-new- | 0.00 | 1.00 | 0.00 | 0.75 | 0.50 | 1.00 |
+| q28 | int | connect-se | 0.00 | 1.00 | 0.00 | 0.33 | 0.17 | 1.00 |
+
+## Four-condition filter (development thresholds, not preregistered)
+
+Smart takers: openai/gpt-5.6-sol. Kept 22 of 28 items.
+
+| Item | smart none | smart paper | ladder none | outcome |
+|---|---|---|---|---|
+| q1 | 0.17 | 1.00 | 0.00 | kept |
+| q2 | 0.50 | 1.00 | 0.00 | kept |
+| q3 | 0.50 | 0.50 | 0.12 | kept |
+| q4 | 0.33 | 1.00 | 0.08 | kept |
+| q5 | 0.50 | 1.00 | 0.00 | kept |
+| q6 | 0.00 | 1.00 | 0.00 | kept |
+| q7 | 1.00 | 1.00 | 0.08 | smart-none |
+| q8 | 0.25 | 1.00 | 0.12 | kept |
+| q9 | 0.67 | 0.83 | 0.08 | smart-none |
+| q10 | 0.50 | 1.00 | 0.25 | kept |
+| q11 | 0.50 | 1.00 | 0.00 | kept |
+| q12 | 0.50 | 1.00 | 0.17 | kept |
+| q13 | 0.50 | 1.00 | 0.12 | kept |
+| q14 | 0.67 | 0.67 | 0.33 | smart-none |
+| q15 | 0.00 | 1.00 | 0.00 | kept |
+| q16 | 0.83 | 1.00 | 0.00 | smart-none |
+| q17 | 0.33 | 1.00 | 0.00 | kept |
+| q18 | 0.50 | 1.00 | 0.00 | kept |
+| q19 | 0.25 | 1.00 | 0.00 | kept |
+| q20 | 0.33 | 1.00 | 0.17 | kept |
+| q21 | 0.50 | 1.00 | 0.00 | kept |
+| q22 | 0.50 | 1.00 | 0.00 | kept |
+| q23 | 0.25 | 1.00 | 0.00 | kept |
+| q24 | 0.50 | 1.00 | 0.25 | kept |
+| q25 | 1.00 | 1.00 | 0.00 | smart-none |
+| q26 | 0.75 | 1.00 | 0.25 | smart-none |
+| q27 | 0.50 | 1.00 | 0.00 | kept |
+| q28 | 0.17 | 1.00 | 0.00 | kept |
+
+Score on kept items (mean over items of the per-item mean; 95% bootstrap CI over items):
+
+| Reader | none | paper | gain |
+|---|---|---|---|
+| google/gemma-4-31b-it | 0.00 [0.00, 0.00] | 0.87 [0.78, 0.95] | 0.87 |
+| mistralai/ministral-8b-2512 | 0.12 [0.05, 0.19] | 0.67 [0.54, 0.80] | 0.56 |
+| openai/gpt-5.6-sol | 0.37 [0.30, 0.43] | 0.98 [0.93, 1.00] | 0.61 |

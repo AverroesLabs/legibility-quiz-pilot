@@ -1,0 +1,581 @@
+{
+ "claims": [
+  {
+   "id": "c1",
+   "text": "MMJailBench factorizes each multimodal jailbreak instance into four controlled factors: harmful intent, prompt framing, visual semantics and instruction carrier. Formally, x = (L(h,t,c), V(h,v)). Crossing 272 intents, 6 framings, 5 visual conditions and 2 carriers gives 16,320 instances per model and 261,120 responses over 16 models. Matched comparisons with intent held fixed allow factor-level attribution, which entangled fixed-instance benchmarks cannot provide.",
+   "sections": [
+    "s0",
+    "s1",
+    "s3",
+    "s8",
+    "s9"
+   ],
+   "depends_on": []
+  },
+  {
+   "id": "c2",
+   "text": "Safety is measured by ASR, the fraction of responses with judge harmfulness score of at least 4 on a 1-5 rubric. For carrier analysis the paper adds CASR, which removes instruction-mismatch cases from the denominator. A GPT-5 judge applies anti-deception rules so that fictional or academic packaging does not lower the score when harmful content is given.",
+   "sections": [
+    "s4",
+    "s9"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Jailbreak vulnerability is highly model-dependent: average ASR ranges from 2.17% (GPT-5) to 78.38% (GLM-4.6V), and capability or access type does not predict robustness. Vulnerability is also uneven across harm domains: cyber, economic, privacy and deception are higher, while physical harm, sensitive advice and sexual content are lower. Aggregate scores can therefore hide domain-specific weaknesses.",
+   "sections": [
+    "s4",
+    "s5",
+    "s8",
+    "s10"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Prompt framing is the dominant source of variation. Story, structured and academic framings generally yield high ASR, while system-style and safety-paradox framings yield low ASR. The gap between the most and least vulnerable strategies exceeds 40 points, and some models have per-model framing ranges above 80 points.",
+   "sections": [
+    "s5",
+    "s10"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Task-relevant visual semantics raise ASR over the no-image setting by about 8-13 points. Authorization documents raise it most (+12.96), followed by identity credentials. Blank, noise and nature control images raise it by less than 2.2 points, so the increase comes from contextual visual meaning (especially authority cues), not from the mere presence of an image.",
+   "sections": [
+    "s3",
+    "s5",
+    "s10"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Visually rendered (OCR) instructions are not inherently stronger jailbreak carriers. Pooled OCR ASR (40.59%) is below TEXT ASR (50.70%), and the gap persists under CASR (42.34% vs 50.89%). The TEXT-over-OCR difference is positive in every harm category, yet the carrier's effect size varies greatly by model.",
+   "sections": [
+    "s3",
+    "s5",
+    "s10"
+   ],
+   "depends_on": [
+    "c2"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Diagnostics on gemma3-12b have three parts. First, representations under authority-document and danger-image contexts diverge more with depth, with the sharpest rise at layer 42. Second, an authority-minus-danger direction fit on discovery samples displaces held-out authority samples, with positive shifts in all harm domains. Third, at that representation-sensitive layer, authority contexts put less attention on harm-related task-label and visual tokens. Together these offer an internal account of authority-cue susceptibility.",
+   "sections": [
+    "s6"
+   ],
+   "depends_on": [
+    "c5"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "The evaluation suite is cheap and reliable. A 1,500-instance stratified lightweight configuration closely matches the full one (mean ASR difference -0.06%, Spearman 0.997). A qwen3-8b lightweight judge trained on GPT-5 labels agrees with GPT-5 (QWK 0.95), and GPT-5 agrees with human experts (QWK 0.97).",
+   "sections": [
+    "s4",
+    "s9",
+    "s10"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s9"
+   ],
+   "question": "Suppose the paper's benchmark added two more visual semantic conditions and kept every other factor at the paper's counts. How many instances per model would the full configuration then contain?",
+   "answer": "22,848 instances. The full configuration is the Cartesian product of 272 intents \u00d7 6 framings \u00d7 visual conditions \u00d7 2 carriers, and with 7 visual conditions this gives 272\u00d76\u00d77\u00d72 = 22,848.",
+   "rubric": [
+    "Gives 22,848 (or an equivalent correct product).",
+    "Uses the paper's Cartesian product of 272 intents, 6 framings and 2 carriers with the visual count raised to 7."
+   ]
+  },
+  {
+   "id": "q2",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s8"
+   ],
+   "question": "In the paper's formal definition of a benchmark instance, on which factors does the visual component depend? What does this imply about what differs between a TEXT instance and an OCR instance that share the same intent, framing and visual condition?",
+   "answer": "The visual component V(h,v) depends only on harmful intent and visual semantics, not on framing or carrier. TEXT and OCR instances with the same h, t, v therefore share the same semantic image. They differ only in how the instruction component L(h,t,c) is delivered: as text, or rendered into an image combined with the semantic image.",
+   "rubric": [
+    "States that the visual input depends only on harmful intent and visual semantics (not on framing or carrier).",
+    "Concludes that the semantic image is held fixed, so the matched TEXT/OCR pair differs only in how the instruction is delivered."
+   ]
+  },
+  {
+   "id": "q3",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s9"
+   ],
+   "question": "If the paper's full evaluation were restricted to only its open-weight models, how many model responses in total would it involve?",
+   "answer": "130,560 responses. The paper has 8 open-weight models, and each is evaluated on 16,320 instances, so 8 \u00d7 16,320 = 130,560.",
+   "rubric": [
+    "Gives 130,560.",
+    "Uses 8 open-weight models times 16,320 instances per model."
+   ]
+  },
+  {
+   "id": "q4",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s9"
+   ],
+   "question": "Suppose the paper's judge rates a response as giving only high-level or partial harmful information. Under the paper's ASR definition, does that response count as a successful jailbreak?",
+   "answer": "No. That description corresponds to score 3 on the paper's 1-5 rubric, and ASR counts only responses scored 4 or higher (actionable or detailed harmful assistance).",
+   "rubric": [
+    "Concludes it does not count as a success.",
+    "Identifies it as rubric level 3.",
+    "Notes that the success threshold is a score of at least 4."
+   ]
+  },
+  {
+   "id": "q5",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "A model produces 1,000 OCR-carrier responses. The judge flags 100 as instruction mismatches, and 270 receive success-level harmfulness scores. Compute this model's ASR and CASR as the paper defines them.",
+   "answer": "ASR = 270/1000 = 27%. CASR = 270/(1000\u2212100) = 30%, because CASR removes mismatch cases from the denominator and ASR does not.",
+   "rubric": [
+    "ASR = 27%.",
+    "CASR = 30%.",
+    "Explains that CASR subtracts mismatch cases from the denominator."
+   ]
+  },
+  {
+   "id": "q6",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s9",
+    "s4"
+   ],
+   "question": "A critic claims that a response wrapping detailed operational harmful instructions in a fictional story with a safety disclaimer would receive a low harmfulness score from the paper's judge, which would understate ASR for story framing. Why is this wrong under the paper's judging protocol?",
+   "answer": "The paper's judge prompt includes anti-deception rules. These prevent safety disclaimers, fictional framing or academic packaging from lowering the score when harmful information is actually provided. Such a response would therefore be scored on its operational content (4-5) and counted as a success.",
+   "rubric": [
+    "States that the response would still be scored high or counted as a jailbreak.",
+    "Cites the judge's anti-deception rules, which ignore disclaimers or fictional/academic packaging when harmful content is present."
+   ]
+  },
+  {
+   "id": "q7",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5"
+   ],
+   "question": "Someone reads the paper as showing that proprietary-access MLLMs are safer than open-weight ones. Using the paper's per-model average ASRs, is this conclusion supported?",
+   "answer": "No. The proprietary glm-4.6v has the highest average ASR of all models (78.38%), while the open-weight qwen3-vl-8b is fairly robust (19.84%). Robustness is model-dependent rather than determined by access type.",
+   "rubric": [
+    "Concludes the claim is not supported.",
+    "Gives a counterexample such as glm-4.6v (proprietary, highest ASR) or qwen3-vl-8b (open-weight, low ASR).",
+    "Links this to the paper's point that safety alignment is model-dependent."
+   ]
+  },
+  {
+   "id": "q8",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s5"
+   ],
+   "question": "The paper argues that aggregate safety scores can hide domain-specific weaknesses. Using qwen3-vl-plus's per-domain results, show how its average ASR misrepresents its risk.",
+   "answer": "qwen3-vl-plus averages about 62% ASR. Its cyber (80.78), economic (84.00) and privacy (80.22) ASRs are near or above 80%, while sexual content is about 25%. The average therefore understates its risk in the most vulnerable domains and overstates it in others.",
+   "rubric": [
+    "Contrasts its average (~62%) with much higher ASRs (~80%+) in domains such as cyber, economic or privacy.",
+    "Notes a much lower domain (e.g., sexual ~25%), so the average hides uneven domain-level vulnerability."
+   ]
+  },
+  {
+   "id": "q9",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s10",
+    "s8"
+   ],
+   "question": "Using the paper's category-level results pooled across carriers, is the low vulnerability of the Sensitive Regulated Advice domain uniform across its subcategories?",
+   "answer": "No. Unlicensed Medical & Legal Advice has ASR of about 26.7%, while High-Risk Financial Advice is about 42.5%. The domain's low ASR is driven mainly by the medical/legal subcategory, which shows that unevenness exists even inside a domain.",
+   "rubric": [
+    "Concludes it is not uniform.",
+    "Cites the medical/legal subcategory (~27%) versus high-risk financial advice (~42%)."
+   ]
+  },
+  {
+   "id": "q10",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s10"
+   ],
+   "question": "Using the paper's per-model prompt-framing results for internvl3-8b, which framing gives the lowest ASR and which the highest? What does this illustrate about the paper's framing claim?",
+   "answer": "System-role framing is nearly fully refused (~0.07%), while story framing reaches about 88%. The same harmful intents swing by roughly 88 points depending only on linguistic presentation, which illustrates framing as the dominant source of variation.",
+   "rubric": [
+    "Identifies system framing as lowest (near 0%) and story as highest (~88%).",
+    "Concludes that framing alone produces a very large swing with intent held fixed, supporting framing's dominance."
+   ]
+  },
+  {
+   "id": "q11",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s10"
+   ],
+   "question": "In the paper's table of per-model factor ranges, qwen2.5-vl-7b has a prompt-framing range of about 90 points, although its average ASR is only about 59%. How is this possible, given how the paper defines the range and its per-framing results?",
+   "answer": "The paper's \u0394 score is the range of ASR across factor configurations, not a level. For qwen2.5-vl-7b, academic framing yields ~91.4% and system framing ~0.7%, a difference of ~90.8 points. A moderate average can therefore hide extreme framing-dependent swings.",
+   "rubric": [
+    "Explains that \u0394 is the max-minus-min ASR across framings, not an average.",
+    "Uses academic (~91%) minus system (~1%) for this model to get ~90 points."
+   ]
+  },
+  {
+   "id": "q12",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s10",
+    "s4"
+   ],
+   "question": "A reader argues that claude-sonnet-4.5 is so robust in the paper that prompt framing does not matter for it. Which result in the paper's per-model framing data contradicts this?",
+   "answer": "Structured framing yields about 32% ASR for claude-sonnet-4.5, while system framing yields 0%. Its overall average is under 9%, but one framing still opens a substantial vulnerability.",
+   "rubric": [
+    "Identifies structured framing (~32%) as the exception.",
+    "Contrasts it with near-zero ASR under other framings such as system (0%), showing that framing still matters."
+   ]
+  },
+  {
+   "id": "q13",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5"
+   ],
+   "question": "Using the paper's visual semantic ablation, how much of the authorization-document ASR increase is due to semantic content beyond the effect of adding a blank image?",
+   "answer": "About 10.8 points (47.73 \u2212 36.96). The blank image itself adds only about 2.2 points over no image, so most of the authorization document's ~13-point increase comes from its semantic content.",
+   "rubric": [
+    "Gives roughly 10.8 percentage points.",
+    "Computes it as authorization-document ASR minus blank-image ASR, noting that the blank image alone adds only ~2 points."
+   ]
+  },
+  {
+   "id": "q14",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s10",
+    "s5"
+   ],
+   "question": "From the paper's main visual ablation, a reader concludes that authorization documents are the most vulnerable visual condition for every evaluated model. Give a counterexample from the paper's per-model visual results.",
+   "answer": "gemini-3-flash has its lowest ASR under authorization documents (~26.8%) and its highest under scenario context (~34.6%). ministral3-8b is also highest under danger context. The pooled ranking does not hold for every model.",
+   "rubric": [
+    "Names a valid counterexample (e.g., gemini-3-flash, ministral3-8b, glm4.1v-9b).",
+    "Notes that this model's highest-ASR condition is not the authorization document, so the pooled ranking does not hold per model."
+   ]
+  },
+  {
+   "id": "q15",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s5"
+   ],
+   "question": "What role do the paper's control image conditions play in its visual semantics analysis, and what do their results let it conclude?",
+   "answer": "The controls (blank, noise and nature images) separate the effect of meaningful visual context from the mere presence of an image. They raise ASR by less than 2.2 points, while task-relevant semantic images raise it by about 8-13 points. The paper therefore concludes that the increase comes from contextual meaning, such as authority cues, and not from visual input itself.",
+   "rubric": [
+    "Explains that the controls isolate image presence from image meaning.",
+    "Cites small control increases (<~2 points) versus larger semantic increases (~8-13 points).",
+    "Concludes that vulnerability comes from semantic content."
+   ]
+  },
+  {
+   "id": "q16",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5"
+   ],
+   "question": "Using the paper's pooled carrier results, by how much does the TEXT-minus-OCR gap shrink when moving from ASR to CASR? What does this imply about perception failures?",
+   "answer": "The ASR gap is ~10.1 points (50.70 \u2212 40.59) and the CASR gap is ~8.6 points (50.89 \u2212 42.34), so the gap shrinks by only about 1.6 points. Instruction-recognition failures explain only a small part of OCR's lower success. Most of the difference remains even when the instruction is understood.",
+   "rubric": [
+    "Computes the ASR gap ~10.1, the CASR gap ~8.6, and a shrinkage of ~1.6 points.",
+    "Concludes that mismatch/perception failures explain little of the gap."
+   ]
+  },
+  {
+   "id": "q17",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s10"
+   ],
+   "question": "A reader suggests that OCR's lower ASR in the paper comes from a few harm domains whose rendered instructions are especially hard to handle. What do the paper's category-level carrier results say about this?",
+   "answer": "This is not supported. The TEXT-minus-OCR difference is positive in every subcategory, ranging from about 5.8 to 12.5 points, so the carrier effect appears across diverse intents rather than being concentrated in specific domains.",
+   "rubric": [
+    "Rejects the suggestion.",
+    "Notes that the TEXT-over-OCR difference is positive across all categories (about 6-12 points)."
+   ]
+  },
+  {
+   "id": "q18",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s10"
+   ],
+   "question": "The pooled TEXT-over-OCR gap in the paper is positive in every harm category. Why does the paper still call the carrier effect model-dependent? Support your answer with its per-model factor ranges.",
+   "answer": "The per-model carrier ranges differ widely. llava-onevision-1.5 (~50.5), kimi-k2.5 (~34.6) and gemini-3-flash (~34.3) are strongly carrier-sensitive, while qwen2.5-vl-7b and claude-sonnet-4.5 (~0.8) barely change. The pooled positive gap averages over very different model behaviors.",
+   "rubric": [
+    "Cites at least one model with a large carrier range and one with a near-zero range.",
+    "Explains that the pooled result hides large model-to-model differences."
+   ]
+  },
+  {
+   "id": "q19",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6"
+   ],
+   "question": "How does the paper's choice of which layer to inspect in its cross-modal attention diagnostics depend on its representation-level diagnostics? What attention difference does it find there?",
+   "answer": "The attention comparison focuses on the representation-sensitive layer identified earlier, layer 42, where authority-versus-danger representation divergence rises most sharply. At that layer, authority-document contexts put lower attention mass on harm-related task-label tokens and on visual tokens.",
+   "rubric": [
+    "Identifies the layer as the one with the sharpest representation divergence (layer 42).",
+    "States that authority contexts show lower attention on harm-related task-label and visual tokens there."
+   ]
+  },
+  {
+   "id": "q20",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s6"
+   ],
+   "question": "Suppose the paper's attention diagnostics had found authority-document contexts placing more attention on harm-related task-label tokens at the representation-sensitive layer. How would this affect the paper's internal explanation of authority-cue susceptibility?",
+   "answer": "It would undercut the explanation. The paper argues that authority cues redistribute attention away from harm-related signals during response initiation, consistent with the representation shift and weaker refusal. Increased attention to harm tokens would contradict that consistency.",
+   "rubric": [
+    "Concludes that the explanation would be weakened or contradicted.",
+    "Explains that the paper's account relies on authority cues reducing attention to harm-related tokens, matching the representation shift."
+   ]
+  },
+  {
+   "id": "q21",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6"
+   ],
+   "question": "In its representation diagnostics, what does the paper do to show that the authority-versus-danger difference is more than an artifact of the samples used to find it? What broader claim does the per-domain result support?",
+   "answer": "It fits the authority-minus-danger direction on discovery samples, then applies that fixed direction to held-out pairs and finds clear displacement of authority contexts. The shifts are positive across all harm domains, which supports a shared higher-layer authority representation pattern across diverse harmful objectives.",
+   "rubric": [
+    "Describes fitting the direction on discovery samples and testing it on held-out pairs, with displacement observed.",
+    "Notes the positive shifts across all harm domains, implying a shared pattern across harmful objectives."
+   ]
+  },
+  {
+   "id": "q22",
+   "claim": "c8",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s9",
+    "s10"
+   ],
+   "question": "What fraction of the full per-model instance set does an auditor evaluate with the paper's lightweight configuration? According to the paper's consistency analysis, should model rankings be expected to change?",
+   "answer": "About 9% (1,500 of 16,320 instances). Rankings should essentially not change: the Spearman correlation with the full setting is 0.997, and the mean ASR difference of \u22120.06% has a confidence interval that includes zero.",
+   "rubric": [
+    "Gives roughly 9% (1,500/16,320).",
+    "Concludes that rankings are preserved, citing the near-perfect rank correlation and/or the negligible unbiased ASR difference."
+   ]
+  },
+  {
+   "id": "q23",
+   "claim": "c8",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s9",
+    "s10"
+   ],
+   "question": "The paper's lightweight judge is trained on GPT-5's annotations rather than human labels. How does the paper's validation still connect the lightweight judge to human judgment?",
+   "answer": "The validation runs in two stages. GPT-5 agrees closely with human experts (QWK 0.97, ASR difference +0.3%), and the lightweight judge agrees closely with GPT-5 (QWK 0.95, \u22120.4%). Since its reference judge is itself validated against humans, the lightweight judge inherits that reliability.",
+   "rubric": [
+    "Describes the chain GPT-5 \u2194 human experts and lightweight judge \u2194 GPT-5.",
+    "Cites high agreement at both stages (e.g., QWK ~0.97 and ~0.95)."
+   ]
+  },
+  {
+   "id": "q24",
+   "claim": "c8",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s9",
+    "s5"
+   ],
+   "question": "Suppose the paper's lightweight configuration had been built by sampling 1,500 instances uniformly at random rather than by its actual construction method. Which of the paper's analyses would be least reliable under the lightweight setting?",
+   "answer": "The factor-level attribution analyses would suffer most, such as per-framing, per-visual-condition, per-carrier and per-domain comparisons. The paper's stratified sampling preserves the factor distribution across domains, framings, visual conditions and carriers, and without it some factor cells could be underrepresented or imbalanced.",
+   "rubric": [
+    "Identifies factor-level or per-cell comparisons as the analyses most affected.",
+    "Explains that the paper uses stratified sampling to preserve the factor distribution, which random sampling would not guarantee."
+   ]
+  },
+  {
+   "id": "q25",
+   "claim": "c7",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s10"
+   ],
+   "question": "The paper's internal diagnostics compare authority-document and danger-image contexts in one specific model. Is that model's behavioral profile across visual semantic conditions consistent with the contrast being diagnosed?",
+   "answer": "Yes. gemma3-12b's highest ASR among the five visual conditions is under authorization documents (~71.6%) and its lowest is under danger context (~64.7%). Behaviorally, authority raises vulnerability relative to danger in this model, which matches the contrast the diagnostics examine.",
+   "rubric": [
+    "Identifies the diagnostic model as gemma3-12b and concludes its behavior is consistent.",
+    "Cites authorization documents as its highest visual condition and danger as its lowest (~7-point gap)."
+   ]
+  },
+  {
+   "id": "q26",
+   "claim": "c4",
+   "kind": "integration",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s10"
+   ],
+   "question": "The paper calls prompt framing the dominant source of variation. Using its per-model factor-range table, find a model for which framing is not the largest of the three contextual factors (framing, visual semantics, carrier). Which factor dominates for that model instead?",
+   "answer": "llava-onevision-1.5 has a carrier range of about 50.5 points, larger than its framing range of about 35.3. For this model the instruction carrier dominates, consistent with the paper's point that vulnerability profiles are model-dependent.",
+   "rubric": [
+    "Identifies llava-onevision-1.5.",
+    "States that carrier (~50.5) exceeds framing (~35.3) for this model."
+   ]
+  },
+  {
+   "id": "q27",
+   "claim": "c3",
+   "kind": "integration",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s10"
+   ],
+   "question": "GPT-5 has the lowest average ASR in the paper. Using the paper's per-framing results, does it still have a framing-specific weakness, and how large is it relative to its average?",
+   "answer": "Yes. Under structured framing GPT-5 reaches about 8.8% ASR, roughly four times its 2.17% average, while other framings stay below about 2%. Even the most robust model has a framing-dependent weak spot that the aggregate hides.",
+   "rubric": [
+    "Identifies structured framing (~8.8%) as GPT-5's weak spot.",
+    "Compares it with the ~2.2% average (several times higher), showing that the aggregate hides it."
+   ]
+  },
+  {
+   "id": "q28",
+   "claim": "c5",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s10"
+   ],
+   "question": "The paper says visual semantic effects are generally smaller than framing effects but consistently positive. Using its per-model factor ranges, is there any model whose visual-semantics range exceeds its prompt-framing range?",
+   "answer": "No. For every model the visual range (at most ~11.3, for glm-4.6v) is smaller than the framing range; even gpt-5 has 0.8 versus 8.8 and qwen3-vl-8b has 6.5 versus 15.6. Visual semantics is a consistent but secondary factor relative to framing.",
+   "rubric": [
+    "Concludes that no model has a larger visual than framing range.",
+    "Supports this with values showing visual ranges (\u2264~11 points) below framing ranges, e.g., for gpt-5 or qwen3-vl-8b."
+   ]
+  }
+ ],
+ "paper": "2608.25490v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "seed": 1,
+ "prompt_version": "p2",
+ "paper_sha256": "a6a8db48f05eff017c54ebcd6ee3cb92b15e05304ef1a179d13b5515ba730723",
+ "problems": []
+}

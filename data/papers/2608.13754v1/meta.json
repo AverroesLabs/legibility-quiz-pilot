@@ -1,0 +1,25 @@
+{
+  "abstract": "The EU AI Act requires providers of high-risk systems to file technical documentation describing how the system reaches its decisions. Mechanistic interpretability is the obvious source of such evidence, and circuit discovery is its most developed instrument. We ask whether that evidence survives the condition under which it would be relied upon: two competent analysts, the same system, the same tool, different defensible settings. We pre-registered a crossed grid of seven analytic axes, every level taken from a published implementation, and mapped each discovered circuit through a deterministic claim map to a structured Annex IV statement. Across 15,840 pre-registered specifications on GPT-2 small and the indirect object identification task, of which 7,561 produced a claim, the derived statement flips across 73.2% of specification pairs (95% CI 0.725 to 0.738) and the modal claim commands 41.1% of the space. The evidence fails a filability criterion at every tolerance a conformity assessment body would plausibly accept. Standardising the single most influential choice, the evaluation metric, leaves the flip rate at 59.4%. Removing circuit size from the claim entirely and holding it fixed leaves 27.1% (95% CI 0.255 to 0.286), still above the pre-registered threshold. The circuits underlying these claims are structurally near-disjoint, median pairwise Jaccard overlap 4%, and functionally uncorrelated at Cohen's kappa 0.015, so the instability is not one mechanism described in different words. We give the filability criterion as a standalone protocol, and we report that one of the seven documented discovery objectives does not execute at all on the library's own canonical task. The study covers one model and one task, and whether the conclusion holds at scale is untested.",
+  "arxiv_id": "2608.13754",
+  "ascii_ratio": 0.9999,
+  "authors": [
+    "Ajay Pravin Mahale"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 1,
+  "hidden_style_hits": 0,
+  "html_sha256": "172c092e46e1c571e99e8efcadb810ba350ba4291a8826a07cd763e2a4411b83",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.AI",
+  "published": "2026-08-13T20:27:56Z",
+  "rank": "0d44bef958821e3318a253e00156cfa95cb79cf673ac5fb9686ac63f466b1648",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2608.13754v1",
+  "stratum": "A",
+  "text_sha256": "9bcbde4598dd93345695d23de85333d551326f2ab4de249e2e0bc2a1d8e80e54",
+  "title": "Explanation Multiplicity: Circuit-Level Interpretability Evidence Does Not Survive Defensible Analytic Variation",
+  "version": 1,
+  "words": 4943
+}

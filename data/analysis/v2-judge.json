@@ -1,0 +1,2282 @@
+{
+ "papers": [
+  "2607.10112v1",
+  "2607.17117v2",
+  "2607.20379v2",
+  "2607.28685v1",
+  "2608.13754v1",
+  "2608.19216v1",
+  "2608.25490v1",
+  "2608.30724v1",
+  "2609.00755v1",
+  "2609.02893v1",
+  "2609.30094v2",
+  "2609.34091v1"
+ ],
+ "failed_ratings": 0,
+ "readability": {
+  "2607.10112v1": {
+   "orig": {
+    "fk_grade": 15.436346797323743,
+    "flesch_ease": 20.22444903780442,
+    "fog": 18.59834040348845,
+    "words": 6376
+   },
+   "obf": {
+    "fk_grade": 23.819165577032994,
+    "flesch_ease": 3.3938986733195975,
+    "fog": 27.404298913244602,
+    "words": 6639
+   },
+   "comp": {
+    "fk_grade": 13.322380952380954,
+    "flesch_ease": 24.48335351089591,
+    "fog": 16.39903147699758,
+    "words": 2562
+   },
+   "compobf": {
+    "fk_grade": 24.927831324632354,
+    "flesch_ease": 2.565592756463303,
+    "fog": 28.344632021894935,
+    "words": 3003
+   }
+  },
+  "2607.17117v2": {
+   "orig": {
+    "fk_grade": 13.751767459136303,
+    "flesch_ease": 32.78769077411246,
+    "fog": 16.520461701907436,
+    "words": 8625
+   },
+   "obf": {
+    "fk_grade": 31.136414473684216,
+    "flesch_ease": -10.179457143919109,
+    "fog": 34.41667781742492,
+    "words": 7632
+   },
+   "comp": {
+    "fk_grade": 11.508343217990852,
+    "flesch_ease": 35.11767198917457,
+    "fog": 14.593815580900833,
+    "words": 2304
+   },
+   "compobf": {
+    "fk_grade": 18.172646261942727,
+    "flesch_ease": 27.596309087059296,
+    "fog": 21.543013693894576,
+    "words": 2912
+   }
+  },
+  "2607.20379v2": {
+   "orig": {
+    "fk_grade": 10.444981527493777,
+    "flesch_ease": 47.83320860269109,
+    "fog": 12.949265045974455,
+    "words": 11224
+   },
+   "obf": {
+    "fk_grade": 19.01417113933722,
+    "flesch_ease": 28.60015404450388,
+    "fog": 21.919676567026393,
+    "words": 11237
+   },
+   "comp": {
+    "fk_grade": 8.511234168569143,
+    "flesch_ease": 52.377420049827066,
+    "fog": 11.06594210616494,
+    "words": 4868
+   },
+   "compobf": {
+    "fk_grade": 11.395722186993588,
+    "flesch_ease": 48.373803107165514,
+    "fog": 14.227663536350917,
+    "words": 5283
+   }
+  },
+  "2607.28685v1": {
+   "orig": {
+    "fk_grade": 13.519884040064053,
+    "flesch_ease": 32.095553987409886,
+    "fog": 15.788988421758999,
+    "words": 8412
+   },
+   "obf": {
+    "fk_grade": 13.731788860918815,
+    "flesch_ease": 35.48865293847123,
+    "fog": 16.156823352858595,
+    "words": 8140
+   },
+   "comp": {
+    "fk_grade": 10.42544431795353,
+    "flesch_ease": 34.49549766735865,
+    "fog": 12.819134355677583,
+    "words": 2622
+   },
+   "compobf": {
+    "fk_grade": 9.738481019582107,
+    "flesch_ease": 48.4350497406725,
+    "fog": 12.625678613404245,
+    "words": 3063
+   }
+  },
+  "2608.13754v1": {
+   "orig": {
+    "fk_grade": 9.014897643390047,
+    "flesch_ease": 51.73884786641932,
+    "fog": 11.533174910196188,
+    "words": 4626
+   },
+   "obf": {
+    "fk_grade": 13.305654386778585,
+    "flesch_ease": 40.80527685575049,
+    "fog": 16.115869681418094,
+    "words": 4807
+   },
+   "comp": {
+    "fk_grade": 8.403709273182958,
+    "flesch_ease": 50.85263575605683,
+    "fog": 10.615326194273564,
+    "words": 1578
+   },
+   "compobf": {
+    "fk_grade": 11.871802740508137,
+    "flesch_ease": 44.573987058711594,
+    "fog": 14.656875059472833,
+    "words": 1818
+   }
+  },
+  "2608.19216v1": {
+   "orig": {
+    "fk_grade": 14.98062609886551,
+    "flesch_ease": 20.35919743490092,
+    "fog": 17.77550570947384,
+    "words": 7984
+   },
+   "obf": {
+    "fk_grade": 24.056973714465418,
+    "flesch_ease": 0.9222513931485707,
+    "fog": 27.24747288939686,
+    "words": 7230
+   },
+   "comp": {
+    "fk_grade": 16.395337115596824,
+    "flesch_ease": 7.502341585206864,
+    "fog": 19.19966561521228,
+    "words": 2478
+   },
+   "compobf": {
+    "fk_grade": 19.891902536204125,
+    "flesch_ease": 8.88765739534648,
+    "fog": 23.099428980081804,
+    "words": 2959
+   }
+  },
+  "2608.25490v1": {
+   "orig": {
+    "fk_grade": 14.493446864059813,
+    "flesch_ease": 16.7363908046502,
+    "fog": 17.92162271953407,
+    "words": 7163
+   },
+   "obf": {
+    "fk_grade": 19.1984085703336,
+    "flesch_ease": 7.420773180868878,
+    "fog": 22.69311444045359,
+    "words": 6175
+   },
+   "comp": {
+    "fk_grade": 15.883530078346329,
+    "flesch_ease": 6.091776859504165,
+    "fog": 19.30497235410195,
+    "words": 1712
+   },
+   "compobf": {
+    "fk_grade": 18.756061298640414,
+    "flesch_ease": 13.356342299578074,
+    "fog": 22.38914674167839,
+    "words": 2148
+   }
+  },
+  "2608.30724v1": {
+   "orig": {
+    "fk_grade": 8.643933532156854,
+    "flesch_ease": 52.8996602555153,
+    "fog": 11.363397910223373,
+    "words": 9367
+   },
+   "obf": {
+    "fk_grade": 16.379730912197832,
+    "flesch_ease": 32.36242447455044,
+    "fog": 19.22042382965629,
+    "words": 8715
+   },
+   "comp": {
+    "fk_grade": 9.228099560825001,
+    "flesch_ease": 47.31329052082259,
+    "fog": 11.950684148786932,
+    "words": 3794
+   },
+   "compobf": {
+    "fk_grade": 12.492862889518417,
+    "flesch_ease": 43.21888640226629,
+    "fog": 15.43139565627951,
+    "words": 4261
+   }
+  },
+  "2609.00755v1": {
+   "orig": {
+    "fk_grade": 12.77290045382188,
+    "flesch_ease": 31.562941872221927,
+    "fog": 15.98617040894841,
+    "words": 5553
+   },
+   "obf": {
+    "fk_grade": 18.11825282430853,
+    "flesch_ease": 20.535275613556678,
+    "fog": 21.532739718403917,
+    "words": 5325
+   },
+   "comp": {
+    "fk_grade": 12.112391951006128,
+    "flesch_ease": 30.31140157480317,
+    "fog": 15.34793150856143,
+    "words": 1635
+   },
+   "compobf": {
+    "fk_grade": 16.73471243511415,
+    "flesch_ease": 28.4893125928308,
+    "fog": 19.856496240831763,
+    "words": 2009
+   }
+  },
+  "2609.02893v1": {
+   "orig": {
+    "fk_grade": 12.556438308886975,
+    "flesch_ease": 38.02939058870382,
+    "fog": 15.216557155815138,
+    "words": 4630
+   },
+   "obf": {
+    "fk_grade": 19.050357288927845,
+    "flesch_ease": 24.840012269938654,
+    "fog": 22.152345895413383,
+    "words": 3921
+   },
+   "comp": {
+    "fk_grade": 12.020402252614648,
+    "flesch_ease": 33.27815097881469,
+    "fog": 14.68232770179673,
+    "words": 1383
+   },
+   "compobf": {
+    "fk_grade": 17.54181349316978,
+    "flesch_ease": 28.24771768423011,
+    "fog": 20.964334169686836,
+    "words": 1705
+   }
+  },
+  "2609.30094v2": {
+   "orig": {
+    "fk_grade": 12.278344102862974,
+    "flesch_ease": 31.98128901070882,
+    "fog": 15.016421650761274,
+    "words": 3948
+   },
+   "obf": {
+    "fk_grade": 16.8483792835474,
+    "flesch_ease": 23.825587843690897,
+    "fog": 19.98809429597071,
+    "words": 3968
+   },
+   "comp": {
+    "fk_grade": 12.45956247921793,
+    "flesch_ease": 27.86813603112327,
+    "fog": 15.592708651991755,
+    "words": 1384
+   },
+   "compobf": {
+    "fk_grade": 14.929401370743204,
+    "flesch_ease": 29.94683301206541,
+    "fog": 18.306118369386734,
+    "words": 1631
+   }
+  },
+  "2609.34091v1": {
+   "orig": {
+    "fk_grade": 12.400632062471292,
+    "flesch_ease": 37.80912218649519,
+    "fog": 14.915645383555352,
+    "words": 6351
+   },
+   "obf": {
+    "fk_grade": 27.52598950965788,
+    "flesch_ease": 1.6449693927369253,
+    "fog": 30.720500398499475,
+    "words": 6515
+   },
+   "comp": {
+    "fk_grade": 10.299174868528976,
+    "flesch_ease": 40.44232142857143,
+    "fog": 12.751314710281276,
+    "words": 2186
+   },
+   "compobf": {
+    "fk_grade": 15.126378178835111,
+    "flesch_ease": 33.81338187038557,
+    "fog": 18.097949138638228,
+    "words": 2453
+   }
+  }
+ },
+ "per_paper": {
+  "2607.10112v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.0,
+     "comp": 9.0,
+     "compobf": 7.333
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      7,
+      7,
+      7
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      7,
+      7,
+      8
+     ]
+    },
+    "quiz": {
+     "orig": 0.8939,
+     "obf": 0.8333,
+     "comp": 0.803,
+     "compobf": 0.8333
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 9.333,
+     "comp": 10.0,
+     "compobf": 6.667
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      8,
+      10,
+      10
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      7,
+      6,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.7424,
+     "obf": 0.6212,
+     "comp": 0.5909,
+     "compobf": 0.4545
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 4.0,
+     "obf": 2.0,
+     "comp": 3.0,
+     "compobf": 2.0
+    },
+    "ratings": {
+     "orig": [
+      4,
+      4,
+      4
+     ],
+     "obf": [
+      2,
+      2,
+      2
+     ],
+     "comp": [
+      3,
+      3,
+      3
+     ],
+     "compobf": [
+      2,
+      2,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.6667,
+     "obf": 0.5909,
+     "comp": 0.6364,
+     "compobf": 0.5758
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 4.0,
+     "obf": 3.667,
+     "comp": 4.0,
+     "compobf": 4.0
+    },
+    "ratings": {
+     "orig": [
+      4,
+      4,
+      4
+     ],
+     "obf": [
+      4,
+      3,
+      4
+     ],
+     "comp": [
+      4,
+      4,
+      4
+     ],
+     "compobf": [
+      4,
+      4,
+      4
+     ]
+    },
+    "quiz": {
+     "orig": 0.2273,
+     "obf": 0.1515,
+     "comp": 0.2273,
+     "compobf": 0.197
+    }
+   }
+  },
+  "2607.17117v2": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 8.0,
+     "comp": 9.0,
+     "compobf": 7.0
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      8,
+      8,
+      8
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      7,
+      7,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.7895,
+     "obf": 0.7588,
+     "comp": 0.7851,
+     "compobf": 0.7061
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 9.0,
+     "comp": 10.0,
+     "compobf": 7.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      10,
+      10,
+      7
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      9,
+      6,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.4912,
+     "obf": 0.4912,
+     "comp": 0.5088,
+     "compobf": 0.3904
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 5.333,
+     "obf": 3.0,
+     "comp": 4.0,
+     "compobf": 2.333
+    },
+    "ratings": {
+     "orig": [
+      4,
+      6,
+      6
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      6,
+      3,
+      3
+     ],
+     "compobf": [
+      3,
+      2,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.3947,
+     "obf": 0.4035,
+     "comp": 0.3947,
+     "compobf": 0.3772
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 5.333,
+     "obf": 4.0,
+     "comp": 5.333,
+     "compobf": 4.667
+    },
+    "ratings": {
+     "orig": [
+      6,
+      6,
+      4
+     ],
+     "obf": [
+      4,
+      4,
+      4
+     ],
+     "comp": [
+      6,
+      4,
+      6
+     ],
+     "compobf": [
+      4,
+      4,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.136,
+     "obf": 0.1053,
+     "comp": 0.0921,
+     "compobf": 0.0877
+    }
+   }
+  },
+  "2607.20379v2": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.0,
+     "comp": 9.0,
+     "compobf": 6.0
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      7,
+      7,
+      7
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      6,
+      6,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.7549,
+     "obf": 0.7328,
+     "comp": 0.7654,
+     "compobf": 0.7584
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 6.667,
+     "comp": 10.0,
+     "compobf": 3.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      7,
+      6,
+      7
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      4,
+      3,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.5608,
+     "obf": 0.5132,
+     "comp": 0.5406,
+     "compobf": 0.4303
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 3.333,
+     "obf": 3.0,
+     "comp": 3.0,
+     "compobf": 2.0
+    },
+    "ratings": {
+     "orig": [
+      4,
+      3,
+      3
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      3,
+      3,
+      3
+     ],
+     "compobf": [
+      2,
+      2,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.4021,
+     "obf": 0.3422,
+     "comp": 0.3607,
+     "compobf": 0.3386
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 5.333,
+     "obf": 4.0,
+     "comp": 3.667,
+     "compobf": 3.667
+    },
+    "ratings": {
+     "orig": [
+      6,
+      4,
+      6
+     ],
+     "obf": [
+      4,
+      4,
+      4
+     ],
+     "comp": [
+      3,
+      4,
+      4
+     ],
+     "compobf": [
+      4,
+      4,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.1473,
+     "obf": 0.119,
+     "comp": 0.127,
+     "compobf": 0.1058
+    }
+   }
+  },
+  "2607.28685v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.667,
+     "comp": 9.0,
+     "compobf": 7.333
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      8,
+      8,
+      7
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      7,
+      7,
+      8
+     ]
+    },
+    "quiz": {
+     "orig": 0.8341,
+     "obf": 0.8263,
+     "comp": 0.8435,
+     "compobf": 0.7926
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 9.333,
+     "comp": 10.0,
+     "compobf": 6.0
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      10,
+      10,
+      8
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      6,
+      6,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.5822,
+     "obf": 0.507,
+     "comp": 0.5509,
+     "compobf": 0.4757
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 3.0,
+     "obf": 2.667,
+     "comp": 3.333,
+     "compobf": 2.0
+    },
+    "ratings": {
+     "orig": [
+      3,
+      3,
+      3
+     ],
+     "obf": [
+      3,
+      3,
+      2
+     ],
+     "comp": [
+      4,
+      3,
+      3
+     ],
+     "compobf": [
+      2,
+      2,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.3474,
+     "obf": 0.3451,
+     "comp": 0.2911,
+     "compobf": 0.2512
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 4.0,
+     "obf": 3.667,
+     "comp": 4.0,
+     "compobf": 4.333
+    },
+    "ratings": {
+     "orig": [
+      4,
+      4,
+      4
+     ],
+     "obf": [
+      4,
+      3,
+      4
+     ],
+     "comp": [
+      4,
+      4,
+      4
+     ],
+     "compobf": [
+      6,
+      3,
+      4
+     ]
+    },
+    "quiz": {
+     "orig": 0.1142,
+     "obf": 0.1236,
+     "comp": 0.0814,
+     "compobf": 0.072
+    }
+   }
+  },
+  "2608.13754v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.667,
+     "comp": 9.0,
+     "compobf": 6.0
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      7,
+      8,
+      8
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      6,
+      6,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.7787,
+     "obf": 0.7541,
+     "comp": 0.7568,
+     "compobf": 0.7404
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 6.0,
+     "comp": 10.0,
+     "compobf": 5.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      6,
+      6,
+      6
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      6,
+      5,
+      5
+     ]
+    },
+    "quiz": {
+     "orig": 0.5137,
+     "obf": 0.4563,
+     "comp": 0.4044,
+     "compobf": 0.3361
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 3.0,
+     "obf": 2.0,
+     "comp": 2.667,
+     "compobf": 2.0
+    },
+    "ratings": {
+     "orig": [
+      3,
+      3,
+      3
+     ],
+     "obf": [
+      2,
+      2,
+      2
+     ],
+     "comp": [
+      3,
+      3,
+      2
+     ],
+     "compobf": [
+      2,
+      2,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.3388,
+     "obf": 0.276,
+     "comp": 0.2787,
+     "compobf": 0.2158
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 3.667,
+     "obf": 3.0,
+     "comp": 4.0,
+     "compobf": 3.333
+    },
+    "ratings": {
+     "orig": [
+      4,
+      3,
+      4
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      6,
+      3,
+      3
+     ],
+     "compobf": [
+      4,
+      3,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.1202,
+     "obf": 0.112,
+     "comp": 0.0929,
+     "compobf": 0.1093
+    }
+   }
+  },
+  "2608.19216v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.333,
+     "comp": 9.0,
+     "compobf": 7.333
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      7,
+      7,
+      8
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      8,
+      7,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.7474,
+     "obf": 0.7579,
+     "comp": 0.7672,
+     "compobf": 0.75
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 8.0,
+     "comp": 10.0,
+     "compobf": 7.667
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      8,
+      8,
+      8
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      8,
+      7,
+      8
+     ]
+    },
+    "quiz": {
+     "orig": 0.619,
+     "obf": 0.6098,
+     "comp": 0.6402,
+     "compobf": 0.5992
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 4.333,
+     "obf": 3.0,
+     "comp": 3.333,
+     "compobf": 2.667
+    },
+    "ratings": {
+     "orig": [
+      6,
+      4,
+      3
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      3,
+      4,
+      3
+     ],
+     "compobf": [
+      2,
+      3,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.5556,
+     "obf": 0.4987,
+     "comp": 0.4841,
+     "compobf": 0.4061
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 4.0,
+     "obf": 4.667,
+     "comp": 4.0,
+     "compobf": 4.0
+    },
+    "ratings": {
+     "orig": [
+      4,
+      4,
+      4
+     ],
+     "obf": [
+      6,
+      4,
+      4
+     ],
+     "comp": [
+      4,
+      4,
+      4
+     ],
+     "compobf": [
+      4,
+      4,
+      4
+     ]
+    },
+    "quiz": {
+     "orig": 0.25,
+     "obf": 0.2579,
+     "comp": 0.172,
+     "compobf": 0.2011
+    }
+   }
+  },
+  "2608.25490v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 8.0,
+     "comp": 9.0,
+     "compobf": 7.667
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      8,
+      8,
+      8
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      8,
+      7,
+      8
+     ]
+    },
+    "quiz": {
+     "orig": 0.8468,
+     "obf": 0.8439,
+     "comp": 0.8351,
+     "compobf": 0.8216
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 7.667,
+     "comp": 10.0,
+     "compobf": 6.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      7,
+      8,
+      8
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      6,
+      7,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.5708,
+     "obf": 0.5111,
+     "comp": 0.5567,
+     "compobf": 0.4825
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 5.667,
+     "obf": 3.0,
+     "comp": 5.0,
+     "compobf": 3.0
+    },
+    "ratings": {
+     "orig": [
+      4,
+      6,
+      7
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      6,
+      5,
+      4
+     ],
+     "compobf": [
+      3,
+      3,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.3538,
+     "obf": 0.2924,
+     "comp": 0.3614,
+     "compobf": 0.3263
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 5.333,
+     "obf": 5.333,
+     "comp": 5.333,
+     "compobf": 4.667
+    },
+    "ratings": {
+     "orig": [
+      6,
+      6,
+      4
+     ],
+     "obf": [
+      6,
+      4,
+      6
+     ],
+     "comp": [
+      4,
+      6,
+      6
+     ],
+     "compobf": [
+      6,
+      4,
+      4
+     ]
+    },
+    "quiz": {
+     "orig": 0.1298,
+     "obf": 0.1444,
+     "comp": 0.1287,
+     "compobf": 0.131
+    }
+   }
+  },
+  "2608.30724v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 8.0,
+     "comp": 9.0,
+     "compobf": 7.667
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      8,
+      8,
+      8
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      7,
+      8,
+      8
+     ]
+    },
+    "quiz": {
+     "orig": 0.8176,
+     "obf": 0.7967,
+     "comp": 0.7902,
+     "compobf": 0.8039
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 9.333,
+     "comp": 10.0,
+     "compobf": 6.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      10,
+      10,
+      8
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      6,
+      7,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.4438,
+     "obf": 0.4386,
+     "comp": 0.4719,
+     "compobf": 0.4359
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 4.0,
+     "obf": 3.0,
+     "comp": 4.0,
+     "compobf": 2.667
+    },
+    "ratings": {
+     "orig": [
+      4,
+      4,
+      4
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      4,
+      4,
+      4
+     ],
+     "compobf": [
+      3,
+      2,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.3745,
+     "obf": 0.3131,
+     "comp": 0.3438,
+     "compobf": 0.3497
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 5.333,
+     "obf": 3.667,
+     "comp": 4.667,
+     "compobf": 4.0
+    },
+    "ratings": {
+     "orig": [
+      4,
+      6,
+      6
+     ],
+     "obf": [
+      4,
+      4,
+      3
+     ],
+     "comp": [
+      4,
+      6,
+      4
+     ],
+     "compobf": [
+      4,
+      4,
+      4
+     ]
+    },
+    "quiz": {
+     "orig": 0.1758,
+     "obf": 0.1405,
+     "comp": 0.149,
+     "compobf": 0.1582
+    }
+   }
+  },
+  "2609.00755v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.667,
+     "comp": 9.0,
+     "compobf": 6.667
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      8,
+      7,
+      8
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      7,
+      7,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.7764,
+     "obf": 0.7243,
+     "comp": 0.7708,
+     "compobf": 0.7271
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 8.667,
+     "comp": 10.0,
+     "compobf": 7.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      8,
+      10,
+      8
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      7,
+      9,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.4194,
+     "obf": 0.3417,
+     "comp": 0.4424,
+     "compobf": 0.3347
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 5.333,
+     "obf": 3.0,
+     "comp": 4.0,
+     "compobf": 2.333
+    },
+    "ratings": {
+     "orig": [
+      4,
+      6,
+      6
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      4,
+      4,
+      4
+     ],
+     "compobf": [
+      2,
+      3,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.3076,
+     "obf": 0.2549,
+     "comp": 0.3056,
+     "compobf": 0.2479
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 5.333,
+     "obf": 5.333,
+     "comp": 4.667,
+     "compobf": 4.0
+    },
+    "ratings": {
+     "orig": [
+      6,
+      6,
+      4
+     ],
+     "obf": [
+      6,
+      4,
+      6
+     ],
+     "comp": [
+      6,
+      4,
+      4
+     ],
+     "compobf": [
+      4,
+      4,
+      4
+     ]
+    },
+    "quiz": {
+     "orig": 0.1778,
+     "obf": 0.1486,
+     "comp": 0.1611,
+     "compobf": 0.1771
+    }
+   }
+  },
+  "2609.02893v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.0,
+     "comp": 9.0,
+     "compobf": 7.0
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      7,
+      7,
+      7
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      7,
+      7,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.7453,
+     "obf": 0.8029,
+     "comp": 0.76,
+     "compobf": 0.7348
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 6.0,
+     "comp": 10.0,
+     "compobf": 5.667
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      6,
+      6,
+      6
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      5,
+      6,
+      6
+     ]
+    },
+    "quiz": {
+     "orig": 0.4036,
+     "obf": 0.4057,
+     "comp": 0.4423,
+     "compobf": 0.4361
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 6.0,
+     "obf": 2.667,
+     "comp": 5.0,
+     "compobf": 2.0
+    },
+    "ratings": {
+     "orig": [
+      7,
+      7,
+      4
+     ],
+     "obf": [
+      3,
+      2,
+      3
+     ],
+     "comp": [
+      5,
+      4,
+      6
+     ],
+     "compobf": [
+      2,
+      2,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.3512,
+     "obf": 0.3333,
+     "comp": 0.3333,
+     "compobf": 0.3092
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 4.667,
+     "obf": 4.0,
+     "comp": 3.667,
+     "compobf": 3.333
+    },
+    "ratings": {
+     "orig": [
+      6,
+      4,
+      4
+     ],
+     "obf": [
+      4,
+      4,
+      4
+     ],
+     "comp": [
+      4,
+      3,
+      4
+     ],
+     "compobf": [
+      4,
+      3,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.2432,
+     "obf": 0.1761,
+     "comp": 0.2034,
+     "compobf": 0.1939
+    }
+   }
+  },
+  "2609.30094v2": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.333,
+     "obf": 7.667,
+     "comp": 9.0,
+     "compobf": 7.667
+    },
+    "ratings": {
+     "orig": [
+      10,
+      9,
+      9
+     ],
+     "obf": [
+      7,
+      8,
+      8
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      8,
+      8,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.8333,
+     "obf": 0.8295,
+     "comp": 0.8349,
+     "compobf": 0.8037
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 6.333,
+     "comp": 10.0,
+     "compobf": 6.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      6,
+      6,
+      7
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      6,
+      6,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.5799,
+     "obf": 0.5023,
+     "comp": 0.4581,
+     "compobf": 0.417
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 6.667,
+     "obf": 3.0,
+     "comp": 5.0,
+     "compobf": 3.0
+    },
+    "ratings": {
+     "orig": [
+      6,
+      7,
+      7
+     ],
+     "obf": [
+      3,
+      3,
+      3
+     ],
+     "comp": [
+      4,
+      5,
+      6
+     ],
+     "compobf": [
+      3,
+      3,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.2062,
+     "obf": 0.261,
+     "comp": 0.2352,
+     "compobf": 0.2359
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 6.0,
+     "obf": 4.0,
+     "comp": 5.333,
+     "compobf": 4.667
+    },
+    "ratings": {
+     "orig": [
+      6,
+      6,
+      6
+     ],
+     "obf": [
+      4,
+      4,
+      4
+     ],
+     "comp": [
+      6,
+      6,
+      4
+     ],
+     "compobf": [
+      6,
+      4,
+      4
+     ]
+    },
+    "quiz": {
+     "orig": 0.0807,
+     "obf": 0.0647,
+     "comp": 0.1096,
+     "compobf": 0.0898
+    }
+   }
+  },
+  "2609.34091v1": {
+   "openai/gpt-5.6-sol": {
+    "rating": {
+     "orig": 9.0,
+     "obf": 7.0,
+     "comp": 9.0,
+     "compobf": 7.0
+    },
+    "ratings": {
+     "orig": [
+      9,
+      9,
+      9
+     ],
+     "obf": [
+      7,
+      7,
+      7
+     ],
+     "comp": [
+      9,
+      9,
+      9
+     ],
+     "compobf": [
+      7,
+      7,
+      7
+     ]
+    },
+    "quiz": {
+     "orig": 0.7765,
+     "obf": 0.7917,
+     "comp": 0.7727,
+     "compobf": 0.7159
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "rating": {
+     "orig": 10.0,
+     "obf": 9.0,
+     "comp": 10.0,
+     "compobf": 5.333
+    },
+    "ratings": {
+     "orig": [
+      10,
+      10,
+      10
+     ],
+     "obf": [
+      7,
+      10,
+      10
+     ],
+     "comp": [
+      10,
+      10,
+      10
+     ],
+     "compobf": [
+      5,
+      6,
+      5
+     ]
+    },
+    "quiz": {
+     "orig": 0.4167,
+     "obf": 0.3674,
+     "comp": 0.3826,
+     "compobf": 0.3182
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "rating": {
+     "orig": 3.333,
+     "obf": 2.667,
+     "comp": 3.333,
+     "compobf": 2.0
+    },
+    "ratings": {
+     "orig": [
+      3,
+      3,
+      4
+     ],
+     "obf": [
+      3,
+      3,
+      2
+     ],
+     "comp": [
+      4,
+      3,
+      3
+     ],
+     "compobf": [
+      2,
+      2,
+      2
+     ]
+    },
+    "quiz": {
+     "orig": 0.3106,
+     "obf": 0.2689,
+     "comp": 0.2992,
+     "compobf": 0.2765
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "rating": {
+     "orig": 4.0,
+     "obf": 4.333,
+     "comp": 4.667,
+     "compobf": 3.333
+    },
+    "ratings": {
+     "orig": [
+      4,
+      4,
+      4
+     ],
+     "obf": [
+      4,
+      3,
+      6
+     ],
+     "comp": [
+      6,
+      4,
+      4
+     ],
+     "compobf": [
+      4,
+      3,
+      3
+     ]
+    },
+    "quiz": {
+     "orig": 0.1212,
+     "obf": 0.1402,
+     "comp": 0.1174,
+     "compobf": 0.1439
+    }
+   }
+  }
+ },
+ "readers": {
+  "openai/gpt-5.6-sol": {
+   "rating_mean": {
+    "orig": 9.028,
+    "obf": 7.5,
+    "comp": 9.0,
+    "compobf": 7.056
+   },
+   "judge_orig_above": {
+    "obf": 1.0,
+    "comp": 0.542,
+    "compobf": 1.0
+   },
+   "judge_pairs_orig_above": {
+    "obf": 1.0,
+    "comp": 0.514,
+    "compobf": 1.0
+   },
+   "quiz_orig_above": {
+    "obf": 0.75,
+    "comp": 0.583,
+    "compobf": 0.833
+   },
+   "quiz_pairs_orig_above": {
+    "obf": 0.583,
+    "comp": 0.588,
+    "compobf": 0.755
+   },
+   "spearman_orig_rating_vs_orig_quiz": [
+    0.218,
+    0.495
+   ],
+   "spearman_rating_drop_vs_quiz_drop": {
+    "obf": [
+     -0.242,
+     0.448
+    ],
+    "comp": [
+     -0.131,
+     0.685
+    ],
+    "compobf": [
+     0.085,
+     0.794
+    ]
+   }
+  },
+  "google/gemma-4-31b-it": {
+   "rating_mean": {
+    "orig": 10.0,
+    "obf": 7.944,
+    "comp": 10.0,
+    "compobf": 6.139
+   },
+   "judge_orig_above": {
+    "obf": 1.0,
+    "comp": 0.5,
+    "compobf": 1.0
+   },
+   "judge_pairs_orig_above": {
+    "obf": 0.847,
+    "comp": 0.5,
+    "compobf": 1.0
+   },
+   "quiz_orig_above": {
+    "obf": 0.875,
+    "comp": 0.583,
+    "compobf": 0.917
+   },
+   "quiz_pairs_orig_above": {
+    "obf": 0.824,
+    "comp": 0.616,
+    "compobf": 0.875
+   },
+   "spearman_orig_rating_vs_orig_quiz": null,
+   "spearman_rating_drop_vs_quiz_drop": {
+    "obf": [
+     -0.198,
+     0.538
+    ],
+    "comp": null,
+    "compobf": [
+     0.233,
+     0.466
+    ]
+   }
+  },
+  "mistralai/ministral-8b-2512": {
+   "rating_mean": {
+    "orig": 4.5,
+    "obf": 2.75,
+    "comp": 3.806,
+    "compobf": 2.333
+   },
+   "judge_orig_above": {
+    "obf": 1.0,
+    "comp": 0.833,
+    "compobf": 1.0
+   },
+   "judge_pairs_orig_above": {
+    "obf": 0.912,
+    "comp": 0.694,
+    "compobf": 0.991
+   },
+   "quiz_orig_above": {
+    "obf": 0.833,
+    "comp": 0.792,
+    "compobf": 0.917
+   },
+   "quiz_pairs_orig_above": {
+    "obf": 0.75,
+    "comp": 0.671,
+    "compobf": 0.847
+   },
+   "spearman_orig_rating_vs_orig_quiz": [
+    -0.137,
+    0.67
+   ],
+   "spearman_rating_drop_vs_quiz_drop": {
+    "obf": [
+     -0.269,
+     0.397
+    ],
+    "comp": [
+     -0.581,
+     0.048
+    ],
+    "compobf": [
+     -0.537,
+     0.072
+    ]
+   }
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+   "rating_mean": {
+    "orig": 4.75,
+    "obf": 4.139,
+    "comp": 4.444,
+    "compobf": 4.0
+   },
+   "judge_orig_above": {
+    "obf": 0.75,
+    "comp": 0.625,
+    "compobf": 0.833
+   },
+   "judge_pairs_orig_above": {
+    "obf": 0.685,
+    "comp": 0.588,
+    "compobf": 0.718
+   },
+   "quiz_orig_above": {
+    "obf": 0.667,
+    "comp": 0.875,
+    "compobf": 0.75
+   },
+   "quiz_pairs_orig_above": {
+    "obf": 0.625,
+    "comp": 0.708,
+    "compobf": 0.681
+   },
+   "spearman_orig_rating_vs_orig_quiz": [
+    -0.096,
+    0.766
+   ],
+   "spearman_rating_drop_vs_quiz_drop": {
+    "obf": [
+     0.517,
+     0.085
+    ],
+    "comp": [
+     -0.058,
+     0.858
+    ],
+    "compobf": [
+     -0.131,
+     0.685
+    ]
+   }
+  }
+ },
+ "readability_orig_easier": {
+  "fk_grade": {
+   "obf": 1.0,
+   "comp": 0.333,
+   "compobf": 0.917
+  },
+  "flesch_ease": {
+   "obf": 0.917,
+   "comp": 0.583,
+   "compobf": 0.833
+  },
+  "fog": {
+   "obf": 1.0,
+   "comp": 0.333,
+   "compobf": 0.917
+  }
+ }
+}

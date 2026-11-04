@@ -1,0 +1,21 @@
+{
+ "paper": "2609.00755v1",
+ "quiz": "quiz-claude-opus-5.5-1-screened.json",
+ "section": "s5",
+ "title": "Related Works",
+ "eligible": [
+  "s2",
+  "s3",
+  "s4",
+  "s5",
+  "s7",
+  "s8"
+ ],
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p2",
+ "call": "6d2166424915ecc954cedf9698b54662178b6c40d57aee43d2e985b675798123",
+ "finish": "stop",
+ "chars_before": 2224,
+ "chars_after": 2444,
+ "items_tagged": []
+}

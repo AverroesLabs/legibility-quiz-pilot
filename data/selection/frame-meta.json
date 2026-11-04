@@ -1,0 +1,26 @@
+{
+  "fetched_utc": "2026-11-02T23:49:40.085337+00:00",
+  "rule_version": "v1",
+  "seed": "20261102",
+  "api_counts": {
+    "A": {
+      "api_total": 198,
+      "rows": 198
+    },
+    "B": {
+      "api_total": 408,
+      "rows": 408
+    },
+    "C": {
+      "api_total": 946,
+      "rows": 946
+    }
+  },
+  "unique_in_any_stratum": 1536,
+  "after_filters": 1185,
+  "per_stratum": {
+    "A": 160,
+    "B": 369,
+    "C": 656
+  }
+}

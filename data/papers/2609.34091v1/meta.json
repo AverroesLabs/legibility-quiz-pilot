@@ -1,0 +1,27 @@
+{
+  "abstract": "Sparse autoencoders (SAEs) decompose dense model activations into discrete latents, making individual features easy to interpret--and easy to misinterpret. In EEG foundation models, this creates a tempting inference: if removing alpha-band activity strongly changes a latent's activation, one might conclude that the latent represents alpha activity. Across 27 settings spanning three backbones, three EEG datasets, and three network depths, this interpretation initially appears compelling: alpha removal changes latent firing 7.3 times more than an equal-width sham notch (95% CI [6.2, 8.7], bootstrapped over settings). However, the alpha filter also deletes far more signal than the sham. After normalizing by removed spectral energy, the ratio falls to 0.28 (95% CI [0.22, 0.36]) and exceeds one in none of the 27 settings. Latents selected for their response to alpha removal are, on clean EEG, slightly anti-correlated with relative alpha power (mean r = -0.073), giving no support for a simple alpha-detector reading. Motivated by this failure case, we propose a validation ladder for semantic interpretations of SAE latents: it asks in turn whether a latent responds, whether that response survives controlling for how much signal the intervention removes, whether it is specific rather than broadly fragile, and whether the proposed property is visible on unperturbed data--while separately testing the stronger claim that the latent matters to a task classifier. Perturbation sensitivity alone does not establish what an SAE latent represents.",
+  "arxiv_id": "2609.34091",
+  "ascii_ratio": 0.9999,
+  "authors": [
+    "Yucong Cao",
+    "Chenqi Li",
+    "Tingting Zhu"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 3,
+  "hidden_style_hits": 0,
+  "html_sha256": "e92e9711342fdfc3c32966a52a6942b0244c0dc33a1dba9cfcfe8524e071a2ab",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.LG",
+  "published": "2026-09-28T01:31:44Z",
+  "rank": "0b2af934bf994bc951975b6e146eae65de763d0791c34efd781fa30324ad0641",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2609.34091v1",
+  "stratum": "A",
+  "text_sha256": "cb6b5fc929e4279aea05392c5886b9af05773e56d008b56ce94b5d860ad4edd9",
+  "title": "When Is an SAE Feature Interpretable? A Validation Ladder for EEG Foundation Models",
+  "version": 1,
+  "words": 6478
+}

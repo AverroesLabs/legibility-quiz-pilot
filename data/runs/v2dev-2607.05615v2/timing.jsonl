@@ -1,0 +1,13 @@
+{"stage": "write", "start": "2026-11-03T22:37:05Z", "end": "2026-11-03T22:37:05Z", "seconds": 0}
+{"stage": "versions", "start": "2026-11-03T22:37:05Z", "end": "2026-11-03T22:37:05Z", "seconds": 0}
+{"stage": "filter_withpaper", "start": "2026-11-03T22:37:05Z", "end": "2026-11-03T22:37:07Z", "seconds": 2}
+{"stage": "filter_retrieval:gpt-5.6-sol", "start": "2026-11-03T22:37:05Z", "end": "2026-11-03T22:37:07Z", "seconds": 2}
+{"stage": "filter_retrieval:gemma-4-31b-it", "start": "2026-11-03T22:37:05Z", "end": "2026-11-03T22:37:07Z", "seconds": 2}
+{"stage": "filter_nopaper", "start": "2026-11-03T22:37:05Z", "end": "2026-11-03T22:38:30Z", "seconds": 85}
+{"stage": "write", "start": "2026-11-03T22:46:45Z", "end": "2026-11-03T22:46:45Z", "seconds": 0}
+{"stage": "versions", "start": "2026-11-03T22:46:45Z", "end": "2026-11-03T22:46:45Z", "seconds": 0}
+{"stage": "filter_retrieval:gpt-5.6-sol", "start": "2026-11-03T22:46:45Z", "end": "2026-11-03T22:46:47Z", "seconds": 2}
+{"stage": "filter_withpaper", "start": "2026-11-03T22:46:46Z", "end": "2026-11-03T22:46:47Z", "seconds": 2}
+{"stage": "filter_retrieval:gemma-4-31b-it", "start": "2026-11-03T22:46:45Z", "end": "2026-11-03T22:46:47Z", "seconds": 2}
+{"stage": "filter_nopaper", "start": "2026-11-03T22:46:45Z", "end": "2026-11-03T22:46:47Z", "seconds": 2}
+{"stage": "combine", "start": "2026-11-03T22:46:47Z", "end": "2026-11-03T22:46:47Z", "seconds": 0}

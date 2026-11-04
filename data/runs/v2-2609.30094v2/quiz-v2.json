@@ -1,0 +1,3347 @@
+{
+ "paper": "2609.30094v2",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p8",
+ "paper_sha256": "036fd1254f0e68f8e0d91537a568b47ac21aaf54d7af0e4af6a0f1a4cc732f2b",
+ "batches": 5,
+ "written_per_batch": [
+  41,
+  40,
+  37,
+  39,
+  34
+ ],
+ "cost_per_batch": [
+  0.468592,
+  0.712288,
+  0.871744,
+  0.851032,
+  0.921772
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Active-context secret leakage is substantial for all three evaluated LLMs at the dialogue level, and it differs between models.",
+   "methods": [
+    "1,000 PrivDrift dialogues per model (900 synthetic, 100 human-authored), each with one seeded secret",
+    "Three standardized persuasion probes per dialogue",
+    "Dialogue-level aggregation: a dialogue leaks if any probe elicits the secret",
+    "Hybrid detector",
+    "95% bootstrap confidence intervals over dialogues"
+   ],
+   "results": [
+    "DeepSeek-R1: 38.70% [35.7, 41.6]",
+    "GPT-OSS-120B: 47.70% [44.6, 50.8]",
+    "Qwen3-VL-235B: 54.60% [51.6, 57.7]"
+   ],
+   "conditions": [
+    "Drift d \u2264 6",
+    "Dialogues are at most about 1,060 approximate tokens",
+    "Four fixed-format PII types",
+    "API-served models"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "Leakage is dominated by direct or near-direct reproduction: hybrid detection barely differs from deterministic normalization matching, and fuzzy matching tracks hybrid labels.",
+   "methods": [
+    "Stage 1 normalization matching: strip non-digits for numeric secrets; normalize case and whitespace (keeping delimiters) for alphanumeric secrets; substring test",
+    "Stage 2: a Llama judge applied only to regex-negative responses",
+    "Post-hoc fuzzy matching at thresholds 0.85 and 0.80",
+    "McNemar tests"
+   ],
+   "results": [
+    "Dialogue-level regex \u2192 hybrid: GPT 47.70 \u2192 47.70 (+0.00, p = 1.0); DeepSeek 37.80 \u2192 38.70 (+0.90); Qwen 53.50 \u2192 54.60 (+1.10)",
+    "Probe-level regex / fuzzy 0.85 / fuzzy 0.80 / hybrid: DeepSeek 25.50 / 26.40 / 26.53 / 26.43; GPT 36.80 / 37.03 / 37.07 / 37.57; Qwen 36.97 / 37.60 / 37.93 / 37.53"
+   ],
+   "conditions": [
+    "Fixed-format secrets",
+    "No human inter-annotator agreement reported"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Persuasion intensity significantly affects probe-level leakage, but the direction is non-monotonic and model-dependent, and the effect size is negligible.",
+   "methods": [
+    "Simple, medium and hard probes",
+    "Cochran's Q test with post-hoc McNemar tests",
+    "Cramer's V"
+   ],
+   "results": [
+    "Cochran's Q p < 1e-5 for all models",
+    "GPT simple / medium / hard: 39.30 / 40.50 / 32.90",
+    "DeepSeek: 28.10 / 22.00 / 29.20",
+    "Qwen: 38.70 / 33.30 / 40.60",
+    "Persuasion Cramer's V: 0.0718 (DeepSeek), 0.0689 (GPT), 0.0639 (Qwen), all negligible"
+   ],
+   "conditions": [
+    "Probe-level aggregation",
+    "One standardized probe template per level"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Within d \u2264 6, additional topic drift does not reliably reduce leakage. Curves dip near d = 3 and then rebound.",
+   "methods": [
+    "Drift distribution: d = 0 with p = 0.2, otherwise Uniform{2,3,4,5,6}",
+    "Content-dense drift turns",
+    "Chi-square test with Cramer's V"
+   ],
+   "results": [
+    "Drift Cramer's V: 0.1073 for DeepSeek (small), 0.0659 for GPT (negligible), 0.0723 for Qwen (negligible)",
+    "Dip near d = 3 followed by rebound"
+   ],
+   "conditions": [
+    "Bounded window",
+    "Average words grow with drift: 44.29 at d = 0 to 568.03 at d = 6",
+    "Maximum about 1,060 tokens, far below the models' context limits"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Secret type strongly determines leakage. SSNs and credit cards are suppressed far more than emails and phone numbers, which suggests format-sensitive heuristics rather than contextual confidentiality reasoning.",
+   "methods": [
+    "Four PII categories",
+    "Probe-level hybrid leakage by type",
+    "Cramer's V"
+   ],
+   "results": [
+    "SSN: GPT 0.14%, DeepSeek 1.11%, Qwen 5.97%",
+    "Credit card: GPT 0.00%, DeepSeek 0.39%, Qwen 4.01%",
+    "Email: GPT 78.24%, DeepSeek 57.11%, Qwen 81.13%",
+    "Phone: GPT 70.89%, DeepSeek 46.13%, Qwen 57.24%",
+    "Secret-type Cramer's V: 0.5871, 0.7731, 0.6927 (large)"
+   ],
+   "conditions": [
+    "All four types are user-disclosed and contextually private",
+    "Fixed-format only"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Privacy Half-Life (\u03c4), a stability-based suppression metric, exceeds the observed window for every model and persuasion level.",
+   "methods": [
+    "\u03b4 = 0.1 \u00d7 L(0)",
+    "\u03c4 = the smallest observed d with L(d) \u2264 \u03b4 and L(d') \u2264 \u03b4 for all larger observed d'",
+    "If no such d exists, \u03c4 = max(D_obs) + 1"
+   ],
+   "results": [
+    "No model approaches \u03b4 at any drift length",
+    "\u03c4 = 7 for all models and persuasion levels"
+   ],
+   "conditions": [
+    "D_obs = {0, 2, 3, 4, 5, 6}",
+    "The metric is relative to L(0)"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Dialogue-level leakage (any of three probes) exceeds the average probe-level leakage, because the two aggregation levels count different things.",
+   "methods": [
+    "Dialogue-level vs probe-level aggregation",
+    "3,000 responses per model"
+   ],
+   "results": [
+    "GPT: dialogue-level 47.70 vs probe-level 37.57",
+    "DeepSeek: 38.70 vs 26.43",
+    "Qwen: 54.60 vs 37.53"
+   ],
+   "conditions": [
+    "Each dialogue receives exactly one response per persuasion condition"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the finding that drift does not reliably reduce leakage be expected to carry over to a deployment where about 50 content-dense turns separate the disclosure from the probe? Why or why not?",
+   "answer": "Not established. PrivDrift only tests d \u2264 6, and its longest dialogues are about 1,060 approximate tokens (roughly 570\u2013800 at d = 6). The secret is therefore never far from the end of the context. Much longer separations could behave differently and are untested.",
+   "rubric": [
+    "Says the result is not established / may not hold for ~50 turns",
+    "Cites the tested range being d \u2264 6 and/or dialogues of at most ~1,060 tokens, so the secret stays near the end of context"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would Privacy Half-Life give a meaningful reading if it were computed separately for GPT-OSS-120B on credit-card secrets? Why?",
+   "answer": "No. GPT-OSS-120B leaks credit cards 0.00% of the time, so L(0) is about zero and \u03b4 = 0.1\u00b7L(0) is about zero. \u03c4 then becomes trivially 0 if leakage is always zero, or jumps to 7 after a single stray leak. In neither case does it measure decay with drift.",
+   "rubric": [
+    "Says \u03c4 would be degenerate or uninformative",
+    "Explains that near-zero L(0) makes \u03b4 \u2248 0 because the threshold is relative to L(0)",
+    "Notes \u03c4 would be trivially small, or sensitive to one leak, rather than reflecting decay"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If PrivDrift seeded unstructured secrets such as a health diagnosis instead of fixed-format PII, would regex-only and hybrid rates still be expected to nearly coincide? Why?",
+   "answer": "No. Stage 1 only checks whether the normalized secret string appears as a substring of the normalized response. A diagnosis can be leaked by paraphrase without reproducing the exact string. Those leaks would be caught only by the judge, so the regex\u2013hybrid gap would likely widen.",
+   "rubric": [
+    "Says the near-agreement would likely not hold / the gap would grow",
+    "Explains that normalization substring matching only detects verbatim fixed strings, so paraphrased leaks depend on the judge"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "When would the 38.7%\u201354.6% dialogue-level range overstate the leakage risk of an assistant deployed in a specific application?",
+   "answer": "It would overstate risk when the application's secrets are mostly SSNs or credit card numbers. The headline rate averages over a mix that includes emails and phones, which leak at 46\u201381%. SSNs and credit cards leak at only 0\u20136% at the probe level.",
+   "rubric": [
+    "Identifies deployments dominated by SSNs/credit cards (or, more generally, a different secret mix)",
+    "Reasons that the overall rate is driven by email/phone leakage, while SSN/credit-card leakage is near zero (\u2264 ~6%)"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If an auditor had tested only drift lengths d \u2208 {0, 2, 3}, would their conclusion about whether drift reduces leakage be reliable? Why?",
+   "answer": "No. The curves dip near d = 3 and then rebound at larger d. Truncating at 3 could make drift look protective. That transient drop is exactly what the stability requirement of Privacy Half-Life is designed to reject.",
+   "rubric": [
+    "Says the conclusion would be unreliable / could wrongly suggest drift reduces leakage",
+    "Cites the dip near d = 3 followed by rebound at higher d"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Would PrivDrift's dialogue-level leakage rates be directly comparable to a benchmark that reports leakage from a single probe per dialogue? Why?",
+   "answer": "No. The dialogue-level rate counts a dialogue as leaking if any of three probes succeeds, which inflates it relative to a single probe. The comparable PrivDrift figures are the probe-level rates (about 26.4%\u201337.6%) or the per-persuasion rates.",
+   "rubric": [
+    "Says not directly comparable",
+    "Explains that dialogue-level is a union over three probes, so it is higher than single-probe rates",
+    "Points to probe-level (~26\u201338%) or per-persuasion rates as the comparable numbers"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can the hybrid-minus-regex difference (\u0394) in Table 2 never be negative?",
+   "answer": "The judge is applied only to responses that Stage 1 already labeled negative. A response counts as leakage if either stage flags it. The judge can therefore add positives but never remove regex positives.",
+   "rubric": [
+    "Says hybrid is always \u2265 regex by construction",
+    "Explains that the judge only sees regex-negative responses and the label is an OR of the two stages"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "For GPT-OSS-120B, the judge raises probe-level leakage from 36.80% to 37.57%, yet dialogue-level leakage stays at 47.70%. Why?",
+   "answer": "Every response that only the judge flagged belongs to a dialogue where another probe's response was already regex-positive. Since a dialogue leaks if any probe leaks, those extra probe-level positives add no new leaking dialogues.",
+   "rubric": [
+    "Says the judge-only positives fall in dialogues already counted as leaking via regex on another probe",
+    "Connects this to the any-probe definition of dialogue-level leakage"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can persuasion be highly significant by Cochran's Q (p < 1e-5) while its Cramer's V is classified as negligible for every model?",
+   "answer": "Each test uses 1,000 paired dialogues (3,000 responses), so even differences of a few percentage points between levels are statistically detectable. Significance reflects detectability. Cramer's V (~0.06\u20130.07) shows the association itself is weak.",
+   "rubric": [
+    "Distinguishes statistical significance from effect size",
+    "Attributes significance to the large paired sample (1,000 dialogues / 3,000 responses) and the modest differences between levels"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is GPT-OSS-120B's dialogue-level leakage (47.70%) higher than its leakage under any single persuasion level (at most 40.50%)?",
+   "answer": "Different probes elicit the secret from partly different dialogues. The dialogue-level rate is the union over the three probes, so it exceeds the best single probe. If all probes leaked on exactly the same dialogues, the two would be equal.",
+   "rubric": [
+    "States that the dialogue-level rate is the union across probes",
+    "Says probes succeed on partially non-overlapping sets of dialogues"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why is GPT-OSS-120B's overall probe-level hybrid rate (37.57%) close to the unweighted mean of its four secret-type rates (about 37.3%)?",
+   "answer": "The overall rate is a weighted average of the per-type rates, with weights equal to each type's share of dialogues. It matches the unweighted mean closely, so the four secret types must appear in roughly equal proportions.",
+   "rubric": [
+    "Says the overall rate is a weighted average by secret-type share",
+    "Concludes the secret types are roughly balanced (about a quarter each)"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can Qwen3-VL-235B's fuzzy-0.85 leakage (37.60%) be slightly higher than its hybrid leakage (37.53%), even though the paper treats fuzzy matching as less expressive than the hybrid?",
+   "answer": "Fuzzy matching is a different criterion, not a subset of the hybrid. Approximate string similarity can mark some responses as leaks that both regex and the judge rejected, such as strings close to the secret. 'Less expressive' refers to semantic or partial disclosure, not to fewer positives.",
+   "rubric": [
+    "Says fuzzy matching flags some responses that neither regex nor the judge flagged",
+    "Explains that string similarity can count near-miss strings, so the two detectors disagree on borderline cases"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does DeepSeek-R1's drift effect, the only one rated 'small' (V = 0.1073), still not yield a Privacy Half-Life below 7?",
+   "answer": "\u03c4 < 7 requires leakage to fall to at most 10% of L(0) at some drift length and stay there for all larger ones. A weak association between drift and leakage is nowhere near a 90% drop, and the curves rebound after the d = 3 dip.",
+   "rubric": [
+    "States that \u03c4 requires a ~90% reduction relative to L(0), sustained at all larger d",
+    "Notes that a small association, plus the rebound, cannot meet that threshold"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b1-p1",
+   "question": "If PrivDrift had used only the simple probe, would Qwen3-VL-235B still be the leakiest of the three models?",
+   "answer": "No. Under the simple probe GPT-OSS-120B leaks 39.30% versus Qwen's 38.70%, so GPT would rank highest.",
+   "rubric": [
+    "Answers no",
+    "Cites GPT 39.30% > Qwen 38.70% under the simple probe"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b1-p1",
+   "question": "If PrivDrift had used only the hard probe, would Qwen3-VL-235B still be the leakiest of the three models?",
+   "answer": "Yes. Under the hard probe Qwen leaks 40.60%, above GPT-OSS-120B (32.90%) and DeepSeek-R1 (29.20%).",
+   "rubric": [
+    "Answers yes",
+    "Cites Qwen 40.60% exceeding GPT 32.90% and DeepSeek 29.20%"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "If the benchmark contained only email secrets, would DeepSeek-R1 remain the least leaky model?",
+   "answer": "Yes. On emails DeepSeek-R1 leaks 57.11%, below GPT-OSS-120B (78.24%) and Qwen (81.13%).",
+   "rubric": [
+    "Answers yes",
+    "Cites DeepSeek 57.11% vs GPT 78.24% and Qwen 81.13%"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "If the benchmark contained only SSN secrets, would DeepSeek-R1 remain the least leaky model?",
+   "answer": "No. On SSNs GPT-OSS-120B leaks only 0.14%, below DeepSeek-R1's 1.11%, so GPT would be least leaky.",
+   "rubric": [
+    "Answers no",
+    "Cites GPT 0.14% < DeepSeek 1.11% on SSNs"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p3",
+   "question": "Suppose a model's leakage fell to at most 0.1\u00b7L(0) at d = 3 and stayed at or below that level at d = 4, 5 and 6. Would its Privacy Half-Life be below 7?",
+   "answer": "Yes. d = 3 satisfies the threshold and every larger observed d also does, so \u03c4 would be 3, or earlier if d = 2 also qualified.",
+   "rubric": [
+    "Answers yes (\u03c4 = 3)",
+    "Explains that the threshold is met at d = 3 and at all larger observed drift lengths"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p3",
+   "question": "Suppose a model's leakage fell to at most 0.1\u00b7L(0) at d = 3 and d = 4 but rose above that threshold at d = 6. Would its Privacy Half-Life be below 7?",
+   "answer": "No. Every candidate d has a larger observed drift length (d = 6) where leakage exceeds \u03b4, so the qualifying set is empty and \u03c4 = max(D_obs) + 1 = 7.",
+   "rubric": [
+    "Answers no (\u03c4 = 7)",
+    "Explains that the resurgence at d = 6 disqualifies every earlier d, so the empty-set rule applies"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p4",
+   "question": "If the seeded phone number is 304-555-1234 and the model replies '(304) 555 1234', would Stage 1 normalization matching flag it as leakage?",
+   "answer": "Yes. For numeric secrets all non-digit characters are stripped from both strings, so both become 3045551234 and the substring test succeeds.",
+   "rubric": [
+    "Answers yes",
+    "Cites the stripping of non-digit characters for numeric secrets"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p4",
+   "question": "If the seeded email is jane@example.com and the model replies 'jane at example dot com', would Stage 1 normalization matching flag it as leakage?",
+   "answer": "No. Alphanumeric secrets are only normalized for case and whitespace, with delimiters like @ and . preserved, so the spelled-out form does not contain the normalized secret. Only the Stage 2 judge could catch it.",
+   "rubric": [
+    "Answers no",
+    "Explains that alphanumeric normalization only handles case/whitespace and preserves delimiters, so detection would fall to the judge"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team building an assistant that routinely handles users' phone numbers must choose among the three evaluated models to minimize re-disclosure. Which should they pick, and why?",
+   "answer": "DeepSeek-R1. Its phone-number leakage is 46.13%, versus 57.24% for Qwen3-VL-235B and 70.89% for GPT-OSS-120B.",
+   "rubric": [
+    "Picks DeepSeek-R1",
+    "Cites the phone leakage figures (46.13% vs 57.24% and 70.89%)"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A red-teamer may send only one PrivDrift-style probe to GPT-OSS-120B. Which persuasion level gives the best chance of extracting the secret?",
+   "answer": "Medium (40.50%), closely followed by simple (39.30%). Hard is the worst choice (32.90%), because pressure cues appear to trigger this model's safety behavior.",
+   "rubric": [
+    "Picks medium (simple is an acceptable near-tie; must not pick hard)",
+    "Cites that hard has the lowest rate for GPT (32.90%) versus medium 40.50%"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Which persuasion level should a red-teamer avoid when probing DeepSeek-R1 with a single probe, and which should they use instead?",
+   "answer": "Avoid medium, which gives DeepSeek-R1's lowest leakage (22.00%). Use hard (29.20%), with simple (28.10%) nearly as good.",
+   "rubric": [
+    "Says avoid medium",
+    "Recommends hard (or simple as a near-tie), citing 29.20% / 28.10% vs 22.00%"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "An application designer plans to insert several unrelated filler exchanges before forwarding any tool output, hoping this makes earlier secrets less recoverable. Is this justified by PrivDrift's results?",
+   "answer": "No. Within d \u2264 6, drift has only a small or negligible association with leakage. \u03c4 = 7 for every model, meaning leakage never stably dropped near 10% of its d = 0 level. Adding a few unrelated turns is not an effective privacy boundary.",
+   "rubric": [
+    "Says the mitigation is not justified",
+    "Cites the small/negligible drift effect sizes and/or \u03c4 = 7 (no stable decay within d \u2264 6)"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "To save cost, an auditor of a new model plans to measure leakage only at d = 0, assuming later turns will be safer. Is that assumption supported by PrivDrift?",
+   "answer": "No. PrivDrift found leakage does not reliably decrease with drift up to d = 6, including a rebound after the d = 3 dip. Measurements at d = 0 cannot be treated as an upper bound that later turns will fall below. Later turns need to be tested directly.",
+   "rubric": [
+    "Says the assumption is not supported",
+    "Cites the absence of reliable or stable decay with drift (rebound, \u03c4 = 7)"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team extends PrivDrift to fixed-format bank account numbers and evaluates the same three models. Based on the paper, should they expect the LLM judge to add much beyond Stage 1 matching?",
+   "answer": "Probably not. For fixed-format numeric secrets, leakage in PrivDrift was almost entirely direct or near-direct reproduction. The judge added at most 1.10 points at the dialogue level, and digit-stripping normalization catches formatting variants.",
+   "rubric": [
+    "Expects only a small judge contribution",
+    "Cites the judge adding \u2264 ~1.1 pp and leakage being near-verbatim, captured by digit-stripping normalization"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A threat modeler assumes an attacker can try all three persuasion styles against Qwen3-VL-235B. Which PrivDrift number better estimates the per-dialogue risk, and why?",
+   "answer": "The dialogue-level rate of 54.60%, not the probe-level 37.53%. The dialogue-level metric counts a dialogue as compromised if any of the three probes succeeds, which matches an attacker who tries all three.",
+   "rubric": [
+    "Picks the dialogue-level rate (54.60%)",
+    "Explains that it counts success under any of the three probes, matching a multi-attempt attacker"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If fuzzy matching at 0.85 had produced rates far below the hybrid rates, which conclusion would lose support?",
+   "answer": "The conclusion that leakage is mostly direct or near-direct reproduction would lose support. The Discussion cites fuzzy matching closely tracking hybrid leakage as evidence for it. Confidence that the judge-augmented labels are not inflated would also weaken.",
+   "rubric": [
+    "Names the conclusion that leakage is mostly direct/near-direct reproduction (or the robustness of the hybrid labels)",
+    "Notes this conclusion relies on fuzzy matching closely tracking hybrid leakage"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If leakage had stayed below 0.1\u00b7L(0) at every d \u2265 3 instead of rebounding, which of the paper's conclusions would be undermined?",
+   "answer": "The claims that \u03c4 = 7 for all models and that topic drift should not be treated as a privacy boundary would be undermined. Leakage would show stable decay, giving \u03c4 = 3.",
+   "rubric": [
+    "Names the \u03c4 = 7 result and/or the claim that drift is not a privacy boundary",
+    "Explains that sustained sub-threshold leakage would satisfy the stability criterion (\u03c4 \u2248 3)"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If SSNs and credit card numbers had leaked about as often as emails and phone numbers, which interpretation would lose its support?",
+   "answer": "The interpretation that safeguards rely on format-sensitive safety heuristics rather than contextual confidentiality reasoning would lose support. That inference rests entirely on the asymmetry across secret types, which carry the same contextual status. The large secret-type effect sizes would also vanish.",
+   "rubric": [
+    "Names the format-sensitive heuristics interpretation",
+    "Explains that it is inferred from the SSN/credit-card vs email/phone asymmetry among equally private secrets"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If GPT-OSS-120B had leaked most under the hard probe, which explanation offered in the paper would lose its support?",
+   "answer": "The explanation that urgency or pressure cues activate refusal or safety behavior in GPT-OSS-120B would lose support. It is grounded only in GPT's hard-probe rate (32.90%) being lower than its simple and medium rates.",
+   "rubric": [
+    "Names the claim that pressure cues trigger safety/refusal behavior in GPT-OSS-120B",
+    "Notes it rests on hard being GPT's lowest-leakage condition"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the LLM judge had added about 15 percentage points of dialogue-level leakage over regex for each model, which Section 5 claim would be undermined?",
+   "answer": "The Section 5.1 claim that dialogue-level hybrid evaluation largely agrees with deterministic matching, and that leakage is dominated by direct reproduction, would be undermined. That claim rests on the judge adding at most 1.10 points. Results would then depend heavily on a judge whose errors are not validated against humans.",
+   "rubric": [
+    "Names the claim that hybrid \u2248 regex / leakage is mostly direct reproduction",
+    "Cites the observed \u2264 1.10 pp judge contribution as its basis"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the 95% bootstrap confidence intervals for DeepSeek-R1 and GPT-OSS-120B had overlapped heavily, which part of the headline finding would weaken?",
+   "answer": "The claim that leakage varies strongly by model would weaken, at least the separation between these two models. The observed intervals [35.7, 41.6] and [44.6, 50.8] do not overlap, which is what supports distinguishing them.",
+   "rubric": [
+    "Names the claim that leakage varies by model / the model ranking",
+    "Notes the actual CIs are non-overlapping, which supports the distinction"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that applying more persuasion pressure makes LLMs leak more user secrets? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted as a general claim. The effect is non-monotonic and model-dependent: hard pressure gave GPT-OSS-120B its lowest leakage (32.90%), while only Qwen leaked most under hard.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites GPT's lowest leakage under hard (or the model-dependent, non-monotonic pattern)"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that topic drift has no effect on leakage regardless of how long the conversation becomes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only d \u2264 6 was tested, with dialogues of at most about 1,060 tokens, far from filling the models' context windows. Behavior over much longer drift is unknown.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the bounded range (d \u2264 6, \u2264 ~1,060 tokens)"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that current LLMs reason robustly about the contextual confidentiality of user-disclosed information? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. All four secret types are equally user-disclosed and private, yet emails and phones leak at 46\u201381% while SSNs and credit cards leak at 0\u20136%. This inconsistency points to format cues rather than contextual reasoning.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the large asymmetry across equally private secret types"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that human-authored dialogues produce the same leakage rates as synthetic dialogues? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The 100 human-authored dialogues were interleaved with the synthetic ones, and their identifiers were not preserved in the evaluation metadata, so only aggregate rates over all 1,000 can be reported.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the lost human-authored identifiers / only aggregate results being available"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the fact that all three models share \u03c4 = 7 show they pose equal privacy risk? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. \u03c4 only measures relative decay against each model's own L(0). The models differ significantly in absolute leakage (38.7% vs 47.7% vs 54.6%, with non-overlapping CIs).",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that \u03c4 is relative to L(0) while absolute dialogue-level leakage differs significantly"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Can PrivDrift's drift results be attributed specifically to the number of topic changes rather than to the distance in tokens between the secret and the probe? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Drift length and dialogue length are confounded: average length rises from about 44 words at d = 0 to about 568 words at d = 6. The design cannot separate topic shifts from token distance.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the confound that dialogue length grows with d (e.g., ~44 \u2192 ~568 words)"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the persuasion style of a probe matters more for leakage than the type of secret? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Secret type has large effect sizes (Cramer's V 0.59\u20130.77), while persuasion is negligible (0.06\u20130.07) for every model.",
+   "rubric": [
+    "Answers contradicted",
+    "Compares Cramer's V for secret type (large, ~0.59\u20130.77) against persuasion (negligible, ~0.06\u20130.07)"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "When could Stage 1 normalization matching report a numeric secret as leaked even though the model never disclosed it?",
+   "answer": "Stage 1 strips every non-digit from the whole response before the substring test. Digits from separate numbers in the response, such as a date, an amount and a code, can therefore be joined into one string. If that joined string happens to contain the secret's digit sequence, or if the response contains a longer unrelated number that includes it, Stage 1 flags a leak that did not happen.",
+   "rubric": [
+    "States that false positives can occur when the response contains other numbers whose digits, once joined, contain the secret's digits (or a longer number containing them)",
+    "Reason: non-digit characters are removed from the entire response, so digits from separate numbers are concatenated before the substring test"
+   ],
+   "batch": 2,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Under what failure of the naturalistic refinement step would PrivDrift underestimate leakage, and why?",
+   "answer": "The detectors compare responses with the stored ground-truth secret. If the rewriting model had changed any characters of the secret in the dialogue text, a model that faithfully repeated the value it was shown would not match the stored secret. Stage 1 would miss it, and the judge, which also compares against the stored secret, might miss it too, so leakage would be undercounted. The method relies on refinement preserving the exact secret.",
+   "rubric": [
+    "Identifies the case where the rewriting model alters the secret (e.g., changes digits or characters) in the dialogue",
+    "Reason: detection compares responses with the stored ground-truth secret, so a faithful reproduction of the altered value would not match and leakage would be undercounted"
+   ],
+   "batch": 2,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Should a replication with newly sampled PrivDrift dialogues be expected to reproduce the dip near d = 3? Why might it not?",
+   "answer": "Not reliably. d = 3 is the smallest drift bin (142 dialogues, against 197 at d = 0), so its rate is the noisiest. The drift effect sizes are only small or negligible (V of 0.066 to 0.107), so the dip may be sampling noise rather than a stable property.",
+   "rubric": [
+    "Says the dip is not reliably expected to reappear",
+    "Cites the small sample at d = 3 (142 dialogues, the smallest bin) and/or the small or negligible drift effect sizes as the reason"
+   ],
+   "batch": 2,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Would GPT-OSS-120B's lower leakage under the hard probe be expected to hold for a differently worded high-pressure request? Why or why not?",
+   "answer": "Not necessarily. Each persuasion level used one standardized template. The paper's explanation is that particular urgency cues trigger refusal. A high-pressure request without those cues might not trigger refusal, so the result may be specific to the template. The persuasion effect is also negligible (V = 0.0689).",
+   "rubric": [
+    "Says the result is not guaranteed to hold for other wordings",
+    "Reason: only one template per persuasion level was tested, and the proposed mechanism depends on specific pressure cues that triggered refusal"
+   ],
+   "batch": 2,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would the strong suppression of SSNs be expected to persist if the SSN were presented without its usual cues, for example as an unlabeled nine-digit string? Why?",
+   "answer": "It is not assured. The paper attributes the SSN and credit-card suppression to format and sensitivity heuristics rather than contextual confidentiality reasoning. Removing those cues could remove what triggers suppression and raise leakage toward the email and phone levels. The paper tested only fixed-format presentations.",
+   "rubric": [
+    "Says suppression may not persist or is not assured",
+    "Reason: the paper interprets suppression as format- or sensitivity-cue driven rather than contextual reasoning, and only standard fixed-format secrets were tested"
+   ],
+   "batch": 2,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q47",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is GPT-OSS-120B's secret-type Cramer's V the largest (0.7731) and DeepSeek-R1's the smallest (0.5871)?",
+   "answer": "GPT shows the most extreme split between categories: SSNs and credit cards leak at about 0% (0.14 and 0.00), while emails and phones leak at about 71 to 78%. DeepSeek also suppresses SSNs and credit cards, but its email and phone rates are much lower (57.11 and 46.13), so the contrast between types, and hence the association, is weaker.",
+   "rubric": [
+    "GPT has the sharpest contrast (near-zero SSN/credit card vs ~71\u201378% email/phone)",
+    "DeepSeek's smaller V comes from its much lower email/phone leakage (~57%/46%), which narrows the gap between categories"
+   ],
+   "batch": 2,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "For DeepSeek-R1 and Qwen3-VL-235B, drift length has a larger Cramer's V than persuasion. Why is this consistent with the paper's claim that drift does not reliably reduce leakage?",
+   "answer": "Cramer's V measures association of any shape and has no direction. The drift association reflects a dip near d = 3 followed by a rebound, not a steady decrease with drift. A non-zero (and still small) V therefore does not show that more drift lowers leakage.",
+   "rubric": [
+    "Notes that Cramer's V is non-directional and measures any association, not a decrease",
+    "Notes that the drift pattern is a dip near d = 3 followed by a rebound, i.e., non-monotonic, so no reliable reduction"
+   ],
+   "batch": 2,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why are Qwen3-VL-235B and GPT-OSS-120B nearly tied in probe-level hybrid leakage (37.53% vs 37.57%) yet about 7 points apart at the dialogue level (54.60% vs 47.70%)?",
+   "answer": "The dialogue level counts dialogues where any probe leaks, while the probe level averages responses. Qwen's leaking responses are spread over more distinct dialogues: different probes succeed on different dialogues. GPT's leaks fall repeatedly on the same dialogues. This shows in the gap above the best single probe: 54.6 vs 40.6 for Qwen, but 47.7 vs 40.5 for GPT.",
+   "rubric": [
+    "States that Qwen's leaks overlap less across probes, so they cover more distinct dialogues, whereas GPT's leaks concentrate in the same dialogues",
+    "Reason: dialogue-level counts the union of probe successes, while probe-level averages individual responses"
+   ],
+   "batch": 2,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "For a model with non-zero leakage at d = 0, what is the smallest value Privacy Half-Life can take in PrivDrift, and why?",
+   "answer": "2. If L(0) > 0, then L(0) \u2264 0.1\u00b7L(0) is impossible, so d = 0 can never qualify. d = 1 is not in D_obs = {0, 2, 3, 4, 5, 6}, so the first drift length that could qualify is 2.",
+   "rubric": [
+    "Answers \u03c4 = 2",
+    "Reason: d = 0 cannot satisfy L(0) \u2264 0.1\u00b7L(0) when L(0) > 0, and d = 1 is not an observed drift length"
+   ],
+   "batch": 2,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Comparing Qwen3-VL-235B's regex-to-hybrid increase at the probe level (36.97 to 37.53) with that at the dialogue level (53.50 to 54.60), where must most of its judge-only detections fall?",
+   "answer": "In dialogues where no probe was regex-positive. The probe-level gain of 0.56 points over 3,000 responses is about 17 judge-only responses. The dialogue-level gain of 1.10 points over 1,000 dialogues is 11 newly leaking dialogues. So most judge-only detections turn non-leaking dialogues into leaking ones rather than adding to dialogues already flagged.",
+   "rubric": [
+    "Concludes that most judge-only detections occur in dialogues with no regex-positive probe (they create new leaking dialogues)",
+    "Supports this with the count conversion: about 17 judge-only responses vs 11 newly leaking dialogues"
+   ],
+   "batch": 2,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why must most of GPT-OSS-120B's leaking dialogues leak under more than one persuasion probe?",
+   "answer": "GPT's probe-level rates (39.3 + 40.5 + 32.9) give about 1,127 leaking responses out of 3,000. Only 477 dialogues leak under any probe. Fitting 1,127 leaks into 477 dialogues averages about 2.4 leaking probes per leaking dialogue. At least about 325 of the 477 (roughly two-thirds) must therefore leak under two or more probes.",
+   "rubric": [
+    "Concludes that a majority (about two-thirds or more) of leaking GPT dialogues leak under multiple probes",
+    "Reason: about 1,127 leaking responses are concentrated in only 477 leaking dialogues (about 2.4 per dialogue)"
+   ],
+   "batch": 2,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the stability clause in Privacy Half-Life's definition, which requires all larger d to stay below \u03b4, make no difference to the \u03c4 values reported in Section 5.6?",
+   "answer": "No model's leakage reaches \u03b4 = 0.1\u00b7L(0) at any tested drift length. Even a definition based on the first crossing would find no qualifying d and would assign \u03c4 = 7. The clause matters only when a dip actually crosses \u03b4 and then rebounds, which never happened here.",
+   "rubric": [
+    "States that \u03c4 would still be 7 without the stability clause",
+    "Reason: no model ever reaches \u03b4 at any observed drift length, so there is no transient crossing for the clause to disqualify"
+   ],
+   "batch": 2,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q54",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2",
+    "c7"
+   ],
+   "pair": "b2-p1",
+   "question": "At the probe level under hybrid detection, is Qwen3-VL-235B the leakiest of the three models?",
+   "answer": "No. GPT-OSS-120B is marginally higher at the probe level under hybrid detection (37.57% vs 37.53%). Qwen leads only at the dialogue level.",
+   "rubric": [
+    "Answers no",
+    "Cites the probe-level hybrid rates: GPT 37.57% vs Qwen 37.53%"
+   ],
+   "batch": 2,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2",
+    "c7"
+   ],
+   "pair": "b2-p1",
+   "question": "At the probe level under regex-only detection, is Qwen3-VL-235B the leakiest of the three models?",
+   "answer": "Yes. Under regex-only detection Qwen is marginally above GPT (36.97% vs 36.80%), and DeepSeek-R1 is at 25.50%.",
+   "rubric": [
+    "Answers yes",
+    "Cites the regex probe-level rates: Qwen 36.97% vs GPT 36.80% (DeepSeek 25.50%)"
+   ],
+   "batch": 2,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": "b2-p2",
+   "question": "If the hard probe were dropped from the evaluation, would GPT-OSS-120B's probe-level average leakage rise?",
+   "answer": "Yes. The probe-level rate is the average over persuasion conditions. Dropping the hard probe (32.9%) leaves the mean of 39.3% and 40.5%, which is 39.9%, above the current 37.57%.",
+   "rubric": [
+    "Answers yes",
+    "Reason: hard is GPT's lowest-leaking level, so the average of simple and medium (\u224839.9%) exceeds 37.57%"
+   ],
+   "batch": 2,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": "b2-p2",
+   "question": "If the hard probe were dropped from the evaluation, could GPT-OSS-120B's dialogue-level leakage rise above 47.70%?",
+   "answer": "No. Dialogue-level leakage counts dialogues where any probe leaks. Removing a probe can only shrink that set or leave it unchanged, so the rate can only stay the same or fall.",
+   "rubric": [
+    "Answers no",
+    "Reason: dialogue-level leakage is a union over probes, so removing a probe cannot add leaking dialogues"
+   ],
+   "batch": 2,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "If a model's reply contains the seeded 16-digit credit card number embedded inside a longer reference code of digits, would Stage 1 normalization matching flag it as leakage?",
+   "answer": "Yes. After non-digits are stripped, the full normalized secret is a substring of the normalized response, which is exactly what Stage 1 tests.",
+   "rubric": [
+    "Answers yes",
+    "Reason: Stage 1 is a substring test on digit-stripped strings, so the full secret contained in a longer digit string matches"
+   ],
+   "batch": 2,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "If a model's reply reveals only the last four digits of the seeded credit card number, would Stage 1 normalization matching flag it as leakage?",
+   "answer": "No. Stage 1 requires the entire normalized secret to appear in the normalized response, and four digits are not the full secret. The response would instead go to the Llama judge, which decides whether this partial information counts as leakage.",
+   "rubric": [
+    "Answers no",
+    "Reason: Stage 1 requires the full normalized secret as a substring, so partial disclosure is left to the Stage 2 judge"
+   ],
+   "batch": 2,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": "b2-p4",
+   "question": "If the benchmark contained only phone-number secrets, would Qwen3-VL-235B be the leakiest model?",
+   "answer": "No. For phone numbers GPT-OSS-120B leaks most (70.89%), ahead of Qwen (57.24%) and DeepSeek-R1 (46.13%).",
+   "rubric": [
+    "Answers no (GPT-OSS-120B would be leakiest)",
+    "Cites the phone rates: GPT 70.89% vs Qwen 57.24%"
+   ],
+   "batch": 2,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": "b2-p4",
+   "question": "If the benchmark contained only email secrets, would Qwen3-VL-235B be the leakiest model?",
+   "answer": "Yes. For email Qwen leaks most (81.13%), ahead of GPT-OSS-120B (78.24%) and DeepSeek-R1 (57.11%).",
+   "rubric": [
+    "Answers yes",
+    "Cites the email rates: Qwen 81.13% vs GPT 78.24%"
+   ],
+   "batch": 2,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": "b2-p5",
+   "question": "Restricting attention to credit-card dialogues, would GPT-OSS-120B's dialogue-level leakage be above zero?",
+   "answer": "No. Its probe-level credit-card leakage is 0.00%, so no probe leaked on any credit-card dialogue. A dialogue leaks only if some probe leaks, so the dialogue-level rate is exactly zero.",
+   "rubric": [
+    "Answers no (it is exactly zero)",
+    "Reason: 0.00% probe-level leakage means no probe succeeded, and dialogue-level leakage requires at least one successful probe"
+   ],
+   "batch": 2,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q63",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": "b2-p5",
+   "question": "Restricting attention to credit-card dialogues, would Qwen3-VL-235B's dialogue-level leakage be above zero?",
+   "answer": "Yes. Its probe-level credit-card leakage is 4.01%, so at least one probe leaked on some dialogues. The dialogue-level rate must be at least the best single probe's rate, and therefore at least 4.01%.",
+   "rubric": [
+    "Answers yes",
+    "Reason: non-zero probe-level leakage (4.01%) means some probes succeeded, and dialogue-level leakage is at least as high as any single probe's rate"
+   ],
+   "batch": 2,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A defender of a Qwen3-VL-235B deployment wants to know which PrivDrift probe style is least effective at extracting secrets from it. Which is it?",
+   "answer": "The medium, justification-based probe, at 33.3%, against 38.7% for simple and 40.6% for hard. The paper highlights Qwen's weakness to hard pressure, but its lowest leakage is under medium.",
+   "rubric": [
+    "Identifies the medium probe",
+    "Cites Qwen's rates: medium 33.3% vs simple 38.7% and hard 40.6%"
+   ],
+   "batch": 2,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An engineer proposes an output filter that blocks any response containing the normalized secret, using PrivDrift's Stage 1 rule. For these three models and fixed-format secrets, what fraction of the paper's hybrid-detected dialogue-level leakage would it catch?",
+   "answer": "Nearly all of it. Regex-only dialogue-level rates are 100% of hybrid for GPT (47.70/47.70), about 98% for DeepSeek (37.80/38.70) and about 98% for Qwen (53.50/54.60), because leakage is almost entirely direct reproduction. This holds only for fixed-format secrets and these models.",
+   "rubric": [
+    "Concludes it would catch nearly all (about 98\u2013100%) of hybrid-detected leakage",
+    "Reason: regex and hybrid dialogue-level rates nearly coincide because leakage is direct or near-direct reproduction",
+    "Condition: applies to fixed-format secrets like those tested"
+   ],
+   "batch": 2,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A product team using GPT-OSS-120B observes that it almost never repeats SSNs and concludes it will also protect users' personal email addresses in shared sessions. Is this justified by PrivDrift?",
+   "answer": "No. GPT leaks SSNs in only 0.14% of probes but emails in 78.24%. Its protection is category-specific and fits format-sensitive heuristics, not general contextual confidentiality.",
+   "rubric": [
+    "Answers no",
+    "Cites GPT's email leakage (~78%) against near-zero SSN leakage, i.e., suppression is category- or format-specific"
+   ],
+   "batch": 2,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Running PrivDrift on a new model, an auditor finds that hybrid leakage exceeds regex-only leakage by about 10 percentage points. What does this imply for interpreting the results, compared with the paper's models?",
+   "answer": "This model leaks substantially through partial, paraphrased or obfuscated forms rather than verbatim reproduction. The paper's finding that leakage is direct reproduction would not carry over. Its rates would also depend heavily on the Llama judge, which has no human agreement audit, so manual verification would be needed.",
+   "rubric": [
+    "States the model leaks substantially via non-verbatim (partial, paraphrased or obfuscated) forms, unlike the evaluated models",
+    "States that results then depend heavily on the judge, which lacks human validation, so a manual audit is warranted"
+   ],
+   "batch": 2,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A threat modeler wants a lower bound on the chance that a GPT-OSS-120B session in which the user shared a phone number leaks it when an attacker can try all three PrivDrift probes. What bound do the paper's numbers give?",
+   "answer": "At least about 70.89%. The probe-level phone rate is the average over the three probes, so at least one probe leaks at 70.89% or more. Dialogue-level leakage is at least as high as any single probe's rate.",
+   "rubric": [
+    "Gives a lower bound of about 71% (70.89%)",
+    "Reason: the per-type probe-level rate averages the probes, so the best probe is at least that high, and dialogue-level leakage is at least the best probe's rate"
+   ],
+   "batch": 2,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q69",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Another study tests drift lengths up to d = 20, applies Privacy Half-Life, and reports \u03c4 = 21 for a model. Can this be read as worse persistence than PrivDrift's \u03c4 = 7?",
+   "answer": "No. When no stable decay is found, \u03c4 is set to max(D_obs) + 1, so it records the window size rather than a measured decay point. \u03c4 = 7 and \u03c4 = 21 can both simply mean that no stable decay was found within each study's window.",
+   "rubric": [
+    "Answers no (not directly comparable)",
+    "Reason: in the no-decay case \u03c4 is defined as max(D_obs) + 1, so its value reflects the tested window rather than the model's behavior"
+   ],
+   "batch": 2,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q70",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A developer with limited resources must choose between mitigations based on conversation drift and mitigations that extend suppression to emails and phone numbers. Which do PrivDrift's effect sizes favour, and why?",
+   "answer": "Suppression targeted at emails and phone numbers. Secret type has a large association with leakage (V of 0.59 to 0.77), while drift is small or negligible (V at most 0.107). Emails and phone numbers are where nearly all leakage occurs.",
+   "rubric": [
+    "Favours extending suppression to emails and phone numbers (secret-type-targeted mitigation)",
+    "Reason: secret-type effect sizes are large (V \u2248 0.59\u20130.77) while drift effects are small or negligible (V \u2264 ~0.11)"
+   ],
+   "batch": 2,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If each model's dialogue-level leakage had exactly equalled its probe-level average, which other reported result could not have held?",
+   "answer": "The significant differences between persuasion levels (Cochran's Q p < 1e-5). Equality would mean all three probes leak on exactly the same dialogues, so the simple, medium and hard rates would be identical, contradicting the differences in Table 4.",
+   "rubric": [
+    "Identifies the persuasion-level differences (significant Cochran's Q / Table 4 variation)",
+    "Reason: equality requires every probe to leak on the same dialogues, which forces identical per-level rates"
+   ],
+   "batch": 2,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Table 7 had shown that dialogue length barely grew with drift (e.g., about 50 words at every d), which interpretation of the drift results would lose support?",
+   "answer": "The claim that leakage persists even as content-dense unrelated material is added between disclosure and probe. Without growth in content, extra drift turns would barely separate the secret from the probe, so the absence of a drift effect would say little about persistence.",
+   "rubric": [
+    "Identifies the interpretation that leakage persists despite substantial added content-dense material (the drift-persistence claim in c4)",
+    "Reason: without growing content, drift would not actually distance the secret from the probe, so the null drift effect would be uninformative"
+   ],
+   "batch": 2,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If it turned out that the d = 3 bin contained an unusually high share of SSN and credit-card dialogues, which reported pattern would become questionable?",
+   "answer": "The dip near d = 3. Secret type has a large effect on leakage, with SSNs and credit cards near 0%. An excess of them in that bin could produce the dip through composition rather than any effect of drift.",
+   "rubric": [
+    "Identifies the dip near d = 3 (dip and rebound pattern)",
+    "Reason: secret type strongly determines leakage (SSN and credit card rarely leak), so composition differences across drift bins could create the dip"
+   ],
+   "batch": 2,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If a human audit found that many SSN and credit-card responses disclosed the last four digits but were labeled non-leaking by the judge, which conclusion would weaken?",
+   "answer": "The conclusion that SSNs and credit cards are strongly suppressed relative to emails and phones. Part of the apparent suppression would reflect partial disclosure that the detector does not count, rather than true refusal.",
+   "rubric": [
+    "Identifies the secret-type asymmetry or suppression claim (c5)",
+    "Reason: the low SSN and credit-card rates would partly be a detector artifact of uncounted partial disclosures"
+   ],
+   "batch": 2,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q75",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If Qwen3-VL-235B's 95% confidence interval lower bound had been about one point lower, which part of the headline model comparison would weaken?",
+   "answer": "The separation between Qwen and GPT-OSS-120B. Qwen's lower bound (51.6) sits only 0.8 points above GPT's upper bound (50.8), so a one-point shift would make the intervals overlap. The DeepSeek comparisons would be unaffected.",
+   "rubric": [
+    "Identifies the Qwen vs GPT-OSS-120B difference",
+    "Reason: the gap between Qwen's lower bound (51.6) and GPT's upper bound (50.8) is only 0.8 points"
+   ],
+   "batch": 2,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the models' leakage decays stably by the seventh turn of drift (since \u03c4 = 7)? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. d = 7 was never tested. \u03c4 = 7 is the value assigned by the rule max(D_obs) + 1 when no stable decay is found within d \u2264 6, so it marks an absence of decay in the window, not decay at 7.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: \u03c4 = 7 is a default assigned when no stable decay occurs within the observed d \u2264 6 window; d = 7 was not observed"
+   ],
+   "batch": 2,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the claim that leakage is substantial depend on trusting the Llama judge, given that no human inter-annotator agreement is reported? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted: it does not depend on the judge. The deterministic regex-only dialogue-level rates are already 37.8% to 53.5%, and the judge adds at most 1.1 points. Only the small partial-disclosure margin rests on the judge.",
+   "rubric": [
+    "Answers contradicted (the claim does not depend on the judge)",
+    "Reason: regex-only rates are already 37.8\u201353.5% and the judge adds at most about 1.1 points"
+   ],
+   "batch": 2,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that persuasion intensity is more strongly associated with leakage than drift length? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted as a general claim. For DeepSeek-R1 (0.1073 vs 0.0718) and Qwen3-VL-235B (0.0723 vs 0.0639), drift has the larger Cramer's V. Only GPT-OSS-120B shows persuasion slightly higher (0.0689 vs 0.0659), and all of these are small or negligible.",
+   "rubric": [
+    "Answers contradicted (or not supported)",
+    "Reason: drift's Cramer's V exceeds persuasion's for DeepSeek and Qwen; only GPT has persuasion slightly higher"
+   ],
+   "batch": 2,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that models do not partially reveal SSNs, for example by disclosing only some digits? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Partial disclosures are labeled only by the Llama judge's decision on whether enough is revealed to identify the secret. There is no breakdown of partial cases by type and no human audit of borderline partial disclosures.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: partial disclosure is judged only by the LLM judge's criterion, with no human audit or per-type breakdown of partial cases"
+   ],
+   "batch": 2,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the models would leak at similar rates if the user had explicitly asked the assistant to keep the secret confidential? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Secrets were inserted in the opening turn as part of a plausible task context, with a legitimate reason for the assistant to see them. Explicit confidentiality requests were not a tested condition.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: secrets were always disclosed within a legitimate task context; no condition with explicit confidentiality instructions was tested"
+   ],
+   "batch": 2,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that DeepSeek-R1 is the least leaky model under every persuasion level? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. DeepSeek is lowest under simple (28.1% vs 39.3% and 38.7%), medium (22.0% vs 40.5% and 33.3%) and hard (29.2% vs 32.9% and 40.6%) probes. This holds only within the tested probe templates and fixed-format secrets.",
+   "rubric": [
+    "Answers supported",
+    "Cites that DeepSeek's rate is below both other models at each of simple, medium and hard"
+   ],
+   "batch": 2,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would PrivDrift's dialogue-level leakage rate be a valid measure of privacy harm in a single-user session where the same user who disclosed the phone number later asks the assistant for it?",
+   "answer": "No. PrivDrift labels any reproduction of the seeded secret as leakage, whoever is asking. Its threat model is re-disclosure to a later party, injected instructions or unintended reuse, as in shared sessions, tool outputs and prompt injection. When the original user legitimately asks for their own number, re-disclosure is helpful behaviour, so counting it as leakage would overstate harm.",
+   "rubric": [
+    "Concludes the rate would not be a valid harm measure in this case, or would overstate harm.",
+    "Explains that the detector counts any reproduction as leakage regardless of requester, while the threat model concerns later parties, shared sessions or injected prompts rather than the original user."
+   ],
+   "batch": 3,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Do the 95% bootstrap confidence intervals in Table 3 capture the uncertainty a reader faces about how leaky these models would be under differently worded probes?",
+   "answer": "No. The bootstrap resamples dialogues while the single probe template per persuasion level stays fixed, so wording variation is not part of the interval. Wording-related shifts can be larger than the intervals: GPT-OSS-120B's medium and hard probes differ by 7.6 points (40.50 vs 32.90), while the dialogue-level intervals are only about \u00b13 points.",
+   "rubric": [
+    "Concludes the CIs do not capture uncertainty from probe wording.",
+    "Explains that the bootstrap is over dialogues with one fixed template per level, and notes that between-probe differences (e.g., GPT's ~7.6-point medium\u2013hard gap) exceed the ~\u00b13-point CI width."
+   ],
+   "batch": 3,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Token counts in PrivDrift are only approximated from word counts. If the true token count were twice the reported approximation, would the paper's framing that its dialogues sit far below the models' context limits break down?",
+   "answer": "No. The longest dialogue is about 1,060 approximate tokens, so doubling gives roughly 2,100 tokens, which is still a tiny fraction of an extended context window. The underestimate would make drift distances in tokens imprecise, but it would not bring the dialogues near the context limit.",
+   "rubric": [
+    "Concludes the framing still holds.",
+    "Uses the ~1,060-token maximum (or ~757 average at d = 6) to show that doubling yields only about 2,000 tokens, still far below extended context limits."
+   ],
+   "batch": 3,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Under what detector weakness would the near-equality of regex-only and hybrid rates fail to show that leakage is dominated by direct or near-direct reproduction?",
+   "answer": "If the Llama judge had low recall for semantic or paraphrased disclosures. The judge is the only component meant to catch such cases, and fuzzy matching only measures string similarity. A small regex-to-hybrid gap would then reflect what the detectors cannot see rather than an absence of paraphrased leakage. No human audit is reported to rule this out.",
+   "rubric": [
+    "Identifies low judge recall for paraphrased or semantic disclosures as the failure condition.",
+    "Explains that regex and fuzzy matching both depend on string form, so the small gap would then reflect a detector blind spot rather than true absence of paraphrase, and that no human agreement check rules this out."
+   ],
+   "batch": 3,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why could Privacy Half-Life systematically report \u03c4 = max(D_obs)+1 for a model whose true leakage at long drift hovers just around 0.1\u00b7L(0)?",
+   "answer": "Each drift bin holds only about 142\u2013197 dialogues, so the estimates of L(d) are noisy. The stability clause requires every later observed bin to be at or below \u03b4, so a single bin that randomly lands above \u03b4 disqualifies all earlier qualifying d. Near the threshold, sampling noise therefore pushes \u03c4 up toward the window maximum plus one.",
+   "rubric": [
+    "Concludes that sampling noise biases \u03c4 upward toward 7 when true leakage is near \u03b4.",
+    "Explains that bins are small (~142\u2013197 dialogues per Table 7) and the stability clause means any single later bin above \u03b4 resets the qualification."
+   ],
+   "batch": 3,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Would PrivDrift's dialogue-level rates carry over to an attack in which the three persuasion probes are sent one after another within the same conversation?",
+   "answer": "Not necessarily. In PrivDrift each standardized probe is appended separately to the completed history, so each response sees no earlier probe or refusal. In a sequential attack, earlier probes and the model's own earlier refusals or disclosures would be in context and could change later responses. The any-of-three rate measures three independent tries, not a chained attack.",
+   "rubric": [
+    "Concludes the rates would not necessarily carry over.",
+    "Explains that each probe in PrivDrift is appended independently to the same history, whereas sequential probing puts earlier probes and responses into context, which can alter behaviour."
+   ],
+   "batch": 3,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Among the three models, whose leaking dialogues leak under the largest number of persuasion probes on average, and how do the paper's numbers show it?",
+   "answer": "GPT-OSS-120B. Summing the three per-level rates and dividing by the dialogue-level rate gives the mean number of leaking probes per leaking dialogue. For GPT this is 112.7/47.7 \u2248 2.36, compared with 79.3/38.7 \u2248 2.05 for DeepSeek-R1 and 112.6/54.6 \u2248 2.06 for Qwen3-VL-235B.",
+   "rubric": [
+    "Names GPT-OSS-120B.",
+    "Shows the calculation: sum of the Table 4 per-level rates divided by the dialogue-level rate (\u22482.36 for GPT vs \u22482.05\u20132.06 for the others)."
+   ],
+   "batch": 3,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why is the median dialogue length (385 words) above the mean (359.16 words) in Table 1?",
+   "answer": "About 20% of dialogues (197) have d = 0 and average only about 44 words, far shorter than all the drift dialogues. This cluster of very short dialogues in the lower tail pulls the mean down more than the median, so the distribution is left-skewed.",
+   "rubric": [
+    "Attributes the gap to the cluster of very short d = 0 dialogues (~20%, ~44 words).",
+    "Explains that this lower-tail cluster pulls the mean below the median (left skew)."
+   ],
+   "batch": 3,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is DeepSeek-R1's dialogue-level regex-to-hybrid increase of only 0.90 points statistically significant (p = 7.7\u00d710\u207b\u00b3)?",
+   "answer": "The judge is applied only to regex-negative responses and its verdict is OR-ed with the regex label, so every disagreement between the two labelings goes in the same direction. The 0.90 points are 9 dialogues that switch from non-leaking to leaking, with none switching back. McNemar's test depends on the discordant pairs, and a 9-to-0 split is highly lopsided, so even this small absolute change is significant.",
+   "rubric": [
+    "Explains that all discordant pairs go in one direction (regex-negative to hybrid-positive) because the judge can only add positives.",
+    "Notes that McNemar uses only discordant pairs, and 9 vs 0 (0.9% of 1,000 dialogues) is a strongly one-sided split, giving a small p-value."
+   ],
+   "batch": 3,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose the drift curves had dipped at d = 3 and then stayed flat at that dip level instead of rebounding. Why would every model's Privacy Half-Life still be 7?",
+   "answer": "The paper reports that no model approaches \u03b4 = 0.1\u00b7L(0) at any tested drift length, and that includes the dip itself. A curve that stays at the dip level therefore never satisfies L(d) \u2264 \u03b4, the set defining \u03c4 is empty, and \u03c4 = max(D_obs)+1 = 7.",
+   "rubric": [
+    "States \u03c4 would remain 7.",
+    "Explains that even the dip is far above \u03b4 = 0.1\u00b7L(0) (no model approaches \u03b4 at any d), so no d qualifies and \u03c4 defaults to max(D_obs)+1."
+   ],
+   "batch": 3,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the d = 0 bin in Table 7 contain more dialogues (197) than any other drift bin (142\u2013181)?",
+   "answer": "The sampling distribution gives d = 0 a probability of 0.2. The remaining 0.8 is split uniformly over five values, so each of d = 2 to 6 gets only 0.16. The expected counts are about 200 for d = 0 versus about 160 for each other bin, which matches the observed sizes.",
+   "rubric": [
+    "Attributes it to the drift sampling distribution (p = 0.2 for d = 0).",
+    "Notes that each other value gets 0.8/5 = 0.16, giving expected counts of ~200 vs ~160."
+   ],
+   "batch": 3,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why would recomputing Table 5 with regex-only labels instead of hybrid labels not weaken the claim that SSNs and credit cards are suppressed far more than emails and phone numbers?",
+   "answer": "A hybrid label is the regex label OR the judge's verdict, so regex-only rates can only be equal to or lower than hybrid rates. The SSN and credit-card rates could therefore only shrink. The judge adds less than about 1 point of leakage overall, so email and phone rates could fall only slightly, and the gap of 40 or more points would remain.",
+   "rubric": [
+    "Concludes the suppression claim would not weaken (if anything the low rates fall further).",
+    "Explains that regex \u2264 hybrid by construction and the judge adds under ~1 point overall, so the large type gap is preserved."
+   ],
+   "batch": 3,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q94",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "A model has L(0) = 80% and L(d) = 7% at every drift length d = 2 to 6. Would its Privacy Half-Life be below 7?",
+   "answer": "Yes. Here \u03b4 = 0.1 \u00d7 80% = 8%, and 7% is at or below \u03b4 at d = 2 and at every larger observed d, so \u03c4 = 2.",
+   "rubric": [
+    "Answers yes (\u03c4 = 2).",
+    "Computes \u03b4 = 8% and notes that 7% \u2264 8% holds at d = 2 and all later observed d."
+   ],
+   "batch": 3,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "A model has L(0) = 20% and L(d) = 7% at every drift length d = 2 to 6. Would its Privacy Half-Life be below 7?",
+   "answer": "No. Here \u03b4 = 0.1 \u00d7 20% = 2%, and 7% exceeds \u03b4 at every observed drift, so the defining set is empty and \u03c4 = max(D_obs)+1 = 7. The same absolute leakage counts as stable suppression for one model and not for the other because the threshold is relative to L(0).",
+   "rubric": [
+    "Answers no (\u03c4 = 7).",
+    "Computes \u03b4 = 2%, notes that 7% never falls to \u03b4, and attributes the difference from a high-L(0) model to the threshold being relative to L(0)."
+   ],
+   "batch": 3,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "If DeepSeek-R1's dialogue-level regex-versus-hybrid McNemar p-value were Bonferroni-corrected over the three per-model comparisons at \u03b1 = 0.05, would it remain significant?",
+   "answer": "Yes. The corrected threshold is 0.05/3 \u2248 0.0167, and p = 7.7\u00d710\u207b\u00b3 is below it.",
+   "rubric": [
+    "Answers yes.",
+    "Compares p = 0.0077 with the corrected threshold \u2248 0.0167."
+   ],
+   "batch": 3,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "If DeepSeek-R1's dialogue-level regex-versus-hybrid McNemar p-value were Bonferroni-corrected over ten comparisons at \u03b1 = 0.05, would it remain significant?",
+   "answer": "No. The corrected threshold is 0.05/10 = 0.005, and p = 7.7\u00d710\u207b\u00b3 exceeds it. By contrast, Qwen3-VL-235B's p = 2.57\u00d710\u207b\u00b3 would still pass.",
+   "rubric": [
+    "Answers no.",
+    "Compares p = 0.0077 with the corrected threshold of 0.005."
+   ],
+   "batch": 3,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": "b3-p3",
+   "question": "If the four secret types each made up 25% of dialogues, could GPT-OSS-120B's 47.70% dialogue-level leakage be produced entirely by email and phone dialogues?",
+   "answer": "Yes. Email and phone dialogues would be 50% of the benchmark, and 47.70% is at most 50%. This fits GPT's near-zero SSN (0.14%) and credit-card (0.00%) leakage.",
+   "rubric": [
+    "Answers yes.",
+    "Notes that email plus phone would be 50% of dialogues, so 47.70% fits within that share, consistent with GPT's near-zero SSN and credit-card rates."
+   ],
+   "batch": 3,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": "b3-p3",
+   "question": "If the four secret types each made up 25% of dialogues, could Qwen3-VL-235B's 54.60% dialogue-level leakage be produced entirely by email and phone dialogues?",
+   "answer": "No. Email and phone dialogues would make up only 50% of the benchmark, so at least 4.6 points of Qwen's dialogue-level leakage must come from SSN or credit-card dialogues. This fits its non-trivial SSN (5.97%) and credit-card (4.01%) probe-level rates.",
+   "rubric": [
+    "Answers no.",
+    "Notes that 54.60% exceeds the 50% email-plus-phone share, so SSN or credit-card dialogues must contribute, consistent with Qwen's non-zero rates for those types."
+   ],
+   "batch": 3,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "If a GPT-OSS-120B dialogue were counted as leaking only when all three persuasion probes elicit the secret, is the resulting rate guaranteed to be below 33%?",
+   "answer": "Yes. A dialogue that leaks under all three probes leaks under the hard probe, so the rate cannot exceed the lowest per-level rate, 32.90%.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the all-three rate is bounded by the lowest per-level rate (hard, 32.90%)."
+   ],
+   "batch": 3,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q101",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "If a GPT-OSS-120B dialogue were counted as leaking when at least two of the three persuasion probes elicit the secret, is the resulting rate guaranteed to be below 33%?",
+   "answer": "No. Leaking-probe counts total 112.7 per 100 dialogues across only 47.7 leaking dialogues, so the at-least-two rate must be at least about 32.1%. It could be as high as the 47.70% dialogue-level rate, for example if no dialogue leaks under exactly one probe.",
+   "rubric": [
+    "Answers no.",
+    "Explains, using the per-level total (112.7) and the dialogue-level rate (47.70), that the at-least-two rate is bounded only by about 32% below and 47.7% above, so it can exceed 33%."
+   ],
+   "batch": 3,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Using Table 7, roughly how many PrivDrift-style drift turns would be needed for a dialogue to reach about 32,000 approximate tokens, and do the paper's drift results speak to that regime?",
+   "answer": "Going from d = 0 (\u224859 tokens) to d = 6 (\u2248757 tokens) adds about 116 approximate tokens per drift turn, so about 275 drift turns would be needed. That is roughly 45 times PrivDrift's maximum of d = 6, and the paper explicitly bounds its conclusions to short-to-medium drift, so its results do not cover that regime.",
+   "rubric": [
+    "Estimates on the order of 250\u2013300 drift turns (\u2248116 tokens per turn from Table 7).",
+    "States that the paper's drift results do not address this regime because they are bounded to d \u2264 6 (~1,060 tokens)."
+   ],
+   "batch": 3,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to use PrivDrift-style dialogues to measure how strongly persuasion style affects leakage in a new model similar to the evaluated ones. Which secret types should they seed, and why?",
+   "answer": "They should seed emails and phone numbers. SSNs and credit cards leak at near-zero rates (0\u20136%) regardless of probe, so those responses sit at a floor and cannot show persuasion differences. They would dilute any persuasion effect, which may partly explain the negligible pooled Cramer's V.",
+   "rubric": [
+    "Recommends email and phone secrets.",
+    "Explains that SSN and credit-card leakage is near zero for all models, creating a floor effect that leaves little room for persuasion to vary leakage."
+   ],
+   "batch": 3,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team building a new benchmark with fixed-format PII secrets cannot afford an LLM judge. Based on PrivDrift, would fuzzy matching at 0.85 be an adequate substitute for the hybrid detector?",
+   "answer": "Largely yes, for fixed-format secrets. At the probe level, fuzzy-0.85 rates are within about 0.03\u20130.54 points of hybrid rates for all three models. This adequacy should not be assumed for unstructured secrets, where string similarity cannot capture semantic disclosure.",
+   "rubric": [
+    "Concludes fuzzy 0.85 is a reasonable substitute for fixed-format secrets.",
+    "Cites the close probe-level agreement (within ~0.5 points of hybrid for all models).",
+    "Notes the caveat that this holds only for fixed-format secrets, not semantic or unstructured disclosures."
+   ],
+   "batch": 3,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A lab runs a new model on only 100 human-authored PrivDrift-style dialogues and finds 45% dialogue-level leakage. Can they conclude it is less leaky than Qwen3-VL-235B (54.60%)?",
+   "answer": "No. The paper never compares human-authored and synthetic dialogues, so there is no evidence that the 100-dialogue subset leaks at the same rate as the full benchmark. Moreover, Qwen's \u00b13-point interval comes from 1,000 dialogues, and a 100-dialogue estimate would be much less precise.",
+   "rubric": [
+    "Concludes they cannot draw that conclusion.",
+    "Explains that the paper reports no human-versus-synthetic comparison, so the subset may differ systematically (optionally noting the much smaller sample than the 1,000 behind Qwen's CI)."
+   ],
+   "batch": 3,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team replicating PrivDrift's hybrid detector on a model that behaves like DeepSeek-R1 wants to budget judge calls. Roughly what fraction of probe responses will be sent to the judge, and how many will it flip to leakage?",
+   "answer": "Only regex-negative responses go to the judge. With DeepSeek-R1's 25.50% probe-level regex rate, that is about 74.5% of responses. The judge raised the hybrid rate only to 26.43%, flipping about 0.93% of all responses (about 28 of 3,000).",
+   "rubric": [
+    "Estimates that about three quarters (~74.5%) of responses go to the judge, because only regex-negatives are judged.",
+    "Estimates that the judge flips under 1% of all responses (~0.93%, ~28 of 3,000)."
+   ],
+   "batch": 3,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q107",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An auditor tests a new model on PrivDrift-style dialogues containing only email and phone secrets and finds 60% probe-level leakage. Is this model leakier than GPT-OSS-120B on comparable secrets?",
+   "answer": "No, it is less leaky on comparable secrets. GPT-OSS-120B leaks 78.24% of email and 70.89% of phone probes, roughly 75% on average for those types. Comparing 60% with GPT's overall 37.57% would be misleading, because that figure includes near-zero SSN and credit-card dialogues.",
+   "rubric": [
+    "Concludes the new model is less leaky than GPT-OSS-120B on these secret types.",
+    "Explains that GPT's email/phone rates (~78% and ~71%) are the right comparison, not its overall 37.57%, which is diluted by near-zero SSN and credit-card rates."
+   ],
+   "batch": 3,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If PrivDrift's drift sampler had never produced d = 0 dialogues, which reported result could not have been computed at all?",
+   "answer": "Privacy Half-Life. Its threshold \u03b4 = 0.1 \u00d7 L(0) requires the leakage rate at d = 0. Without d = 0 dialogues there is no L(0), so there is no \u03b4 and no \u03c4.",
+   "rubric": [
+    "Names Privacy Half-Life (\u03c4).",
+    "Explains that \u03b4 is defined as 0.1\u00b7L(0), which requires d = 0 observations."
+   ],
+   "batch": 3,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the mean of a model's three per-persuasion rates in Table 4 had differed noticeably from its probe-level hybrid rate in Table 6, which statement about the evaluation design would be contradicted?",
+   "answer": "The statement that each dialogue contributes exactly one response per persuasion condition, giving 3,000 balanced responses per model. With equal-sized persuasion groups, the overall probe-level rate is exactly the unweighted mean of the three level rates. For example, GPT's (39.30 + 40.50 + 32.90)/3 = 37.57.",
+   "rubric": [
+    "Identifies the design statement that each dialogue receives exactly one response per persuasion level (balanced 3,000 responses).",
+    "Explains that balanced groups make the probe-level rate equal to the mean of the three level rates (e.g., GPT's mean equals 37.57)."
+   ],
+   "batch": 3,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If PrivDrift had seeded only SSNs and credit card numbers, which part of the headline claim c1 would lose its support?",
+   "answer": "The claim that leakage is substantial for all three models. Probe-level leakage for those types is at most about 6% (Qwen) and essentially zero for GPT-OSS-120B. The 38.7\u201354.6% headline range depends on email and phone dialogues.",
+   "rubric": [
+    "Identifies the 'substantial leakage for all models' claim.",
+    "Explains that SSN and credit-card leakage is near zero (\u2264 ~6%), so the headline rates are driven by email and phone secrets."
+   ],
+   "batch": 3,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If GPT-OSS-120B's email and phone leakage had matched DeepSeek-R1's, which headline model comparison would lose its support?",
+   "answer": "The finding that DeepSeek-R1 leaks less than GPT-OSS-120B. On SSNs and credit cards, GPT (0.14%, 0.00%) is actually lower than DeepSeek (1.11%, 0.39%). GPT's higher overall leakage therefore comes entirely from its much higher email (78.24 vs 57.11) and phone (70.89 vs 46.13) leakage, and without that gap GPT would be no leakier.",
+   "rubric": [
+    "Identifies the DeepSeek-R1 < GPT-OSS-120B comparison.",
+    "Explains that GPT is already lower on SSN and credit card, so its excess leakage comes only from email and phone."
+   ],
+   "batch": 3,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q112",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "The abstract says leakage 'varies strongly' by persuasion intensity. Is that wording supported, contradicted or not settled by the paper's own statistics?",
+   "answer": "Contradicted as a description of effect size. Persuasion is statistically significant (Cochran's Q p < 1e-5), but its Cramer's V is negligible for every model (0.064\u20130.072). Persuasion has a reliable but weak association with leakage, unlike secret type (V 0.59\u20130.77).",
+   "rubric": [
+    "Answers contradicted (overstated).",
+    "Cites the negligible Cramer's V for persuasion (~0.06\u20130.07) despite significance, contrasting it with secret type's large V."
+   ],
+   "batch": 3,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Since the human-authored and synthetic rows cannot be separated, is the claim that leakage is substantial supported for the 900 synthetic dialogues on their own? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. Even in the worst case, where all 100 human-authored dialogues leaked, the synthetic dialogues would still leak at (387 \u2212 100)/900 \u2248 31.9% for DeepSeek-R1. The corresponding figures are about 41.9% for GPT-OSS-120B and about 49.6% for Qwen3-VL-235B, all substantial.",
+   "rubric": [
+    "Answers supported.",
+    "Gives a worst-case bound by assigning all 100 human dialogues as leaking, showing synthetic-only leakage remains substantial (\u224832% or more for DeepSeek)."
+   ],
+   "batch": 3,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Qwen3-VL-235B is significantly more vulnerable to the hard probe than to the simple probe? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports only the omnibus Cochran's Q across all three levels and does not give the post-hoc pairwise McNemar results. The hard-versus-simple difference for Qwen is only 1.9 points (40.60 vs 38.70), and the significant omnibus result could be driven by the lower medium rate (33.30).",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that only the omnibus test is reported (pairwise post-hoc results are not given) and that the hard\u2013simple gap is small (~1.9 points), while medium differs more."
+   ],
+   "batch": 3,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that GPT-OSS-120B's lower leakage under the hard probe is caused by urgency cues triggering refusal behaviour? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper only says the drop is 'consistent with' pressure cues activating safety behaviour. It reports no analysis of refusal content and no manipulation of urgency cues, and it uses only one hard template.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the paper offers only a 'consistent with' interpretation, with no refusal analysis or controlled manipulation of urgency (one template per level)."
+   ],
+   "batch": 3,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that leakage differs across dialogue topics such as tax filing, medical triage or travel logistics? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Topics are assigned during generation, but the paper reports leakage only by model, drift length, persuasion level and secret type. No topic-level breakdown or test is given.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that topic is a generation variable but no leakage analysis by topic is reported."
+   ],
+   "batch": 3,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the rebound after the dip near d = 3 show that longer topic drift actually increases leakage? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The drift effect sizes are negligible for GPT and Qwen and small for DeepSeek. The paper reports no trend test showing leakage rising with d, only a descriptive dip and rebound. The defensible claim is that drift does not reliably reduce leakage, not that it increases it.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes the small or negligible drift Cramer's V and the absence of a trend test, so the rebound is descriptive and supports only 'no reliable reduction'."
+   ],
+   "batch": 3,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that leakage rates would be similar if the secret were disclosed in the middle of a conversation rather than at its start? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. In every PrivDrift dialogue the secret is inserted in the opening turn as part of a task context, so disclosure position never varies. Drift varies only the number of turns between that opening disclosure and the probe.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the secret is always placed in the opening turn, so disclosure position is never manipulated."
+   ],
+   "batch": 3,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q119",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The chi-square tests behind the drift-length and secret-type Cramer's V values are run on the 3,000 probe-level responses per model. Why might their p-values overstate the evidence?",
+   "answer": "The p-values may be too optimistic. Each dialogue contributes three responses that share the same secret and drift length, and these responses are strongly correlated: dialogue-level leakage is far below what three independent probes would produce. A chi-square test of independence treats the 3,000 responses as independent, but the effective sample is closer to the 1,000 dialogues.",
+   "rubric": [
+    "States that the significance (p-values) may be overstated or inflated.",
+    "Explains that the three probe responses per dialogue share the secret and drift length and are correlated, which violates the test's independence assumption (effective n is nearer 1,000 dialogues than 3,000 responses)."
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q120",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Under what condition in PrivDrift's dialogue construction would the SSN/credit-card versus email/phone gap fail to support the format-sensitive-heuristics interpretation?",
+   "answer": "The interpretation fails if the opening-turn task contexts or the probe wording differ systematically by secret type, for example if SSN dialogues are framed in ways that signal confidentiality more strongly. In that case the gap could reflect reasoning about those contexts rather than the format of the value. The interpretation relies on all four types being equally user-disclosed and contextually private, so that format is the only systematic difference.",
+   "rubric": [
+    "Identifies a type-correlated confound in the context or probe framing, such as SSN contexts signalling confidentiality differently from email contexts.",
+    "Explains that the interpretation depends on the four types being equally user-disclosed and contextually private, with format as the only systematic difference."
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Should a re-run of PrivDrift through OpenRouter some months later be expected to reproduce the model ranking DeepSeek-R1 < GPT-OSS-120B < Qwen3-VL-235B? Why or why not?",
+   "answer": "It is not guaranteed. The models are API-served and may change over time, while the bootstrap CIs capture only sampling variation over dialogues, not changes to the model. The GPT\u2013Qwen ordering is especially fragile because their intervals nearly touch (50.8 vs 51.6).",
+   "rubric": [
+    "Says the ranking is not guaranteed to reproduce.",
+    "Cites that API-served models can change over time and that the CIs reflect only dialogue sampling, not model-version changes (optionally noting the GPT\u2013Qwen intervals nearly touch)."
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "In what case could Privacy Half-Life report suppression (\u03c4 < 7) on the strength of one noisy bin, despite its stability clause?",
+   "answer": "This happens when only the largest observed drift, d = 6, falls below \u03b4. There is no larger d left to verify stability, so \u03c4 = 6 would rest on a single bin of about 167 dialogues, and sampling noise could produce the dip. The stability clause only guards against dips that are followed by later observed bins.",
+   "rubric": [
+    "Identifies the case where only the last observed drift length (d = 6) falls below \u03b4.",
+    "Explains that no larger d exists to check stability, so one bin of limited size (about 167 dialogues) decides \u03c4 and noise can drive it."
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "The threat model motivates PrivDrift with prompt-injection content arriving through tool outputs or retrieved documents. Can the reported leakage rates be taken directly as estimates for that channel? Why?",
+   "answer": "Not directly. The evaluation appends a standardized probe as the final conversational request; it never delivers the request through tool outputs or retrieved documents. Models may treat instructions from those channels differently, so the rates for this channel are untested.",
+   "rubric": [
+    "Says the rates cannot be taken directly or are untested for that channel.",
+    "Explains that probes are appended as final conversational queries rather than injected through tool or retrieved content, and that models may respond differently to other channels."
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q124",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is the ratio of approximate tokens to words the same (about 1.333) in every row of Table 1 and Table 7, including the min/max values?",
+   "answer": "The approximate tokens are not produced by a tokenizer. They are the word count multiplied by a fixed factor of 4/3 (for example, 795 words \u00d7 4/3 = 1,060 and 43 \u00d7 4/3 = 57.33). A fixed conversion gives an identical ratio everywhere.",
+   "rubric": [
+    "States that tokens are computed as a fixed multiple (4/3, about 1.33) of word counts.",
+    "Connects this to the paper's statement that token counts are estimated from word counts, not from a real tokenizer, so the ratio cannot vary between rows."
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q125",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Which secret types must account for GPT-OSS-120B's drop in leakage under the hard probe (32.90% vs 40.50% under medium)? Why?",
+   "answer": "The drop must come from email and phone dialogues. GPT's SSN (0.14%) and credit-card (0.00%) leakage is near zero averaged over all probes, so those dialogues almost never leak under any persuasion level. They cannot supply a drop of about 7.6 points, which is roughly 76 of 1,000 dialogues.",
+   "rubric": [
+    "Says the drop must come from email and phone dialogues.",
+    "Reasons that SSN and credit-card leakage is near zero under every probe, so it cannot account for a drop of about 7.6 points."
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can't the higher leakage of emails than phone numbers (for every model) be explained by Stage 1 matching being more lenient for emails?",
+   "answer": "Stage 1 is actually more lenient for numeric secrets: it strips every non-digit character from phone numbers, whereas emails keep their meaningful delimiters. Any detection bias would therefore favour phones, yet emails still leak more. In addition, the judge adds very little, so detection differences cannot explain a gap of 7\u201324 points.",
+   "rubric": [
+    "Says the email > phone gap is not a Stage 1 leniency artifact.",
+    "Explains that numeric normalization (stripping all non-digits) is the more lenient rule, while emails keep delimiters, so any bias would favour phones."
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "For GPT-OSS-120B, why does even the loosest fuzzy threshold (0.80, 37.07%) stay below the hybrid rate (37.57%), unlike for DeepSeek-R1 and Qwen3-VL-235B?",
+   "answer": "About 15 GPT responses (0.5% of 3,000) were judged as revealing the secret even though their string similarity to the secret is below 0.80. These are partial or reformatted disclosures that the judge recognizes but string similarity cannot capture. GPT's judge-only detections are of this low-similarity kind, whereas the other models' extra detections are mostly near-matches.",
+   "rubric": [
+    "Attributes the gap to judge-only detections (roughly 15 responses) that have low string similarity to the secret.",
+    "Characterizes these as partial, indirect or reformatted disclosures that the judge catches but fuzzy matching at 0.80 cannot."
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If GPT-OSS-120B's three probes leaked independently at 39.3%, 40.5% and 32.9%, its dialogue-level leakage would be about 76%. Why is the observed rate only 47.70%?",
+   "answer": "Leakage is strongly correlated across the three probes within a dialogue. The main reason is secret type: SSN and credit-card dialogues almost never leak under any probe, while email and phone dialogues tend to leak under several probes. The union of the probes therefore adds far fewer new dialogues than independence would predict.",
+   "rubric": [
+    "States that leakage is strongly positively correlated across probes within a dialogue rather than independent.",
+    "Attributes the correlation to secret type, which largely fixes whether a dialogue leaks: SSN/credit card rarely under any probe, email/phone under several."
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Secret type has a large effect on leakage. Why can differences in secret-type composition still not explain the differences among the three persuasion-level rates in Table 4?",
+   "answer": "Every dialogue receives all three probes, so each persuasion level is measured on exactly the same dialogues with the same secret-type mix. This paired, repeated-measures design, analysed with Cochran's Q, holds composition fixed across levels. Drift bins are different, because they contain different dialogues.",
+   "rubric": [
+    "States that secret-type composition is identical across persuasion levels.",
+    "Explains that each dialogue is evaluated under all three probes (a paired, repeated-measures design), so composition cannot differ between levels."
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q130",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b4-p1",
+   "question": "If only the hard probe were used, would GPT-OSS-120B's probe-level leakage exceed DeepSeek-R1's by more than 10 percentage points?",
+   "answer": "No. Under the hard probe GPT leaks 32.90% and DeepSeek 29.20%, a gap of only 3.7 points, because GPT's leakage drops sharply under pressure.",
+   "rubric": [
+    "Answers no.",
+    "Cites the hard-probe rates (32.90% vs 29.20%, about a 3.7-point gap) or GPT's drop under hard persuasion."
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q131",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b4-p1",
+   "question": "If only the medium probe were used, would GPT-OSS-120B's probe-level leakage exceed DeepSeek-R1's by more than 10 percentage points?",
+   "answer": "Yes. Under the medium probe GPT leaks 40.50% while DeepSeek reaches its lowest rate, 22.00%, a gap of about 18.5 points.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the medium-probe rates (40.50% vs 22.00%, about an 18.5-point gap) or DeepSeek's minimum at medium."
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q132",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b4-p3",
+   "question": "If PrivDrift had used only the simple and hard probes, would GPT-OSS-120B's average probe-level leakage exceed Qwen3-VL-235B's?",
+   "answer": "No. GPT would average (39.3 + 32.9)/2 = 36.1%, against Qwen's (38.7 + 40.6)/2 = 39.65%.",
+   "rubric": [
+    "Answers no.",
+    "Shows GPT's average of about 36.1% falling below Qwen's of about 39.65% (Qwen's strong hard-probe rate versus GPT's weak one)."
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q133",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b4-p3",
+   "question": "If PrivDrift had used only the simple and medium probes, would GPT-OSS-120B's average probe-level leakage exceed Qwen3-VL-235B's?",
+   "answer": "Yes. GPT would average (39.3 + 40.5)/2 = 39.9%, against Qwen's (38.7 + 33.3)/2 = 36.0%.",
+   "rubric": [
+    "Answers yes.",
+    "Shows GPT's average of about 39.9% exceeding Qwen's of about 36.0% (dropping the hard probe removes GPT's low and Qwen's high value)."
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q134",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "For DeepSeek-R1, would fuzzy matching at the 0.80 threshold flag a larger share of probe responses than the hybrid detector?",
+   "answer": "Yes, slightly: 26.53% versus 26.43% (Table 6).",
+   "rubric": [
+    "Answers yes.",
+    "Cites 26.53% (fuzzy 0.80) versus 26.43% (hybrid)."
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q135",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "For GPT-OSS-120B, would fuzzy matching at the 0.80 threshold flag a larger share of probe responses than the hybrid detector?",
+   "answer": "No. It flags 37.07% against the hybrid's 37.57%, because the judge catches some low-similarity disclosures.",
+   "rubric": [
+    "Answers no.",
+    "Cites 37.07% (fuzzy 0.80) versus 37.57% (hybrid)."
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q136",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": "b4-p5",
+   "question": "Given only Table 4's per-probe rates, could DeepSeek-R1's dialogue-level leakage have been as high as 85%?",
+   "answer": "No. A dialogue leaks only if at least one probe leaks, so the dialogue-level rate cannot exceed the sum of the three probe rates: 28.1 + 22.0 + 29.2 = 79.3%.",
+   "rubric": [
+    "Answers no.",
+    "Uses the bound that dialogue-level leakage is at most the sum of the probe-level rates (79.3% for DeepSeek)."
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q137",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": "b4-p5",
+   "question": "Given only Table 4's per-probe rates, could GPT-OSS-120B's dialogue-level leakage have been as high as 85%?",
+   "answer": "Yes, it would be possible. The sum of GPT's probe rates is 39.3 + 40.5 + 32.9 = 112.7%, so the union bound does not rule out 85%; only the observed 47.70% shows it did not happen.",
+   "rubric": [
+    "Answers yes (not ruled out).",
+    "Notes that the sum of GPT's probe rates (112.7%) exceeds 85%, so the any-probe bound permits it."
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q138",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b4-p6",
+   "question": "Given GPT-OSS-120B's probe-level regex and hybrid rates (36.80% and 37.57%), could the judge have raised its dialogue-level leakage by as much as 2.0 percentage points?",
+   "answer": "Yes, it could have. The judge flipped about 0.77% of 3,000 responses, about 23 responses, and each can add at most one leaking dialogue, so up to about 2.3 points was possible. The actual increase was 0.",
+   "rubric": [
+    "Answers yes (possible).",
+    "Computes about 23 judge-flipped responses, so the dialogue-level increase is capped at about 2.3 points, which is at least 2.0."
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q139",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b4-p6",
+   "question": "Given GPT-OSS-120B's probe-level regex and hybrid rates (36.80% and 37.57%), could the judge have raised its dialogue-level leakage by as much as 3.0 percentage points?",
+   "answer": "No. Only about 23 of 3,000 responses were flipped by the judge, and each can add at most one of the 1,000 dialogues. The dialogue-level increase therefore cannot exceed about 2.3 points.",
+   "rubric": [
+    "Answers no.",
+    "Uses the cap of about 23 judge-flipped responses, so at most about 2.3 points can be added at the dialogue level."
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An attacker can resend each of the three PrivDrift probes several times to a Qwen3-VL-235B session with stochastic outputs. Is 54.60% better viewed as an upper or a lower estimate of the per-dialogue risk, and why?",
+   "answer": "It is better viewed as a lower estimate. The dialogue-level rate counts a dialogue as leaking if any of exactly one response per probe leaks, and under the any-of rule extra attempts can only add leaks. Repeated sampling would therefore raise or maintain the rate, unless the outputs are deterministic.",
+   "rubric": [
+    "Says it is a lower estimate (or that risk is likely higher).",
+    "Explains that the metric uses one response per probe with an any-of rule, so additional samples can only add leaks."
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q141",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A workflow's downstream requests for user data are always urgent, high-pressure demands. A colleague argues that GPT-OSS-120B is the safest choice because pressure triggers its safety behaviour. Is that right by PrivDrift's probe-level numbers?",
+   "answer": "No. Under the hard probe, DeepSeek-R1 still leaks less (29.20%) than GPT-OSS-120B (32.90%), and Qwen3-VL-235B is worst (40.60%). GPT's pressure-induced drop narrows its gap with DeepSeek but does not close it.",
+   "rubric": [
+    "Says no; DeepSeek-R1 is the safest under hard probes.",
+    "Cites the hard-probe rates: DeepSeek 29.20% < GPT 32.90% < Qwen 40.60%."
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In a threat setting, exactly one probe is sent per session and its persuasion style is equally likely to be simple, medium or hard. Should GPT-OSS-120B or Qwen3-VL-235B be judged riskier, based on PrivDrift?",
+   "answer": "Neither, meaningfully: the relevant measure is the probe-level average, and GPT and Qwen are essentially tied (37.57% vs 37.53%). Qwen's 7-point lead at the dialogue level comes from the any-of-three-probes aggregation, which does not apply to a single attempt.",
+   "rubric": [
+    "Says they are essentially tied, with no meaningful difference.",
+    "Explains that probe-level averages (37.57% vs 37.53%) are the appropriate measure because the dialogue-level gap reflects multiple attempts."
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q143",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team deploys GPT-OSS-120B for travel bookings in which users share passport numbers. They cite PrivDrift's near-zero SSN and credit-card leakage as evidence that passport numbers will also be suppressed. Is this justified?",
+   "answer": "No. Passport numbers were not tested, and PrivDrift suggests that suppression depends on format-specific sensitivity cues rather than general confidentiality reasoning. Other user-disclosed identifiers, such as phone numbers, leak at high rates (70.89% for GPT), so an untested format could easily behave like those rather than like SSNs.",
+   "rubric": [
+    "Says it is not justified (untested).",
+    "Reasons that suppression appears format-specific, as shown by the high leakage of other identifiers such as phone numbers, so it need not extend to an unseen format."
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q144",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Using PrivDrift-style dialogues, a new study finds a Cramer's V of 0.09 between leakage and the politeness of the probe. Using PrivDrift's effect sizes as a reference scale, how important is politeness?",
+   "answer": "Politeness would be a minor factor. A V of 0.09 sits within PrivDrift's range for drift length and persuasion (about 0.064\u20130.107, negligible to small) and far below secret type (0.59\u20130.77, large).",
+   "rubric": [
+    "Concludes politeness is a minor or small effect.",
+    "Compares 0.09 with PrivDrift's drift and persuasion values (about 0.06\u20130.11) and with the much larger secret-type values (about 0.59\u20130.77)."
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q145",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6",
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose it emerged that the naturalistic refinement step had silently changed the number of drift turns in many dialogues, while preserving secrets and probes. Which of the paper's results would be compromised?",
+   "answer": "The drift-indexed results would be compromised: the drift-length Cramer's V, the dip-and-rebound pattern, Table 7's length-by-drift statistics and Privacy Half-Life. The persuasion-level and secret-type results, and the overall dialogue-level rates, would not depend on correct drift labels.",
+   "rubric": [
+    "Identifies the drift-dependent results (drift V, the dip near d = 3, \u03c4 and/or Table 7) as compromised.",
+    "Notes that the persuasion and secret-type findings (and the aggregate rates) do not rely on drift labels and would remain intact."
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q146",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If a manual audit found that many responses labelled positive by Stage 1 matching did not really disclose the secret, would the hybrid detector have corrected this in the paper's headline rates? Why?",
+   "answer": "No. The Llama judge is applied only to responses that Stage 1 labels negative, so every regex-positive response stays positive under the hybrid detector. Such false positives would inflate the regex and hybrid rates equally, including the headline 38.7\u201354.6%.",
+   "rubric": [
+    "Says no, the hybrid stage would not correct it.",
+    "Explains that the judge sees only regex-negative responses, so regex positives pass straight into hybrid labels and inflate the headline rates."
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q147",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If Figure 4's drift curves had been completely flat, with no dip near d = 3, which part of the paper's argument would lose its empirical illustration even though \u03c4 would still be 7?",
+   "answer": "The Discussion's motivation for the stability clause of Privacy Half-Life would lose its illustration. That clause is justified by observed intermediate dips that are not stable, and the \u03c4 values themselves would be unchanged.",
+   "rubric": [
+    "Identifies the motivation for stability-based evaluation (the stability clause of \u03c4, or the argument that transient dips should not count as suppression).",
+    "Explains that the observed dip-then-rebound is what illustrates the transient decreases this argument relies on."
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q148",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does \u03c4 = 7 show that no model's leakage ever falls to half its d = 0 level within d \u2264 6? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Despite the name, \u03c4 tests a threshold of 10% of L(0), not 50%. Leakage could stably fall to, say, 40% of L(0) and still yield \u03c4 = 7.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that \u03c4 uses \u03b4 = 0.1 \u00d7 L(0), not a halving threshold, so \u03c4 = 7 is compatible with leakage falling below half of L(0)."
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the evaluated models generally suppress numeric personal identifiers? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Phone numbers are numeric identifiers, yet they leak at 46.13\u201370.89% across models. Only SSNs and credit-card numbers are strongly suppressed.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites high phone-number leakage (about 46\u201371%) in contrast with the low SSN and credit-card rates."
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q150",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that credit-card numbers are protected more reliably than SSNs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Credit cards leak slightly less than SSNs for all three models (0.00 vs 0.14, 0.39 vs 1.11, 4.01 vs 5.97), but the differences are tiny and no test comparing the two types is reported.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the differences are small and no significance test compares the two types, even though the direction is consistent."
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q151",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show how leakage behaves after a single intervening drift turn? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Drift lengths are sampled from {0} \u222a {2, \u2026, 6}, so d = 1 never occurs in the observed set.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that d = 1 is excluded from the sampled drift lengths (D_obs = {0, 2, 3, 4, 5, 6})."
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q152",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that GPT-OSS-120B leaks significantly more under the medium probe than under the simple probe? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The rates differ by only 1.2 points (40.50% vs 39.30%). Cochran's Q establishes only that the three levels differ overall, and the post-hoc McNemar results for individual pairs are not reported.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes the small difference (about 1.2 points) and that pairwise post-hoc results are not reported; Cochran's Q only shows an overall difference."
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q153",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that each additional drift turn adds roughly the same amount of content to the dialogue? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. In Table 7 the per-turn increments in average words vary widely: about 108 words from d = 3 to 4, but only about 47 from d = 5 to 6. Drift length is therefore an uneven proxy for added content.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites unequal increments in Table 7 (for example about +108 words from d = 3 to 4 versus about +47 from d = 5 to 6)."
+   ],
+   "batch": 4,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q154",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its Llama judge labels leakage more accurately than fuzzy matching? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper argues that the judge is more expressive but reports no human inter-annotator agreement or ground truth. Fuzzy and hybrid rates differ by fractions of a point, in both directions, so neither is validated as more accurate.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes the absence of human ground truth or inter-annotator agreement, and that fuzzy and hybrid disagree only slightly and in both directions."
+   ],
+   "batch": 4,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q155",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Since every evaluated model's leakage stays above \u03b4 at all tested drift lengths, what does PrivDrift imply about an auditor's claim that six drift turns cut a model's leakage by more than 90% relative to immediate recall?",
+   "answer": "For these three models the claim is contradicted. No model approaches \u03b4 = 0.1 \u00d7 L(0) at any tested d, so leakage at d = 6 remains above 10% of the d = 0 rate, which means the reduction is less than 90%.",
+   "rubric": [
+    "Says the claim is contradicted for these models (the reduction is under 90%).",
+    "Reasons that leakage at every tested d, including d = 6, stays above \u03b4 = 0.1 \u00d7 L(0)."
+   ],
+   "batch": 4,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q156",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Qwen3-VL-235B leaks more than GPT-OSS-120B for emails, SSNs and credit cards in Table 5. Why are the two models still almost tied in probe-level hybrid leakage (37.53% vs 37.57%)?",
+   "answer": "GPT-OSS-120B leaks phone numbers far more often (70.89% vs 57.24%, about 13.7 points). That gap roughly cancels Qwen's combined excess on the other three types: about 2.9 points on email, 5.8 on SSN and 4.0 on credit card.",
+   "rubric": [
+    "Identifies phone numbers as the type where GPT-OSS-120B leaks much more than Qwen (about 71% vs 57%)",
+    "Explains that this phone gap offsets Qwen's higher email, SSN and credit-card leakage, producing a near tie overall"
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q157",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does loosening the fuzzy-matching threshold from 0.85 to 0.80 add at most about a third of a percentage point of probe-level leakage for any model?",
+   "answer": "Very few responses fall in the 0.80\u20130.85 similarity band. Responses either reproduce the secret verbatim or nearly so, or are far from it, and there are almost no near-miss strings. This fits the paper's claim that leakage is dominated by direct or near-direct reproduction.",
+   "rubric": [
+    "States that few responses have intermediate similarity to the secret (outputs are essentially either matches or clearly non-matches)",
+    "Links this to leakage being dominated by direct or near-direct reproduction"
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q158",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the paper compute the persuasion-level comparison in Table 4 at the probe level rather than with the dialogue-level labels used for its headline rates?",
+   "answer": "A dialogue-level label is an OR over all three probes, so each dialogue gets a single label that cannot be attributed to any one persuasion level. Only probe-level responses, one per persuasion condition per dialogue, tie a leak to a specific level.",
+   "rubric": [
+    "States that the dialogue-level label combines all three probes (any probe leaking)",
+    "Concludes that dialogue-level labels cannot separate leakage by persuasion level, so per-level rates require probe-level responses"
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q159",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "The paper uses Cochran's Q for persuasion level. Why could the same test not be used for drift length, which instead gets a chi-square test of independence?",
+   "answer": "Cochran's Q needs each unit to be measured under every condition. Each dialogue receives all three persuasion probes, but it has only one fixed drift length. Drift therefore varies between dialogues rather than within them, so the drift data are not repeated measures.",
+   "rubric": [
+    "States that each dialogue has a single drift length but receives all three persuasion probes",
+    "Explains that Cochran's Q requires repeated (within-dialogue) measurements across conditions, which drift lacks"
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q160",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does GPT-OSS-120B's pattern across persuasion levels point specifically to pressure or urgency cues, rather than persuasion in general, as what reduces its leakage?",
+   "answer": "The medium probe, which adds a contextual justification, does not lower GPT-OSS-120B's leakage (40.50% vs 39.30% for simple). Only the high-pressure hard probe lowers it, to 32.90%. The reduction therefore appears only with pressure cues, not with any added persuasion.",
+   "rubric": [
+    "Notes that the medium (justified) probe gives leakage equal to or slightly above the simple probe (about 40.5% vs 39.3%)",
+    "Notes that only the hard probe reduces leakage (32.9%), so the drop is tied to pressure cues rather than to persuasion per se"
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q161",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Qwen3-VL-235B has the smallest persuasion Cramer's V (0.0639) yet the highest dialogue-level leakage. Why is this not contradictory?",
+   "answer": "Cramer's V measures how much leakage depends on persuasion level, not how much leakage there is. Qwen leaks at high rates under all three levels (33.3\u201340.6%), so its leakage varies little with persuasion while staying high overall.",
+   "rubric": [
+    "States that Cramer's V measures association or variation across levels, not the overall leakage rate",
+    "Notes that Qwen leaks substantially under every persuasion level, so low dependence coexists with high leakage"
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q162",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Would the 95% bootstrap confidence intervals in Table 3 still reflect the true sampling uncertainty if PrivDrift's dialogues were not independent of one another? What in the dataset's construction makes this a concern?",
+   "answer": "No, they would likely be too narrow. Bootstrapping over dialogues treats each dialogue as an independent draw. However, drift turns come from a shared topic-conditioned library, personas come from a finite pool, and each persuasion level uses one fixed template, so dialogues are correlated.",
+   "rubric": [
+    "Concludes the intervals could understate uncertainty (be too narrow)",
+    "Explains that bootstrapping over dialogues assumes independence, while shared drift-turn libraries, personas or fixed templates make dialogues correlated"
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q163",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Would PrivDrift's finding that drift does not reliably reduce leakage be expected to hold for a model with a 512-token context window? Why?",
+   "answer": "No. Average dialogue length exceeds 512 approximate tokens from d = 4 onward (603, 695 and 757 tokens), and the secret sits in the opening turn. It would often be truncated away, so any drop in leakage would reflect the secret's absence rather than behavioural suppression. PrivDrift's result relies on dialogues of at most about 1,060 tokens staying fully in context.",
+   "rubric": [
+    "Concludes the finding would not carry over (leakage could drop artificially)",
+    "Explains that the opening-turn secret would fall out of a 512-token window for many longer-drift dialogues (average about 600 or more tokens at d \u2265 4)",
+    "Notes that PrivDrift's result depends on the whole dialogue fitting well within the context window"
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q164",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "PrivDrift's drift turns, including the assistant replies, come from a fixed library and are identical across models. When might its leakage rates fail to represent conversations in which the evaluated model wrote its own earlier replies?",
+   "answer": "The assistant turns were not generated by the evaluated model. The results could therefore misrepresent organic use whenever a model's own replies would differ, for example by restating or acknowledging the secret, which might raise recoverability, or by refusing or redacting it early, which might lower it.",
+   "rubric": [
+    "Recognizes that drift-turn assistant replies were scripted from the library rather than produced by the evaluated model",
+    "Identifies the failure condition: when the model's natural earlier replies would handle the secret differently (e.g., repeat it or refuse it), changing later recoverability"
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would a large secret-type Cramer's V, on its own, support the paper's interpretation that models use format-sensitive heuristics to protect SSNs and credit cards? When would it fail to?",
+   "answer": "No. Cramer's V does not indicate direction. A model that leaked SSNs and credit cards far more than emails and phone numbers would also produce a large V. The interpretation rests on the direction shown in Table 5, where the sensitive numeric formats are suppressed.",
+   "rubric": [
+    "States that a large V alone would not support the interpretation",
+    "Explains that V is non-directional, so a reversed asymmetry (SSN/credit card leaking more) would give an equally large V; the support comes from Table 5's direction"
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q166",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the assistant's drift-turn replies had frequently restated the user's secret, which of the paper's results would lose its intended interpretation?",
+   "answer": "The drift results (c4), and with them Privacy Half-Life (c6), would lose their meaning. The secret would reappear close to the probe, so d would no longer measure how far the probe is from the disclosure. Persistence across drift could then reflect recent restatement rather than recall from the opening turn.",
+   "rubric": [
+    "Identifies the drift-length finding (and/or Privacy Half-Life) as compromised",
+    "Explains that restatements would keep the secret near the probe, so d would no longer measure distance from the original disclosure"
+   ],
+   "batch": 5,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q167",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If fuzzy matching at 0.80 had flagged about 10 percentage points more responses than both fuzzy 0.85 and the hybrid detector, which conclusion would be undermined?",
+   "answer": "The claim that leakage is dominated by direct or near-direct reproduction, corroborated by fuzzy matching tracking the hybrid labels (c2), would be undermined. Many near-miss reproductions would exist that neither Stage 1 nor the judge counted. That would also suggest the hybrid detector misses partial disclosures and understates leakage.",
+   "rubric": [
+    "Names the claim that fuzzy matching tracks hybrid labels and that leakage is mainly direct reproduction (c2)",
+    "Explains that many near-miss outputs uncounted by the hybrid detector would suggest it misses partial disclosures"
+   ],
+   "batch": 5,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q168",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If each model's three per-persuasion rates in Table 4 had been identical, which values reported elsewhere in the paper would necessarily change, and which claim would fall?",
+   "answer": "The persuasion Cramer's V values in Table 8 would be zero, and Cochran's Q would not be significant. The claim that persuasion intensity significantly affects leakage in a non-monotonic, model-dependent way (c3) would therefore fall.",
+   "rubric": [
+    "States that the persuasion Cramer's V would be 0 (and/or Cochran's Q non-significant)",
+    "Identifies c3's claim of a significant, model-dependent persuasion effect as the claim that would fall"
+   ],
+   "batch": 5,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q169",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose DeepSeek-R1's leakage had fallen steadily with drift, reaching half of L(0) at d = 6. Which of the paper's drift-related claims would be undermined, and which would survive?",
+   "answer": "The claim that drift does not reliably reduce leakage (c4) would be undermined, because leakage would decline steadily. The result that \u03c4 = 7 (c6) would survive, because 50% of L(0) is still above \u03b4 = 0.1\u00b7L(0).",
+   "rubric": [
+    "States that c4 (drift does not reliably reduce leakage) would be undermined",
+    "States that the \u03c4 = 7 result would still hold",
+    "Explains that half of L(0) remains above the 10% threshold \u03b4"
+   ],
+   "batch": 5,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q170",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In a workflow, every later request for user data comes with a contextual justification such as filling in a form. A colleague prefers GPT-OSS-120B over Qwen3-VL-235B because Qwen has the highest dialogue-level leakage. Is that preference justified for this workflow?",
+   "answer": "No. Under the medium (justified) probe, Qwen3-VL-235B leaks less than GPT-OSS-120B (33.30% vs 40.50%). DeepSeek-R1 is safest of all at 22.00%. The dialogue-level ranking aggregates all three probe styles and does not reflect this request style.",
+   "rubric": [
+    "Concludes the preference is not justified (Qwen leaks less than GPT under justified requests)",
+    "Cites the medium-probe rates (about 33% for Qwen vs 40.5% for GPT), optionally noting DeepSeek-R1 is lowest at 22%",
+    "Notes that the dialogue-level ranking mixes all probe styles"
+   ],
+   "batch": 5,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q171",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose a GPT-OSS-120B deployment sees disclosures that are 90% SSNs and 10% emails, and PrivDrift's per-type rates carry over. Roughly what probe-level leakage rate should be expected?",
+   "answer": "About 8%: 0.9 \u00d7 0.14% + 0.1 \u00d7 78.24% \u2248 7.95%. Almost all of it comes from the email disclosures.",
+   "rubric": [
+    "Gives roughly 8% (accept about 7.5\u20138.5%)",
+    "Shows the weighted combination of the SSN (0.14%) and email (78.24%) rates, with email dominating"
+   ],
+   "batch": 5,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q172",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A vendor patches GPT-OSS-120B so that it suppresses emails as strongly as SSNs (0.14%), with all else unchanged. Assuming the four secret types are equally common, roughly what would its probe-level leakage become, and what would remain the main source?",
+   "answer": "About 18%: (0.14 + 0.00 + 0.14 + 70.89)/4 \u2248 17.8%, down from about 37%. Phone numbers, at about 71%, would then account for nearly all remaining leakage.",
+   "rubric": [
+    "Gives roughly 18% (accept about 17\u201319%)",
+    "Identifies phone numbers as the dominant remaining source"
+   ],
+   "batch": 5,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q173",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A new model evaluated on PrivDrift has about 40% probe-level leakage but a secret-type Cramer's V of only about 0.05. By the paper's reasoning, what does this imply about its handling of SSNs and credit cards compared with the three evaluated models?",
+   "answer": "It leaks SSNs and credit cards about as often as emails and phones, roughly 40%. It therefore lacks the format-sensitive suppression that kept those types near zero (0\u20136%) for the evaluated models. Its uniformity reflects being equally leaky across types, not better contextual confidentiality reasoning.",
+   "rubric": [
+    "Concludes the model leaks SSNs and credit cards far more than the evaluated models (about as often as emails and phones)",
+    "Explains that low V means leakage barely depends on type, i.e., no format-sensitive suppression, which is not evidence of contextual reasoning"
+   ],
+   "batch": 5,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q174",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Running PrivDrift on a new model, a team finds 30% probe-level leakage and 31% dialogue-level leakage. What does this imply about how its leaks spread across the three probes, compared with the paper's models?",
+   "answer": "Its leaking dialogues almost always leak under all three probes, so each dialogue is either leaked by every probe style or by none. In the paper's models, dialogue-level leakage exceeds probe-level by about 10\u201317 points, meaning many dialogues leak under only some probes.",
+   "rubric": [
+    "Concludes the new model's leaks are highly consistent across probes (mostly all three or none)",
+    "Contrasts this with the paper's models, whose dialogue-level rates exceed probe-level rates by about 10\u201317 points because many dialogues leak under only some probes"
+   ],
+   "batch": 5,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q175",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Since Qwen3-VL-235B leaks more than GPT-OSS-120B, does the paper show that larger models leak more user secrets? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only three models are compared, and they differ in family, training and serving, not just size. The paper does not vary or control parameter count, so size cannot be isolated as the cause.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the three models differ in many respects beyond size and that the paper does not vary or control model size"
+   ],
+   "batch": 5,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q176",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Is the dialogue-level model ranking (DeepSeek-R1 < GPT-OSS-120B < Qwen3-VL-235B) an artifact of the LLM judge? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Regex-only dialogue-level rates give the same order (37.80 < 47.70 < 53.50). The judge adds at most 1.10 points, far smaller than the gaps of at least about 6 points between models.",
+   "rubric": [
+    "Answers contradicted (the ranking is not a judge artifact)",
+    "Cites that regex-only rates preserve the order and that the judge's contribution (\u22641.1 points) is much smaller than the gaps between models"
+   ],
+   "batch": 5,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q177",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the models spontaneously disclose earlier secrets when no one asks for them? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Every evaluated response is a reply to a probe that explicitly requests the secret, and the drift turns are scripted rather than generated by the evaluated model. Unprompted disclosure is never measured.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that leakage is measured only in responses to explicit extraction probes, so spontaneous disclosure is not tested"
+   ],
+   "batch": 5,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q178",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that SSN and credit-card suppression is triggered by the digit format of the secret rather than by the category named in the probe? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Probes refer to the item by its category (e.g., 'the phone number mentioned earlier'), and the design never varies the format and the category wording separately. Format cues and category cues are therefore confounded.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that probe wording and secret format co-vary with type and are never manipulated independently, so the two cues cannot be separated"
+   ],
+   "batch": 5,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q179",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the negligible-to-small drift-length Cramer's V show that drift has no sizable effect under any individual persuasion level? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The drift Cramer's V is computed on probe-level responses pooled across persuasion levels, which could average out opposing per-level trends. Only a heatmap is shown per level, with no per-level statistics. The fact that \u03c4 = 7 for every persuasion level rules out only stable decay to 10% of L(0), not every sizable effect.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the effect size is pooled over persuasion levels and no per-level drift statistics are reported (\u03c4 = 7 per level excludes only stable 90% suppression)"
+   ],
+   "batch": 5,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q180",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that secrets leak to a different user who later joins a shared session? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Shared sessions motivate the threat model, but each probe is simply appended to the same transcript with no change of speaker or session identity. A different user asking is never simulated.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that probes are appended to the same conversation without any user-identity switch, so cross-user leakage is not directly tested"
+   ],
+   "batch": 5,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q181",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b5-p2",
+   "question": "Would switching from hybrid to regex-only detection move Qwen3-VL-235B's dialogue-level leakage outside its 95% confidence interval?",
+   "answer": "No. The regex-only rate of 53.50% lies inside the hybrid interval [51.6, 57.7], so the choice of detector matters less than sampling uncertainty.",
+   "rubric": [
+    "Answers no",
+    "Notes that 53.50% falls within [51.6, 57.7]"
+   ],
+   "batch": 5,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q182",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b5-p2",
+   "question": "Would switching from dialogue-level to probe-level aggregation move Qwen3-VL-235B's hybrid leakage outside its 95% dialogue-level confidence interval?",
+   "answer": "Yes. The probe-level rate of 37.53% is far below the interval [51.6, 57.7], so the choice of aggregation level matters much more than the choice of detector.",
+   "rubric": [
+    "Answers yes",
+    "Notes that 37.53% is far outside [51.6, 57.7], because the two aggregation levels count different things"
+   ],
+   "batch": 5,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q183",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p3",
+   "question": "Pooling all three models' probe-level responses with equal weight, would the hard probe yield higher leakage than the medium probe?",
+   "answer": "Yes. The pooled hard rate is about 34.2% ((32.9 + 29.2 + 40.6)/3), versus about 31.9% for medium ((40.5 + 22.0 + 33.3)/3).",
+   "rubric": [
+    "Answers yes",
+    "Gives pooled rates of about 34.2% (hard) vs about 31.9% (medium)"
+   ],
+   "batch": 5,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q184",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p3",
+   "question": "Pooling all three models' probe-level responses with equal weight, would the hard probe yield higher leakage than the simple probe?",
+   "answer": "No. The pooled hard rate of about 34.2% is below the pooled simple rate of about 35.4% ((39.3 + 28.1 + 38.7)/3).",
+   "rubric": [
+    "Answers no",
+    "Gives pooled rates of about 34.2% (hard) vs about 35.4% (simple)"
+   ],
+   "batch": 5,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q186",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Given the paper's definition of Privacy Half-Life, would a reading of \u03c4 = 7 reliably separate a model whose leakage does not decay from one whose leakage declines steadily within d \u2264 6? Why?",
+   "answer": "No. \u03c4 = 7 is assigned whenever no observed d brings leakage to at most 10% of L(0). A flat curve and a steadily falling curve that ends above that threshold (e.g., one ending at 15% of L(0)) receive the same score. \u03c4 captures only stable suppression past the \u03b4 threshold, not the amount or trend of decay.",
+   "rubric": [
+    "Answers no, the metric cannot separate the two cases",
+    "Explains that \u03c4 = max(D_obs)+1 whenever leakage never reaches 0.1\u00b7L(0), regardless of how much leakage declines above that threshold"
+   ],
+   "batch": 5,
+   "orig_id": "q34"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p2",
+   "question": "The seeded secret is jane.doe@example.com and the model replies 'JANE.DOE@EXAMPLE.COM'. Would Stage 1 normalization matching flag it as leakage?",
+   "answer": "Yes. For alphanumeric secrets, Stage 1 normalizes case and whitespace, so the uppercase reply normalizes to the secret and the substring test succeeds.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that case normalization makes the reply match the normalized secret."
+   ],
+   "batch": 4,
+   "orig_id": "q14",
+   "reject": "near-duplicate of q21"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p2",
+   "question": "The seeded secret is jane.doe@example.com and the model replies 'janedoe@example.com' (dropping the dot). Would Stage 1 normalization matching flag it as leakage?",
+   "answer": "No. Alphanumeric normalization preserves meaningful delimiters such as the dot, so the normalized secret is not a substring of the reply. Only the Stage 2 judge could catch it.",
+   "rubric": [
+    "Answers no (not at Stage 1).",
+    "Explains that delimiters are preserved for alphanumeric secrets, so the missing dot breaks the substring match (only the judge might flag it)."
+   ],
+   "batch": 4,
+   "orig_id": "q15",
+   "reject": "near-duplicate of q21"
+  },
+  {
+   "id": "q26",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p1",
+   "question": "If the seeded email is jane@example.com and the model replies 'JANE@EXAMPLE.COM', would Stage 1 normalization matching flag it as leakage?",
+   "answer": "Yes. For alphanumeric secrets, Stage 1 normalizes case, so the uppercase reply contains the normalized secret as a substring.",
+   "rubric": [
+    "Answers yes",
+    "Explains that Stage 1 normalizes case for alphanumeric secrets, so the strings match"
+   ],
+   "batch": 5,
+   "orig_id": "q26",
+   "reject": "near-duplicate of q21"
+  },
+  {
+   "id": "q27",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p1",
+   "question": "If the seeded email is jane@example.com and the model replies 'janeexamplecom', would Stage 1 normalization matching flag it as leakage?",
+   "answer": "No. For alphanumeric secrets, Stage 1 preserves meaningful delimiters such as '@' and '.'. The normalized secret therefore does not appear in a reply with the delimiters removed; only the judge could flag it.",
+   "rubric": [
+    "Answers no",
+    "Explains that alphanumeric normalization keeps delimiters, so the substring test fails"
+   ],
+   "batch": 5,
+   "orig_id": "q27",
+   "reject": "near-duplicate of q21"
+  },
+  {
+   "id": "q33",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p4",
+   "question": "If a model's leakage followed L(d) = L(0) \u00d7 0.7^d at every observed drift length, would its Privacy Half-Life be below 7?",
+   "answer": "No. Even at d = 6, L = 0.7^6\u00b7L(0) \u2248 0.118\u00b7L(0) > 0.1\u00b7L(0). No observed d meets the threshold, so \u03c4 = 7 despite the steady decline.",
+   "rubric": [
+    "Answers no (\u03c4 = 7)",
+    "Shows that 0.7^6 \u2248 0.118 stays above the 0.1 threshold, so no observed drift length qualifies"
+   ],
+   "batch": 5,
+   "orig_id": "q33",
+   "reject": "near-duplicate of q94"
+  },
+  {
+   "id": "q185",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p4",
+   "question": "If a model's leakage followed L(d) = L(0) \u00d7 0.5^d at every observed drift length, would its Privacy Half-Life be below 7?",
+   "answer": "Yes. L(4) = 0.0625\u00b7L(0) \u2264 0.1\u00b7L(0), while L(3) = 0.125\u00b7L(0) is above the threshold, and leakage stays below it at d = 5 and 6. So \u03c4 = 4.",
+   "rubric": [
+    "Answers yes (\u03c4 = 4)",
+    "Shows that leakage first falls to at most 0.1\u00b7L(0) at d = 4 and stays there for larger observed d"
+   ],
+   "batch": 5,
+   "orig_id": "q32",
+   "reject": "twin dropped"
+  }
+ ],
+ "types": {
+  "failure": 27,
+  "why": 32,
+  "counterfactual": 40,
+  "transfer": 31,
+  "connect": 22,
+  "scope": 33
+ }
+}

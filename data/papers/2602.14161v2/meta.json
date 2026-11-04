@@ -1,0 +1,25 @@
+{
+  "abstract": "Detecting prompt injection, jailbreak attacks, and harmful requests is critical for deploying LLM-based agents safely, yet current evaluation practices in this literature overestimate generalization. We train activation-based classifiers (linear probes on LLM hidden states) on a benchmark of 18 datasets (prompt attacks plus benign sources) and propose Leave-One-Dataset-Out (LODO) evaluation, where the held-out dataset is never seen during training. Across four LLMs from three families (Llama-3.1-8B, Gemma-3-27B, Qwen-3.5-2B/4B), standard cross-validation reports a pooled AUC 8.0-16.5 points higher than LODO; per-dataset held-out-test-vs-LODO accuracy gaps span 1-25 points. To understand the gap, we analyze the LODO stability of a linear probe's per-feature classifier coefficients, defining a retention metric for sparse-autoencoder (SAE) features that flags dataset-dependent shortcuts. 28-44% of top SAE features are shortcuts across models, a dataset-identity classifier reaches 96.6%, and the dataset-identifying and safety-relevant subspaces partially overlap. Standard domain-generalization fixes such as adversarial training, subspace projection, sample reweighting, and class balancing do not close the gap. Finally, we show LODO-weighted SAE attributions filter dataset artifacts for more reliable per-prompt explanations. We release our framework at https://github.com/maxf-zn/prompt-mining so future prompt-attack classifiers can be evaluated under LODO alongside CV.",
+  "arxiv_id": "2602.14161",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Max Fomin"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 6,
+  "hidden_style_hits": 0,
+  "html_sha256": "b3635dfa1bba5a010a1073a6231041125885e915cfe7857c0c033ac2f9a81ccf",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.LG",
+  "published": "2026-02-15T14:21:43Z",
+  "rank": "052ee092253e882e73272b2c4b99f7bd1d242fa0eef4fded657ac685c802bf5a",
+  "role": "chain_A",
+  "source_url": "https://arxiv.org/abs/2602.14161v2",
+  "stratum": "chain",
+  "text_sha256": "2dde87580ff4f98f818e7e160e65acbc308c578b8492d0ffacef77e5208a84f5",
+  "title": "When Benchmarks Lie: Evaluating Malicious Prompt Classifiers Under True Distribution Shift",
+  "version": 2,
+  "words": 10493
+}

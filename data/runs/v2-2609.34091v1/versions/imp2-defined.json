@@ -1,0 +1,44 @@
+{
+ "terms": [
+  "Setting: one combination of backbone (CBraMod, REVE, DINOv3), dataset (BCI, MA, Speech), and depth (early, middle, late), giving 27 in total (Section 2, Backbones and data).",
+  "TopK SAE: c=ReLU(TopK_k((x\u2212b_dec)W_enc+b_enc)), x\u0302=cW_dec+b_dec, with k=32, trained with MSE plus AuxK (Section 2, TopK SAEs).",
+  "Alpha vs sham test: an 8\u201312 Hz band-stop compared with a width-matched 30\u201334 Hz notch, both fourth-order zero-phase Butterworth filters (Section 2, Perturbations).",
+  "Response metrics: sparse-code cosine, active-set Jaccard, and per-latent |\u0394f_j| (Section 2, Perturbations).",
+  "Distortion control: the SAE response divided either by time-domain \u2016x\u2212x\u0303\u2016\u2082/\u2016x\u2016\u2082 or by the fraction of spectral energy removed. Removed-energy ratios are 57.2/34.6/11.8 on BCI/MA/Speech (Section 2, Perturbations).",
+  "Selectivity: s_{j,b}=|\u0394f_{j,b}| \u2212 (1/5)\u03a3_{b'\u2260b}|\u0394f_{j,b'}| (Section 2, Selectivity).",
+  "Specialist-like alpha latent: in the top quartile of alpha selectivity and at or below median channel-dropout fragility (Section 2, Selectivity).",
+  "Controls: size-matched general-fragile and random groups for readout tests; activity-matched non-specialists (nearest in clean firing rate and mean activation) for clean-alpha tests (Section 2; Appendix A).",
+  "Importance: |w_j|\u00b7E_train[c_j] from logistic probes on mean-pooled codes. Group ablation zeroes a selected set of codes and measures the change in balanced accuracy, either with a frozen probe or a retrained one (Section 2).",
+  "Independent observational validation: correlation of a latent's clean activation with trial-wise relative alpha power, a quantity not used in selection (Section 2).",
+  "Validation ladder: Stages 1\u20133 test sensitivity, distortion-controlled selectivity, and specificity. Stage 5 (observational validation) completes the representational claim. Stage 4 (readout intervention) is required only for a task-relevance claim (Section 1, Table 1, Figure 1).",
+  "Bootstrap CIs: 10,000 resamples over settings, not over latents (Section 2)."
+ ],
+ "orig": [
+  true,
+  false,
+  true,
+  false,
+  true,
+  false,
+  true,
+  true,
+  false,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  false,
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  false,
+  true,
+  true,
+  true
+ ]
+}

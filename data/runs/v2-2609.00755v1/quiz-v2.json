@@ -1,0 +1,3492 @@
+{
+ "paper": "2609.00755v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p8",
+ "paper_sha256": "4e47758dbb7678eea7807f4a577a2b0022845d92935f709e2e101dfd09023e9c",
+ "batches": 5,
+ "written_per_batch": [
+  42,
+  42,
+  38,
+  39,
+  40
+ ],
+ "cost_per_batch": [
+  0.451504,
+  0.574008,
+  0.760704,
+  0.811416,
+  0.809376
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Node behaviour in task circuits can be abstracted into two general, task-agnostic computational roles: functional nodes, which transform their inputs, and passthrough nodes, which relocate information with minimal change. These roles recur across tasks.",
+   "methods": [
+    "Mapping of prior IOI and Acronym circuit roles onto the dichotomy (Figure 1)"
+   ],
+   "results": [
+    "IOI: S-inhibition and previous token heads map to passthrough; name mover and negative name mover heads map to functional",
+    "Acronym: previous token and bridge heads map to passthrough; letter mover heads map to functional"
+   ],
+   "conditions": [
+    "Roles describe how a node processes information, not what content it processes",
+    "Roles are coarse and defined relative to a task's activations, so the same node may be labelled differently across tasks"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "Functional roles can be assigned quantitatively using the FI metric, the normalized change in token-wise similarity between a node's input and output. FI is embedded in a classification objective.",
+   "methods": [
+    "Sim(A) = row-L2-normalized A times its transpose, with the diagonal removed",
+    "FI(X,Y) = ||Sim(X) - Sim(Y)||_F / ||Sim(X)||_F",
+    "L_class = sum over important nodes of [-c_f*FI - c_p/FI]"
+   ],
+   "results": [
+    "High-FI nodes are pushed toward a higher c_f; low-FI nodes are pushed toward a higher c_p"
+   ],
+   "conditions": [
+    "Applied only to nodes in N_i (those with c_p + c_f > c_u)",
+    "Feedforward neurons have d_n = 1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "S\u00b3martCirc jointly learns node importance and role through per-node coefficients (c_u, c_p, c_f). It alternates a discovery stage (KL + cross-entropy) with a classification stage, using sparsity regularization and a warmup phase.",
+   "methods": [
+    "L_disc = alpha*KL(P_orig || P_mask) - (1-alpha)*log P_mask(y)",
+    "L_sparsity with confidence, validity and sparsity (c_p + c_f) terms",
+    "Warmup on L_disc only, then each iteration is one discovery step followed by k classification steps",
+    "Soft masking during training; argmax hard assignment at evaluation"
+   ],
+   "results": [],
+   "conditions": [
+    "Hyperparameters are tuned per model and task (e.g., alpha = 0.25 for GPT-2 Acronym, 0.75 for GPT-2 IOI; GPT-2 Acronym uses 60 epochs and 60 warmup epochs)"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "S\u00b3martCirc finds circuits whose ablation causes much larger accuracy and logit drops than the baselines, across GPT-2, Llama 3.2 1B and Qwen 3 1.7B, although it does not always find the smallest circuit.",
+   "methods": [
+    "Evaluation ablates only circuit nodes; Circuit Size counts the end-to-end connected circuit",
+    "Baselines: Act., Attr., Attr. IG, IBCircuit, Prune., Random"
+   ],
+   "results": [
+    "GPT-2 Acronym: -97.50% vs -54.67% for Act.",
+    "GPT-2 IOI: -95.99%",
+    "Llama IOI: -69.00 \u00b1 42.43 with 35 nodes vs Attr. IG with 47.67 nodes and -5.67%",
+    "Qwen: -100% on both tasks, with sizes 12 (Acronym) and 16.33 (IOI) and logit drops -10.97 and -12.01",
+    "Qwen Acronym Act.: -100% from one run, size 32, logit -1.00",
+    "Qwen IOI Act.: size 12, -33%",
+    "GPT-2 S\u00b3martCirc Acronym size 60.33, equal to Random",
+    "IBCircuit produced empty circuits on GPT-2 (both tasks) and Qwen IOI"
+   ],
+   "conditions": [
+    "Three runs per setting except the starred Act. runs (48-hour limit)"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "S\u00b3martCirc recovers human-verified circuits and roles: recovery on IOI is comparable to Act. and above the other baselines, and on Acronym it recovers 4 of 8 nodes with roles matching Figure 1.",
+   "methods": [
+    "Percent of the IOI circuit (Wang et al.) recovered at thresholds of 50, 100, 150 and 200 nodes",
+    "Comparison with the GPT-2 Acronym circuit"
+   ],
+   "results": [
+    "IOI recovery is comparable only to Act.; optimization-based baselines are much lower",
+    "Acronym: 4/8 nodes recovered; head 1.0 classified passthrough, head 11.4 functional",
+    "8.11 classified passthrough and 10.10 functional, although both can act as Bridge or Letter Mover",
+    "Appendix: largest Acronym recovery percentage"
+   ],
+   "conditions": [
+    "Ground-truth circuits exist only for GPT-2",
+    "Labels reflect the dominant contribution across samples"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Performance depends on k and alpha: more classification steps help up to k = 6, and alpha = 0.75 is best for GPT-2 IOI, with sharp degradation when the cross-entropy term is removed (alpha = 1.0).",
+   "methods": [
+    "Sweep of k in {2,4,6,8,10} and alpha in {0, 0.25, 0.5, 0.75, 1.0} on IOI with GPT-2"
+   ],
+   "results": [
+    "Accuracy drop goes from -71% at k = 2 to about -96% at k = 6 and then stabilizes; recovery increases monotonically with k",
+    "alpha = 0.75 is best on both accuracy and recovery; alpha = 1.0 degrades sharply"
+   ],
+   "conditions": [
+    "Only IOI on GPT-2"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Alternating optimization and warmup are both necessary.",
+   "methods": [
+    "Ablations: NW (no warmup), DF (discovery first), IF (interpretation first)"
+   ],
+   "results": [
+    "DF: -4.33% on Acronym vs -97.5% for full S\u00b3martCirc",
+    "IF is substantially better than DF (about 88% on IOI and 42% on Acronym) but worse than full",
+    "NW reduces performance (67% IOI, 66% Acronym)"
+   ],
+   "conditions": []
+  },
+  {
+   "id": "c8",
+   "text": "S\u00b3martCirc is relatively efficient in runtime.",
+   "methods": [
+    "Wall-clock comparison (Table 2)"
+   ],
+   "results": [
+    "Act.: 6239.72 s (GPT-2 Acronym) up to 187663.88 s (Qwen IOI)",
+    "S\u00b3martCirc: 197.14 s to 1047.59 s",
+    "Attr. is faster than S\u00b3martCirc on Qwen (829.43 vs 982.16; 783.17 vs 1047.59)",
+    "Random takes only seconds"
+   ],
+   "conditions": [
+    "Attr. and Attr. IG on Qwen were run on 48GB GPUs"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Could the FI metric be computed for a prompt consisting of a single token (T = 1), and why?",
+   "answer": "No. Sim removes the diagonal, so with one token Sim(X) is the zero matrix. The denominator ||Sim(X)||_F is then zero and FI is undefined, so the classification stage cannot assign roles.",
+   "rubric": [
+    "States that FI cannot be computed or is undefined for T = 1",
+    "Explains that excluding self-similarity leaves Sim(X) as all zeros, so FI divides by zero"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Would FI give a fine-grained measure of how a single feedforward neuron changes token relations, and why?",
+   "answer": "No. A feedforward neuron has d_n = 1, so row-wise L2 normalization turns each token's output into +1 or -1. Sim(Y) therefore only records whether two tokens' outputs share a sign, which makes FI a coarse comparison of input similarities against a sign pattern.",
+   "rubric": [
+    "Concludes that FI is coarse or degenerate for single neurons",
+    "Explains that with d_n = 1 normalization yields \u00b11, so Sim(Y) entries are only \u00b11 (sign agreement)"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Consider a node whose only effect is to multiply each token's representation by a different positive scalar. Would FI capture this behaviour, and how would L_class treat the node?",
+   "answer": "FI would not capture it. Row-wise normalization makes Sim invariant to positive per-token rescaling, so FI is about 0 and the -c_p/FI term strongly favours the passthrough label, however much the rescaling matters.",
+   "rubric": [
+    "States that FI is (near) zero, so the node would be labelled passthrough",
+    "Explains that row-wise L2 normalization removes per-token scale, so Sim is unchanged"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Under what condition would a single candidate node dominate L_class, and why?",
+   "answer": "This happens when some node in N_i has FI close to zero. The term -c_p/FI then grows without bound in magnitude, so that node's passthrough reward, and its gradient, swamps every other node's contribution.",
+   "rubric": [
+    "Identifies a node with FI near zero as the condition",
+    "Explains that the 1/FI term diverges as FI approaches 0"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Under the paper's evaluation protocol, how could a method that correctly flags important nodes still get an empty cell in Table 1?",
+   "answer": "Evaluation keeps only nodes connected to the input or output in an end-to-end circuit. If the flagged nodes do not form a connected path, they are all removed and no circuit remains, which is what produces IBCircuit's empty cells.",
+   "rubric": [
+    "States that the selected nodes would be pruned away because they are not end-to-end connected",
+    "Links this to the step that removes nodes not connected to the input or output"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "When would the two terms of L_disc pull the mask in conflicting directions, and why?",
+   "answer": "This happens when the full model often predicts the wrong answer. The KL term rewards reproducing P_orig, including its wrong predictions, while the cross-entropy term rewards the ground-truth token y. A mask cannot satisfy both, so alpha decides which one wins.",
+   "rubric": [
+    "Identifies the case where the original model's predictions disagree with the ground truth",
+    "Explains that KL targets the full model's distribution while cross-entropy targets y"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If a head plays the Bridge role on some samples and the Letter Mover role on others, would its S\u00b3martCirc label stay fixed if the sample mix changed, and why?",
+   "answer": "Not necessarily. The label reflects the head's dominant contribution aggregated across samples. Shifting the mix toward the other role could flip which of c_p or c_f wins, as the 8.11/10.10 discussion implies.",
+   "rubric": [
+    "Concludes that the label could change",
+    "Explains that the role is set by the aggregate or dominant behaviour over the sample set, not by an intrinsic property"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why were the Act. results on Qwen limited to a single run?",
+   "answer": "On Qwen, one Act. run takes 168,689 s (Acronym) to 187,664 s (IOI), which is roughly 47 to 52 hours. That is at or beyond the 48-hour limit, so three runs could not be completed.",
+   "rubric": [
+    "Cites Act.'s Qwen runtime of roughly 47 to 52 hours",
+    "Connects this to the 48-hour time limit that prevented repeated runs"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does Act.'s runtime grow about 30-fold from GPT-2 to Qwen, while S\u00b3martCirc's grows only about 5-fold?",
+   "answer": "Act. ablates nodes one at a time, so its cost scales with the number of nodes times a forward pass for each. S\u00b3martCirc optimizes all masking coefficients jointly by gradient descent, so its cost grows only with the per-step cost of the model.",
+   "rubric": [
+    "Attributes Act.'s scaling to evaluating each node independently through separate ablations",
+    "Contrasts this with S\u00b3martCirc's joint gradient optimization of all masks"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "On GPT-2 Acronym, Prune. has the smallest circuit. Why does that not make it the best method there?",
+   "answer": "The goal is a minimal circuit with maximal ablation damage. Prune.'s 32.33-node circuit gives a 0.00% accuracy drop, so removing it does not hurt the task at all and it evidently misses the critical nodes. Its small size is therefore meaningless.",
+   "rubric": [
+    "Notes that Prune.'s accuracy drop is 0.00%",
+    "Explains that a small circuit only counts if ablating it degrades performance, so a small but ineffective circuit misses the critical nodes"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can the classification stage change which nodes count as important, even though it is described as only assigning roles?",
+   "answer": "Minimizing L_class increases both c_f (weighted by FI) and c_p (weighted by 1/FI) for candidate nodes. Together with the validity term, which makes the coefficients sum to one, this lowers c_u. Classification steps thus reinforce or reshape the c_p + c_f > c_u decision, balanced by the sparsity term.",
+   "rubric": [
+    "States that L_class pushes c_p and/or c_f upward, which raises importance relative to c_u",
+    "Mentions the sum-to-one constraint or the interaction with sparsity, which makes this affect selection"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why would applying the classification objective from random initialization be especially unreliable, given how L_class is defined?",
+   "answer": "L_class is summed only over N_i, the nodes with c_p + c_f > c_u. With random coefficients N_i is an essentially arbitrary set, so FI-based role signals would be applied to nodes that may not matter for the task.",
+   "rubric": [
+    "Points out that L_class applies only to nodes in N_i, defined by the importance coefficients",
+    "Explains that with random initialization N_i is arbitrary, so role updates target the wrong nodes"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can FI compare a node's input and output even though they have different widths (d_m versus d_n)?",
+   "answer": "Sim maps any T\u00d7d activation matrix to a T\u00d7T token-pair similarity matrix after row normalization. Both Sim(X) and Sim(Y) are therefore T\u00d7T and can be subtracted directly, whatever the feature dimension.",
+   "rubric": [
+    "States that both similarity matrices are T\u00d7T",
+    "Explains that Sim operates in token-pair space, independent of the feature dimension"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does a more negative Acc. value indicate a better circuit in Table 1?",
+   "answer": "Evaluation masks only the circuit nodes. If the circuit really carries the task, removing it should destroy accuracy, so a larger drop (toward -100%) means the circuit captured more of the critical computation.",
+   "rubric": [
+    "Explains that evaluation ablates the discovered circuit",
+    "States that a larger drop shows the removed nodes were critical, so the circuit is more complete"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "For a candidate node with FI = 0.5, would L_class push it toward the passthrough role?",
+   "answer": "Yes. The passthrough term rewards c_p by 1/FI = 2, while the functional term rewards c_f by FI = 0.5, so shifting mass to c_p lowers the loss more.",
+   "rubric": [
+    "Answers yes (passthrough)",
+    "Compares the rewards: 1/FI = 2 is greater than FI = 0.5"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "For a candidate node with FI = 2, would L_class push it toward the passthrough role?",
+   "answer": "No. The functional reward FI = 2 exceeds the passthrough reward 1/FI = 0.5, so the loss prefers raising c_f.",
+   "rubric": [
+    "Answers no (functional is favoured)",
+    "Compares the rewards: FI = 2 is greater than 1/FI = 0.5"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p2",
+   "question": "A node ends training with (c_u, c_p, c_f) = (0.4, 0.3, 0.3). Would it appear in the evaluated circuit?",
+   "answer": "No. During training it counts as a candidate because c_p + c_f = 0.6 > 0.4. At evaluation, however, the argmax indicator picks c_u = 0.4 as the single largest coefficient, so the node is treated as unimportant.",
+   "rubric": [
+    "Answers no",
+    "Explains the mismatch between the summed training criterion and the per-coefficient argmax used at evaluation"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p2",
+   "question": "A node ends training with (c_u, c_p, c_f) = (0.4, 0.5, 0.1). Would it appear in the evaluated circuit?",
+   "answer": "Yes. The argmax indicator picks c_p = 0.5, so the node is in the circuit and labelled passthrough.",
+   "rubric": [
+    "Answers yes, as a passthrough node",
+    "Explains that c_p is the largest single coefficient under the argmax"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p3",
+   "question": "On Qwen IOI, did Act. find a smaller circuit than S\u00b3martCirc?",
+   "answer": "Yes. Act. found 12 nodes versus 16.33 for S\u00b3martCirc, though Act.'s accuracy drop was only -33% versus -100%.",
+   "rubric": [
+    "Answers yes",
+    "Cites 12 vs 16.33 nodes"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p3",
+   "question": "On Qwen Acronym, did Act. find a smaller circuit than S\u00b3martCirc?",
+   "answer": "No. Act. found 32 nodes versus 12 for S\u00b3martCirc, even though both reached a -100% accuracy drop.",
+   "rubric": [
+    "Answers no",
+    "Cites 32 vs 12 nodes"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p4",
+   "question": "On GPT-2 IOI, would raising k from 6 to 8 noticeably change the accuracy drop?",
+   "answer": "No. Performance stabilizes at k = 6 at about -96%, so k = 8 should give a similar accuracy drop, though circuit recovery may still rise slightly.",
+   "rubric": [
+    "Answers no, not substantially",
+    "Cites stabilization at k = 6 (about -96%)"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p4",
+   "question": "On GPT-2 IOI, would lowering k from 6 to 2 noticeably change the accuracy drop?",
+   "answer": "Yes. The accuracy drop weakens from about -96% at k = 6 to about -71% at k = 2, and circuit recovery falls too.",
+   "rubric": [
+    "Answers yes, performance worsens",
+    "Cites about -71% at k = 2 vs about -96% at k = 6"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team with a limited compute budget wants node-level circuits for a model several times larger than Qwen 3 1.7B. Should they use Act. or S\u00b3martCirc, and why?",
+   "answer": "They should use S\u00b3martCirc. Act. already needs about 47 to 52 hours per run on Qwen and its cost grows steeply with model size, while S\u00b3martCirc took about 1,000 s on Qwen and also produced larger accuracy and logit drops.",
+   "rubric": [
+    "Recommends S\u00b3martCirc",
+    "Cites Act.'s steep runtime scaling (about 168k to 188k s on Qwen vs about 1k s for S\u00b3martCirc)",
+    "Notes that S\u00b3martCirc also achieved equal or better circuit quality"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A researcher wants S\u00b3martCirc to tell them which heads are 'name movers' versus 'S-inhibition' heads in a new model. Will it give them this, and why?",
+   "answer": "No. S\u00b3martCirc outputs only the coarse passthrough/functional dichotomy. Both S-inhibition heads (passthrough) and name movers (functional) collapse into these two broad categories, and the paper says the roles do not recover fine-grained manual labels.",
+   "rubric": [
+    "Answers no",
+    "Explains that it outputs only the two coarse roles, which deliberately trade semantic specificity for generality"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team applies S\u00b3martCirc to a new task and, to save effort, sets alpha = 1.0 (KL only). Is this a reasonable default, and why?",
+   "answer": "No. On GPT-2 IOI, removing the cross-entropy term caused a sharp drop in performance. The paper explains that some critical components support correct behaviour without large logit changes, so some task-loss weight should be kept.",
+   "rubric": [
+    "Answers no",
+    "Cites the sharp degradation at alpha = 1.0 and the role of the cross-entropy term in capturing components that don't shift logits much"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "With a fixed compute budget per iteration on a GPT-2 IOI-like task, what k should a team choose, and why?",
+   "answer": "About k = 6. Accuracy gains level off there (about -96%), so larger k adds cost for little accuracy benefit, while smaller k such as 2 gives a clearly worse result (about -71%).",
+   "rubric": [
+    "Recommends k of about 6",
+    "Cites stabilization at k = 6 and the worse result at k = 2"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team runs S\u00b3martCirc on two different tasks and finds the same head labelled passthrough in one and functional in the other. Should they conclude the method is broken, and why?",
+   "answer": "No. Roles are defined relative to a task's activations and reflect a node's dominant contribution, not an intrinsic property. The paper explicitly expects the same node to be labelled differently across tasks, as with multi-role heads like 8.11/10.10.",
+   "rubric": [
+    "Answers no, this is expected",
+    "Explains that roles are task-relative or dominant-contribution labels, not intrinsic"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "For Qwen, a team considers Attr. instead of S\u00b3martCirc because it is slightly faster. Is that a good trade, and why?",
+   "answer": "No. Attr. saves only about 150 to 260 s on Qwen (829 vs 982; 783 vs 1048), but its accuracy drops are around -0.17% to -0.5% versus -100% for S\u00b3martCirc.",
+   "rubric": [
+    "Answers no",
+    "Contrasts the small runtime saving with the vastly worse accuracy drop"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A new head is found that writes almost the same token-wise relational structure it receives, just routed to later layers. Which role would S\u00b3martCirc likely assign, and why?",
+   "answer": "Passthrough. Preserving the token similarity structure gives a low FI, and L_class rewards c_p in proportion to 1/FI.",
+   "rubric": [
+    "Answers passthrough",
+    "Explains that preserved similarity gives low FI, which favours c_p through the 1/FI term"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "For GPT-2 Acronym, the hyperparameters list 60 epochs and 60 warmup epochs. If warmup counts within the total epochs, how would this bear on using the -97.50% result as evidence that functional interpretation guides discovery?",
+   "answer": "Under that reading, the classification stage never runs for GPT-2 Acronym, so the -97.50% would come from discovery-only training. It could not then support the claim that functional interpretation is what improves node selection. It would also sit awkwardly with DF reaching only -4.33% on Acronym.",
+   "rubric": [
+    "States that this result would then reflect discovery only, with no classification steps",
+    "Concludes that it would no longer support the functional-guidance claim for that setting"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc-DF had matched the full method's accuracy drop, which conclusion would lose its support?",
+   "answer": "The conclusion that bidirectional, alternating coupling between discovery and classification is necessary. The large DF gap (-4.33% vs -97.5% on Acronym) is the main evidence for it.",
+   "rubric": [
+    "Names the alternating/bidirectional training claim",
+    "Cites the DF ablation gap as its support"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc-IF had performed no better than S\u00b3martCirc-DF, which conclusion would be weakened?",
+   "answer": "The conclusion that functional information is a useful prior or guide for identifying important nodes. That inference rests on IF's large improvement over DF.",
+   "rubric": [
+    "Names the claim that functional interpretation helps discovery",
+    "Cites the IF-over-DF improvement as its evidence"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's IOI recovery had been as low as the optimization-based baselines', which claim would lose support?",
+   "answer": "The claim that S\u00b3martCirc aligns with human-verified mechanisms, and so that its circuits are credible where no ground truth exists. The accuracy-drop results of RQ1 alone would remain.",
+   "rubric": [
+    "Names the alignment with human-verified circuits and the credibility-without-ground-truth claim",
+    "Notes that this rests on the RQ2 recovery comparison rather than RQ1"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If head 1.0 had been classified functional and head 11.4 passthrough, which conclusion would be undermined?",
+   "answer": "The conclusion that FI-based classification reproduces the Figure 1 role mapping and human interpretations. In that mapping, Previous Token heads are passthrough and Letter Movers are functional.",
+   "rubric": [
+    "Names the claim that the quantitative roles match the human-derived mapping or correctly capture mechanistic roles",
+    "References the expected mapping (Previous Token = passthrough, Letter Mover = functional)"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If alpha = 1.0 had performed as well as alpha = 0.75 on GPT-2 IOI, which explanation in the paper would lose its support?",
+   "answer": "The explanation that the cross-entropy term captures critical components that don't strongly shift logits. With it would go the account that baselines underperform because they rely mainly on output-distribution differences.",
+   "rubric": [
+    "Names the need for the cross-entropy term",
+    "Names the explanation of baseline weakness"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If Prune. and IBCircuit had matched S\u00b3martCirc's accuracy drops, which RQ1 inference would be undercut?",
+   "answer": "The inference that incorporating functional interpretation gives guidance beyond continuous masking alone. That argument depends on other masking methods doing much worse.",
+   "rubric": [
+    "Names the claim that functional interpretation adds value beyond masking",
+    "Explains that it rests on the masking baselines underperforming"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc beats every baseline on every metric in every setting? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. It is often not the smallest circuit (GPT-2 Acronym 60.33, equal to Random; Act. is smaller on Qwen IOI). On Qwen Acronym, Act. also reaches a -100% accuracy drop.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites at least one counterexample, such as circuit size or the Act. tie on Qwen Acronym accuracy"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a head's passthrough/functional label is an intrinsic, task-independent property of that head? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper says roles are defined relative to a task's activations and may differ across tasks, and that labels reflect dominant contribution, as with the multi-role heads 8.11 and 10.10.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the limitation on task-relative roles or the 8.11/10.10 example"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that alpha = 0.75 is the best setting across models and tasks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The sweep was run only on GPT-2 IOI, and the main-table configurations used alpha = 0.25 for GPT-2 Acronym and Llama IOI.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that the sweep covered only GPT-2 IOI and that other settings used alpha = 0.25"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc recovers human-verified circuits in Llama and Qwen? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The reference circuits for both IOI and Acronym were established in GPT-2, so recovery was only measured there.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that ground-truth circuits exist only for GPT-2"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc is the fastest circuit discovery method it evaluated? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Random takes only seconds, and Attr. is faster than S\u00b3martCirc on both Qwen tasks (829 vs 982 s; 783 vs 1048 s). S\u00b3martCirc is only described as relatively efficient.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites Random and/or Attr. on Qwen being faster"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc's results are stable across runs in all settings? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. On Llama IOI its accuracy drop is -69.00 \u00b1 42.43, a very large spread across the three runs.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the \u00b142.43 standard deviation on Llama IOI"
+   ],
+   "batch": 1,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Consider a node whose output applies the same rotation (an angle-preserving linear change of basis) to every token's input representation. Would FI identify this node as functional, and why?",
+   "answer": "No. Row-normalized pairwise similarities are unchanged by a rotation applied to all tokens, so Sim(Y) equals Sim(X) and FI is near zero. L_class would then push the node strongly toward passthrough, even though its representation has changed. FI only detects changes in relational structure between tokens, not changes of representation as such.",
+   "rubric": [
+    "Says FI would not flag it as functional (FI \u2248 0, so it is labelled or pushed toward passthrough)",
+    "Explains that a common rotation preserves token-wise cosine similarities, so Sim(Y) = Sim(X)",
+    "Notes that this misses a genuine representational change that the paper's definition of functional would include"
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose a head that writes nearly the same vector at every token position (for example, by attending everywhere to one fixed token) enters N_i on a prompt whose input tokens are mutually dissimilar. Which role would L_class push it toward, and why is that a potential mislabel?",
+   "answer": "It would be pushed toward functional. Identical output rows make the off-diagonal entries of Sim(Y) close to 1, which differ sharply from the low similarities in Sim(X), so FI is large. Yet the head performs no token-specific computation, so a high FI here reflects the collapse of structure rather than meaningful transformation.",
+   "rubric": [
+    "Says it would be pushed toward functional (high c_f)",
+    "Explains that a near-constant output gives off-diagonal Sim(Y) \u2248 1, far from Sim(X), so FI is large",
+    "Notes that this can mislabel a head that does no meaningful token-specific transformation"
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Under the paper's evaluation protocol, could a method that finds a genuinely correct task circuit still show only a small Acc. drop, and under what condition?",
+   "answer": "Yes. Evaluation ablates only the circuit nodes and leaves every other node intact. If nodes outside the circuit can compensate for or duplicate the circuit's function, removing the circuit barely changes accuracy. The metric measures how necessary the circuit is, so redundancy defeats it.",
+   "rubric": [
+    "Says yes, a correct circuit could show a small drop",
+    "Explains that evaluation only masks circuit nodes and the rest of the model stays active",
+    "Gives the condition: redundant or compensating components outside the circuit can reproduce the behaviour"
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Could the paper's Acronym data-generation procedure produce a usable dataset for a model whose tokenizer encodes most capitalised, space-prefixed words as a single token, and why?",
+   "answer": "Probably not. A word is kept only if its formatted version splits into exactly two tokens, the first being the space-prefixed capital letter. Single-token words are discarded, and letters with no valid words are dropped, so few or no valid letters and three-letter abbreviations would remain.",
+   "rubric": [
+    "Says the procedure would largely fail or yield a very small or empty dataset",
+    "Cites the requirement that a word tokenizes into exactly two tokens, the first being the space-prefixed capital letter",
+    "Notes that letters with no valid words are discarded, which shrinks the valid abbreviation set"
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "What would happen to the circuit if the sparsity coefficient were set so high that the sparsity term dominated L_disc, and why?",
+   "answer": "The circuit could collapse to empty or near-empty. The sparsity term penalizes c_p + c_f for every node, so a dominant penalty drives c_u above c_p + c_f everywhere. N_i would then be empty, the classification stage would have no nodes to act on, and hard argmax would mark every node unimportant.",
+   "rubric": [
+    "Says the circuit would collapse to empty or near-empty",
+    "Explains that the sparsity term penalizes c_p + c_f, pushing c_u to dominate for all nodes",
+    "Notes that N_i becomes empty, so classification has nothing to operate on"
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Based on the paper's account of why S\u00b3martCirc-DF fails, would the classification stage still give useful guidance if the sparsity coefficient were set near zero? Why?",
+   "answer": "Likely not. Without sparsity pressure, discovery yields an overly broad candidate set N_i. The paper argues that such a set swamps functional interpretation with noise, which is the reason DF fails. L_class also rewards raising c_p or c_f for every candidate, so nothing would counter the growth of the candidate set.",
+   "rubric": [
+    "Says classification would likely give much less useful guidance or performance would degrade",
+    "Links this to the DF explanation: a broad candidate set swamps classification with noise",
+    "Notes that without sparsity nothing counters inclusion, since L_class itself rewards larger c_p or c_f"
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does removing the diagonal in Sim make FI more sensitive, even though the diagonal entries would cancel in the numerator anyway?",
+   "answer": "After row-wise L2 normalization, every diagonal entry of Sim is 1 for both input and output, so the diagonals cancel in the numerator. Kept in the denominator, they would add a constant T to ||Sim(X)||_F\u00b2, which inflates the denominator and shrinks FI for every node. Removing them makes FI reflect only changes in cross-token relations.",
+   "rubric": [
+    "States that diagonal entries are always 1 after row normalization, so they cancel in Sim(X) - Sim(Y)",
+    "Explains that keeping them would inflate the denominator ||Sim(X)||_F and deflate FI, diluting real changes"
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is the confidence term in L_sparsity useful, given that evaluation uses an argmax hard assignment?",
+   "answer": "Training applies masks softly through continuous coefficients, while evaluation uses one-hot argmax masks. Pushing each coefficient toward 0 or 1 makes the soft-masked model seen during training resemble the hard-masked model that is evaluated. Without it, a circuit optimized under fractional masks could behave differently once rounded.",
+   "rubric": [
+    "Notes the mismatch between soft masking in training and hard argmax masking at evaluation",
+    "Explains that pushing coefficients toward binary values makes training behaviour match the hard-assigned circuit that is evaluated"
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the sparsity regularizer need to be applied during the classification stage, not only during discovery?",
+   "answer": "Both terms of L_class are negative for any positive FI. Raising either c_f or c_p therefore always lowers L_class, so classification steps on their own reward inflating c_p + c_f for candidate nodes. The sparsity term counteracts this pressure toward including more nodes.",
+   "rubric": [
+    "Notes that both L_class terms are negative, so increasing c_p or c_f always lowers the loss",
+    "Concludes that classification alone would push inclusion probability up, so sparsity is needed to counteract circuit growth"
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is Attr. IG roughly ten times slower than Attr. in Table 2 (for example, 3452.48 s vs 299.54 s on GPT-2 Acronym)?",
+   "answer": "Attr. uses a single linear approximation: the activation difference multiplied by one gradient. Attr. IG integrates gradients along a path between corrupted and clean activations, which requires gradient computations at many interpolated points, multiplying the cost.",
+   "rubric": [
+    "Says Attr. IG needs many gradient evaluations while Attr. needs one",
+    "Attributes this to integrating gradients along the path between corrupted and clean activations"
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does S\u00b3martCirc take noticeably longer on Llama IOI (901.02 s) than on Llama Acronym (507.67 s)?",
+   "answer": "Hyperparameters are set per task. Llama IOI is trained for 75 epochs versus 50 for Llama Acronym, so it runs more discovery and classification iterations. That accounts for much of the gap.",
+   "rubric": [
+    "Points to the larger number of training epochs for Llama IOI (75 vs 50)",
+    "Links more epochs to more optimization iterations and hence longer runtime"
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the Random baseline finish in only a few seconds, while every other method takes hundreds to hundreds of thousands of seconds?",
+   "answer": "Random just samples k nodes as the circuit. It does not score nodes, run patching interventions, compute gradients or optimize masks, so it needs no repeated forward or backward passes through the model.",
+   "rubric": [
+    "States that Random only samples nodes without scoring them",
+    "Contrasts this with the other methods, which need many forward/backward passes, patching or optimization"
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is it important that FI divides by ||Sim(X)||_F, given how L_class trades off its two terms?",
+   "answer": "L_class rewards c_f in proportion to FI and c_p in proportion to 1/FI, so the preference flips at FI = 1. Normalizing by the input's similarity magnitude makes FI a relative, scale-free change. That keeps the threshold of 1 meaningful across nodes and prompts whose inputs have very different overall similarity levels.",
+   "rubric": [
+    "Notes that L_class's preference between c_f and c_p flips around FI = 1",
+    "Explains that normalization makes FI relative and scale-free, so that threshold is comparable across nodes and inputs"
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p1",
+   "question": "On Qwen Acronym, did S\u00b3martCirc achieve a larger accuracy drop than Act.?",
+   "answer": "No. Both reach -100% accuracy drop, although Act.'s figure comes from a single run.",
+   "rubric": [
+    "Answers no (they tie at -100%)",
+    "Cites both methods' -100% accuracy drop on Qwen Acronym"
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p1",
+   "question": "On Qwen Acronym, did S\u00b3martCirc achieve a larger logit drop than Act.?",
+   "answer": "Yes. S\u00b3martCirc's logit drop is -10.97 versus -1.00 for Act., so the logit metric separates two methods that tie on accuracy.",
+   "rubric": [
+    "Answers yes",
+    "Cites -10.97 for S\u00b3martCirc vs -1.00 for Act."
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p2",
+   "question": "On GPT-2 Acronym, was S\u00b3martCirc's circuit smaller than the Random baseline's circuit?",
+   "answer": "No. Both have an average size of 60.33 nodes.",
+   "rubric": [
+    "Answers no (sizes are equal)",
+    "Cites 60.33 for both methods"
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p2",
+   "question": "On Qwen Acronym, was S\u00b3martCirc's circuit smaller than the Random baseline's circuit?",
+   "answer": "Yes. S\u00b3martCirc averages 12 nodes versus 52.67 for Random.",
+   "rubric": [
+    "Answers yes",
+    "Cites 12 vs 52.67 nodes"
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b2-p3",
+   "question": "Did S\u00b3martCirc-IF reach at least an 80% accuracy drop on IOI?",
+   "answer": "Yes. IF reaches about 88% on IOI, still below the full method.",
+   "rubric": [
+    "Answers yes",
+    "Cites roughly 88% for IF on IOI"
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b2-p3",
+   "question": "Did S\u00b3martCirc-IF reach at least an 80% accuracy drop on Acronym?",
+   "answer": "No. IF reaches only about 42% on Acronym, compared with 97.5% for the full method.",
+   "rubric": [
+    "Answers no",
+    "Cites roughly 42% for IF on Acronym"
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A lab has only 16GB GPUs and wants node-level circuits for a model the size of Qwen 3 1.7B. Based on the paper's setup, should they pick Attr. or S\u00b3martCirc, and why?",
+   "answer": "S\u00b3martCirc. In the paper it ran on Qwen using 16GB A4000/A16 GPUs, whereas Attr. and Attr. IG on Qwen had to be moved to 48GB A6000 GPUs. S\u00b3martCirc also gave far larger accuracy drops on Qwen.",
+   "rubric": [
+    "Recommends S\u00b3martCirc",
+    "Cites the hardware note that Attr./Attr. IG on Qwen needed 48GB GPUs, while the other runs used 16GB GPUs",
+    "Optionally notes S\u00b3martCirc's much larger accuracy/logit drops on Qwen"
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team claims their discovered circuit matters because ablating it drops accuracy sharply. Based on the paper's GPT-2 Acronym results, what control should they report, and why?",
+   "answer": "They should report a random circuit of matched size. On GPT-2 Acronym, Random has exactly the same size as S\u00b3martCirc (60.33) yet produces a 0% accuracy drop, while S\u00b3martCirc gives -97.50%. This shows that circuit size alone does not cause the drop, and a matched-size control is what isolates node selection.",
+   "rubric": [
+    "Recommends a size-matched random-node control",
+    "Cites Random's 0% drop at the same 60.33-node size vs S\u00b3martCirc's -97.50%, showing size alone does not explain the drop"
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "To save time on a new task, a team proposes skipping S\u00b3martCirc's warmup and starting alternating training immediately. Is this advisable, and why?",
+   "answer": "No. Removing warmup (NW) lowered performance to about 67% on IOI and 66% on Acronym, versus roughly 96% and 97.5% for the full method. Warmup is also cheap: most configurations use only 5 to 10 warmup epochs.",
+   "rubric": [
+    "Says it is not advisable",
+    "Cites NW's drop to ~67%/66% vs ~96%/97.5% for the full method",
+    "Optionally notes warmup is typically short (5\u201310 epochs), so the savings are small"
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team has a task with no natural corrupted counterpart for each prompt. Among Act., Attr., Attr. IG and S\u00b3martCirc, which can be applied as the paper describes them, and why?",
+   "answer": "S\u00b3martCirc. Act., Attr. and Attr. IG all depend on corrupted activations: patching in corrupted activations, multiplying clean-minus-corrupted differences by gradients, or integrating along a corrupted-to-clean path. S\u00b3martCirc's L_disc needs only the full model's output distribution and the ground-truth token.",
+   "rubric": [
+    "Identifies S\u00b3martCirc as the applicable method",
+    "Explains that the three patching/attribution baselines are defined using corrupted counterparts, while L_disc uses only P_orig and the ground-truth token"
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants to reuse the paper's IOI data pipeline on a model whose tokenizer splits most of the Wang et al. names into several tokens. What problem should they expect, and why?",
+   "answer": "The pipeline keeps only names and place/object pairs that tokenize as a single token. With most names discarded, few valid combinations remain for the template, so the balanced 1000-sample set would be highly repetitive or impossible to build without changing the pipeline.",
+   "rubric": [
+    "Predicts a very small set of valid names, leading to a repetitive or infeasible dataset",
+    "Cites the single-token filter on names in the data generation"
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team working on Llama IOI cares most about getting the smallest circuit with a sizeable accuracy drop, and compute is not a constraint. Is Act. a defensible choice over S\u00b3martCirc, and why?",
+   "answer": "Yes. On Llama IOI, Act. finds a 13-node circuit with a -59.17% drop, while S\u00b3martCirc finds 35 nodes with -69.00%. The gap in accuracy drop is small relative to the very large standard deviations (about \u00b142). The cost is runtime: about 64640 s versus 901 s.",
+   "rubric": [
+    "Says Act. is defensible under these priorities",
+    "Cites 13 nodes/-59.17% vs 35 nodes/-69.00%, with the difference within the large (~\u00b142) variance",
+    "Notes Act.'s much higher runtime as the trade-off"
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q69",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Could S\u00b3martCirc, as formulated, be applied directly to a task whose correct answer spans several tokens, and why?",
+   "answer": "Not directly. L_disc's cross-entropy term is the log-probability of a single ground-truth token y, and the KL term compares next-token distributions. The data pipelines also deliberately enforce single-token answers, so a multi-token task would require changing the objective.",
+   "rubric": [
+    "Says not directly (it would need modification)",
+    "Cites that the cross-entropy term uses a single ground-truth token y and the setup enforces single-token answers"
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If, on GPT-2 Acronym, the Random baseline at its 60.33-node size had produced an accuracy drop near S\u00b3martCirc's, which RQ1 conclusion would lose support?",
+   "answer": "The conclusion that S\u00b3martCirc's large drop reflects more effective node selection rather than circuit size would lose support. The two circuits are the same size, so a matching random drop would imply that ablating any 60 nodes is enough.",
+   "rubric": [
+    "Identifies the claim that S\u00b3martCirc selects critical nodes effectively, as opposed to the drop being explained by circuit size",
+    "Explains that equal sizes make Random the size-matched control, so matching drops would attribute the effect to size"
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the Appendix B experiment had shown S\u00b3martCirc recovering less of the Acronym circuit than the baselines, which conclusion would be weakened?",
+   "answer": "The conclusion that S\u00b3martCirc's alignment with human-verified circuits holds beyond IOI would be weakened. RQ2's recovery evidence would then rest on IOI alone, where S\u00b3martCirc is only comparable to Act.",
+   "rubric": [
+    "Identifies the claim that S\u00b3martCirc's recovery of human-verified circuits generalizes beyond IOI (the RQ2 alignment claim)",
+    "Notes that the remaining IOI evidence shows S\u00b3martCirc only comparable to Act., not uniquely best"
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Act. had matched S\u00b3martCirc's -97.50% accuracy drop on GPT-2 Acronym, which explanation offered in RQ1 would lose its support?",
+   "answer": "The explanation that patching-based methods fall short because they evaluate nodes independently and miss interactions, while an optimizable mask captures them. A patching method matching the optimized mask would undercut that account.",
+   "rubric": [
+    "Identifies the explanation that patching evaluates nodes independently and misses interactions (so an optimizable mask is better)",
+    "Explains that equal performance by Act. would show no cost from independent evaluation in this setting"
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc-NW had performed as well as the full method, which design rationale in the training procedure would lose support?",
+   "answer": "The rationale for the warmup phase would lose support. That rationale holds that assigning roles from randomly initialized coefficients gives an unreliable signal, so important nodes must first be found with L_disc alone.",
+   "rubric": [
+    "Identifies the warmup rationale: classification from random initialization is unreliable",
+    "Explains that NW matching the full method would show that starting alternation immediately is not harmful"
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If percent circuit recovery on GPT-2 IOI had stayed flat as k increased from 2 to 10, which interpretation in RQ3 would be weakened?",
+   "answer": "The interpretation that additional classification steps improve the identification of important nodes and circuit quality would be weakened. Classification steps would then appear not to feed back into which nodes are found, undercutting the claimed bidirectional influence.",
+   "rubric": [
+    "Identifies the claim that more classification steps improve identification of important nodes and circuit quality",
+    "Links this to the claimed feedback from classification to discovery (bidirectional coupling)"
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q75",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If prior work had shown that head 8.11 acts only as a Letter Mover, which argument in RQ2 would fail?",
+   "answer": "The argument that labelling 8.11 passthrough reflects the head's multi-functional nature, and its dominant contribution across samples, rather than a misclassification. Under such evidence, the passthrough label would conflict with the Figure 1 mapping of Letter Movers to functional.",
+   "rubric": [
+    "Identifies the defence that the 8.11/10.10 discrepancy reflects multi-functional heads, not misclassification",
+    "Notes that Letter Movers map to functional, so a passthrough label for a pure Letter Mover would be a genuine error"
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc's discovered circuits, run on their own, reproduce the full model's behaviour? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The training objective aims at faithfulness through KL to the full model. Evaluation, however, only ablates the circuit nodes from the full model and measures the resulting drops, which tests necessity. No metric reports how well the circuit alone matches the full model.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that evaluation measures the effect of ablating circuit nodes (necessity), not the circuit's standalone faithfulness, even though training targets KL faithfulness"
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc correctly discovers and classifies feedforward neurons, not just attention heads? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Neurons are included in the node set, but results report only total circuit sizes, and the role validation covers attention heads only (layer.head labels in the Acronym comparison). No result separates or verifies neuron discoveries or labels.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the reported results do not break out neurons and that role validation concerns attention heads only"
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that warmup and alternating training are necessary for Llama and Qwen as well? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The ablation is reported only per task (IOI, Acronym), and the full-method reference of -97.5% on Acronym matches the GPT-2 result, indicating GPT-2. No ablation is reported for Llama or Qwen.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that the ablation's reference value (-97.5% Acronym) matches GPT-2 and that no Llama or Qwen ablations are reported"
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper directly isolate the contribution of the classification stage by comparing S\u00b3martCirc with an otherwise identical version that has no classification at all? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The ablations NW, DF and IF all keep the classification stage and change only its timing. The RQ1 inference that functional interpretation guides discovery relies on comparisons with Prune. and IBCircuit, which differ from S\u00b3martCirc in other ways too.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that every ablation retains classification and the RQ1 evidence comes from baselines that differ in other respects"
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper quantitatively demonstrate, using FI, that the passthrough/functional decomposition recurs across both IOI and Acronym? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The cross-task recurrence in Figure 1 is a conceptual mapping of prior human-assigned roles. FI-based role labels are compared with ground truth only for the GPT-2 Acronym circuit, and only on the four recovered nodes. IOI recovery is measured only as node overlap, not as role agreement.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that Figure 1 maps prior human labels and that FI role checks are reported only for GPT-2 Acronym (four nodes), not IOI roles"
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc's IOI circuits hold for IOI sentences phrased differently from its prompt template? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All IOI data come from a single template ('When [NAME_1] and [NAME_2] went to the [PLACE], [NAME_1] handed the [OBJECT] to'). Other phrasings are not tested.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that the IOI data are generated from one fixed template"
+   ],
+   "batch": 2,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q82",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The paper says S\u00b3martCirc outperforms all baselines 'by substantial margins across all tasks and models'. On Llama IOI against Act., is a substantial margin supported, contradicted or not settled, and why?",
+   "answer": "Not settled. S\u00b3martCirc's -69.00 \u00b1 42.43 versus Act.'s -59.17 \u00b1 41.90 is a gap of about 10 points, far smaller than either standard deviation. Act. also achieves this with a smaller circuit (13 vs 35 nodes).",
+   "rubric": [
+    "Answers not settled (or not clearly supported)",
+    "Cites the ~10-point gap against standard deviations of ~\u00b142",
+    "Optionally notes Act.'s smaller circuit (13 vs 35)"
+   ],
+   "batch": 2,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q83",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The conclusion says S\u00b3martCirc identifies 'compact' circuits. For GPT-2, is the claim that its circuits are more compact than the baselines' supported, contradicted or not settled, and why?",
+   "answer": "Contradicted for GPT-2. On Acronym, S\u00b3martCirc's 60.33 nodes equal Random's and exceed Act., Attr., Attr. IG and Prune. On IOI, its 76 nodes are close to Random's 77.33 and larger than every non-random baseline that produced a circuit. Its advantage there lies in accuracy and logit drop, not size.",
+   "rubric": [
+    "Answers contradicted for GPT-2",
+    "Cites GPT-2 sizes: 60.33 (equal to Random, larger than the other baselines) and 76 on IOI (near Random's 77.33, larger than the other baselines)"
+   ],
+   "batch": 2,
+   "orig_id": "q84"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Figure 1 maps previous token heads to the passthrough role. Under the FI metric, when would a head that does nothing but copy each token's previous-token representation forward still be pushed toward the functional role, and why?",
+   "answer": "FI compares Sim(X) and Sim(Y) at the same position pairs. If the output at position t is roughly the input at t-1, then Sim(Y)_ij roughly equals Sim(X)_(i-1)(j-1), which matches Sim(X)_ij only when the token-similarity pattern is shift-invariant. On prompts whose similarity structure varies by position, this pure copy produces a large FI, and L_class pushes the head toward functional even though Figure 1 calls it passthrough.",
+   "rubric": [
+    "States that such a head can get a large FI and be pushed toward functional when the prompt's token-similarity structure is not invariant to a one-position shift (or equivalent wording).",
+    "Explains that FI compares input and output similarity at the same position pairs, so shifting representations by one position changes Sim even with no transformation of content."
+   ],
+   "batch": 3,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "When would an S\u00b3martCirc Acronym circuit for some model fail to represent acronym prediction across the whole alphabet, given how the paper builds its Acronym data?",
+   "answer": "This happens when the model's tokenizer leaves only a few valid letters. The generator throws out any letter with no word that splits into the space-prefixed capital letter plus one more token, and it keeps only abbreviations that tokenize into three tokens. With few valid letters, the 1000 samples cover a narrow set of letters and abbreviations, so the circuit and its role labels describe behaviour on that subset only.",
+   "rubric": [
+    "Says the circuit would not represent the whole alphabet when the tokenizer leaves few valid letters or abbreviations.",
+    "Explains that letters without valid two-token words (and abbreviations that are not three tokens) are discarded, so the training samples cover only that subset."
+   ],
+   "batch": 3,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Under what condition would the paper's balanced IOI sampling procedure (drawing 1000/p samples per place/object pair) stop producing a balanced 1000-sample dataset?",
+   "answer": "It breaks when the number of valid place/object pairs p is larger than 1000, because 1000/p is then less than one sample per pair. It also breaks, more mildly, when p does not divide 1000, because rounding leaves the dataset unbalanced or not exactly 1000. Since p depends on how many pairs each model's tokenizer encodes as single tokens, this condition is model-specific.",
+   "rubric": [
+    "Identifies the condition p > 1000 (fewer than one sample per pair), optionally also noting the case where p does not divide 1000.",
+    "Explains that the procedure draws 1000/p samples per pair, and that p depends on which pairs tokenize as single tokens."
+   ],
+   "batch": 3,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "When would Appendix B's statement that S\u00b3martCirc has the largest percent of the Acronym circuit recovered be fragile evidence?",
+   "answer": "It would be fragile when S\u00b3martCirc's lead over the best baseline is only one node. The Acronym ground-truth circuit has just eight nodes, so each node is worth 12.5 percentage points, and S\u00b3martCirc itself recovers only 4 of 8. A 'largest' result can therefore rest on a single head.",
+   "rubric": [
+    "Says the claim is fragile when the margin over the best baseline amounts to about one node (or a small number of nodes).",
+    "Explains that the Acronym circuit has only eight nodes, so recovery moves in 12.5-point steps (S\u00b3martCirc recovers 4/8)."
+   ],
+   "batch": 3,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q88",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "For which candidate nodes would the classification stage give essentially no preference between the passthrough and functional roles, and why?",
+   "answer": "Nodes with FI close to 1 get no preference. In L_class the gradient with respect to c_f is -FI and with respect to c_p is -1/FI, and these are equal at FI = 1. The classification objective therefore pushes both coefficients equally, and the label is decided by other forces such as the confidence and sparsity terms, the discovery stage, or the initialization.",
+   "rubric": [
+    "Identifies nodes with FI approximately equal to 1.",
+    "Explains that the c_f term (weighted by FI) and the c_p term (weighted by 1/FI) then exert equal pull, so L_class does not separate the roles."
+   ],
+   "batch": 3,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q89",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Could S\u00b3martCirc's final output ever record a head such as 8.11 as acting both as passthrough and as functional, and why?",
+   "answer": "No. The confidence term in L_sparsity pushes each coefficient toward 0 or 1, and evaluation uses an argmax hard assignment, so every node gets exactly one label. A genuinely multi-functional head is collapsed into its dominant role, which is why 8.11 is reported only as passthrough.",
+   "rubric": [
+    "Answers no: each node receives a single label.",
+    "Cites the argmax hard assignment and/or the confidence term pushing coefficients to binary values, which forces multi-functional heads into one dominant role."
+   ],
+   "batch": 3,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Both GPT-2 settings use 60 epochs, yet S\u00b3martCirc runs faster on GPT-2 Acronym (197.14 s) than on GPT-2 IOI (264.44 s). What in the training setup explains this?",
+   "answer": "GPT-2 Acronym has 60 warmup epochs out of 60, so essentially every epoch runs only discovery steps. GPT-2 IOI has 5 warmup epochs, and the remaining epochs each run one discovery step plus k classification steps, which require FI computations. IOI therefore performs many more optimization steps.",
+   "rubric": [
+    "Points to the warmup schedule: Acronym's 60 warmup epochs (all or nearly all of training) versus IOI's 5.",
+    "Explains that warmup epochs run only discovery steps, while post-warmup iterations add k classification steps, so IOI does more work."
+   ],
+   "batch": 3,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does Attr. IG take less time on Qwen 3 1.7B (about 11,150 s) than on the smaller Llama 3.2 1B (about 12,500 s)?",
+   "answer": "The Qwen runs of Attr. and Attr. IG were done on 48GB A6000 GPUs, while everything else, including the Llama runs, used 16GB GPUs. The faster Qwen time reflects stronger hardware, not lower cost for the larger model.",
+   "rubric": [
+    "Attributes the difference to hardware, not to the model.",
+    "States that Attr. IG on Qwen ran on 48GB GPUs while the Llama runs used 16GB GPUs."
+   ],
+   "batch": 3,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The Random baseline selects a fixed number k of nodes, yet its reported Circuit Size varies across runs (e.g., 60.33 \u00b1 7.76 on GPT-2 Acronym). Why?",
+   "answer": "Circuit Size is measured after removing selected nodes that are not connected to the input or output. Different random draws keep different numbers of connected nodes, so the end-to-end circuit size varies even though k is fixed.",
+   "rubric": [
+    "States that reported size counts only the end-to-end connected circuit, not all selected nodes.",
+    "Explains that different random selections lose different numbers of disconnected nodes, producing variance."
+   ],
+   "batch": 3,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Prune.'s GPT-2 Acronym Circuit Size is 32.33 with a standard deviation of 37.97, larger than the mean. What does this imply about its three runs?",
+   "answer": "Circuit sizes cannot be negative, so a standard deviation larger than the mean means the runs were extremely spread out. Very likely at least one run produced a tiny or near-empty connected circuit while another produced a much larger one, around 80 nodes. The 'smallest circuit' mean therefore hides very unstable behaviour.",
+   "rubric": [
+    "Concludes that the runs varied wildly, with at least one very small (near-empty) circuit and at least one much larger one.",
+    "Reasons from sizes being non-negative, so a standard deviation above the mean requires widely dispersed values."
+   ],
+   "batch": 3,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q94",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the Acronym data generator keep a word only if its first token is the space-prefixed capital letter?",
+   "answer": "The task asks the model to output the initial letter of each word. The letter therefore has to exist as its own token in the prompt, matching the answer token, so that letter information can be carried forward and moved to the output by the previous token, bridge and letter mover heads. Words whose first token merges the letter with other characters would not supply that letter as a separate unit.",
+   "rubric": [
+    "States that the filter ensures each word's capital letter exists as a standalone token matching the expected answer token.",
+    "Links this to the task or circuit: the letter must be propagated and moved to the output (e.g., by mover heads), which needs it as a distinct token."
+   ],
+   "batch": 3,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p2",
+   "question": "On GPT-2 IOI, would raising k from 6 to 10 increase the percentage of the Wang et al. circuit that S\u00b3martCirc recovers?",
+   "answer": "Yes. Accuracy drop plateaus around k = 6, but percent circuit recovery rises monotonically with k, so k = 10 recovers more.",
+   "rubric": [
+    "Answers yes.",
+    "Cites that recovery increases monotonically with k (even though accuracy stabilizes at k = 6)."
+   ],
+   "batch": 3,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p2",
+   "question": "On GPT-2 IOI, would raising alpha from 0.75 to 1.0 increase the percentage of the Wang et al. circuit that S\u00b3martCirc recovers?",
+   "answer": "No. Alpha = 0.75 is best on both accuracy and recovery, and alpha = 1.0, which removes the cross-entropy term, degrades performance sharply.",
+   "rubric": [
+    "Answers no.",
+    "Cites alpha = 0.75 as best for recovery and the sharp degradation at alpha = 1.0 when cross-entropy is removed."
+   ],
+   "batch": 3,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b3-p3",
+   "question": "On GPT-2 Acronym, did ablating Attr.'s circuit lower the logit of the original model's predicted answer?",
+   "answer": "No. Attr.'s Logit. value is +0.46. Negative values indicate a drop, as for S\u00b3martCirc's -5.00, so a positive value means the answer's logit actually rose after ablation.",
+   "rubric": [
+    "Answers no (the logit increased).",
+    "Cites the positive Logit. value of 0.46 and reads the sign correctly (negative = drop)."
+   ],
+   "batch": 3,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b3-p3",
+   "question": "On GPT-2 Acronym, did ablating Attr. IG's circuit lower the logit of the original model's predicted answer?",
+   "answer": "Yes, but only slightly. Attr. IG's Logit. value is -0.59, a small drop compared with S\u00b3martCirc's -5.00.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the negative Logit. value of -0.59 (small relative to S\u00b3martCirc)."
+   ],
+   "batch": 3,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "A candidate word for the K slot formats as ' Kettle' and tokenizes as [' K', 'ettle']. Would the paper's Acronym generator keep it?",
+   "answer": "Yes. It splits into exactly two tokens, and the first token is the space-prefixed capital letter ' K', which satisfies the filter.",
+   "rubric": [
+    "Answers yes.",
+    "Notes that it has exactly two tokens and the first is the space-prefixed capital letter."
+   ],
+   "batch": 3,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q101",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "A candidate word for the K slot formats as ' Kettle' and tokenizes as [' Ke', 'ttle']. Would the paper's Acronym generator keep it?",
+   "answer": "No. Although it has two tokens, the first token is ' Ke', not the space-prefixed capital letter alone, so the word is discarded.",
+   "rubric": [
+    "Answers no.",
+    "Notes that the first token is not the space-prefixed capital letter by itself."
+   ],
+   "batch": 3,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team studies a task where they suspect some critical components support the correct answer without moving the output logits much. Should they rely on a logit-difference-driven method like Act. or Attr., or on S\u00b3martCirc, and why?",
+   "answer": "They should prefer S\u00b3martCirc with alpha below 1. The paper argues that methods relying mainly on output-distribution or logit differences can miss components that contribute to correct behaviour without large logit changes. S\u00b3martCirc's cross-entropy term on the ground-truth answer captures those components, and removing that term (alpha = 1.0) degraded performance sharply on GPT-2 IOI.",
+   "rubric": [
+    "Recommends S\u00b3martCirc (keeping the cross-entropy term, i.e., alpha < 1) over logit-difference methods.",
+    "Reasons that logit- or KL-driven signals can miss components that matter for correctness without big logit changes, while the cross-entropy term captures them (alpha = 1.0 degrades sharply)."
+   ],
+   "batch": 3,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team working on Llama IOI is drawn to IBCircuit because it produced the smallest circuits there. Is that a good basis for choosing it, and why?",
+   "answer": "No. IBCircuit's Llama IOI circuits are tiny (7.33 nodes) but ablating them causes a 0% accuracy drop, so they do not capture task-critical nodes. S\u00b3martCirc's 35-node circuit gives a -69% drop, and small size is only meaningful together with a large ablation effect.",
+   "rubric": [
+    "Says no, size alone is a poor basis.",
+    "Cites IBCircuit's 0% accuracy drop despite its small size, versus S\u00b3martCirc's substantial drop (about -69%)."
+   ],
+   "batch": 3,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team wants a circuit for the Acronym task on Llama 3.2 1B and considers Act. as the most established method. Based on the paper's results, is that a good bet, and why?",
+   "answer": "No. On Llama Acronym, Act. produced no circuit at all (an empty cell) despite taking about 61,500 s. S\u00b3martCirc ran in about 508 s and produced a 47-node circuit with a -57% accuracy drop.",
+   "rubric": [
+    "Says Act. is a poor choice here.",
+    "Cites that Act. returned no circuit on Llama Acronym while costing roughly 61,500 s, compared with S\u00b3martCirc's fast run and substantial accuracy drop."
+   ],
+   "batch": 3,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team applies S\u00b3martCirc to a model larger than GPT-2 and must pick an initial sparsity coefficient. What does the paper's configuration suggest, and with what caveat?",
+   "answer": "They should start higher than the GPT-2 values. The paper used 0.3\u20130.5 for GPT-2 but 0.7\u20131.0 for Llama 3.2 1B and Qwen 3 1.7B, which still produced compact circuits (e.g., 12\u201316 nodes on Qwen). Hyperparameters were tuned per model and task, though, so this is only a starting point that needs tuning.",
+   "rubric": [
+    "Suggests starting with a higher sparsity coefficient than GPT-2's (around the 0.7\u20131.0 used for the larger models).",
+    "Notes that the paper's values were tuned per model and task, so tuning is still required."
+   ],
+   "batch": 3,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "In a new task's circuit, a head's job is to suppress a particular candidate token in the output logits. Under the paper's dichotomy, which role should it be expected to have, and why?",
+   "answer": "Functional. Figure 1 maps negative name mover heads, which suppress names in the logits, to the functional role. Selectively reshaping the output logit distribution is transformation, not relocation of information.",
+   "rubric": [
+    "Answers functional.",
+    "Justifies by analogy to negative name mover heads being mapped to functional, because they transform information to change the output logits rather than just relocating it."
+   ],
+   "batch": 3,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q107",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A researcher wants to know every function a particular head is capable of performing in a task, e.g., whether it can act as both Bridge and Letter Mover. Is S\u00b3martCirc the right tool, and why?",
+   "answer": "No. S\u00b3martCirc assigns one coarse label reflecting a head's dominant contribution across samples, as with 8.11 being labelled passthrough although it can act as either role. Finding the full range of a head's capabilities needs carefully isolated interventions, as in the human analyses.",
+   "rubric": [
+    "Says S\u00b3martCirc is not suited to this goal.",
+    "Explains that it reports only the dominant, coarse role across samples, whereas isolated interventions reveal all the functions a head can perform (as with 8.11 and 10.10)."
+   ],
+   "batch": 3,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's Llama IOI circuit had been larger than Attr. IG's 47.67 nodes (with the same accuracy drops), which RQ1 argument would lose its cleanest support?",
+   "answer": "The circuit-size argument would lose its cleanest support. That argument says S\u00b3martCirc picks more critical nodes, getting far greater degradation at comparable or smaller size, and the paper's example contrasts 35 nodes at -69% with 47.67 nodes at -5.67%. The effectiveness claim about the larger accuracy drop would still stand.",
+   "rubric": [
+    "Identifies the circuit-size and node-efficiency argument (more degradation for comparable or smaller circuits).",
+    "Notes that the paper's illustrating example relies on S\u00b3martCirc's 35 nodes being fewer than Attr. IG's 47.67, while the raw accuracy-drop advantage would remain."
+   ],
+   "batch": 3,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If letter mover heads had turned out to relay letter information essentially unchanged, which parts of the paper's argument would weaken?",
+   "answer": "Two parts would weaken. The cross-task decomposition (c1) depends on Acronym, like IOI, having passthrough heads (previous token and bridge) feeding functional heads (letter movers); without functional movers that parallel breaks. The RQ2 claim that head 11.4's functional label matches its human-verified role (c5) would also no longer count as agreement.",
+   "rubric": [
+    "Names the claim that the passthrough-then-functional decomposition recurs across IOI and Acronym (c1).",
+    "Names the RQ2 role-alignment evidence for head 11.4 being correctly labelled functional (c5)."
+   ],
+   "batch": 3,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose S\u00b3martCirc's role labels for all recovered Acronym nodes contradicted Figure 1, but its Table 1 accuracy drops were unchanged. Which claim would survive and which would fall?",
+   "answer": "The RQ1 effectiveness claim (c4), that ablating its circuits causes much larger drops, would survive because it depends only on node selection. The RQ2 claim that S\u00b3martCirc accurately captures mechanistic roles matching human analysis (c5) would fall.",
+   "rubric": [
+    "States that the circuit-discovery effectiveness claim (large accuracy drops) survives.",
+    "States that the claim of correctly recovering human-verified roles falls."
+   ],
+   "batch": 3,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's Qwen circuits had been around 50 nodes (similar to Random) instead of 12 and 16.33, which conclusion would be left with little support?",
+   "answer": "The conclusion's claim that S\u00b3martCirc identifies compact circuits would be left with little support. On GPT-2 its circuits equal or nearly equal Random's size, and on Llama it is not the smallest, so the Qwen results are the main evidence of S\u00b3martCirc producing the smallest circuits.",
+   "rubric": [
+    "Identifies the claim that S\u00b3martCirc finds compact (small) circuits.",
+    "Explains that the Qwen sizes are the main place it wins on size, since GPT-2 sizes match Random and Llama sizes are not the smallest."
+   ],
+   "batch": 3,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc-DF's discovery stage had been shown to produce a small, focused candidate set and DF still failed on Acronym, which explanation in the paper would lose support?",
+   "answer": "The explanation that DF fails because completing discovery first yields an overly broad candidate set, which swamps functional interpretation with noise, would lose support. If the candidate set were already focused, that mechanism could not account for the -4.33% result.",
+   "rubric": [
+    "Identifies the 'overly broad candidate set overwhelms classification' explanation for DF's failure.",
+    "Explains that a focused candidate set together with continued failure contradicts that mechanism."
+   ],
+   "batch": 3,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc labels GPT-2's IOI heads correctly, e.g., name mover heads as functional and S-inhibition heads as passthrough? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. For IOI the paper reports only the percentage of Wang et al.'s nodes recovered. The per-node role comparison with a ground-truth circuit is done only for Acronym (Figure 4).",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that IOI evaluation reports only node-recovery percentages, while role labels are checked only against the Acronym circuit."
+   ],
+   "batch": 3,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that functional nodes generally sit in later layers than passthrough nodes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The only role-labelled evidence is four Acronym heads: 1.0 and 8.11 passthrough, 10.10 and 11.4 functional. That pattern is suggestive but far too small a sample, and the paper does no systematic layer-wise analysis.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the evidence is only four labelled Acronym heads (suggestive ordering), with no systematic analysis across layers or tasks."
+   ],
+   "batch": 3,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the 76-node GPT-2 IOI circuit reported in Table 1 itself contains a large share of Wang et al.'s circuit? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Figure 3's recovery percentages are computed on circuits obtained by thresholding at 50, 100, 150 and 200 nodes. Those are not the method-selected Table 1 circuits, so recovery for the 76-node circuit is never reported directly.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that recovery is measured on circuits thresholded at fixed sizes (50\u2013200 nodes), not on the Table 1 circuits."
+   ],
+   "batch": 3,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper evaluate GPT-2, Llama and Qwen on the same IOI and Acronym sentences? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Data are generated separately for each model's tokenizer. IOI keeps only names and place/object pairs that are single tokens, and Acronym keeps only words and abbreviations meeting tokenization rules, so the sentence sets differ across models.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that samples are generated per tokenizer with filtering (single-token names and pairs, valid Acronym words), so the datasets differ by model."
+   ],
+   "batch": 3,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Prune. identified task-specific circuits on Llama and Qwen? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled, and the evidence points against it. Prune. reports identical sizes on both tasks (70.67 \u00b1 3.09 on Llama and 46.00 \u00b1 4.24 on Qwen) with 0% accuracy drops, which suggests its selection did not adapt to the task. The paper does not examine this directly.",
+   "rubric": [
+    "Answers not settled (optionally noting the evidence leans against).",
+    "Cites the identical circuit sizes across Acronym and IOI on each model together with zero accuracy drops."
+   ],
+   "batch": 3,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc outperforms the baselines at discovering edge-level circuits? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All comparisons are at node level; Prune., an edge-pruning method, was even adapted to operate on nodes for fairness. Edge-level discovery is never evaluated.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that every method, including Prune. (adapted from edges to nodes), is compared at node level only."
+   ],
+   "batch": 3,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its Acronym circuits handle acronyms formed from every letter of the alphabet? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The generator discards letters that have no valid word under each model's tokenizer, and the paper does not report which letters remain. Coverage of the full alphabet is therefore neither guaranteed nor tested.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that letters without valid tokenizations are discarded per model and the remaining set is not reported or tested."
+   ],
+   "batch": 3,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q120",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Consider a feedforward neuron whose activation has the same sign at every token position. Would L_class treat its role neutrally, or bias it toward one role, and why?",
+   "answer": "It would be biased toward the functional role. With d_n = 1, row-wise normalization turns every output into \u00b11, so when all outputs share a sign every off-diagonal entry of Sim(Y) equals 1. FI is then ||Sim(X) \u2212 1||/||Sim(X)||. For uniform input cosines s this is (1 \u2212 s)/s, which exceeds 1 whenever s < 0.5, so the neuron is pushed toward c_f unless its input tokens are already highly similar.",
+   "rubric": [
+    "Says the neuron is biased toward the functional role (not neutral).",
+    "Explains that d_n = 1 makes normalized outputs \u00b11, so Sim(Y) is all ones (maximal similarity) and differs strongly from Sim(X).",
+    "Gives the condition: this happens unless input token similarity is high (about above 0.5)."
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "When a head's output is close to the zero vector at some token positions, how reliable is its FI value, and why?",
+   "answer": "It is unreliable. Sim applies row-wise L2 normalization, so near-zero rows are rescaled to unit length. Their direction is then dominated by small noise, which makes their cosine similarities essentially arbitrary and makes FI, and hence the role push, unstable.",
+   "rubric": [
+    "States that FI (and the resulting role assignment) becomes unreliable or unstable.",
+    "Explains that row-wise L2 normalization blows tiny rows up to unit length, so their similarities reflect noise."
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If a team ran S\u00b3martCirc only once on Llama IOI, could they plausibly get a circuit whose ablation barely hurts accuracy? Use Table 1 to justify your answer.",
+   "answer": "Yes. Over three runs the mean is \u221269.00% with a standard deviation of 42.43. Drops cannot exceed \u2212100%, so runs above the mean can lie at most 31 points away from it. The large spread therefore forces at least one run far below the mean, roughly a 10\u201320% drop (for example two runs near \u2212100% and one near \u221210%). A single run could land on that weak outcome.",
+   "rubric": [
+    "Answers yes: a single run may yield a weak or near-useless circuit.",
+    "Reasons that a std of about 42 around a mean of 69, with drops capped at 100%, implies at least one run with a small drop."
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A head transforms only the final token's representation and leaves all other positions' relational structure intact. When would L_class push it toward passthrough even though it does the decisive computation, and why?",
+   "answer": "This happens on longer prompts. FI weighs all T(T\u22121) off-diagonal similarity pairs equally, and changing only the final token alters just its row and column, about 2(T\u22121) entries. As T grows the change is diluted relative to ||Sim(X)||_F, so FI can fall below 1 and the head is pushed toward c_p.",
+   "rubric": [
+    "Says it can be labelled passthrough, especially when the prompt is long.",
+    "Explains that FI aggregates over all token pairs, and only the final token's row and column change, so the change is diluted."
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A head faithfully relays token relations within one small subspace of the previous layer's representation and ignores the rest. Could FI label it functional, and why?",
+   "answer": "Yes. FI compares Sim(Y) with the Sim of the node's entire input X, which is the full d_m-dimensional previous-layer representation, not just the part the head uses. If token relations within that subspace differ from those in the full representation, Sim(Y) and Sim(X) diverge. FI can then be large even though the head only propagates information.",
+   "rubric": [
+    "Says yes, it could be mislabelled functional.",
+    "Explains that X is the whole previous-layer representation, so Sim(Y) mirroring only a subspace can differ from Sim(X)."
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "When would a head that drastically reorganizes token relations still be pushed toward passthrough by L_class, and why?",
+   "answer": "This happens when its input tokens are already almost identical in direction (input cosines near 1). The denominator ||Sim(X)||_F is then maximal, and for uniform cosines FI = |s_x \u2212 s_y|/s_x. Lowering output cosines from about 1 to, say, 0.2 gives FI of about 0.8, which is below 1. L_class therefore favours c_p despite the large restructuring; in this regime any output with positive cosines stays under the threshold.",
+   "rubric": [
+    "Identifies the condition: input token similarities near 1 (highly similar inputs).",
+    "Explains that normalizing by ||Sim(X)|| keeps FI below 1 (the L_class break-even point), so the passthrough term dominates."
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does L_sparsity need a validity term even though the paper defines c_u, c_p and c_f to sum to one?",
+   "answer": "The sum-to-one constraint is not built into the parameterization. The coefficients are learned freely and the constraint is imposed only as a soft penalty. Other losses also pull against it: L_class keeps rewarding increases in c_p and c_f, because both of its terms are negative. Without the validity term the coefficients could drift away from summing to one and lose their meaning as probabilities.",
+   "rubric": [
+    "States that the constraint is not hard-enforced and is imposed softly via the penalty.",
+    "Notes that other objectives (e.g., L_class, which always rewards raising c_p or c_f) would otherwise push the sum away from one."
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is L_class applied only to nodes in N_i rather than to every node in the model?",
+   "answer": "Both terms of L_class, \u2212c_f\u00b7FI and \u2212c_p/FI, decrease as c_f or c_p grows, so for any node it rewards raising c_p + c_f, that is, inclusion in the circuit. Applied to every node, it would push all nodes toward the circuit, fight the sparsity term and override the discovery stage's importance decisions. Restricting it to candidates keeps it focused on assigning roles.",
+   "rubric": [
+    "Notes that L_class always favours increasing c_p or c_f, i.e., circuit membership.",
+    "Concludes that applying it to all nodes would inflate the circuit or undo sparsity and discovery."
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "In what sense is the role assignment in S\u00b3martCirc 'self-supervised'?",
+   "answer": "No human role labels are used. Each candidate's passthrough or functional label is driven by FI, which is computed from the node's own input and output activations, and the training objective uses that quantity as its signal.",
+   "rubric": [
+    "States that roles come from FI computed on the model's own activations.",
+    "States that no human-annotated role labels are needed."
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "On Qwen Acronym, how can Act.'s circuit cause a \u2212100% accuracy drop while lowering the logit by only 1.00, compared with 10.97 for S\u00b3martCirc?",
+   "answer": "Accuracy only checks whether the answer is still the top prediction. If the margin over competing tokens is small, a modest decrease in its logit, or a rise in competitors' logits, flips every prediction. Logit tracks only how much the original answer's logit falls, so Act. breaks predictions while barely suppressing the answer, whereas S\u00b3martCirc suppresses it far more strongly.",
+   "rubric": [
+    "Explains that accuracy flips once the answer loses top rank, which a small logit change can cause.",
+    "Notes that Logit. measures magnitude for the original answer only, so the two metrics can diverge."
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "For two candidate heads in the same layer, what alone determines which one L_class pushes more strongly toward the functional role, and why?",
+   "answer": "It is determined by how far each head's output similarity structure Sim(Y) departs from the shared input structure. Every node takes the previous layer's representation as X, so same-layer heads share Sim(X) and the FI denominator. Differences in FI therefore come entirely from Sim(Y).",
+   "rubric": [
+    "States that it depends only on each head's output similarity structure (distance of Sim(Y) from the common Sim(X)).",
+    "Explains that same-layer heads share the same input X, hence the same Sim(X) and denominator."
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q131",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p1",
+   "question": "A candidate head's input tokens all have pairwise cosine 0.4, and its output tokens all have pairwise cosine 0.6. Would L_class push it toward passthrough?",
+   "answer": "Yes. For uniform entries FI = |0.4 \u2212 0.6|/0.4 = 0.5. That is below 1, so the c_p/FI term outweighs c_f\u00b7FI and the head is pushed toward passthrough.",
+   "rubric": [
+    "Answers yes (passthrough).",
+    "Computes or reasons that FI = 0.5 < 1, so the passthrough term dominates."
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q132",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p1",
+   "question": "A candidate head's input tokens all have pairwise cosine 0.4, and its output tokens all have pairwise cosine \u22120.4. Would L_class push it toward passthrough?",
+   "answer": "No. FI = |0.4 \u2212 (\u22120.4)|/0.4 = 2. That is above 1, so the functional term dominates and the head is pushed toward c_f; inverting the relational structure counts as a transformation.",
+   "rubric": [
+    "Answers no (pushed toward functional).",
+    "Computes or reasons that FI = 2 > 1, so the functional term dominates."
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q133",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p3",
+   "question": "On Llama Acronym, did any baseline produce an accuracy drop larger than 10%?",
+   "answer": "No. The best baseline was Attr. IG at \u22122.17%, Act. and Attr. produced no circuit, and the rest were at 0%.",
+   "rubric": [
+    "Answers no.",
+    "Notes the best baseline was Attr. IG at about \u22122% and Act./Attr. cells are empty."
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q134",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p3",
+   "question": "On Llama IOI, did any baseline produce an accuracy drop larger than 10%?",
+   "answer": "Yes. Act. reached \u221259.17%, although with a large standard deviation (\u00b141.90).",
+   "rubric": [
+    "Answers yes.",
+    "Identifies Act. with about \u221259% accuracy drop."
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q135",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": "b4-p4",
+   "question": "If S\u00b3martCirc had labelled head 10.10 passthrough, would that contradict the human-verified Acronym circuit under the Figure 1 mapping?",
+   "answer": "No. Prior work shows 10.10 can act as either a Bridge head or a Letter Mover. Bridge maps to passthrough, so a passthrough label would still be consistent.",
+   "rubric": [
+    "Answers no.",
+    "Reasons that 10.10 can act as a Bridge head, which maps to passthrough."
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q136",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": "b4-p4",
+   "question": "If S\u00b3martCirc had labelled head 11.4 passthrough, would that contradict the human-verified Acronym circuit under the Figure 1 mapping?",
+   "answer": "Yes. 11.4 is a Letter Mover, and letter mover heads map to the functional role, so a passthrough label would be a mismatch.",
+   "rubric": [
+    "Answers yes.",
+    "Reasons that 11.4 is a Letter Mover, which maps to functional."
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q137",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p5",
+   "question": "On Llama Acronym, was S\u00b3martCirc's circuit smaller than Attr. IG's?",
+   "answer": "Yes. S\u00b3martCirc averaged 47.33 nodes against Attr. IG's 54.67.",
+   "rubric": [
+    "Answers yes.",
+    "Cites 47.33 versus 54.67 nodes."
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q138",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p5",
+   "question": "On Llama IOI, was S\u00b3martCirc's circuit smaller than Act.'s?",
+   "answer": "No. S\u00b3martCirc averaged 35 nodes, while Act. averaged 13.",
+   "rubric": [
+    "Answers no.",
+    "Cites 35 versus 13 nodes."
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q139",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team wants to recover as much of Wang et al.'s IOI circuit in GPT-2 as possible while spending the least compute. Which method does the paper's evidence favour, and why?",
+   "answer": "S\u00b3martCirc. Its IOI recovery is matched only by Act., and the other baselines recover much less. It also ran in about 264 s on GPT-2 IOI versus about 7,944 s for Act., roughly 30 times faster.",
+   "rubric": [
+    "Recommends S\u00b3martCirc.",
+    "Notes that only Act. has comparable recovery, and Act. is about 30\u00d7 slower (\u2248264 s vs \u22487,944 s)."
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Two candidates in N_i face the same sparsity pressure; one has FI = 1.05 and the other FI = 6. Which is more likely to remain in the circuit through the classification stage, and why?",
+   "answer": "The FI = 6 node. L_class's push to raise its c_f has magnitude 6. For FI near 1 both pushes, FI and 1/FI, are about 1, the weakest possible support, so the sparsity term is more likely to prune that node.",
+   "rubric": [
+    "Chooses the FI = 6 node.",
+    "Explains that L_class's push is weakest when FI is near 1 (gradient magnitude max(FI, 1/FI)), so sparsity dominates for that node."
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q141",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "In a new task's circuit, a head writes into the residual stream information about an earlier occurrence of the current token, without otherwise altering it. Under the paper's dichotomy, which role should it be expected to have, and why?",
+   "answer": "Passthrough. It is analogous to the previous token heads that Figure 1 maps to passthrough: it relocates information about another position with minimal transformation.",
+   "rubric": [
+    "Predicts passthrough.",
+    "Draws the analogy to previous token heads, which relocate information and are mapped to passthrough."
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "On Qwen IOI, a team wants the smallest circuit whose ablation completely breaks the task. Should they choose Act., which gives the smallest circuit, or S\u00b3martCirc, and why?",
+   "answer": "S\u00b3martCirc. Act.'s 12-node circuit causes only a \u221233% drop, and that comes from a single run. S\u00b3martCirc's 16.33-node circuit gives \u2212100% with zero variance across three runs, so it is the smallest circuit that meets the goal.",
+   "rubric": [
+    "Recommends S\u00b3martCirc.",
+    "Notes that Act.'s smaller circuit only reaches \u221233% (single run), whereas S\u00b3martCirc reaches \u2212100% at about 16 nodes."
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q143",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team builds a variant pipeline that keeps only functional nodes as the circuit and treats passthrough nodes as unimportant. Is this sound given the paper's findings, and why?",
+   "answer": "No. In the paper, passthrough nodes are important circuit components: S-inhibition, previous token and bridge heads, and S\u00b3martCirc's own Acronym passthrough nodes 1.0 and 8.11. Importance (c_p + c_f vs c_u) is separate from role, so dropping passthrough nodes would omit critical components.",
+   "rubric": [
+    "Says it is not sound.",
+    "Explains that passthrough nodes (e.g., S-inhibition, previous token, bridge heads, or 1.0/8.11) are part of verified circuits, and that role is distinct from importance."
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q144",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc-IF had matched the full method on both tasks, which conclusion of the ablation study would lose its support?",
+   "answer": "The conclusion that alternating, bidirectional optimization is needed beyond using functional interpretation as a prior. The paper argues that IF is 'insufficient without the alternating training', and that argument rests on IF underperforming the full method.",
+   "rubric": [
+    "Identifies the claim that alternating/bidirectional training is necessary (beyond functional interpretation as a prior).",
+    "Notes that this claim rests on IF underperforming full S\u00b3martCirc."
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q145",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If FI turned out to carry no information about nodes' behaviour, which interpretation of the RQ3 k-sweep would lose its basis?",
+   "answer": "The interpretation that additional classification steps refine node identification. The paper reads the gain from \u221271% at k = 2 to about \u221296% at k = 6, and the rise in recovery, as better role-driven refinement. More steps on an uninformative FI signal would give no reason for such gains.",
+   "rubric": [
+    "Identifies the RQ3 reading that more classification steps improve node identification and circuit quality.",
+    "Explains that this attribution presupposes FI provides a meaningful signal."
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q146",
+   "type": "connect",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's runtimes had been on the order of Act.'s (tens to hundreds of thousands of seconds), which claims would lose support, and which would remain intact?",
+   "answer": "The efficiency claim (Table 2) and the conclusion's description of the method as advancing scalable MI would lose support. The Table 1 effectiveness and RQ2 recovery results would be unaffected.",
+   "rubric": [
+    "Identifies the efficiency/scalability claim as undermined.",
+    "Notes that the accuracy-drop and recovery results do not depend on runtime."
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q147",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If Act. had recovered a much larger share of Wang et al.'s IOI circuit than S\u00b3martCirc at every threshold, which RQ2 argument would weaken?",
+   "answer": "The claim that S\u00b3martCirc aligns closely with human-verified mechanisms (recovery 'comparable only to Act.') would weaken. So would the argument that this alignment lends its circuits credibility on models without ground truth, such as Llama and Qwen.",
+   "rubric": [
+    "Identifies the claim that S\u00b3martCirc's IOI recovery is top-tier (comparable to Act.)/aligned with human-verified circuits.",
+    "Notes the knock-on weakening of the credibility argument for settings without ground truth."
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q148",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The appendix does not list k. Which k values is the Table 1 GPT-2 IOI result (\u221295.99%) consistent with, given RQ3?",
+   "answer": "k = 6 or higher. RQ3 shows about \u221296% from k = 6 onward but only \u221271% at k = 2. The listed alpha of 0.75 also matches the best value in the sweep.",
+   "rubric": [
+    "States k \u2265 6 (not small k such as 2).",
+    "Cites the sweep: \u221271% at k = 2 versus about \u221296% from k = 6, matching \u221295.99%."
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 provide an independent measure of run-to-run variability for the Logit. metric? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. In every row the Logit. standard deviation is identical to the Acc. standard deviation, for example \u00b138.33 for Act. on GPT-2 Acronym and \u00b10.00 for S\u00b3martCirc on Qwen. This suggests the Logit. variability was not reported separately.",
+   "rubric": [
+    "Answers not settled (or that the table does not give trustworthy logit variability).",
+    "Notes that each Logit. std equals the Acc. std in the same row."
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q150",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper establish what varied between its three runs per setting? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The appendix states that all experiments used random seed 42, yet Table 1 reports nonzero standard deviations over three runs. The source of the run-to-run variation is never specified.",
+   "rubric": [
+    "Answers not settled.",
+    "Points to the fixed seed 42 alongside nonzero standard deviations across three runs."
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q151",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does Table 2 confirm that the single Act. run on Qwen IOI fit within the stated 48-hour time limit? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. 187,663.88 s is about 52 hours, which exceeds 48 hours (172,800 s). The Qwen Acronym run, at about 168,689 s or 46.9 hours, does fit.",
+   "rubric": [
+    "Answers contradicted.",
+    "Converts 187,663.88 s to about 52 h (or compares with 172,800 s), which exceeds 48 h."
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q152",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a larger sparsity coefficient yields smaller S\u00b3martCirc circuits? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The sparsity coefficient is never swept, and it varies together with model, task, learning rate and epochs. Across settings the pattern is not even monotone: Qwen Acronym (0.7) produced 12 nodes while Llama Acronym (1.0) produced 47.33.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes there is no sweep and the coefficient is confounded with other settings, e.g., Qwen 0.7 \u2192 12 nodes versus Llama 1.0 \u2192 47.33."
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q153",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the 50% Acronym recovery show that S\u00b3martCirc's GPT-2 Acronym circuit consists mostly of known-circuit nodes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Recovery measures recall: 4 of the 8 known nodes were found. S\u00b3martCirc's GPT-2 Acronym circuits average about 60 nodes, so the large majority of their nodes lie outside the known 8-node circuit.",
+   "rubric": [
+    "Answers contradicted (or that it does not show this).",
+    "Reasons that only 4 known nodes were recovered while the circuit has about 60 nodes, so recovery is recall, not precision."
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q154",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc recovers more of Wang et al.'s IOI circuit than Act. does? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper describes S\u00b3martCirc's recovery as comparable only to Act. It claims superiority only over the other baselines, especially the optimization-based ones.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the paper calls the recovery 'comparable' to Act. rather than higher."
+   ],
+   "batch": 4,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q155",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that increasing k never hurts S\u00b3martCirc? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The sweep covers only k up to 10 and only GPT-2 IOI. Accuracy stops improving after k = 6, so behaviour at larger k and in other settings is untested.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes the sweep is limited to k \u2264 10 on GPT-2 IOI only, with a plateau after 6."
+   ],
+   "batch": 4,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q156",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "RQ1 explains Act.'s weaker results by noting that patching-based methods evaluate nodes independently. Under what kind of circuit structure would Act.'s node scores fail most badly, and why?",
+   "answer": "Act. would fail most badly when several nodes back each other up or jointly implement a step. Patching any one of them alone barely changes the logit difference because the others compensate, so each gets a low score. A jointly optimized mask can remove the whole group at once and reveal its importance.",
+   "rubric": [
+    "Identifies redundant, compensating or jointly interacting nodes (e.g., backup heads) as the failure case",
+    "Explains that ablating one such node in isolation produces little logit-difference change, so each is scored as unimportant, while a joint mask can capture the group's effect"
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q157",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "When could comparing Circuit Size across methods in Table 1 be misleading about how much model computation each circuit contains, and why?",
+   "answer": "It is misleading when circuits differ in their mix of node types. The node set includes whole attention heads and individual feedforward neurons (d_n = 1), and each counts as one node. A circuit made mostly of single neurons and an equally sized circuit made of heads therefore contain very different amounts of computation.",
+   "rubric": [
+    "States that size comparisons mislead when circuits differ in their mix of attention heads and feedforward neurons",
+    "Explains that Circuit Size counts each head and each single neuron (d_n = 1) as one node, so equal counts can represent very different amounts of computation"
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q158",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "When would a high percent-recovered value in Figure 3 fail to show that a method's circuit is a precise description of the IOI mechanism, and why?",
+   "answer": "It fails whenever the circuit also contains many nodes outside Wang et al.'s circuit. The metric counts the fraction of known-circuit nodes that appear in the discovered circuit, so extra irrelevant nodes are never penalized. This matters most at large thresholds such as 150\u2013200 nodes.",
+   "rubric": [
+    "States that high recovery can coexist with many extraneous, non-ground-truth nodes, especially at large thresholds",
+    "Explains that the metric measures coverage of the known circuit (recall) and does not penalize extra nodes (no precision component)"
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q159",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "When could ablating a circuit produce a large Logit. drop but almost no Acc. drop, and why?",
+   "answer": "This happens when ablation lowers the logit of the original predicted answer but competing tokens' logits fall by a similar amount. The predicted token then stays the argmax. Logit. tracks the raw logit of one token, while accuracy depends only on which token ranks first.",
+   "rubric": [
+    "States that this happens when the answer's logit falls while competing logits fall comparably (or the answer stays top-ranked)",
+    "Explains that Logit. measures the raw logit of the original predicted answer, whereas accuracy depends only on the argmax ranking"
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q160",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would S\u00b3martCirc's GPT-2 IOI advantage over Act. in Table 1 survive if S\u00b3martCirc were run with k = 2, and why?",
+   "answer": "Essentially no. RQ3 reports about \u221271% accuracy drop at k = 2, which roughly ties Act.'s \u221270.71% (\u00b125.89). The clear margin depends on using enough classification steps, around k = 6 (about \u221296%).",
+   "rubric": [
+    "Concludes the advantage would largely vanish, leaving roughly a tie with Act.",
+    "Cites about \u221271% at k = 2 versus Act.'s \u221270.71%, compared with about \u221296% at k = 6"
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q161",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "When would Attr.'s estimate of a node's contribution be unreliable compared with Act.'s direct patching, and why?",
+   "answer": "It is unreliable when the logit-based metric responds nonlinearly as the node's activation moves from clean to corrupted. Attr. multiplies the activation difference by a single gradient, which is only a linear approximation of the patching effect. Attr. IG addresses this by integrating gradients along the path between the two activations.",
+   "rubric": [
+    "Identifies a nonlinear relationship between the node's activation and the metric, or a large clean\u2013corrupted difference, as the failure condition",
+    "Explains that Attr. uses a single-gradient linear approximation of the patching effect (which is why Attr. IG integrates along the path)"
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q162",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the Acronym data generator keep only abbreviations whose three-letter concatenation tokenizes into exactly three tokens?",
+   "answer": "The prompt ends with '(AB', and the model must predict the third letter. If each letter is its own token, the prompt ends at a token boundary and the answer C is a single token. The ground-truth y used in the cross-entropy term and in accuracy is a single vocabulary token, so this is required.",
+   "rubric": [
+    "States that the filter ensures each letter is a separate token, so the target letter C is a single next token after '(AB'",
+    "Links this to the objective and evaluation using a single ground-truth token y in the vocabulary"
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q163",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "S\u00b3martCirc is trained to make the model, with unimportant nodes masked out, reproduce the original output. Yet it is evaluated by ablating the circuit nodes. Why does the training objective nonetheless yield circuits whose ablation sharply hurts accuracy?",
+   "answer": "L_disc forces the retained nodes alone to carry the computation that reproduces the model's output and the correct answer. The sparsity term keeps that retained set small. The task computation is therefore concentrated in the circuit nodes, so removing them at evaluation removes the mechanism.",
+   "rubric": [
+    "Explains that training forces the few retained (circuit) nodes to carry the task computation needed to match P_orig and predict y",
+    "Notes that sparsity concentrates this computation in a small set, so ablating that set at evaluation destroys task performance"
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q164",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "S\u00b3martCirc on Llama Acronym and on Qwen Acronym uses the same 50 epochs, 5 warmup epochs and learning rate. Why does the Qwen run take nearly twice as long (982.16 s vs 507.67 s)?",
+   "answer": "The training schedule is the same, so the difference comes from the model. Qwen 3 1.7B is larger than Llama 3.2 1B, so it has more nodes, and therefore more masking coefficients, and each forward and backward pass costs more.",
+   "rubric": [
+    "States that the difference comes from model size, since the schedule is identical",
+    "Explains that the larger Qwen model has more nodes/coefficients and costlier forward/backward passes per step"
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q165",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "S\u00b3martCirc's Qwen accuracy drops are \u2212100.00 \u00b1 0.00 on both tasks. Why is the zero standard deviation not evidence that the three runs found the same circuit?",
+   "answer": "An accuracy drop cannot exceed \u2212100%, so every run that fully breaks the task scores the same. The circuit sizes do vary across runs (12 \u00b1 1.63 and 16.33 \u00b1 4.50), so the runs differ. The zero spread is a ceiling effect.",
+   "rubric": [
+    "Identifies a ceiling effect: the drop is capped at \u2212100%, so any run that fully breaks the task scores identically",
+    "Points to the nonzero spread in circuit size (\u00b11.63, \u00b14.50) as showing the circuits differ across runs"
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q166",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "To illustrate its comparable-circuit-size argument on Llama IOI, why does the paper contrast S\u00b3martCirc with Attr. IG rather than with the runner-up, Act.?",
+   "answer": "Act. found a smaller circuit (13 nodes) with a sizeable \u221259.17% drop, so it would not show S\u00b3martCirc achieving more with fewer or equal nodes. Attr. IG uses more nodes (47.67) yet gets only \u22125.67%. That makes it a clean example of a larger circuit with far less effect.",
+   "rubric": [
+    "Notes that Act.'s Llama IOI circuit is smaller (13 vs 35 nodes) with a substantial drop (\u221259.17%), so it would not support the argument",
+    "Notes that Attr. IG is larger (47.67) with a tiny drop (\u22125.67%), which cleanly supports it"
+   ],
+   "batch": 5,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q167",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "In RQ3, why can percent circuit recovery keep rising with k beyond k = 6 while the accuracy drop stops improving?",
+   "answer": "At k = 6 the accuracy drop is already about \u221296%, close to the \u2212100% ceiling, so there is little room left to improve. Recovery measures overlap with Wang et al.'s circuit and is not near its maximum. Extra classification steps can therefore keep refining which nodes are selected toward the known circuit without changing the ablation effect.",
+   "rubric": [
+    "Notes that accuracy drop is near its \u2212100% ceiling (about \u221296%) at k = 6, so it saturates",
+    "Explains that recovery measures overlap with the known circuit and can keep improving as additional classification steps refine node selection"
+   ],
+   "batch": 5,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q168",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p1",
+   "question": "On GPT-2 IOI, did S\u00b3martCirc's Logit. drop exceed Act.'s by more than 5 logits?",
+   "answer": "No. S\u00b3martCirc gives \u221210.42 and Act. gives \u22129.11, a gap of only about 1.3.",
+   "rubric": [
+    "Answers no",
+    "Cites \u221210.42 vs \u22129.11 (a gap of about 1.3)"
+   ],
+   "batch": 5,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q169",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p1",
+   "question": "On Qwen IOI, did S\u00b3martCirc's Logit. drop exceed Act.'s by more than 5 logits?",
+   "answer": "Yes. S\u00b3martCirc gives \u221212.01 and Act. gives \u22120.33, a gap of almost 12.",
+   "rubric": [
+    "Answers yes",
+    "Cites \u221212.01 vs \u22120.33 (a gap of about 11.7)"
+   ],
+   "batch": 5,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q170",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p3",
+   "question": "On GPT-2 IOI, was S\u00b3martCirc's circuit larger than Attr.'s?",
+   "answer": "Yes. S\u00b3martCirc's circuit has 76.00 nodes, compared with 48.00 for Attr.",
+   "rubric": [
+    "Answers yes",
+    "Cites 76.00 vs 48.00 nodes"
+   ],
+   "batch": 5,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q171",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p3",
+   "question": "On Qwen IOI, was S\u00b3martCirc's circuit larger than Attr.'s?",
+   "answer": "No. S\u00b3martCirc's circuit has 16.33 nodes, compared with 29.00 for Attr.",
+   "rubric": [
+    "Answers no",
+    "Cites 16.33 vs 29.00 nodes"
+   ],
+   "batch": 5,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q173",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team suspects their task is implemented partly by backup heads that take over when a primary head is removed. Based on the paper's RQ1 reasoning, should they prefer Act. or a mask-optimization method like S\u00b3martCirc, and why?",
+   "answer": "They should prefer S\u00b3martCirc. The paper attributes patching's weakness to evaluating nodes independently, which misses interactions. With backup heads, ablating one head alone barely changes the output, whereas a jointly optimized mask can capture the group.",
+   "rubric": [
+    "Recommends S\u00b3martCirc (joint mask optimization) over Act.",
+    "Explains that Act. scores nodes one at a time, so compensating backup heads each look unimportant, while a joint mask captures their interaction"
+   ],
+   "batch": 5,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q174",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A new circuit paper calls a head a 'mover' head. Should an S\u00b3martCirc user expect that head to be labelled passthrough, and why?",
+   "answer": "Not necessarily. Under Figure 1, name mover, negative name mover and letter mover heads all map to functional, because they transform information to amplify specific outputs. The role depends on how a node processes information, not on whether its name suggests moving information.",
+   "rubric": [
+    "Says no, a 'mover' head need not be passthrough and may well be functional",
+    "Cites Figure 1 mapping name/letter mover heads to functional, since roles reflect how a node transforms information rather than the role's name or content"
+   ],
+   "batch": 5,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q175",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team needs a GPT-2 circuit-discovery method whose accuracy-drop results are consistent from run to run. Between Act. and S\u00b3martCirc, which do the Table 1 results favour, and why?",
+   "answer": "They favour S\u00b3martCirc. Its standard deviations are \u00b11.08 on Acronym and \u00b12.85 on IOI, compared with Act.'s \u00b138.33 and \u00b125.89.",
+   "rubric": [
+    "Chooses S\u00b3martCirc",
+    "Cites S\u00b3martCirc's much smaller standard deviations on GPT-2 (\u00b11.08/\u00b12.85) versus Act.'s (\u00b138.33/\u00b125.89)"
+   ],
+   "batch": 5,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants to intervene on the GPT-2 Acronym head, among S\u00b3martCirc's recovered nodes, that most directly shapes which output letter is emphasized. Should they target head 1.0 or head 11.4, and why?",
+   "answer": "They should target head 11.4. S\u00b3martCirc classifies it as functional, matching its Letter Mover role, and functional nodes transform information to emphasize the correct output. Head 1.0 is a passthrough Previous Token head that only relays information.",
+   "rubric": [
+    "Chooses head 11.4",
+    "Explains that 11.4 is functional (Letter Mover), which transforms information to emphasize the output, whereas 1.0 is passthrough (Previous Token) and only relays information"
+   ],
+   "batch": 5,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Two S\u00b3martCirc runs on Qwen IOI both give \u2212100% accuracy drop, one with 12 nodes and one with 21 nodes. Given the paper's stated evaluation goal, which circuit should the team report, and why?",
+   "answer": "They should report the 12-node circuit. The paper's goal is a minimal circuit that achieves maximal accuracy drop, and both circuits reach the maximal drop.",
+   "rubric": [
+    "Chooses the 12-node circuit",
+    "Cites the goal of a minimal circuit with maximal accuracy drop, given that the drops are equal"
+   ],
+   "batch": 5,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q178",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team scaling up to models larger than Qwen 3 1.7B must choose between IBCircuit and S\u00b3martCirc. Based on Tables 1 and 2, which should they choose, and why?",
+   "answer": "They should choose S\u00b3martCirc. Its runtime grows more slowly with model size than IBCircuit's: on IOI it goes from about 264 s to 1048 s from GPT-2 to Qwen, while IBCircuit goes from about 467 s to 5153 s. IBCircuit also produced empty or zero-accuracy-drop circuits in every setting, whereas S\u00b3martCirc produced large drops.",
+   "rubric": [
+    "Chooses S\u00b3martCirc",
+    "Cites that IBCircuit's runtime grows faster with model size (roughly 11x vs 4x from GPT-2 to Qwen on IOI)",
+    "Cites that IBCircuit gave empty or 0% accuracy-drop circuits"
+   ],
+   "batch": 5,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q179",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If prior work had found that circuit components are generally not reused across tasks with consistent roles, which part of the paper's argument would lose external support?",
+   "answer": "The premise of c1 would lose external support. The paper cites component reuse with consistent roles (Merullo et al.) as evidence that a small set of computational roles recurs across tasks. That recurrence is what motivates a task-agnostic passthrough/functional dichotomy. The Figure 1 mapping of IOI and Acronym would remain, but only as two examples.",
+   "rubric": [
+    "Identifies the claim that computational roles recur across tasks, motivating the task-agnostic dichotomy (c1)",
+    "Notes that the paper cites cross-task component reuse with consistent roles as support for this, leaving only the two-task Figure 1 mapping"
+   ],
+   "batch": 5,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q180",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Of the four recovered Acronym nodes, which ones give an unambiguous test of S\u00b3martCirc's role labels? If one of them had not been recovered, how would the RQ2 role evidence be affected?",
+   "answer": "Only heads 1.0 (Previous Token, so passthrough) and 11.4 (Letter Mover, so functional) give unambiguous tests. Heads 8.11 and 10.10 can act as either Bridge or Letter Mover, so either label is defensible for them. Losing 1.0 or 11.4 would leave the claim that roles match Figure 1 resting on a single node.",
+   "rubric": [
+    "Identifies 1.0 and 11.4 as the only unambiguous checks, because 8.11 and 10.10 can play either role",
+    "States that losing either would leave the role-agreement claim resting on a single node"
+   ],
+   "batch": 5,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the alpha sweep had shown alpha = 0.0 (cross-entropy only) performing best on GPT-2 IOI, which RQ3 interpretation would fail?",
+   "answer": "The interpretation that, for IOI, the KL faithfulness objective should be weighted more heavily than the task loss would fail. That conclusion rests on alpha = 0.75 being best. The claim that the cross-entropy term matters would still stand.",
+   "rubric": [
+    "Identifies the conclusion that KL should be weighted more heavily than cross-entropy for IOI",
+    "Notes this rests on alpha = 0.75 being best, while the importance of the cross-entropy term would survive"
+   ],
+   "batch": 5,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If GPT-2's IOI name mover heads turned out to have FI below 1, what would that imply for the paper's claim that FI quantifies the functional/passthrough dichotomy?",
+   "answer": "L_class would push these heads toward passthrough, because for FI < 1 the 1/FI term outweighs FI. Figure 1 maps name movers to functional. FI would then contradict the dichotomy it is meant to quantify, weakening c2's claim that FI assigns the roles of c1.",
+   "rubric": [
+    "States that with FI < 1, L_class favours passthrough for these heads",
+    "Notes this contradicts Figure 1's mapping of name movers to functional, undermining FI as a quantification of the dichotomy"
+   ],
+   "batch": 5,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose S\u00b3martCirc's Llama and Qwen circuits had produced Random-level accuracy drops, while its GPT-2 results were unchanged. Which claim would lose its support?",
+   "answer": "The claim that S\u00b3martCirc generalizes across architectures would lose its support. The paper includes Llama 3.2 1B and Qwen 3 1.7B specifically to test this, and c4 asserts superiority across all three models. The GPT-2 evidence would remain.",
+   "rubric": [
+    "Identifies the cross-architecture generalization claim (superiority across GPT-2, Llama and Qwen)",
+    "Notes that Llama and Qwen were included specifically to test generalization, so GPT-2-only success would not support it"
+   ],
+   "batch": 5,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q184",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If patching baselines had been rerun with joint multi-node ablations and still performed as poorly as in Table 1, which RQ1 explanation would lose its support?",
+   "answer": "The explanation that patching-based methods underperform because they evaluate nodes independently and miss interactions would lose its support. Their weakness would then have to come from something else.",
+   "rubric": [
+    "Identifies the explanation that patching evaluates nodes independently and misses interactions",
+    "Explains that joint ablations remove that limitation, so persistent failure would point to another cause"
+   ],
+   "batch": 5,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q185",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Attr. IG's more accurate attribution yields more effective circuits than Attr.? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted as a general claim. Attr. IG beats Attr. on GPT-2 Acronym (\u22122.00 vs \u22120.17) and Llama IOI (\u22125.67 vs \u22121.50). Attr. is better on GPT-2 IOI (\u221212.73 vs \u22120.17) and Qwen IOI (\u22120.50 vs \u22120.33), and they tie on Qwen Acronym.",
+   "rubric": [
+    "Answers contradicted (results are mixed rather than consistently favouring Attr. IG)",
+    "Cites at least one setting where Attr. beats Attr. IG (e.g., GPT-2 IOI \u221212.73 vs \u22120.17) alongside one where Attr. IG wins"
+   ],
+   "batch": 5,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q186",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that ablating S\u00b3martCirc's circuits nearly eliminates task accuracy on every model? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The drops are near-total on GPT-2 (\u221297.50%, \u221295.99%) and Qwen (\u2212100%). On Llama they are only \u221257.33% on Acronym and \u221269.00% \u00b1 42.43 on IOI.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the Llama drops (\u221257.33% Acronym, \u221269.00% IOI) as far from near-total elimination"
+   ],
+   "batch": 5,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Prune.'s 0% accuracy drop in Table 1 show that gradient-based edge pruning (Bhaskar et al.) is ineffective at circuit discovery? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper adapted Prune. to operate at the node level for a fair comparison. Its results therefore say nothing about the original edge-level method.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that Prune. was adapted from edge-level to node-level pruning, so the results do not test the original edge method"
+   ],
+   "batch": 5,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q188",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc achieves its Table 1 results with a single hyperparameter configuration shared across models and tasks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Every model\u2013task combination uses its own learning rate, epochs, warmup, sparsity coefficient and alpha, and no shared-configuration run is reported. RQ3 also shows that performance is sensitive to k and alpha.",
+   "rubric": [
+    "Answers not settled (no shared-configuration experiment is reported)",
+    "Notes that hyperparameters are tuned per setting and that RQ3 shows sensitivity to k and alpha"
+   ],
+   "batch": 5,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 show that, on GPT-2, S\u00b3martCirc achieves a larger accuracy drop than Act. at matched circuit size? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. On GPT-2, S\u00b3martCirc's circuits are nearly twice Act.'s size (60.33 vs 35.00 on Acronym, 76.00 vs 39.33 on IOI). No size-matched accuracy comparison is reported, so part of its advantage could come from ablating more nodes.",
+   "rubric": [
+    "Answers not settled",
+    "Cites S\u00b3martCirc's much larger GPT-2 circuits versus Act.'s and the absence of a size-matched accuracy comparison"
+   ],
+   "batch": 5,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q190",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper's text establish that removing the KL term (alpha = 0.0) degrades GPT-2 IOI performance as sharply as removing the cross-entropy term (alpha = 1.0)? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The text reports only that alpha = 0.75 is best and that performance degrades sharply at alpha = 1.0. It does not describe how severe the drop is at alpha = 0.0.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the text describes only alpha = 0.75 being best and a sharp degradation at alpha = 1.0, with no characterization of alpha = 0.0"
+   ],
+   "batch": 5,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q191",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Circuit Size in Table 1 equal the number of nodes each method selected as important? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. After a method selects nodes, any nodes not connected to the input or output are removed. Circuit Size counts only the remaining end-to-end connected circuit, which can be smaller than the selection or even empty.",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that disconnected nodes are removed and only the end-to-end connected circuit is counted"
+   ],
+   "batch": 5,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q192",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 show that S\u00b3martCirc achieves the largest Logit. drop in every model\u2013task setting? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported, in terms of reported means. S\u00b3martCirc has the largest Logit. drop in all six settings, though the margin on Llama IOI is small (\u22122.96 vs \u22122.37 for Act.) and the spread there is very large (\u00b142.43).",
+   "rubric": [
+    "Answers supported (S\u00b3martCirc has the largest mean Logit. drop in all six settings)",
+    "Notes the caveat that the Llama IOI margin over Act. is small (\u22122.96 vs \u22122.37) relative to its large standard deviation"
+   ],
+   "batch": 5,
+   "orig_id": "q40"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q63",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p4",
+   "question": "On Llama Acronym, did Prune. find a smaller circuit than S\u00b3martCirc?",
+   "answer": "No. Prune. averages 70.67 nodes versus 47.33 for S\u00b3martCirc.",
+   "rubric": [
+    "Answers no",
+    "Cites 70.67 vs 47.33"
+   ],
+   "batch": 2,
+   "orig_id": "q63",
+   "reject": "near-duplicate of q20"
+  },
+  {
+   "id": "q12",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b3-p1",
+   "question": "On the Acronym task, did S\u00b3martCirc-NW achieve a larger accuracy drop than S\u00b3martCirc-IF?",
+   "answer": "Yes. On Acronym, NW reaches about 66% while IF reaches only about 42%, so on that task removing warmup hurts less than running interpretation first.",
+   "rubric": [
+    "Answers yes.",
+    "Cites NW at about 66% versus IF at about 42% on Acronym."
+   ],
+   "batch": 3,
+   "orig_id": "q12",
+   "reject": "near-duplicate of q56"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc-IF had matched the full method's accuracy drop on both tasks, which conclusion from the ablation study would lose support?",
+   "answer": "The conclusion that alternating (bidirectional) training is necessary would lose support. The paper argues that functional interpretation is useful as a prior but insufficient without alternation; IF matching the full method would show that a single interpretation-first pass suffices. The warmup finding from NW would be unaffected.",
+   "rubric": [
+    "Identifies the claim that alternating, bidirectional optimization is necessary beyond functional interpretation used as a prior.",
+    "Explains that IF matching the full method would show interpretation-first alone is enough (the warmup conclusion is separate)."
+   ],
+   "batch": 3,
+   "orig_id": "q29",
+   "reject": "near-duplicate of q31"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-p2",
+   "question": "On Acronym, did S\u00b3martCirc-IF achieve a larger accuracy drop than S\u00b3martCirc-NW?",
+   "answer": "No. IF reached about 42%, below NW's 66%, so on Acronym skipping warmup hurt less than putting interpretation first.",
+   "rubric": [
+    "Answers no.",
+    "Cites IF about 42% versus NW about 66% on Acronym."
+   ],
+   "batch": 4,
+   "orig_id": "q14",
+   "reject": "near-duplicate of q56"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-p2",
+   "question": "On Acronym, did S\u00b3martCirc-IF achieve a larger accuracy drop than S\u00b3martCirc-DF?",
+   "answer": "Yes. IF reached about 42%, while DF managed only \u22124.33%.",
+   "rubric": [
+    "Answers yes.",
+    "Cites IF about 42% versus DF about 4.33% on Acronym."
+   ],
+   "batch": 4,
+   "orig_id": "q15",
+   "reject": "near-duplicate of q56"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc's role labels are stable across its three runs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Role labels are reported only for one GPT-2 Acronym comparison (Figure 4), with no per-run breakdown, even though circuit sizes vary across runs.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that labels are shown only in a single Figure 4 comparison, without run-level reporting."
+   ],
+   "batch": 4,
+   "orig_id": "q37",
+   "reject": "near-duplicate of q42"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b5-p2",
+   "question": "On Acronym, did S\u00b3martCirc-NW achieve a larger accuracy drop than S\u00b3martCirc-IF?",
+   "answer": "Yes. NW reaches about 66% on Acronym, while IF reaches only about 42%.",
+   "rubric": [
+    "Answers yes",
+    "Cites about 66% for NW vs about 42% for IF on Acronym"
+   ],
+   "batch": 5,
+   "orig_id": "q15",
+   "reject": "near-duplicate of q56"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b5-p2",
+   "question": "On Acronym, did S\u00b3martCirc-DF achieve a larger accuracy drop than S\u00b3martCirc-IF?",
+   "answer": "No. DF reaches only \u22124.33% on Acronym, far below IF's roughly 42%.",
+   "rubric": [
+    "Answers no",
+    "Cites \u22124.33% for DF vs about 42% for IF"
+   ],
+   "batch": 5,
+   "orig_id": "q16",
+   "reject": "near-duplicate of q56"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p4",
+   "question": "On Qwen Acronym, did IBCircuit produce a smaller circuit than S\u00b3martCirc?",
+   "answer": "No. IBCircuit's circuit has 14.67 nodes, while S\u00b3martCirc's has 12.00.",
+   "rubric": [
+    "Answers no",
+    "Cites 14.67 vs 12.00 nodes"
+   ],
+   "batch": 5,
+   "orig_id": "q20",
+   "reject": "near-duplicate of q20"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p4",
+   "question": "On GPT-2 Acronym, did Prune. find a smaller circuit than S\u00b3martCirc?",
+   "answer": "Yes. Prune. averages 32.33 nodes versus 60.33 for S\u00b3martCirc.",
+   "rubric": [
+    "Answers yes",
+    "Cites 32.33 vs 60.33"
+   ],
+   "batch": 2,
+   "orig_id": "q62",
+   "reject": "twin dropped"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b3-p1",
+   "question": "On the IOI task, did S\u00b3martCirc-NW achieve a larger accuracy drop than S\u00b3martCirc-IF?",
+   "answer": "No. On IOI, IF reaches about 88% while NW reaches only about 67%, so the ordering of the two ablations reverses relative to Acronym.",
+   "rubric": [
+    "Answers no.",
+    "Cites IF at about 88% versus NW at about 67% on IOI."
+   ],
+   "batch": 3,
+   "orig_id": "q13",
+   "reject": "twin dropped"
+  },
+  {
+   "id": "q172",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p4",
+   "question": "On Llama Acronym, did IBCircuit produce a smaller circuit than S\u00b3martCirc?",
+   "answer": "Yes. IBCircuit's circuit has 29.67 nodes and S\u00b3martCirc's has 47.33, although IBCircuit's accuracy drop is 0%.",
+   "rubric": [
+    "Answers yes",
+    "Cites 29.67 vs 47.33 nodes"
+   ],
+   "batch": 5,
+   "orig_id": "q19",
+   "reject": "twin dropped"
+  }
+ ],
+ "types": {
+  "failure": 31,
+  "why": 30,
+  "counterfactual": 32,
+  "transfer": 31,
+  "connect": 29,
+  "scope": 36
+ }
+}

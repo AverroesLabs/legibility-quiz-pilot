@@ -1,0 +1,3531 @@
+{
+ "paper": "2607.17117v2-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "c00164fe25ee970d77468a394d1852f182c015825e1ce50acc260784207f316f",
+ "batches": 5,
+ "written_per_batch": [
+  40,
+  43,
+  40,
+  39,
+  40
+ ],
+ "cost_per_batch": [
+  0.4678,
+  0.505044,
+  0.610836,
+  0.870344,
+  0.793688
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Persistent SAEs separate a token-wise sparse activation a(t) from a persistent feature state h(t). Each feature has its own learned timescale and no predefined partition of temporal roles. Decoder-level attribution is preserved, and standard SAEs are a special case.",
+   "methods": [
+    "BatchTopK encoder produces a(t)",
+    "feature-wise state update h(t)=Phi_theta(h(t-1),a(t)) with h(0)=0 at sequence start",
+    "decoder reconstructs from h(t) (Eq. 3)",
+    "contrast with Temporal SAE (predefined high-level subset plus contrastive loss) and Lubana et al. (dense attention predictor)"
+   ],
+   "results": [
+    "memoryless timescales make Eq. 3 reduce to Eq. 1",
+    "each state coordinate is tied to one decoder direction",
+    "inference cost per token is linear in dictionary size"
+   ],
+   "conditions": [
+    "the update must act feature-wise",
+    "the restriction gives up expressiveness relative to general recurrent models"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "The state dynamics are constrained to be stable and non-degenerate. Sparsity applies only to the token-wise activation, not to the state.",
+   "methods": [
+    "timescales constrained to a contractive range",
+    "new evidence normalised",
+    "hard cap keeping effective memory finite",
+    "unconstrained parameter passed through a squashing function and initialised at an intermediate value",
+    "state L0 monitored during training"
+   ],
+   "results": [
+    "the state h(t) is not necessarily sparse",
+    "at initialisation the model differs from a standard SAE only by moderate temporal smoothing",
+    "state L0 must be monitored because it is not directly controlled"
+   ],
+   "conditions": [
+    "an effectively infinite timescale would freeze the first evidence and give ill-conditioned gradients"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "All four SAE families are trained under matched settings: width, sparsity, optimiser, steps and approximate token budget.",
+   "methods": [
+    "m=16,384 features, k=20, Adam with lr 3e-4",
+    "244,140 steps at about 2,048 activation tokens per step",
+    "Persistent SAE uses 8 contiguous sequences of length 256 from different documents, with reset state for each window",
+    "Temporal SAE uses adjacent token pairs",
+    "Matryoshka and Temporal SAEs use a 20%/80% partition",
+    "thresholded BatchTopK at inference"
+   ],
+   "results": [
+    "about 5.0e8 tokens for the flat baselines",
+    "Persistent SAE gets 8\u00d7255=2,040 tokens per step, within 0.4% of the baseline",
+    "the thresholded form removes the dependence on batch composition"
+   ],
+   "conditions": [
+    "models: Pythia-160M layer 8 and Gemma-2-2B layer 12",
+    "data: Pile Uncopyrighted"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Temporal structure at the feature level is a separate question from correlation between hidden states. Measuring it requires controls for local versus global continuity and for confounds in dictionary geometry.",
+   "methods": [
+    "projections p_j = d_j^T x onto decoder directions",
+    "anchoring on activation events with normalisation",
+    "feature-wise context correction with one parameter per feature per lag",
+    "control that uses past activations from unrelated text",
+    "drop 16 prefix tokens and cap documents at 768 tokens"
+   ],
+   "results": [
+    "projections are confounded because decoder directions are not orthogonal",
+    "aggregate medians conceal heterogeneity across features",
+    "a dense correction map would trivially exploit hidden-state correlation"
+   ],
+   "conditions": [
+    "evaluate on held-out documents",
+    "exclude features with near-zero elevation"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Interpretability is evaluated on the token-wise activations. The timescale quintiles are characterised by the token categories at which features receive new evidence.",
+   "methods": [
+    "Bills et al. autointerp with a gpt-4o-mini judge on a(t)",
+    "relative update frequency U_{q,c} over 5 timescale quintiles and 6 token categories, normalised by base rates"
+   ],
+   "results": [
+    "for short-timescale features, a \u2248 h, so scores are comparable to standard SAEs",
+    "a low token-level score for a long-timescale feature does not imply it is uninterpretable"
+   ],
+   "conditions": [
+    "the judge sees short windows around high-activation tokens"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Long-timescale persistent states are evaluated for whether they carry subject information. The labels are never used in training.",
+   "methods": [
+    "t-SNE of the final 20 tokens of 100 MMLU sequences from 5 subjects (descriptive only)",
+    "linear probe on spliced MMLU sequences using h(t)",
+    "features ranked by decreasing timescale, increasing timescale, random order, or a supervised oracle",
+    "fraction of features swept from 0.1% to 100%",
+    "macro ROC AUC",
+    "documents held out for test"
+   ],
+   "results": [
+    "timescale vs random tests whether timescales carry relevance",
+    "Persistent vs baselines at matched budgets tests the effect of carrying state",
+    "the supervised ranking is a label-informed upper reference"
+   ],
+   "conditions": [
+    "splicing forces the representation to update at boundaries"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "The persistent states are evaluated for long-context monitoring of indirect prompt injection, and for causal influence on a replay monitor.",
+   "methods": [
+    "AgentDojo banking, travel and workspace trajectories from Llama-3.3-70B",
+    "only failed attacks (security=false) as positives",
+    "Gemma-2-2B layer-12 replay monitor",
+    "logistic probe fit at d=0 and evaluated at d=50 to 350 without retraining",
+    "steering with the top k=128 probe-weighted decoder directions, scaled to rho=0.1 of the hidden-state norm, applied with both signs"
+   ],
+   "results": [
+    "the yes-minus-no logit from prompting alone gives AUC 0.51",
+    "the fixed-probe protocol separates local detection from retention",
+    "the symmetric intervention removes direction-independent effects"
+   ],
+   "conditions": [
+    "effects concern the external monitor, not the agent's actions"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "Limitations: each feature has a single timescale and a feature-wise recurrence. The model therefore cannot capture interactions between features or context-dependent resets, and token-level autointerp fits long-timescale features poorly.",
+   "methods": [
+    "feature-wise recurrence"
+   ],
+   "results": [
+    "no clearing of state at a document boundary",
+    "the monitor is an external replay model"
+   ],
+   "conditions": [
+    "evaluation covers 2 models, specific layers, and 3 AgentDojo domains"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "In the spliced MMLU subject probing, would the longest-timescale Persistent SAE features be expected to predict the new subject accurately at the tokens just after a segment boundary, and why?",
+   "answer": "No. Their state decays only gradually and has no context-dependent reset, so just after a boundary it still largely reflects the previous segment's subject. Accuracy should recover only after enough new evidence has accumulated.",
+   "rubric": [
+    "Says the longest-timescale features would be inaccurate, or lag, right after a boundary",
+    "Reason: the state carries the previous subject forward because there is no reset; it only decays or integrates slowly",
+    "Condition: accuracy recovers as new-subject evidence accumulates over subsequent tokens"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose the hard cap on timescales were removed and a feature learned an effectively infinite timescale. Would that feature's state still track the current subject in spliced sequences, and why?",
+   "answer": "No. With an effectively infinite timescale the feature keeps the first evidence it receives for the rest of the sequence. It therefore cannot respond to the subject change at a splice boundary.",
+   "rubric": [
+    "Says no, it would not track the current subject",
+    "Reason: it retains the first evidence for the rest of the sequence and cannot respond to new context"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Given the Persistent SAE's training windows, should one expect training to have shaped its timescales to retain the injection signal specifically at d=300\u2013350 tokens? Why?",
+   "answer": "Not necessarily. Training used windows of 256 tokens (255 usable) with a reset state for each window. The reconstruction objective therefore never rewarded carrying information over more than about 255 tokens, so retention at 300\u2013350 tokens is extrapolation beyond the training horizon.",
+   "rubric": [
+    "Says retention at 300\u2013350 tokens is not directly optimised by training, or is uncertain",
+    "Reason: training sequences are only 256 tokens (255 usable) with a state reset, so no training signal spans more than about 255 tokens"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "After feature j activates, its decoder-direction projection stays elevated for many tokens, but a strongly correlated feature fires throughout the same passage. Does this show that feature j itself persists, and why?",
+   "answer": "No. Decoder directions are not orthogonal, so the correlated feature's activity can raise the projection onto d_j. The measured persistence belongs to a residual-stream direction, not to feature j in isolation.",
+   "rubric": [
+    "Says no, the elevated projection does not establish feature j's own persistence",
+    "Reason: non-orthogonal decoder directions let a correlated active feature raise the projection, so persistence is a property of the direction"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A representation achieves high probe accuracy at d=0, but adding its probe-weighted direction with + and \u2212 signs shifts the monitor's yes-minus-no margin by the same amount. Would the causal analysis count it as influencing the monitor's judgement, and why?",
+   "answer": "No. The analysis takes the difference between the positive and negative interventions. Identical shifts cancel, which indicates only a generic, direction-independent perturbation effect, so the direction is decodable but not shown to be used.",
+   "rubric": [
+    "Says no causal influence is credited",
+    "Reason: the symmetric difference is about zero, so the effect is generic perturbation rather than alignment with the monitor's judgement"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would a single dictionary-wide median decay curve computed over Pile documents reliably reveal a small set of long-lived features such as code-identifier trackers? Why or why not?",
+   "answer": "Probably not. The median summarises typical behaviour and can hide a minority of long-lived features. The Pile also mixes very different temporal regimes such as code and loosely related web fragments, so the aggregate averages them away. Per-band distributions or per-domain analyses are needed.",
+   "rubric": [
+    "Says no, or that it is unreliable",
+    "Reason: aggregate medians conceal heterogeneity across features and average over domains with different temporal regimes"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can the number of non-zero persistent-state coordinates per token exceed the BatchTopK budget of k=20, even though only about 20 features activate per token?",
+   "answer": "Sparsity is imposed only on the token-wise activation a(t). The state integrates activations from earlier tokens and decays rather than resetting. Features that fired at earlier positions therefore remain non-zero in h(t) alongside the current token's roughly 20 new activations.",
+   "rubric": [
+    "Notes that sparsity constrains a(t), not h(t)",
+    "Explains that earlier activations persist in the decaying state, so non-zero coordinates accumulate across tokens"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why would the persistent state h(t) of a Persistent SAE tend to score better on the temporal smoothness metric than its own token-wise activation a(t), regardless of whether it captures meaningful context?",
+   "answer": "The state integrates sparse updates through a contractive, decaying recurrence. Consecutive values therefore differ less than the on/off sparse activations do. This smoothness is built into the dynamics, which is why smoothness must be read alongside FVE and cosine similarity.",
+   "rubric": [
+    "Says the state is smoother by construction",
+    "Reason: temporal integration or decay smooths token-to-token changes compared with sparse on/off activations",
+    "Condition: smoothness is only meaningful alongside reconstruction metrics"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the subject probe for the Persistent SAE use the persistent state h(t) rather than the token-wise activation a(t)?",
+   "answer": "a(t) is non-zero only where new local evidence arrives, so at tokens without subject-specific words it carries little subject information. h(t) carries accumulated evidence forward, so it can encode the current subject at every token of a segment, which is what the spliced probing task requires.",
+   "rubric": [
+    "Says a(t) reflects only local, sparse evidence and is often zero at tokens lacking subject cues",
+    "Says h(t) carries accumulated subject evidence across tokens, matching the per-token temporal task"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the Temporal SAE's training buffer return adjacent previous\u2013next token pairs rather than flat shuffled tokens?",
+   "answer": "Its objective is contrastive alignment of its high-level features' activations across nearby tokens. Each training example therefore needs a neighbouring token from the same stream, which shuffled independent tokens cannot provide.",
+   "rubric": [
+    "Links the pairs to the Temporal SAE's contrastive objective across neighbouring tokens",
+    "Explains that shuffled tokens lack the neighbouring-token pairing that the objective needs"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does using the thresholded form at inference matter more for the Persistent SAE than for the flat baselines?",
+   "answer": "The Persistent SAE's training batches contain only eight contiguous sequences, so the global top-kB selection allocated activations across positions in just a few documents. That allocation differs from both shuffled batches and from monitoring a single trajectory. A fixed threshold makes a(t) depend only on the current hidden state, which removes the dependence on batch composition.",
+   "rubric": [
+    "Says the Persistent SAE's batches are a few correlated documents, so exact BatchTopK allocation depends strongly on batch composition",
+    "Says the threshold makes a(t) a deterministic function of the current hidden state, independent of the batch"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the t-SNE and monitoring comparisons, why is the Temporal SAE represented by its predefined high-level group rather than its full dictionary?",
+   "answer": "The high-level group is the subset the Temporal SAE trains to be temporally consistent through its contrastive objective. It is the Temporal SAE's counterpart to a timescale-selected subset of Persistent SAE features, so the comparison is between the temporally structured components of each design.",
+   "rubric": [
+    "Says the high-level group is the part designated to carry temporal or contextual information (via the contrastive alignment)",
+    "Says it is the analogue of the timescale-selected Persistent SAE subset, so like is compared with like"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why should autointerp scores for the shortest-timescale quintile of Persistent SAE features be directly comparable to BatchTopK feature scores, while scores for the longest quintile are not as informative?",
+   "answer": "Short-timescale features are nearly memoryless, so their state roughly equals their token-wise activation, and they behave like standard SAE features that local windows describe well. Long-timescale features accumulate evidence beyond the judge's short window, so a token-level score may miss their role.",
+   "rubric": [
+    "Short timescale: state \u2248 activation, so the feature behaves like a standard SAE feature and local contexts suffice",
+    "Long timescale: relevance is spread beyond the judge's window, so a low score does not mean uninterpretable"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p1",
+   "question": "If every feature's timescale were set to be memoryless, would a Persistent SAE's reconstruction be identical to that of a standard Eq. 1 SAE with the same encoder and decoder?",
+   "answer": "Yes. With memoryless timescales h(t)=a(t), so Eq. 3 becomes W_dec a(t)+b_dec, which is exactly Eq. 1.",
+   "rubric": [
+    "Says yes, identical",
+    "Reason: memoryless means the state equals the token-wise activation, so Eq. 3 reduces to Eq. 1"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "If every feature's timescale were instead set at the hard cap, would a Persistent SAE's reconstruction be identical to that of a standard Eq. 1 SAE with the same encoder and decoder?",
+   "answer": "No. With long timescales the state accumulates evidence from earlier tokens, so h(t)\u2260a(t). The decoder then reconstructs from the history-dependent state rather than from the current activation alone.",
+   "rubric": [
+    "Says no",
+    "Reason: long-lived states include past activations, so h(t) differs from a(t) and the reconstruction depends on history"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "If the timescales varied widely across features but the state update stayed feature-wise, would each reconstruction contribution remain attributable to a single decoder direction?",
+   "answer": "Yes. Under a feature-wise update, coordinate j depends only on feature j's history and is decoded only through d_j. Attribution holds whatever timescale each feature has.",
+   "rubric": [
+    "Says yes, attribution is preserved",
+    "Reason: a feature-wise update keeps each state coordinate tied to one dictionary element or decoder direction"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "If the state update were replaced by a dense recurrence that mixes coordinates across features, would each reconstruction contribution remain attributable to a single decoder direction?",
+   "answer": "No. Mixing would make each state coordinate depend on other features' histories, so its contribution along d_j could no longer be read as the state of one nameable feature.",
+   "rubric": [
+    "Says no",
+    "Reason: cross-feature mixing breaks the tie between a state coordinate and a single feature's history, which is the paper's first requirement"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p3",
+   "question": "At inference, if the Persistent SAE kept exact BatchTopK selection, would a trajectory's token-wise activations a(t) depend on which other sequences were in the same batch?",
+   "answer": "Yes. Exact BatchTopK keeps the top kB entries globally across the batch, so a token's selected features depend on the competing pre-activations of other tokens in the batch.",
+   "rubric": [
+    "Says yes",
+    "Reason: global top-kB selection across the batch couples each token's activation to the batch composition"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p3",
+   "question": "At inference, if the Persistent SAE used the thresholded form with a fixed \u03b8, would a trajectory's token-wise activations a(t) depend on which other sequences were in the same batch?",
+   "answer": "No. The thresholded form keeps pre-activations above a fixed \u03b8 estimated during training, so a(t) is a deterministic function of the current hidden state alone.",
+   "rubric": [
+    "Says no",
+    "Reason: a fixed threshold makes a(t) depend only on the current hidden state"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b1-p4",
+   "question": "If the positive class consisted only of attacks with security=false, would high probe accuracy at late distances be good evidence that the representation retains the injection signal?",
+   "answer": "Yes, reasonably. In these runs the agent did not perform the attacker's action, so no overt malicious action is available as a cue. Accuracy at later distances must therefore come from a retained trace of the injection itself.",
+   "rubric": [
+    "Says yes",
+    "Reason: failed attacks contain no malicious action to serve as a downstream cue, so late accuracy reflects retention of the injection signal"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b1-p4",
+   "question": "If the positive class instead included successful attacks (security=true), would high probe accuracy at late distances be good evidence that the representation retains the injection signal?",
+   "answer": "No. Successful attacks contain overt malicious actions such as money transfers later in the trajectory. A late-position probe could succeed by detecting those actions rather than a retained trace of the injection.",
+   "rubric": [
+    "Says no",
+    "Reason: the later overt malicious action gives a trivial cue that confounds retention"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team must monitor agents whose action comes about 1,000 tokens after the injected span. Based on the paper's protocol and training setup, what representation should they try, and what caveat applies?",
+   "answer": "They should try the Persistent SAE state, especially the long-timescale subset, because it is designed to carry the signal forward. The caveat is that the paper evaluates only up to 350 tokens and trains on 256-token windows, so retention at 1,000 tokens is untested and should be checked with the same fixed-probe protocol.",
+   "rubric": [
+    "Recommends the long-timescale Persistent SAE state (or subset)",
+    "Caveat: evaluation stops at 350 tokens and training windows are 256 tokens, so 1,000-token retention is unverified"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An analyst wants to describe a Persistent SAE feature that fires on the substring 'function' in JavaScript code. Should they explain it from the token-wise activation in short windows or from its document-level persistent state, and why?",
+   "answer": "From the token-wise activation in short windows. The feature responds to a local substring, so its timescale is presumably short and h\u2248a. A document-level view adds little and may blur its description.",
+   "rubric": [
+    "Chooses token-wise activation with local windows",
+    "Reason: it is a local, token-level feature (likely short timescale, state \u2248 activation), so a document-level view would blur the description"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A deployment feeds a Persistent SAE a single stream of many unrelated concatenated documents. What should the operators do at document boundaries, and why?",
+   "answer": "They should reset the state to h=0 at each boundary, as is done for each training window. The model has no learned context-dependent reset, so without manual resets the previous document's long-timescale state would carry into the next one.",
+   "rubric": [
+    "Recommends manually resetting the state to zero at document boundaries",
+    "Reason: the feature-wise recurrence cannot clear the state itself, so the previous document's state would leak; training also used resets"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team retrains the Persistent SAE with context length 512 and wants to stay matched to the 2,048-token-per-step baselines. How many sequences per step should they use, and how many usable tokens results?",
+   "answer": "Four sequences per step. After dropping the beginning-of-sequence token, 4\u00d7511=2,044 usable tokens results, close to 2,048. Keeping eight sequences would give 4,088 tokens and break the match.",
+   "rubric": [
+    "Says 4 sequences per step",
+    "Gives about 2,044 usable tokens (4\u00d7511), and notes that 8 sequences would roughly double the budget"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the feature-wise context correction diagnostic were applied to the paper's Matryoshka SAE at one lag, how many correction parameters would be fitted, and why is that count desirable?",
+   "answer": "16,384, one per feature. Having only one parameter per feature lets any gain be attributed to specific features, and its sign shows the direction of the effect. A dense map would instead have far more parameters and would exploit general hidden-state correlation.",
+   "rubric": [
+    "Says 16,384 parameters (one per feature)",
+    "Reason: one parameter per feature keeps any gain attributable to individual features, unlike a dense map"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants an unsupervised subject summary using the smallest fraction swept in the probing analysis. About how many Persistent SAE features is that, and which comparison tells them whether ranking by timescale is worth using?",
+   "answer": "0.1% of 16,384 is about 16 features. The decreasing-timescale ranking should be compared against the averaged random rankings at that budget. The supervised ranking shows how far it falls from a label-informed ceiling.",
+   "rubric": [
+    "Says about 16 features (0.1% of 16,384)",
+    "Says to compare the decreasing-timescale ranking with random rankings (the supervised oracle serves as a reference ceiling)"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the decreasing-timescale ranking had performed no better than random rankings in spliced subject probing, which conclusion would lose support?",
+   "answer": "The conclusion that the learned timescale parameters carry information about which features are relevant to subject, i.e. that long-timescale states track subject information. Persistent states might still encode subject, but timescale would not be a useful selection criterion.",
+   "rubric": [
+    "Names the claim that timescale parameters indicate subject relevance (long-timescale states track subject)",
+    "Notes that the timescale-vs-random comparison is what tests this claim"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the monitor's own yes-minus-no answer logit had achieved an AUC near 0.9 instead of 0.51, which design choice of the case study would lose its stated justification?",
+   "answer": "The choice to train internal linear probes on representations rather than rely on prompting the monitor. The near-chance 0.51 AUC is what motivates internal monitors.",
+   "rubric": [
+    "Identifies training internal probes instead of prompting",
+    "Reason: prompting would already be informative, removing the motivation given by the 0.51 AUC"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the fixed d=0 probe on the Persistent SAE state had lost accuracy with distance as quickly as the raw hidden state did, which motivating claim of the paper would be undermined?",
+   "answer": "The claim that representations which explicitly carry state forward are natural candidates for long-context monitoring, i.e. that persistence helps retain the security-relevant signal until the agent acts. Local detection near d=0 would be unaffected.",
+   "rubric": [
+    "Identifies the claim that persistent states support long-context retention or monitoring",
+    "Notes this concerns retention over distance, not local detection at d=0"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE's timescale parameters showed no relation to projection-based persistence measured in the hidden states, which interpretation of those parameters would lose support?",
+   "answer": "The interpretation that the timescales reflect measurable persistence in the underlying representation. They would then be model properties only, not evidence that the corresponding features are long-lived in the data.",
+   "rubric": [
+    "Says the meaningfulness of timescales as reflecting real persistence in hidden states would be undermined",
+    "Reason: projection-based measures are the check of whether the parameters correspond to observable persistence"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the state L0 in Figure 4 had grown steadily without bound over training, which design requirement would appear violated, and what downstream problem would follow?",
+   "answer": "The stability or boundedness requirement, implemented by the contractive timescale range and normalisation. Decoder inputs would then vary in scale with position, which complicates optimisation and makes late-position reconstructions incomparable with early ones.",
+   "rubric": [
+    "Identifies the stability / bounded-state requirement (contractive parameterisation)",
+    "Gives the consequence: decoder input scale depends on position, harming optimisation or comparability"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "In the context correction experiment, if past activations drawn from unrelated text recovered as much reconstruction error as the true document history, which conclusion would that undermine?",
+   "answer": "The conclusion that an atemporal SAE leaves genuine feature-level temporal information unused. The gain would come from the marginal statistics of the activations, not from the document's actual history.",
+   "rubric": [
+    "Identifies the claim that standard SAEs leave feature-level temporal information unused",
+    "Reason: the control preserves marginal statistics but removes the genuine history, so equal gains imply no history-specific signal"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE's FVE had been far below BatchTopK under the matched budget, which requirement stated in the paper would it fail, and why would that matter for its use?",
+   "answer": "It would fail the first requirement that an SAE extension should not degrade the decomposition it extends. An extension that trades fidelity for temporal structure would be hard to justify against BatchTopK and Matryoshka on standard criteria.",
+   "rubric": [
+    "Identifies the requirement that the extension not degrade reconstruction relative to atemporal baselines",
+    "Reason: under matched budgets, lower fidelity would undermine justification for using it"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Persistent SAE states support prompt-injection monitoring across all AgentDojo domains? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. AgentDojo includes workspace, Slack, travel and banking, but the monitoring data uses only banking, travel and workspace trajectories, so Slack is untested.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: only banking, travel and workspace are used; Slack is excluded"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that its findings about Persistent SAEs hold for large frontier models and for any layer? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All SAEs are trained only on Pythia-160M layer 8 and Gemma-2-2B layer 12, and the monitor is Gemma-2-2B layer 12, so other models and layers are untested.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: only Pythia-160M layer 8 and Gemma-2-2B layer 12 are used"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper's design guarantee that the persistent state h(t) has at most about k=20 active features per token, like the baselines? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Sparsity is imposed only on the token-wise activation, and the accumulated state is explicitly not necessarily sparse. Its L0 is uncontrolled and must be monitored.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: the k budget applies to a(t); h(t) integrates updates and is not directly sparsity-constrained"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Can a Persistent SAE represent one feature's activation clearing or resetting another feature's state, for example a boundary feature resetting a topic feature? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The state update is feature-wise, so each coordinate depends only on its own feature's history. Interactions between features and context-dependent resets are named as limitations.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: the feature-wise recurrence means no cross-feature interactions or context-dependent resets"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Is the Persistent SAE more expressive as a sequence model than general recurrent or state-space models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. It restricts the carried state so that each coordinate is tied to a single dictionary element, which the paper says sacrifices expressiveness relative to general recurrent models in exchange for interpretability.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: the feature-wise restriction trades expressiveness for interpretability"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the protocol let the paper conclude that Persistent SAE features are smoother than Temporal SAE high-level features on an equal footing? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The Temporal SAE's groups are predefined, while the Persistent SAE's grouping is derived from its own timescales, so the paper calls the comparison asymmetric by design. The state is also smooth partly by construction, so smoothness must be read with FVE and cosine similarity.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the grouping is asymmetric (predefined vs timescale-derived), and smoothness is only meaningful alongside fidelity"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose the Persistent SAE's state update kept its contractive timescales but dropped the normalisation of new evidence. For a long-timescale feature that fires often, would the decoder still see inputs on a consistent scale across positions, and why?",
+   "answer": "No. Without normalisation, each new activation adds evidence on top of what the slowly decaying state already holds. A frequently firing long-timescale feature's state would therefore climb well above the scale of the token-wise activations, and how far it climbs would depend on position and firing history. Reconstructions at late positions would then not be comparable to early ones, which is the problem the paper's stability requirement is meant to prevent.",
+   "rubric": [
+    "Concludes that the scale would not stay consistent: the state can grow beyond the activation scale, depending on position or firing frequency.",
+    "Explains that accumulated evidence is not rescaled, so repeated activations pile up under slow decay, and links this to the stated need for the decoder to see inputs on a consistent scale or for late reconstructions to be comparable to early ones."
+   ],
+   "batch": 2,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the unconstrained timescale parameters were initialised deep in a saturated region of the squashing function rather than at an intermediate value, would features reliably learn their own heterogeneous timescales during training? Why?",
+   "answer": "Probably not. In a saturated region, the gradients with respect to the timescale parameters are vanishingly small. Timescales would then barely move from their starting value, so features would not spread to the range of timescales the paper relies on. The paper chose an intermediate initialisation precisely so that each timescale could move in either direction.",
+   "rubric": [
+    "Concludes that timescales would tend to stay stuck near their initial value and would not diversify.",
+    "Reason: gradients through a saturated squashing function are vanishingly small, unlike at the intermediate initialisation, which lets timescales move in either direction."
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "In the spliced MMLU probing, suppose test tokens could come from the same source questions as training tokens. Would a high macro ROC AUC still be good evidence that a representation tracks the current subject? Why?",
+   "answer": "No. If test tokens shared source questions with training tokens, the probe could score well by recognising memorised content from specific questions rather than by reading a generalisable subject signal. Holding out entire source documents is what rules this out.",
+   "rubric": [
+    "Concludes that the AUC would no longer be good evidence of subject tracking.",
+    "Reason: the probe could exploit memorised content of shared source questions; holding out whole documents is the safeguard against this."
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "In the steering analysis, suppose each representation's steering vector were built from all features with non-zero probe coefficients rather than the top k=128. Would comparing steering effects between the full Persistent SAE state and the sparse baselines still be fair, and why?",
+   "answer": "No. The Persistent SAE state is not necessarily sparse, so many more of its features could receive non-zero coefficients. A direction assembled from more features could produce a larger effect simply by spanning more of the residual stream. Fixing k=128 is what equalises this across representations.",
+   "rubric": [
+    "Concludes that the comparison would be unfair or confounded.",
+    "Reason: the dense Persistent state would let its direction draw on many more features, and more features can yield larger effects just by spanning more of the residual stream; the fixed k=128 prevents this."
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If steering interventions were added with a fixed absolute norm instead of a fraction \u03c1=0.1 of the hidden-state norm, would differences in the effect on the monitor's logit margin across distances and trajectories be interpretable? Why?",
+   "answer": "No. Residual-stream norms vary across positions and trajectories. A fixed absolute perturbation would be relatively large where the norm is small and small where it is large. Changes in effect with distance could then reflect norm differences rather than how the direction's causal effect transfers.",
+   "rubric": [
+    "Concludes that the effects would not be comparably interpretable.",
+    "Reason: residual norms vary by position and trajectory, so a fixed absolute size gives perturbations of different relative strength; relative scaling keeps them comparable."
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the feature-wise context correction were fitted and scored on the same documents without regularisation, could a measured reduction in reconstruction error be trusted as evidence of feature-level temporal information? Why?",
+   "answer": "No. The expected gains are small relative to total reconstruction error. Without held-out evaluation and regularisation, parameters for rarely active features could overfit, producing improvements that reflect fitting noise rather than a genuine relationship with the document's history.",
+   "rubric": [
+    "Concludes that the reduction could not be trusted.",
+    "Reason: overfitting, especially of rarely active features, can produce gains comparable to the small true effect; the paper requires disjoint held-out documents and regularisation."
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose Persistent SAE training windows started at arbitrary mid-document points, with the state still set to h(0)=0. For long-timescale features, would the state at early window positions faithfully reflect the context, and why?",
+   "answer": "No. The zero initial state would assert that there is no preceding context, while the hidden states already encode the earlier document. Long-timescale features would have to rebuild their state from scratch, so early-position states would understate the real context. This is why the paper takes sequences from document beginnings where possible.",
+   "rubric": [
+    "Concludes that early states would misrepresent (understate) the context.",
+    "Reason: h(0)=0 means absence of preceding context, but a truncated window has real preceding context in the hidden state; slow features need many tokens to catch up."
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the Persistent SAE draw its 8 training sequences per step from different documents, rather than using one contiguous stretch of about 2,040 tokens from a single document?",
+   "answer": "Tokens within a sequence are correlated, so a batch from one document would be highly correlated and would destabilise optimisation compared with shuffled baselines. Also, the batch-level top-kB selection would then allocate activations only among positions of a single document. Drawing from different documents limits both effects while still giving contiguous context for the state.",
+   "rubric": [
+    "Identifies within-sequence correlation as the problem that multiple documents reduce.",
+    "Notes that BatchTopK's global selection allocates activations across the batch, so a single-document batch would concentrate the sparsity budget within one document (or otherwise ties the choice to batch composition)."
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does a freshly initialised Persistent SAE behave like a standard BatchTopK SAE with only moderate temporal smoothing, rather than like a long-memory model?",
+   "answer": "The timescales start at an intermediate value, so features neither copy activations exactly nor hold them for long. New evidence is normalised, so the state stays on the scale of the token-wise activations. The decoder therefore sees a lightly smoothed version of essentially standard SAE activations.",
+   "rubric": [
+    "Cites the intermediate initial timescale (neither memoryless nor long-lived).",
+    "Cites normalisation of new evidence, which keeps the state on the same scale as the activations, so the decoder input resembles smoothed standard activations."
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why can a monitor based on the Persistent SAE state run online over an arbitrarily long agent trajectory without storing the past hidden states?",
+   "answer": "The state update h(t)=\u03a6(h(t\u22121),a(t)) depends only on the previous state and the current token-wise activation, and it acts feature-wise. Each token therefore needs one update costing time linear in dictionary size, and the history is summarised in h(t\u22121).",
+   "rubric": [
+    "States that h(t) depends only on h(t\u22121) and the current a(t), a recurrent summary.",
+    "Notes that the per-token cost is linear in dictionary size, so no stored history or attention over past tokens is needed."
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can a long-timescale Persistent SAE feature contribute to the reconstruction at a token where its token-wise activation a_j(t) is zero?",
+   "answer": "The decoder reconstructs from the persistent state h(t), not from a(t). A long-timescale feature's state retains evidence from earlier activations, so h_j(t) can remain positive and add its decoder direction even when no new evidence arrives at token t.",
+   "rubric": [
+    "States that reconstruction uses h(t), per Eq. 3.",
+    "Explains that h_j retains decaying past evidence, so it can be non-zero while a_j(t)=0."
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the monitoring protocol place checkpoints in benign trajectories at the position matched to the end of an injected span, rather than at arbitrary positions?",
+   "answer": "Hidden-state statistics vary with position. If positive and negative checkpoints sat at systematically different positions, a probe could separate them using positional drift rather than injection content. Matching positions keeps the distance-based comparison aligned across classes.",
+   "rubric": [
+    "Concludes that matching avoids a positional confound between classes.",
+    "Reason: representations drift with position, so mismatched positions could give a spurious cue; matching keeps offsets d comparable."
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is the paper's check on whether temporal structure is meaningful for the Temporal SAE phrased in terms of its predefined groups differing in projection-based persistence, rather than per-feature agreement as for the Persistent SAE?",
+   "answer": "The Temporal SAE has no per-feature timescale; temporal roles come only from the fixed high-level/low-level partition. The only model-side quantity to relate to measured persistence is therefore group membership, whereas the Persistent SAE exposes a timescale parameter for every feature.",
+   "rubric": [
+    "States that the Temporal SAE lacks per-feature timescales and has only a predefined partition.",
+    "Concludes that its temporal assumptions can only be checked at group level, unlike the Persistent SAE's per-feature parameters."
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is excluding early token positions particularly important for measuring how a projection decays over lags after an activation event?",
+   "answer": "Lag comparisons set the projection at the anchor against projections at later positions. Hidden states at the first positions have atypical statistics, and statistics drift with position. Anchors near the start would therefore mix genuine decay with positional effects. Dropping the prefix and capping document length reduces this confound.",
+   "rubric": [
+    "Identifies positional drift or atypical early-position statistics as the confound.",
+    "Explains that lagged measurements compare different positions, so early anchors would conflate positional change with persistence."
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p1",
+   "question": "In the context correction diagnostic, if each feature's correction used only its own past activation along its own decoder direction, could a reduction in reconstruction error be attributed to specific features?",
+   "answer": "Yes. With one parameter per feature acting along that feature's own direction, any gain can be traced to particular features. The sign of each parameter shows whether past activation predicts a positive or negative contribution.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: one parameter per feature along its own direction keeps the effect attributable to individual features."
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p1",
+   "question": "In the context correction diagnostic, if the correction were an arbitrary dense linear map from all past activations to the current hidden state, could a reduction in reconstruction error be attributed to specific features?",
+   "answer": "No. A dense map could exploit the known correlation between consecutive hidden states through mixtures of many features. Its gain would say nothing about whether any individual feature carries information forward.",
+   "rubric": [
+    "Answers no.",
+    "Reason: the dense map trivially exploits hidden-state correlation through feature mixtures, so the effect is not attributable to single features."
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p2",
+   "question": "Under exact BatchTopK training, does the average number of active features per token differ between the Persistent SAE's contiguous-sequence batches and the flat baselines' shuffled batches?",
+   "answer": "No. Both select the top kB entries over a batch of about B tokens, so the average stays k=20 active features per token in both cases.",
+   "rubric": [
+    "Answers no; the average is the same (about k=20).",
+    "Reason: the global top-kB budget fixes the average per token regardless of batch composition."
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p2",
+   "question": "Under exact BatchTopK training, can the distribution of active features across token positions differ between the Persistent SAE's contiguous-sequence batches and the flat baselines' shuffled batches?",
+   "answer": "Yes. In the Persistent SAE, the global selection allocates activations among positions within a few documents rather than across a shuffled mixture. How the budget spreads over positions can therefore differ even though the average is unchanged.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: selection happens across positions within a small number of documents instead of a shuffled mixture, which changes allocation across tokens."
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p3",
+   "question": "If the Persistent SAE used 8 sequences of length 256 per step, with the beginning-of-sequence position excluded, would its activation tokens per step stay within 1% of the flat baselines' 2,048?",
+   "answer": "Yes. It would get 8\u00d7255=2,040 tokens per step, about 0.4% below 2,048.",
+   "rubric": [
+    "Answers yes.",
+    "Gives 8\u00d7255=2,040, about 0.4% short."
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p3",
+   "question": "If the Persistent SAE used 8 sequences of length 128 per step, with the beginning-of-sequence position excluded, would its activation tokens per step stay within 1% of the flat baselines' 2,048?",
+   "answer": "No. It would get 8\u00d7127=1,016 tokens per step, about half the baseline. Over the same number of steps, it would see roughly half the token budget.",
+   "rubric": [
+    "Answers no.",
+    "Gives 8\u00d7127=1,016, roughly half of 2,048."
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p4",
+   "question": "If the probing sequences were spliced from segments of different MMLU subjects, would a representation have to update what it encodes mid-sequence to score well?",
+   "answer": "Yes. The label changes at segment boundaries, so a representation must update at each boundary and then maintain the new subject.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: subject labels change at segment boundaries, which forces updating and then maintenance."
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p4",
+   "question": "If each probing sequence instead contained a single MMLU subject throughout, would a representation have to update what it encodes mid-sequence to score well?",
+   "answer": "No. The label would be constant within each sequence, so no boundary update would be needed. A representation that holds its initial impression, or relies on local lexical cues, could score well, and the task would no longer be genuinely temporal.",
+   "rubric": [
+    "Answers no.",
+    "Reason: with a constant label there are no boundaries, so the test no longer requires updating and loses its temporal character."
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "In some timescale quintile, 30% of feature updates fall on nouns, while nouns make up 20% of corpus tokens. What is U_{q,noun}, and how should it be read?",
+   "answer": "U = 0.30/0.20 = 1.5. Features in that quintile receive new evidence on nouns 1.5 times more often than the base rate of nouns would predict, which indicates a preference rather than corpus composition.",
+   "rubric": [
+    "Computes U = 1.5.",
+    "Interprets a value above 1 as more updates than expected from the noun base rate, i.e. a preference."
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "At an intervention position where the hidden-state norm is 80, what norm does the paper's steering vector have, and how many decoder directions are combined into it?",
+   "answer": "The vector is scaled to \u03c1=0.1 of the norm, giving 8, and it combines the k=128 features with the largest absolute probe coefficients. It is added with both signs.",
+   "rubric": [
+    "Gives norm 8 (0.1\u00d780).",
+    "States that 128 probe-weighted decoder directions are combined."
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team applies the paper's spliced subject-probing protocol to the Lubana et al. predictive decomposition. Which of the protocol's comparisons can they not run as specified, and why?",
+   "answer": "They cannot run the timescale-ranking versus random-ranking comparison. That comparison needs a timescale for each feature, but the Lubana method uses a dense attention-based predictor and a fixed partition, with no per-feature timescales. They can still compare against baselines at matched budgets and against the supervised reference.",
+   "rubric": [
+    "Identifies the timescale-based versus random ranking comparison as not applicable.",
+    "Reason: that method has no per-feature timescale parameters (only a dense predictor and partition)."
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the paper's 16,384-feature Temporal SAE, roughly how many features make up the high-level group that is used in the t-SNE and monitoring comparisons?",
+   "answer": "About 3,277 features (20% of 16,384), since the Temporal SAE uses the 20%/80% partition and the high-level group is the 20% subset.",
+   "rubric": [
+    "Gives about 3,277 (\u22483,276.8), i.e. 20% of 16,384.",
+    "Ties this to the 20%/80% partition with the high-level group as the 20% subset."
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "An analyst sees that feature j has a large persistent state at token 400 but a_j=0 there. Where should they look to explain why the feature is present, and which view tells them?",
+   "answer": "They should look at earlier tokens where a_j was positive, within the feature's timescale. The token-wise activation a(t) marks where new evidence arrived, while h(t) only shows what the feature currently represents given the history.",
+   "rubric": [
+    "Says to look at earlier tokens where the feature activated.",
+    "Identifies a(t) as the view showing where evidence arrives (h(t) carries it forward)."
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team has only a frozen BatchTopK SAE and wants a cheap test of whether a persistent formulation could exploit feature-level history, without training a Persistent SAE. What should they run, and what does it not tell them?",
+   "answer": "They should run the feature-wise context correction at several lags on held-out documents, comparing against the control that uses past activations from unrelated text. This shows whether the atemporal decomposition leaves feature-level temporal information unused. It does not show what a Persistent SAE would learn, because there the encoder, decoder and timescales adapt jointly from the start.",
+   "rubric": [
+    "Recommends the feature-wise context correction, held out and with the unrelated-text control.",
+    "Caveat: a post-hoc correction on a frozen SAE does not reveal what a jointly trained Persistent SAE learns."
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If every timescale quintile had shown U_{q,c}\u22481 for all six token categories, which expectation in the paper would lack support?",
+   "answer": "The expectation that meaningful timescales are reflected in where features receive new evidence, for example short versus long features preferring content words versus punctuation or function words. With U\u22481 everywhere, features in all quintiles would update at each category only at base rate.",
+   "rubric": [
+    "Identifies the expectation that timescales are reflected in the token categories where features get evidence.",
+    "Explains that U\u22481 means no preference beyond base rates in any quintile."
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE state had matched the BatchTopK, Matryoshka and Temporal SAE representations at every feature budget in spliced probing, which question would get a negative answer?",
+   "answer": "Whether carrying state forward changes what a fixed number of features can encode about the current subject. This is the question the matched-budget Persistent-versus-baselines comparison isolates.",
+   "rubric": [
+    "Names the matched-budget comparison and its question: whether carrying state adds subject information per feature budget.",
+    "States that equal performance would answer that question negatively, while leaving the timescale-versus-random question separate."
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the short-timescale and long-timescale subsets of the Persistent SAE state had shown identical accuracy curves across distance in the fixed-probe evaluation, which question posed by the case study would get a negative answer?",
+   "answer": "Whether fast and slow components of the persistent representation divide the labour between immediate detection near d=0 and long-context retention. Identical curves would show no such specialisation by timescale.",
+   "rubric": [
+    "Identifies the fast/slow division-of-labour question (detection versus retention).",
+    "Explains that identical curves would show no timescale-dependent specialisation."
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If all learned timescales had collapsed to memoryless during training, which parts of the evaluation would lose their basis for distinguishing the Persistent SAE from a standard SAE?",
+   "answer": "The Persistent SAE would reduce to a standard SAE (Eq. 3 equals Eq. 1), so h(t)=a(t). The timescale-based rankings in probing, the timescale-grouped analyses and the claim that persistent states retain injection signal would have nothing temporal to show. Any advantage over BatchTopK would then not be due to carried state.",
+   "rubric": [
+    "States that the model reduces to a standard SAE (h=a).",
+    "Names at least one analysis that relies on non-trivial timescales, such as timescale rankings in probing, timescale subsets in monitoring, or update-frequency quintiles, as losing its basis."
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the thresholded inference form had produced token-wise activations that differed substantially from the training-time BatchTopK selection, which downstream evaluations of the Persistent SAE would be affected?",
+   "answer": "All of them. Autointerp, update frequency, probing and monitoring all use a(t) at inference, and h(t) integrates a(t), so state-based probing and monitoring would also be affected. The evaluated representation would no longer match the one the model was trained with, because the paper relies on the thresholded form being equivalent.",
+   "rubric": [
+    "Concludes that both a(t)-based evaluations (e.g. autointerp, update frequency) and h(t)-based ones (probing, monitoring) would be affected.",
+    "Reason: h is built from a, and the thresholded form is assumed equivalent to training-time selection."
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the Temporal SAE's predefined high-level group had matched the long-timescale Persistent SAE subset in subject information, which motivation for the paper's design would be weakened?",
+   "answer": "The motivation that locating timescales in individual features, rather than in a predefined partition, offers an advantage. A fixed partition chosen in advance would then capture subject information equally well.",
+   "rubric": [
+    "Identifies the motivation for per-feature timescales over a predefined partition.",
+    "Explains that parity would show the partition-based design suffices for this property."
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If decoder-direction projections after standard SAE activations had shown no elevation beyond what local continuity explains, once the control disrupting global continuity was applied, which motivating claim would weaken?",
+   "answer": "The claim that atemporal SAE features carry document-level temporal information that a decomposition could expose per feature. That evidence motivated building persistence into the SAE. Any remaining persistence would be attributable to phrase-level local continuity.",
+   "rubric": [
+    "Identifies the motivation that feature-level (global) temporal structure exists in atemporal decompositions.",
+    "Explains that persistence would then reflect only local continuity, not document context."
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the t-SNE visualisation, on its own, establish that the timescale-selected Persistent SAE state encodes subject better than BatchTopK features? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper treats the t-SNE as descriptive, because t-SNE layouts depend on perplexity and initialisation even under a common configuration. Quantitative claims rest on the spliced probing analysis instead.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: t-SNE is hyperparameter-sensitive and used descriptively; quantitative evidence comes from probing."
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper hold that a good decomposition should push features toward slow, long timescales? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper argues for accommodating a range of timescales, because many language properties are intrinsically fast. It permits memoryless timescales, which recover standard SAE behaviour, and caps long ones.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: the paper wants a range of timescales and allows memoryless features for fast properties, rather than favouring slowness."
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the matched setup mean all four SAE families were trained on identical token activations? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The families are matched on steps and approximate tokens per step, not on identical data. The baselines see shuffled tokens, the Temporal SAE sees adjacent pairs, and the Persistent SAE sees 2,040 contiguous tokens per step rather than 2,048.",
+   "rubric": [
+    "Answers contradicted (or not identical).",
+    "Reason: only steps and approximate token counts are matched; the data units differ (shuffled tokens, pairs, contiguous sequences) and per-step counts differ slightly (2,040 vs 2,048)."
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Would strong spliced-probing performance of the long-timescale Persistent SAE features show that individual features each track a subject? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The probe is a linear classifier over sets of features, and the paper frames subject as carried jointly by many coordinates. Good probe performance does not show that any single feature encodes a subject.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the probe reads many features jointly, so success does not identify single subject-tracking features."
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does running a Persistent SAE require reprocessing the whole token history at each new token, making per-token cost grow with sequence length? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The state is updated once per token from the previous state and the current activation, at a cost linear in dictionary size, and can be maintained online.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: there is a single recurrent update per token, linear in dictionary size and independent of history length."
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Do the paper's MMLU analyses show that persistent states organise text by subject across MMLU's 57 subjects? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Both the geometry and probing analyses use only five subjects (abstract algebra, astronomy, business ethics, computer security, European history). Finer distinctions among closely related subjects are untested.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: only five chosen subjects are used, so the behaviour on the other subjects is untested."
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the monitoring case study show that the Persistent SAE probe detects successful prompt-injection attacks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The positive class contains only failed attacks (security=false), and successful attacks are deliberately excluded. Performance on successful attacks is never measured.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: only failed attacks are positives, so successful attacks are not evaluated."
+   ],
+   "batch": 2,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q83",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the Persistent SAE's decoder-level attribution mean that each reconstruction contribution at token t can be traced to evidence found at token t itself? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Attribution is to a feature (one decoder direction), not to a token. The contribution comes from h(t), which integrates the feature's evidence from earlier tokens, so part or all of it can stem from past activations.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: attribution is per feature, but h(t) accumulates past activations, so the contribution can come from earlier tokens."
+   ],
+   "batch": 2,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "In the Appendix D persistence measurement, suppose every activation event were kept as an anchor, including events too close to the document end to be followed to the longest lag. Would the long-lag points of the decay curve rest on the same population of events as the short-lag points, and why does that matter?",
+   "answer": "No. Anchors near the end of a document drop out at long lags, so the long-lag averages come from a smaller and differently positioned subset of events. The tail would then mix changes in which events are counted with genuine decay and would be noisier. This is why the paper requires a minimum number of valid anchors at every lag considered.",
+   "rubric": [
+    "States that the long-lag points would not rest on the same events (late anchors drop out, so fewer or different events contribute)",
+    "Explains that this confounds decay with changes in anchor composition or position and makes the tail unstable, which is why a minimum number of valid anchors per lag is required"
+   ],
+   "batch": 3,
+   "orig_id": "q84"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "For a long-timescale Persistent SAE feature, would adding contexts from lower activation quantiles to the autointerp examples fix the mismatch the paper identifies for such features, and why?",
+   "answer": "No. Lower-quantile sampling addresses features whose maxima misrepresent a broad, low-amplitude profile. The long-timescale problem is different: the feature's role is set by context accumulated outside the short window the judge sees. Lower-quantile examples are still short windows, so that context stays out of view.",
+   "rubric": [
+    "States that it would not fix the mismatch",
+    "Explains that the problem is that the relevant evidence lies outside the short window shown to the judge, which lower-quantile sampling does not change (that remedy targets broad, low-amplitude activation profiles)"
+   ],
+   "batch": 3,
+   "orig_id": "q85"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "The steering direction for each representation is built at d=0 and reused at later checkpoints. If a representation encodes the injection at d=300 along a different direction from the one it uses at d=0, should one expect its d=0 steering vector to move the monitor's margin at d=300 as much as at d=0? Why?",
+   "answer": "Not necessarily. The intervention reuses the fixed d=0 direction. If the encoding drifts, that direction may no longer line up with what the monitor relies on at later positions, so the causal effect can shrink. Measuring this transfer across distance is exactly what the fixed-direction design tests.",
+   "rubric": [
+    "States that a comparable effect should not be expected (the effect may weaken)",
+    "Explains that the steering direction is fixed at d=0 and drift in the encoding means it may no longer align with what the monitor uses later"
+   ],
+   "batch": 3,
+   "orig_id": "q86"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Suppose a Persistent SAE pushed every feature's timescale to the hard cap and scored far better than BatchTopK on the smoothness metric, but its FVE dropped well below BatchTopK. Would this count as evidence that it captures meaningful temporal structure? Why?",
+   "answer": "No. Long timescales smooth any feature mechanically, and the paper notes that a decomposition can be made arbitrarily smooth by sacrificing reconstruction. Smoothness is informative only when fidelity is preserved. Here fidelity is not preserved, and the extension also fails the requirement not to degrade the decomposition.",
+   "rubric": [
+    "States that it would not be good evidence",
+    "Explains that smoothness can be bought by sacrificing reconstruction (or by long timescales alone), so it must be read alongside FVE and cosine similarity, and here FVE has degraded"
+   ],
+   "batch": 3,
+   "orig_id": "q87"
+  },
+  {
+   "id": "q88",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE were trained on shuffled token activations like the flat baselines, would its learned timescales describe how long feature information persists in real text? Why?",
+   "answer": "No. With shuffled tokens, the state at each token would integrate activations from unrelated preceding tokens, not the actual preceding context. Whatever timescales were learned would therefore not reflect persistence in real documents. The paper requires contiguous sequences precisely so that the state reflects the true history.",
+   "rubric": [
+    "States that the timescales would not describe real persistence",
+    "Explains that the state would integrate unrelated tokens instead of the actual preceding context, which is why contiguous sequences are required"
+   ],
+   "batch": 3,
+   "orig_id": "q88"
+  },
+  {
+   "id": "q89",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "In the monitoring evaluation, should the Persistent SAE's token-wise activation a(t), by construction, retain the injection signal at d=350 as well as its state h(t)? Why?",
+   "answer": "No, not by construction. a(t) is computed from the current hidden state alone and carries nothing forward; it only marks new evidence at the current token. h(t) integrates past activations through each feature's timescale. Any retention in a(t) would have to come from the hidden state itself, as for the atemporal baselines.",
+   "rubric": [
+    "States that a(t) is not built to retain the signal as h(t) is",
+    "Explains that a(t) is a token-wise function of the current hidden state with no carried state, whereas h(t) accumulates past evidence through the feature timescales"
+   ],
+   "batch": 3,
+   "orig_id": "q89"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The agent trajectories were generated by Llama-3.3-70B-Instruct. Why does the monitoring case study replay them through Gemma-2-2B instead of reading the agent's own activations?",
+   "answer": "The paper's SAEs, including the Persistent SAE, were trained on Gemma-2-2B layer-12 (and Pythia) activations, not on Llama-3.3-70B. To probe and steer with those dictionaries, the trajectories must be read by the model and layer the SAEs were trained on.",
+   "rubric": [
+    "States that the SAEs were trained on Gemma-2-2B layer 12, not on the agent model",
+    "Explains that the SAE representations and decoder directions can only be used on activations from the model and layer they were trained on, hence the replay"
+   ],
+   "batch": 3,
+   "orig_id": "q90"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "The raw hidden state is one of the representations probed for injection retention. Why can the paper's causal intervention not be built for it in the same way as for the SAE representations?",
+   "answer": "The steering vector is built by choosing the k=128 features with the largest probe coefficients and combining their decoder columns. The raw hidden state has no dictionary features or decoder columns. Its probe weights are dense coordinates, not a top-128 set of decoder directions.",
+   "rubric": [
+    "States that the construction needs SAE features with decoder directions, which the raw hidden state lacks",
+    "Refers to the top-k=128 probe-weighted decoder columns as the construction that cannot be applied"
+   ],
+   "batch": 3,
+   "orig_id": "q91"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why might a Persistent SAE spend fewer of its token-wise activations than a standard SAE on a property that holds across a whole passage, such as its topic, even under the same k=20 budget?",
+   "answer": "A standard SAE reconstructs each token only from that token's activations, so a passage-wide feature must be reselected at every token to contribute. In a Persistent SAE, a feature with a long timescale keeps contributing through its state h(t) after it fires. It needs new activation only occasionally, which frees budget for other features.",
+   "rubric": [
+    "States that the Persistent SAE needs to reactivate the feature less often",
+    "Explains that the decoder reads from the persistent state, so a long-timescale feature keeps contributing between activations, whereas a standard SAE must fire it at every token"
+   ],
+   "batch": 3,
+   "orig_id": "q92"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "In the t-SNE comparison, why is the Persistent SAE represented by a subset of its state selected by timescale rather than its full state?",
+   "answer": "Subject is a slowly varying, contextual property, so the long-timescale coordinates are the ones expected to carry it. The full state also contains short-timescale features that track token-level lexical events, and these would add variation unrelated to subject.",
+   "rubric": [
+    "States that the subset targets the long-timescale coordinates expected to carry contextual or subject information",
+    "Explains that short-timescale features mostly reflect token-level cues and would dilute subject structure"
+   ],
+   "batch": 3,
+   "orig_id": "q93"
+  },
+  {
+   "id": "q94",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the Persistent SAE produce its token-wise activation a(t) with the same BatchTopK encoder (thresholded at inference) as the baselines, rather than with a sparsity scheme of its own?",
+   "answer": "Using the same encoder and sparsity budget means the only difference from a standard SAE is the downstream state and decoding from h(t). The comparison then isolates the effect of carrying state, and memoryless timescales recover the standard SAE exactly.",
+   "rubric": [
+    "States that it isolates the persistent state as the only difference",
+    "Links this to the matched comparison with the baselines or to standard SAEs being a special case"
+   ],
+   "batch": 3,
+   "orig_id": "q94"
+  },
+  {
+   "id": "q95",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "In spliced subject probing, why might one expect the Persistent SAE state to do relatively well on tokens deep inside a segment that contain no subject-specific words?",
+   "answer": "The state h(t) accumulates evidence from earlier tokens in the segment, so subject information picked up from earlier cues can persist into tokens without such cues. A token-wise representation must rely on whatever local lexical cues happen to appear near each token, and here there are none.",
+   "rubric": [
+    "States that the persistent state can still carry the subject there",
+    "Explains that h(t) integrates evidence from earlier tokens, whereas token-wise representations depend on local cues that are absent at such tokens"
+   ],
+   "batch": 3,
+   "orig_id": "q95"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "If the supervised feature score in Eq. 8 is computed on the training split, would the supervised ranking use the labels of test tokens?",
+   "answer": "No. The score is computed from training-split states and labels only, and test documents are held out. The ranking is label-informed but does not draw on the test labels.",
+   "rubric": [
+    "Answers no",
+    "Explains that the score uses only training-split labels and the test documents are held out"
+   ],
+   "batch": 3,
+   "orig_id": "q96"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "If the supervised feature score in Eq. 8 were instead computed on the test split, would the supervised ranking use the labels of test tokens?",
+   "answer": "Yes. Feature selection would then be driven by the very labels the probe is scored on. This leaks test information and would inflate the reference curve beyond a fair label-informed upper reference.",
+   "rubric": [
+    "Answers yes",
+    "Explains that selection would use the labels being evaluated, leaking test information and inflating the reference"
+   ],
+   "batch": 3,
+   "orig_id": "q97"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "During Persistent SAE training with context length 256, would a document of exactly 256 tokens, taken from its beginning, yield any window whose zero initial state is set at an arbitrary mid-document point?",
+   "answer": "No. The document fits in one window that starts at the document beginning, so h(0)=0 matches the true absence of preceding context.",
+   "rubric": [
+    "Answers no",
+    "Explains that it fits in a single window starting at the document beginning, so the reset matches the real absence of preceding context"
+   ],
+   "batch": 3,
+   "orig_id": "q98"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "During Persistent SAE training with context length 256, would a 700-token document yield any window whose zero initial state is set at an arbitrary mid-document point?",
+   "answer": "Yes. A document longer than the context length is split into later windows, which are treated as fresh sequences with a reset state. Those windows start mid-document even though real preceding context exists.",
+   "rubric": [
+    "Answers yes",
+    "Explains that subsequent windows of longer documents are reset to zero although they begin mid-document"
+   ],
+   "batch": 3,
+   "orig_id": "q99"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p3",
+   "question": "Under the supervised ranking, would a feature whose persistent state is equally large on every token, regardless of subject, rank near the top for any subject?",
+   "answer": "No. Eq. 8 is the difference between the mean state on subject c and on all other subjects. For a feature that is equally high everywhere this difference is about zero, so it ranks low for every subject.",
+   "rubric": [
+    "Answers no",
+    "Explains that Eq. 8 measures the difference between mean states inside and outside the subject, which is about zero for a uniformly high feature"
+   ],
+   "batch": 3,
+   "orig_id": "q100"
+  },
+  {
+   "id": "q101",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p3",
+   "question": "Under the supervised ranking, would a feature whose persistent state is large mainly on abstract algebra tokens rank near the top for some subject?",
+   "answer": "Yes. Its Eq. 8 score for abstract algebra is large and positive, so it ranks high in that subject's list. The round-robin interleaving puts that subject's top features early in the global ordering.",
+   "rubric": [
+    "Answers yes, for abstract algebra",
+    "Explains that the in-subject minus out-of-subject mean difference is large, and round-robin interleaving places that subject's top features early"
+   ],
+   "batch": 3,
+   "orig_id": "q101"
+  },
+  {
+   "id": "q102",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "If the Temporal SAE's predefined high-level group were smoother than its low-level group, could that gap reflect an explicit temporal training signal applied to that group?",
+   "answer": "Yes. The Temporal SAE applies a contrastive objective that aligns its high-level group's activations across nearby tokens, which is a direct training pressure toward smoothness.",
+   "rubric": [
+    "Answers yes",
+    "Cites the contrastive objective that aligns high-level activations across adjacent tokens"
+   ],
+   "batch": 3,
+   "orig_id": "q102"
+  },
+  {
+   "id": "q103",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "If the Matryoshka SAE's predefined high-level group were smoother than its low-level group, could that gap reflect an explicit temporal training signal applied to that group?",
+   "answer": "No. The Matryoshka SAE has no temporal prior: it trains nested dictionaries with uniform reconstruction weights on shuffled tokens. Any smoothness gap would have to come from what the nested structure leads the high-level group to encode, not from a temporal objective.",
+   "rubric": [
+    "Answers no",
+    "Explains that Matryoshka has no temporal objective (nested dictionaries, shuffled tokens, uniform weights), so any gap arises indirectly"
+   ],
+   "batch": 3,
+   "orig_id": "q103"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Using the paper's numbers, how many activation tokens does the Persistent SAE process over its full training run, and how many fewer is that than the flat baselines?",
+   "answer": "2,040 \u00d7 244,140 = 498,045,600 tokens, about 4.98e8. That is 1,953,120 fewer than the baselines' 499,998,720, a shortfall of about 0.4%.",
+   "rubric": [
+    "Gives about 498,045,600 (\u22484.98e8) tokens",
+    "Gives a difference of about 1.95 million tokens (\u22480.4%) from 499,998,720"
+   ],
+   "batch": 3,
+   "orig_id": "q104"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "With m=16,384 for both models, how overcomplete is the dictionary relative to the hidden width for the Pythia-160M SAEs compared with the Gemma-2-2B SAEs?",
+   "answer": "Pythia layer 8 has d=768, so the expansion is about 16,384/768 \u2248 21.3\u00d7. Gemma layer 12 has d=2,304, so it is about 7.1\u00d7. The Pythia dictionaries are about three times more overcomplete.",
+   "rubric": [
+    "Gives about 21\u00d7 for Pythia and about 7\u00d7 for Gemma",
+    "Concludes that Pythia's dictionaries are roughly three times more overcomplete, using d=768 versus d=2,304"
+   ],
+   "batch": 3,
+   "orig_id": "q105"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team wants to use Persistent SAE states to monitor the Llama-3.3-70B agent's own internal representations and to steer the agent's actions. Can they reuse the paper's trained SAEs and causal results directly? What would they need instead?",
+   "answer": "No. The paper's SAEs were trained on Gemma-2-2B layer 12 (and Pythia), and its interventions affect only an external replay monitor's judgement, not the agent's actions. The team would need to train a Persistent SAE on the agent model's activations and run new tests of effects on agent behaviour.",
+   "rubric": [
+    "States that the paper's SAEs and causal results do not transfer directly",
+    "Explains that the SAEs are tied to Gemma-2-2B (or Pythia) activations and the intervention effects concern the replay monitor, not the agent",
+    "Says a new SAE trained on the agent's activations and a new behavioural test would be needed"
+   ],
+   "batch": 3,
+   "orig_id": "q106"
+  },
+  {
+   "id": "q107",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Applying the paper's preprocessing for temporal statistics to a 2,000-token Pile document, how many token positions are used?",
+   "answer": "The document is capped at 768 tokens and the first 16 positions are dropped. Positions 16 to 767 remain, which is 752 positions.",
+   "rubric": [
+    "Gives 752 positions",
+    "Shows the cap at 768 tokens and the dropping of the first 16 positions"
+   ],
+   "batch": 3,
+   "orig_id": "q107"
+  },
+  {
+   "id": "q108",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "With the paper's five MMLU subjects, what do the first five features of the supervised ranking's global ordering consist of?",
+   "answer": "Because the subject-specific rankings are interleaved round-robin, the first five features are the top-scoring Eq. 8 feature for each of the five subjects, one per subject.",
+   "rubric": [
+    "States that there is one feature per subject, namely each subject's top-ranked feature",
+    "Attributes this to the round-robin interleaving of the per-subject rankings"
+   ],
+   "batch": 3,
+   "orig_id": "q108"
+  },
+  {
+   "id": "q109",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Under the paper's six token categories for the relative update frequency, which category do the tokens 'she', 'of' and 'but' each fall into?",
+   "answer": "'she' is a pronoun and 'of' is an adposition, so both are function words. 'but' falls under conjunctions, which is a separate category.",
+   "rubric": [
+    "Assigns 'she' and 'of' to function words",
+    "Assigns 'but' to conjunctions, which the paper lists as a category separate from function words"
+   ],
+   "batch": 3,
+   "orig_id": "q109"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE's fraction of alive features had been far below the BatchTopK baseline under matched settings, which comparisons in the evaluation would become harder to interpret?",
+   "answer": "Comparisons at matched feature budgets, such as subject probing and monitoring, assume a similar amount of usable capacity. Fewer alive features would mean the Persistent SAE effectively has a smaller dictionary, so differences could reflect lost capacity rather than the effect of carrying state. It would also violate the principle that an extension should not degrade the decomposition.",
+   "rubric": [
+    "Identifies the matched-budget comparisons (probing or monitoring against the baselines) as compromised, or names the requirement not to degrade the decomposition",
+    "Explains that differences could then reflect reduced effective capacity rather than the persistent state"
+   ],
+   "batch": 3,
+   "orig_id": "q110"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If each of the five MMLU subjects could be identified by a single keyword appearing in every segment, which interpretation of strong spliced-probing performance would weaken?",
+   "answer": "The interpretation that strong performance shows a representation tracking the current subject as context. A probe could succeed from local lexical cues alone. The paper chose subjects that differ in vocabulary, register and argumentative structure precisely to avoid a single lexical cue.",
+   "rubric": [
+    "Names the interpretation that probing reflects tracked context or subject rather than local cues",
+    "Explains that a single keyword would let token-local lexical cues solve the task, which the choice of subjects was meant to rule out"
+   ],
+   "batch": 3,
+   "orig_id": "q111"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the SAE's decoder directions had turned out to be mutually orthogonal, which caveat about projection-based persistence would no longer apply, and which caveats would remain?",
+   "answer": "The confound that a projection rises because a correlated feature is active would largely disappear. Positional drift and short-range persistence from local continuity would remain, so the prefix drop, the document cap and the control that disrupts global continuity would still be needed.",
+   "rubric": [
+    "States that the non-orthogonality confound (correlated features raising the projection) would no longer apply",
+    "States that positional drift and local continuity remain as confounds"
+   ],
+   "batch": 3,
+   "orig_id": "q112"
+  },
+  {
+   "id": "q113",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the shortest-timescale quintile of Persistent SAE features had scored much lower on autointerp than BatchTopK features, which claim would that undermine?",
+   "answer": "It would undermine the claim that short-timescale features stay locally interpretable and are directly comparable to standard SAE features, since for them a \u2248 h. A low score could not then be blamed on missing context outside the window, so it would suggest the persistent formulation degrades token-wise features.",
+   "rubric": [
+    "Identifies the claim that short-timescale features are locally interpretable or comparable to standard SAEs",
+    "Explains that for these features a \u2248 h, so the out-of-window excuse does not apply and the result points to degraded token-wise features"
+   ],
+   "batch": 3,
+   "orig_id": "q113"
+  },
+  {
+   "id": "q114",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If even the supervised ranking had reached AUC no higher than random rankings at the smallest feature fractions, what would that imply for the paper's goal for persistent features?",
+   "answer": "It would imply that subject information is not concentrated in any small set of state coordinates, even when labels choose them. That would undercut the aim of using persistent features as a small, inspectable summary of context, and would leave no headroom for a timescale ranking to show compactness.",
+   "rubric": [
+    "States that subject information would not be compactly concentrated in a few features",
+    "Links this to undermining the goal of a small inspectable context summary, or to removing headroom for the timescale-versus-random comparison"
+   ],
+   "batch": 3,
+   "orig_id": "q114"
+  },
+  {
+   "id": "q115",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If training had collapsed the Gemma-2-2B Persistent SAE's timescales to memoryless while the Pythia one learned long timescales, which part of the evaluation would lose its basis for testing persistence?",
+   "answer": "The prompt-injection case study, because its replay monitor uses Gemma-2-2B layer 12. With memoryless timescales, h equals a and that SAE reduces to a standard SAE. Its state could then not be tested for carrying the injection signal forward, nor could fast and slow subsets be compared.",
+   "rubric": [
+    "Identifies the prompt-injection monitoring and steering case study",
+    "Explains that it relies on the Gemma layer-12 SAE, which would reduce to a standard SAE with h = a"
+   ],
+   "batch": 3,
+   "orig_id": "q115"
+  },
+  {
+   "id": "q116",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the state L0 in Figure 4 had stayed at about k=20 throughout training, what would that suggest about the learned timescales?",
+   "answer": "That features were behaving almost memorylessly. State coordinates would be non-zero only around the tokens where a feature fires, instead of persisting and accumulating beyond the token-wise budget. The persistent state would add little beyond a standard SAE.",
+   "rubric": [
+    "States that timescales would be effectively short or memoryless",
+    "Explains that persistent states with longer memory would leave more non-zero coordinates than the roughly 20 active per token"
+   ],
+   "batch": 3,
+   "orig_id": "q116"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that long-timescale Persistent SAE features receive their new evidence mainly at punctuation and function words? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper motivates the possibility from work on contextual information in punctuation and structural markers, but says the direction and strength of any relationship are an empirical matter. It defines U_{q,c} for testing this without reporting such a conclusion.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the paper treats the direction of the relationship as empirical and only sets up the U_{q,c} analysis"
+   ],
+   "batch": 3,
+   "orig_id": "q117"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper report that the Persistent SAE reconstructs hidden states better than BatchTopK in FVE? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper states that an extension should not degrade reconstruction and lists FVE and cosine similarity as metrics. Its text reports no comparative FVE values; Figure 4 shows only Persistent SAE training loss and state L0.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that FVE is set as a requirement or protocol metric but no comparison showing superiority is reported"
+   ],
+   "batch": 3,
+   "orig_id": "q118"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Because the subject probing includes a supervised ranking, was the Persistent SAE exposed to MMLU subject labels in training? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The SAEs are trained only on Pile activations, and MMLU is never used for training. Labels enter only in the Eq. 8 score used to order features for the probe, computed after training as a reference point.",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that labels are used only post hoc for the supervised ordering or probe, while SAE training uses Pile data without labels"
+   ],
+   "batch": 3,
+   "orig_id": "q119"
+  },
+  {
+   "id": "q120",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the AUC of 0.51 from the monitor's yes-minus-no logit show that Gemma-2-2B's layer-12 hidden states carry no information about the injection? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported. The 0.51 measures only the model's prompted answer. Whether the hidden states contain injection information is tested separately by the internal linear probes, which is exactly why the paper trains them rather than relying on prompting.",
+   "rubric": [
+    "Answers that the claim is not supported (not settled or contradicted is acceptable, but not supported)",
+    "Explains that 0.51 concerns the prompted output, whereas internal information is assessed by separate probes on the hidden states"
+   ],
+   "batch": 3,
+   "orig_id": "q120"
+  },
+  {
+   "id": "q121",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Can a Persistent SAE feature's state take negative values to encode evidence against the feature? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Both a(t) and h(t) are defined in the non-negative orthant. The state integrates non-negative sparse updates and is kept on the scale of those activations, so it cannot go negative.",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that a(t) and h(t) are non-negative by definition, since the state integrates non-negative activations"
+   ],
+   "batch": 3,
+   "orig_id": "q121"
+  },
+  {
+   "id": "q122",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the matched setup ensure that the Temporal SAE reads exactly 2,048 hidden-state activations per step, like BatchTopK? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled, and likely not. The paper matches the number of reconstructed token positions per step, but the Temporal SAE's buffer returns previous\u2013next pairs. It therefore also reads previous-token activations, and the paper says matching holds only up to the pairing its objective requires.",
+   "rubric": [
+    "Answers not settled or not guaranteed",
+    "Explains that only reconstructed positions are matched, while pairs bring in extra previous-token activations"
+   ],
+   "batch": 3,
+   "orig_id": "q122"
+  },
+  {
+   "id": "q123",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Is the supervised ranking guaranteed to be the best possible feature ordering for the linear probe at each budget? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported. It scores each feature independently by its mean-state difference for one subject, then interleaves the subjects round-robin. This ignores scale, variance and redundancy among features. The paper calls it a label-informed reference, not an optimal selection.",
+   "rubric": [
+    "Answers that this is not supported or not guaranteed",
+    "Explains that the ranking uses per-feature mean differences (Eq. 8) with round-robin interleaving, which ignores variance and redundancy, so it is a reference rather than an optimum"
+   ],
+   "batch": 3,
+   "orig_id": "q123"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Section 3 notes that a standard SAE might absorb the persistent part of the hidden state into its decoder bias. If that happened, would the feature-wise context correction experiment on that SAE reveal the persistence, and why?",
+   "answer": "No. The correction only adds a learned multiple of each feature's own past activation along that feature's decoder direction. A constant bias is not tied to any feature's activation, so the correction would recover little error. The diagnostic would then indicate no feature-level temporal structure, even though the hidden states themselves are temporally correlated.",
+   "rubric": [
+    "States that the correction would not reveal (or would barely reveal) the persistence.",
+    "Explains that the correction acts only through each feature's own past activation along its own decoder direction, and a bias term is not tied to any feature's activation.",
+    "Notes that hidden-state correlation can therefore exist without showing up at the feature level (or equivalent)."
+   ],
+   "batch": 4,
+   "orig_id": "q124"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Suppose training drove about 60% of Persistent SAE features to the same memoryless timescale. Would differences in the relative update frequency U_{q,c} between the three lowest timescale quintiles reflect differences in timescale, and why?",
+   "answer": "No. The quintiles are equal-sized splits by timescale, so the three lowest would all contain features with essentially identical (memoryless) timescales. How features are divided among those quintiles would be arbitrary with respect to timescale, so any U differences between them could not be attributed to timescale.",
+   "rubric": [
+    "States that the differences would not reflect timescale.",
+    "Explains that equal-sized quintiles would place features with identical timescales into several quintiles, so the split between those quintiles is arbitrary."
+   ],
+   "batch": 4,
+   "orig_id": "q125"
+  },
+  {
+   "id": "q126",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose one feature in a timescale quintile activates far more often than every other feature in that quintile. Would U_{q,c} for that quintile describe the token preferences of a typical feature in it, and why?",
+   "answer": "Not reliably. Equation 4 pools all activation events of the quintile's features, conditioning on a_j>0 for any j in Q_q. The very frequent feature would contribute most of the events, so U_{q,c} would mostly reflect that one feature's token categories.",
+   "rubric": [
+    "States that U_{q,c} would not reliably describe a typical feature.",
+    "Explains that Eq. 4 pools activation events over all features in the quintile, so a frequently firing feature contributes most events and dominates the ratio."
+   ],
+   "batch": 4,
+   "orig_id": "q126"
+  },
+  {
+   "id": "q127",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "An analyst fits exponential decay curves to projection persistence for BatchTopK features using one minimum-activation-event threshold, and for Matryoshka features using a stricter threshold. Is a difference in fitted decay rates evidence that the two dictionaries differ in persistence, and why?",
+   "answer": "No. Appendix D says fit parameters should be compared only between conditions measured under identical selection criteria. A different threshold changes which features and anchors enter each curve, so the difference in decay rates could come from the selection rather than from the dictionaries.",
+   "rubric": [
+    "States that the difference is not valid evidence.",
+    "Explains that fitted parameters are comparable only under identical selection criteria, because different thresholds change which features and anchors contribute."
+   ],
+   "batch": 4,
+   "orig_id": "q127"
+  },
+  {
+   "id": "q128",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "In the paper's dataset, benign trajectories also contain an untrusted span with benign content. Suppose instead that benign trajectories had no untrusted span at all. Would high probe accuracy at d=0 still indicate injection detection, and why?",
+   "answer": "No. The d=0 checkpoint would then compare the end of a block of untrusted tool content against an ordinary position in a trajectory that has no such block. The probe could separate the classes on the mere presence of untrusted content rather than on the injection itself.",
+   "rubric": [
+    "States that high accuracy would no longer indicate injection detection.",
+    "Explains that the probe could exploit the generic presence or absence of an untrusted span (structural difference) rather than injected instructions."
+   ],
+   "batch": 4,
+   "orig_id": "q128"
+  },
+  {
+   "id": "q129",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The Persistent SAE is trained on 256-token windows with the state reset each time, but it is run continuously over agent trajectories whose checkpoints lie much later than 256 tokens. Should its state scale drift into a regime never seen in training at those late positions, and why?",
+   "answer": "Largely no. The contractive update with normalised new evidence keeps the state on the scale of the token-wise activations regardless of position. The hard cap makes every feature's memory finite, so the state depends mainly on recent tokens. This holds as long as effective memories are shorter than the 256-token training window.",
+   "rubric": [
+    "States that the state should not drift (it stays bounded and comparable).",
+    "Cites stability (contractive update and normalised evidence) and finite memory from the hard cap as the reason.",
+    "Adds the condition that effective memories must be within the training window length, or equivalent."
+   ],
+   "batch": 4,
+   "orig_id": "q129"
+  },
+  {
+   "id": "q130",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose a representation's injection probe spreads its coefficients almost evenly over several thousand features. Would its top-k=128 steering vector give a faithful test of whether the monitor uses the probed information, and why?",
+   "answer": "Not fully. Taking only the top 128 features by absolute coefficient would capture just a small part of the probe direction. A weak steering effect could then reflect that truncation rather than the monitor ignoring the information. Comparisons with representations whose probe weights are concentrated would be biased against this one.",
+   "rubric": [
+    "States that the test would not be faithful (it could understate the effect).",
+    "Explains that the top-128 restriction captures only a small fraction of a widely spread probe direction, so the effect depends on how concentrated the coefficients are."
+   ],
+   "batch": 4,
+   "orig_id": "q130"
+  },
+  {
+   "id": "q131",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the paper standardise each representation separately before applying t-SNE with a single common hyperparameter setting?",
+   "answer": "The compared representations differ greatly in scale and sparsity: dense raw hidden states, sparse BatchTopK features, the Temporal SAE's high-level group, and a subset of non-negative persistent states. With one shared perplexity and seed, unstandardised scale differences would change neighbourhood structure. The layouts would then reflect scale rather than subject organisation. Standardising puts the representations on a comparable footing.",
+   "rubric": [
+    "Identifies that the representations differ in scale or sparsity (dense versus sparse versus state).",
+    "Explains that with shared t-SNE hyperparameters, scale differences would distort neighbourhoods, so standardising makes layouts comparable."
+   ],
+   "batch": 4,
+   "orig_id": "q131"
+  },
+  {
+   "id": "q132",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why is taking the final 20 tokens of each MMLU sequence for the t-SNE analysis especially important for the Persistent SAE state?",
+   "answer": "The persistent state starts at h(0)=0 and builds up evidence over tokens. Near the start of a sequence, long-timescale coordinates have accumulated little subject-specific evidence. By the final tokens, the state reflects substantial subject-specific preceding context.",
+   "rubric": [
+    "Notes that the state starts at zero and accumulates evidence over the sequence.",
+    "Concludes that early tokens would underrepresent long-timescale subject information, whereas final tokens follow substantial subject-specific context."
+   ],
+   "batch": 4,
+   "orig_id": "q132"
+  },
+  {
+   "id": "q133",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Unlike the Temporal SAE, the Persistent SAE has no contrastive or smoothness term. What then pushes an individual feature toward a long timescale during training?",
+   "answer": "Only the reconstruction objective on Eq. 3. A longer timescale is favoured when carrying a feature's past evidence forward along its decoder direction helps reconstruct later hidden states, that is, when the information the direction represents stays present in the residual stream. Otherwise the feature's timescale can stay short or become memoryless.",
+   "rubric": [
+    "States that reconstruction loss alone drives the timescale.",
+    "Explains that a long timescale helps only when carrying the feature's past evidence along its decoder direction improves reconstruction of later hidden states."
+   ],
+   "batch": 4,
+   "orig_id": "q133"
+  },
+  {
+   "id": "q134",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "In terms of the local versus global continuity distinction in Section 3, why might the Temporal SAE's temporal training signal mainly reward local continuity?",
+   "answer": "Its buffer supplies adjacent previous\u2013next token pairs, and its contrastive objective aligns high-level activations across neighbouring tokens. Consistency between adjacent tokens is exactly what local continuity, such as phrase continuation, produces on its own. Document-level context across sentences is therefore not directly targeted.",
+   "rubric": [
+    "States that the signal mainly rewards local (adjacent-token) continuity.",
+    "Explains that training uses adjacent token pairs with a contrastive alignment of nearby tokens, which local phrase-level continuity alone can satisfy."
+   ],
+   "batch": 4,
+   "orig_id": "q134"
+  },
+  {
+   "id": "q135",
+   "type": "why",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "The paper does not filter trajectories by task utility. Why can the fixed injection probe still not learn the agent's later behaviour, such as task failure, as its cue for an injection?",
+   "answer": "The probe is fit only at d=0, the final token of the untrusted span. The monitor model is causal, so its representation there depends only on tokens up to that point. The agent's later tool calls and outcomes are not yet visible, so the probe weights cannot be fitted to them.",
+   "rubric": [
+    "States that the probe cannot learn later-behaviour cues during fitting.",
+    "Explains that fitting happens at d=0 and the causal monitor's representation there contains no information about later tokens or outcomes."
+   ],
+   "batch": 4,
+   "orig_id": "q135"
+  },
+  {
+   "id": "q136",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is the Persistent SAE's reconstruction fidelity measured from the persistent state h(t) via Eq. 3, rather than by decoding its token-wise activation a(t)?",
+   "answer": "The decoder is trained to reconstruct from h(t). For long-timescale features, h carries evidence from earlier tokens that a(t) lacks. Decoding a(t) would evaluate a mapping the model was never trained for and would drop those carried contributions. The two agree only for memoryless features.",
+   "rubric": [
+    "States that the decoder is trained to reconstruct from h, so fidelity must be measured from h.",
+    "Explains that a(t) omits evidence carried from earlier tokens by long-timescale features (the two coincide only when memoryless)."
+   ],
+   "batch": 4,
+   "orig_id": "q136"
+  },
+  {
+   "id": "q137",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In spliced subject probing at very small feature fractions, why should the increasing-timescale ranking of the Persistent SAE state be expected to do poorly at most tokens?",
+   "answer": "That ranking first selects near-memoryless features, whose state is essentially their sparse token-wise activation. Those features are zero except at the few tokens where they find evidence. With only a handful of them, most tokens give the probe all-zero inputs, so it has nothing to classify subject from.",
+   "rubric": [
+    "States that this ranking should do poorly at small budgets.",
+    "Explains that the first-selected features are near-memoryless, so their state equals a sparse a(t) that is zero at most tokens."
+   ],
+   "batch": 4,
+   "orig_id": "q137"
+  },
+  {
+   "id": "q138",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "At inference, if two different sequences happen to produce an identical hidden state x at some token, would the Persistent SAE's token-wise activations a(t) at that token be identical?",
+   "answer": "Yes. With the thresholded form, a(t) is a deterministic function of the current hidden state alone. It does not depend on the SAE's previous state.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that a(t) is computed from the current hidden state only (thresholded encoder), independently of h(t-1)."
+   ],
+   "batch": 4,
+   "orig_id": "q138"
+  },
+  {
+   "id": "q139",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "At inference, if two different sequences happen to produce an identical hidden state x at some token, would the Persistent SAE's persistent states h(t) at that token be identical?",
+   "answer": "Generally no. h(t) is computed from h(t-1) and a(t), so it depends on each sequence's earlier token-wise activations. Different histories give different states unless all features are memoryless.",
+   "rubric": [
+    "Answers no (in general).",
+    "Explains that h(t) depends on the previous state and hence on the history of a, not only on the current hidden state."
+   ],
+   "batch": 4,
+   "orig_id": "q139"
+  },
+  {
+   "id": "q140",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b4-p2",
+   "question": "Given that h(0)=0 at sequence start, would computing the fraction of alive features on the persistent state h instead of the token-wise activation a change which features count as alive?",
+   "answer": "No. Each state coordinate is updated feature-wise from zero, so h_j becomes non-zero only after a_j has been positive at some token. A feature that never activates keeps a zero state, so the same set of features is alive under either view.",
+   "rubric": [
+    "Answers no.",
+    "Explains that with a zero initial state and a feature-wise update, h_j can be non-zero only if a_j was positive at some point."
+   ],
+   "batch": 4,
+   "orig_id": "q140"
+  },
+  {
+   "id": "q141",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b4-p2",
+   "question": "If the initial state h(0) were a learned non-zero vector instead of zero, would computing the fraction of alive features on h instead of a change which features count as alive?",
+   "answer": "Yes. A feature could then have a non-zero, decaying state from its initial value without its token-wise activation ever being positive. Measuring on h could make dead features look alive.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that a non-zero initial state lets h_j be non-zero even when a_j never activates, so dead features could appear alive."
+   ],
+   "batch": 4,
+   "orig_id": "q141"
+  },
+  {
+   "id": "q142",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "In spliced subject probing at 100% of features, would the decreasing-timescale ranking give a different macro ROC AUC from the random rankings?",
+   "answer": "No. At 100% every ranking hands the probe the same full set of state coordinates. Order no longer matters, and the curves should coincide.",
+   "rubric": [
+    "Answers no (they coincide).",
+    "Explains that at the full budget all rankings include the same features, so the ordering is irrelevant."
+   ],
+   "batch": 4,
+   "orig_id": "q142"
+  },
+  {
+   "id": "q143",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "In spliced subject probing at 0.1% of features, could the decreasing-timescale ranking give a different macro ROC AUC from the random rankings?",
+   "answer": "Yes. At 0.1%, roughly 16 features are used, and different rankings select different subsets. The AUC can differ depending on whether timescale picks subject-relevant features.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that at a small budget the rankings select different small feature subsets (about 16 features), so performance can differ."
+   ],
+   "batch": 4,
+   "orig_id": "q143"
+  },
+  {
+   "id": "q144",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Under the fixed-probe protocol, representation A has accuracy 0.95 at d=0 and 0.70 at d=350, and representation B has 0.85 at d=0 and 0.83 at d=350. Which is better at local detection and which at retention?",
+   "answer": "A is better at local detection, because detection concerns accuracy near d=0 and A scores 0.95 there. B is better at retention, because retention concerns how accuracy changes with distance: B loses 0.02 while A loses 0.25.",
+   "rubric": [
+    "States that A is better at local detection and B is better at retention.",
+    "Justifies this by reading detection as accuracy near d=0 and retention as the change in accuracy with distance."
+   ],
+   "batch": 4,
+   "orig_id": "q144"
+  },
+  {
+   "id": "q145",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Adding a representation's steering vector with the positive sign raises the monitor's yes-minus-no margin by 0.6, and adding it with the negative sign raises the margin by 0.2. What direction-dependent effect remains after the paper's symmetric analysis?",
+   "answer": "A direction-dependent difference of 0.4 (0.6 \u2212 0.2), equivalently \u00b10.2 around a shared shift. The common +0.4 shift that both signs produce is a direction-independent effect of the perturbation, and the symmetric analysis removes it.",
+   "rubric": [
+    "Gives a direction-dependent effect of 0.4 as the difference (or \u00b10.2 around a mean shift).",
+    "Identifies the shared positive shift (about +0.4) as a direction-independent perturbation effect that is removed."
+   ],
+   "batch": 4,
+   "orig_id": "q145"
+  },
+  {
+   "id": "q146",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "How many features does each timescale quintile contain in the paper's 16,384-feature Persistent SAE, and how does that compare with the Temporal SAE's predefined high-level group?",
+   "answer": "About 3,277 features (16,384/5 = 3,276.8). That is the same size as the Temporal SAE's 20% high-level group, so the longest-timescale quintile is a size-matched counterpart to that group.",
+   "rubric": [
+    "Gives about 3,277 (3,276\u20133,277) features per quintile.",
+    "Notes that this equals the size of the Temporal SAE's 20% high-level group."
+   ],
+   "batch": 4,
+   "orig_id": "q146"
+  },
+  {
+   "id": "q147",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team does not know in advance what fraction of a dictionary should carry contextual information. Based on the paper, should they choose a Temporal SAE or a Persistent SAE, and why?",
+   "answer": "A Persistent SAE. A Temporal SAE requires fixing in advance a high-level subset that carries temporal information, such as the paper's 20%, which builds in experimenter bias. A Persistent SAE learns a timescale for every feature without any predefined partition.",
+   "rubric": [
+    "Recommends the Persistent SAE.",
+    "Explains that the Temporal SAE requires a predefined high-level partition size, whereas the Persistent SAE learns per-feature timescales with no partition."
+   ],
+   "batch": 4,
+   "orig_id": "q147"
+  },
+  {
+   "id": "q148",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Could the paper's Pythia-160M Persistent SAE be used to build the monitoring representations in the AgentDojo case study? Why or why not?",
+   "answer": "No. That SAE was trained on Pythia-160M's 768-dimensional layer-8 residual stream. The monitor reads Gemma-2-2B's 2,304-dimensional layer-12 residual stream. Its encoder and decoder directions do not apply there, so a Gemma-2-2B layer-12 SAE is required.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the Pythia SAE is defined for a different model and layer (d=768, layer 8), whereas the monitor uses Gemma-2-2B layer 12 (d=2,304)."
+   ],
+   "batch": 4,
+   "orig_id": "q148"
+  },
+  {
+   "id": "q149",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team runs the feature-wise context correction on its own SAE. It finds gains above the unrelated-text control at a lag of 2 tokens, but no gains at lags of 50 tokens or more. What can they conclude about document-level context?",
+   "answer": "Little. Short-lag gains are what local continuity, such as consecutive tokens of a phrase or sentence, produces. Evidence that features carry document-level context would require gains at long lags that exceed the unrelated-text control.",
+   "rubric": [
+    "States that this does not show feature-level tracking of document-level context.",
+    "Explains that short-lag gains are consistent with local continuity, and global context would require long-lag gains beyond the control."
+   ],
+   "batch": 4,
+   "orig_id": "q149"
+  },
+  {
+   "id": "q150",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Under exact BatchTopK training with k=20, how many non-zero activation entries does a single Persistent SAE training step keep, compared with a flat-baseline step?",
+   "answer": "The Persistent SAE keeps 20 \u00d7 2,040 = 40,800 entries per step, against 20 \u00d7 2,048 = 40,960 for the flat baselines. That is 160 fewer, while the average of 20 active features per token is the same.",
+   "rubric": [
+    "Gives 40,800 for the Persistent SAE and 40,960 for the baselines (160 fewer).",
+    "Bases this on kB with 2,040 versus 2,048 tokens per step, keeping an average of 20 per token."
+   ],
+   "batch": 4,
+   "orig_id": "q150"
+  },
+  {
+   "id": "q151",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the feature-wise context correction had found mostly negative per-feature parameters, which aspect of the Persistent SAE's design would the diagnostic fail to support?",
+   "answer": "Its way of carrying information forward. The persistent state is non-negative and integrates past activations, so it adds a positive contribution along each feature's decoder direction. A negative parameter means past activation predicts a smaller contribution along that direction, which such a carried state cannot express.",
+   "rubric": [
+    "Identifies the Persistent SAE's non-negative carried state (positive carry-forward along d_j) as unsupported.",
+    "Explains that negative parameters mean past activation predicts a reduced contribution along the same direction, which a non-negative accumulated state cannot represent."
+   ],
+   "batch": 4,
+   "orig_id": "q151"
+  },
+  {
+   "id": "q152",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE's state update mixed coordinates across features, which step of the monitoring case study's causal analysis could no longer be carried out as described?",
+   "answer": "Building the steering vector. The paper weights the decoder directions of the features with the largest probe coefficients on h. That requires each state coordinate to correspond to one decoder direction. With mixing, probe weights on state coordinates would not map onto decoder columns, so the single-framework test of 'contains and is used' would break.",
+   "rubric": [
+    "Identifies construction of the probe-weighted steering vector (the causal intervention) as broken.",
+    "Explains that it relies on each state coordinate being tied to a single decoder direction, which a mixing update would destroy."
+   ],
+   "batch": 4,
+   "orig_id": "q152"
+  },
+  {
+   "id": "q153",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If every Persistent SAE feature had learned the same non-memoryless timescale, which comparisons in the subject and token-category analyses would become uninformative?",
+   "answer": "The timescale-versus-random comparison in spliced probing, the token-category analysis by timescale quintile, and the timescale-selected subsets. With identical timescales, ordering or splitting by timescale is arbitrary, so none of these could show whether timescales carry relevance.",
+   "rubric": [
+    "Names the timescale-based rankings versus random (and/or the quintile analyses and timescale-selected subsets) as uninformative.",
+    "Explains that identical timescales make any ordering or grouping by timescale arbitrary."
+   ],
+   "batch": 4,
+   "orig_id": "q153"
+  },
+  {
+   "id": "q154",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the hard cap limited every feature's effective memory to about 50 tokens, what could high fixed-probe accuracy of the long-timescale subset at d=200\u2013350 no longer be attributed to?",
+   "answer": "It could not be credited to the persistent state carrying the injection evidence forward from d=0. With roughly 50 tokens of memory, the d=0 evidence would have decayed by then. Any late accuracy would have to come from new evidence arriving in later tokens.",
+   "rubric": [
+    "States that late accuracy could not be attributed to the state retaining evidence from the injected span.",
+    "Explains that a finite memory far shorter than the distance means the d=0 evidence would have decayed, so the signal must come from later tokens."
+   ],
+   "batch": 4,
+   "orig_id": "q154"
+  },
+  {
+   "id": "q155",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE had been trained with a dictionary four times wider than the baselines, which subject-probing comparison would become confounded, and why?",
+   "answer": "The comparison of the Persistent SAE state with the baseline SAE representations at matched budgets. The same fraction of features would correspond to four times as many absolute features, and the model would have extra capacity. Any advantage could then reflect width rather than carrying state forward.",
+   "rubric": [
+    "Identifies the Persistent-versus-baseline comparison at matched feature budgets as confounded.",
+    "Explains that unequal width changes absolute feature counts and capacity, so differences could come from width rather than persistence."
+   ],
+   "batch": 4,
+   "orig_id": "q155"
+  },
+  {
+   "id": "q156",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the k=128 restriction mean that the injection probes compared across representations use the same number of features? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The k=128 restriction applies only to building steering vectors. The logistic probes are fit on each full representation, for example the full Persistent state of 16,384 features versus the Temporal SAE's high-level group of about 3,277, so feature counts differ.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that k=128 applies only to steering, and the probes use full representations of different sizes (for example 16,384 versus about 3,277)."
+   ],
+   "batch": 4,
+   "orig_id": "q156"
+  },
+  {
+   "id": "q157",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper's setup guarantee that the Persistent SAE's token-wise activation a(t) has exactly 20 active features at every token? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. BatchTopK enforces k=20 as a batch-level budget, letting the number of active features vary across tokens, and the thresholded inference form also lets it vary per token. Twenty is the average, not a per-token count.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that BatchTopK fixes only a batch-level (average) budget and the thresholded form lets per-token counts vary."
+   ],
+   "batch": 4,
+   "orig_id": "q157"
+  },
+  {
+   "id": "q158",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the longest-timescale quintile had U above 1 for nouns, would that show that those features are mainly present at nouns? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. U_{q,c} is computed over positions where a_j>0, which is where new evidence arrives. For long-timescale features, the persistent state stays elevated across many later tokens. A noun preference describes where updates happen, not where the feature is present.",
+   "rubric": [
+    "Answers contradicted (or not supported).",
+    "Explains that U counts token-wise update positions, while a long-timescale feature's state persists over subsequent tokens of any category."
+   ],
+   "batch": 4,
+   "orig_id": "q158"
+  },
+  {
+   "id": "q159",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If long-timescale features scored low on token-level autointerp but their states gave strong spliced subject probing, would the two results conflict? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted: the results would not conflict. Autointerp judges short windows of the token-wise activation, which fit long-timescale features poorly. The probing treats the persistent states jointly at the level of whole segments. A low local score does not imply that the features carry no meaningful information.",
+   "rubric": [
+    "States that the results would not conflict.",
+    "Explains that autointerp uses short token-level windows ill-suited to long-timescale features, whereas probing evaluates joint state at segment level."
+   ],
+   "batch": 4,
+   "orig_id": "q159"
+  },
+  {
+   "id": "q160",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the case study show that Persistent SAE states retain the signal of every kind of indirect prompt injection attack in AgentDojo? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The positives are restricted to the important_instructions and direct attack types, and to failed attacks. Retention for other attack types was not evaluated.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that only important_instructions and direct attacks (with security=false) were used."
+   ],
+   "batch": 4,
+   "orig_id": "q160"
+  },
+  {
+   "id": "q161",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that the learned timescales capture persistence in long-form fiction and subtitled dialogue? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Training uses Pile Uncopyrighted, which removes Books3, BookCorpus2, OpenSubtitles and YouTube Subtitles. The evaluations use Pile documents capped at 768 tokens, MMLU and AgentDojo, so neither book-length narrative nor subtitled dialogue is tested.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the book and subtitle components were removed from the training data and that no evaluation covers such text."
+   ],
+   "batch": 4,
+   "orig_id": "q161"
+  },
+  {
+   "id": "q162",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If autointerp gave several long-timescale Persistent SAE features nearly identical descriptions such as 'academic text', would that show that those features are redundant? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper notes that features whose relevance is spread across a sequence may receive similar descriptions even when they are distinct, because the judge sees only short windows. Similar descriptions therefore do not establish redundancy.",
+   "rubric": [
+    "Answers not settled (similar descriptions do not show redundancy).",
+    "Explains that token-level descriptions of distributed, long-timescale features can converge on broad domains even for distinct features."
+   ],
+   "batch": 4,
+   "orig_id": "q162"
+  },
+  {
+   "id": "q163",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "In the Appendix D persistence measurement, suppose a feature's activation events cluster just after the 16-token prefix at the start of documents. Would a decline in its normalised projection at long lags be clean evidence that the feature's signal fades, and why?",
+   "answer": "No. The long-lag points for these anchors fall at much later positions in the document, where hidden-state statistics differ. A decline could therefore reflect positional drift rather than fading of the feature's signal. Dropping the prefix and capping document length reduce this confound but do not remove it.",
+   "rubric": [
+    "Concludes that the decline is not clean evidence of fading.",
+    "Explains that long lags from early anchors land at later positions whose hidden-state statistics differ (the positional-drift confound), and that the prefix drop and length cap only mitigate it."
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q164",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Every trajectory ends with the same appended monitoring query. Would a representation that reflects only the current and immediately preceding tokens separate injected from benign trajectories at the final query position, and why?",
+   "answer": "No. The local tokens at the query position are identical for both classes. Any separation there must come from information carried forward from earlier in the trajectory, so this checkpoint tests retention rather than local detection.",
+   "rubric": [
+    "Concludes that a purely local representation would not separate the classes there (near chance).",
+    "Explains that the appended query text is the same for all trajectories, so only information carried from earlier can distinguish them."
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose the context correction's control replaced the past activations with zeros instead of past activations from unrelated text. Would a gain of the true-history correction over this control show that features carry document-specific history, and why?",
+   "answer": "No. A zero control removes the marginal statistics of the activations. The true-history correction could then gain simply by adding a typical, bias-like activation level along each direction, without any document-specific relationship. The unrelated-text control keeps those marginals and removes only the link to the target document's history.",
+   "rubric": [
+    "Concludes that the gain would not show document-specific history.",
+    "Explains that zeros discard the marginal activation statistics, so the gain could come from generic average-activation effects, whereas the unrelated-text control preserves those statistics."
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q166",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Persistent SAE features are grouped by their own learned timescales, and smoothness is measured on the persistent state. If the longest-timescale group is smoother than the shortest, does that difference by itself show that the long group captures meaningful structure? Why?",
+   "answer": "No. The grouping uses the same parameter that sets how strongly each state is smoothed over time, so the long group would be smoother by construction. This is why the paper calls the comparison asymmetric. Meaningfulness has to be checked with fidelity (FVE) and with independent evidence, such as projection-based persistence or subject information.",
+   "rubric": [
+    "Concludes that the difference is not by itself evidence of meaningful structure.",
+    "Explains that the groups are defined by the timescale that controls smoothing of h, so greater smoothness follows by construction; independent checks such as FVE, projection persistence or probing are needed."
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q167",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If each representation in the t-SNE comparison were projected with its own tuned perplexity rather than a common setting, would differences in how cleanly subjects cluster be comparable across representations, and why?",
+   "answer": "No. t-SNE can exaggerate or suppress cluster separation depending on perplexity and initialisation. Tuning per representation would mix hyperparameter effects into the comparison, which is why the paper uses one perplexity and a fixed seed for all representations.",
+   "rubric": [
+    "Concludes that the cluster differences would not be comparable.",
+    "Explains that t-SNE separation depends on perplexity and initialisation, so per-representation tuning confounds the comparison."
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q168",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the random-ranking reference in spliced subject probing were a single permutation rather than an average over several, would a gap between the decreasing-timescale curve and the random curve at the 0.1% fraction be reliable? Why?",
+   "answer": "No. At 0.1%, only about 16 features are available, so the AUC depends heavily on which features one random draw happens to include. A single permutation is a high-variance reference, and averaging several permutations is what makes the comparison stable.",
+   "rubric": [
+    "Concludes that the gap would not be reliable.",
+    "Explains that with very few features (about 16) a single random draw has high variance, and averaging over permutations is needed for a stable reference."
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q169",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the monitoring evaluation, why is the Persistent SAE's token-wise activation a(t) a particularly informative comparison for its state h(t), more so than the BatchTopK activations?",
+   "answer": "a(t) and h(t) come from the same trained encoder and dictionary, and differ only in whether the state update has been applied. A difference in retention between them can therefore be attributed to carrying state forward. BatchTopK also differs in its training and in its learned dictionary.",
+   "rubric": [
+    "States that a(t) and h(t) share the same encoder and dictionary, differing only by the state update.",
+    "Concludes that their difference isolates the effect of carrying state, unlike a comparison with a separately trained SAE."
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q170",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the relative update frequency U_{q,c} condition on a_j(t)>0 rather than on the persistent state h_j(t) being non-zero?",
+   "answer": "The state is not sparse and stays non-zero for many tokens after evidence arrives, especially for long-timescale features. Conditioning on h would count tokens far from the update and mix the timescale itself into the statistic. a_j(t)>0 marks exactly the tokens where new evidence arrives, which is what the analysis is meant to measure.",
+   "rubric": [
+    "States that h remains non-zero for many tokens after an update because it is not sparse, especially for long timescales.",
+    "Explains that a_j(t)>0 identifies where new evidence arrives, which is the quantity U is meant to characterise."
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q171",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the Persistent SAE's per-token inference cost grow only linearly with dictionary size, rather than quadratically as a general recurrent state over m coordinates might?",
+   "answer": "The state update acts feature-wise. Each coordinate is updated only from its own previous value and its own token-wise activation, so a token requires m independent scalar updates. A dense recurrence would mix coordinates and need interactions among all m features.",
+   "rubric": [
+    "Attributes the linear cost to the feature-wise update.",
+    "Explains that each coordinate depends only on its own past and activation, so there are m scalar updates rather than m-by-m cross-feature interactions."
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q172",
+   "type": "why",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "In the causal analysis, why is the steering intervention applied at the final query token of a trajectory truncated at a later distance, rather than at the end of the injected span?",
+   "answer": "The monitor's yes-minus-no margin is produced at the query token. Intervening there tests whether the direction affects the monitor's judgement at the moment it answers, after the delay that matters for long-context monitoring. Intervening at the span end would not test influence on the delayed decision.",
+   "rubric": [
+    "States that the monitor's judgement (the yes-minus-no margin) is read out at the query token.",
+    "Explains that intervening there, after the chosen distance, tests causal influence on the delayed judgement rather than on local processing at the span."
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q173",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the paper describe a Persistent SAE as internalising the feature-wise context correction diagnostic?",
+   "answer": "The correction adds a learned multiple of a feature's own past activation along its own decoder direction. A Persistent SAE's state likewise accumulates each feature's own past activations, decayed according to its timescale, and decodes them along that same direction. It does this across many lags and learns it jointly with the encoder and decoder during training, not post hoc on a frozen SAE.",
+   "rubric": [
+    "Notes that both add a feature's own past activation along its own decoder direction, in the same feature-wise form.",
+    "Notes that the Persistent SAE does this across lags through its state and learns it jointly in training rather than post hoc."
+   ],
+   "batch": 5,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q174",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why are the BatchTopK, Matryoshka and Temporal SAE baselines probed with their full dictionaries rather than ranked by timescale like the Persistent SAE?",
+   "answer": "The baselines have no per-feature timescale parameter, so an unsupervised ranking by timescale is undefined for them. Only the Persistent SAE exposes a timescale for every feature that can order its dictionary.",
+   "rubric": [
+    "States that the baselines lack per-feature timescales.",
+    "Concludes that a timescale-based ranking cannot be built for them, so it applies only to the Persistent SAE."
+   ],
+   "batch": 5,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q175",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Using the context correction preprocessing, roughly how many target positions in a document at the 768-token cap can be paired with a past activation at lag 10, compared with lag 700?",
+   "answer": "After dropping the 16 prefix tokens, positions 16 to 767 remain, which is about 752. At lag 10, nearly all of them, about 740 to 750, have a valid past position. At lag 700, only about 50 to 70 do. Long-lag corrections therefore rest on an order of magnitude less data, and documents shorter than about 716 tokens contribute nothing at that lag.",
+   "rubric": [
+    "Gives about 740\u2013750 positions at lag 10 and about 50\u201370 at lag 700.",
+    "Explains that this follows from the 16-token prefix drop and the 768-token cap, so long-lag estimates use far fewer pairs."
+   ],
+   "batch": 5,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "In the monitoring case study, representation R has low fixed-probe accuracy at d=200, but adding its d=0 steering vector with opposite signs at d=200 produces a large, sign-dependent change in the monitor's margin. How should this be interpreted?",
+   "answer": "R's direction appears to be used by the monitor's judgement even though it is only weakly decodable at that position. The paper explicitly allows this case, since decodability and causal use can come apart. The symmetric design rules out a generic perturbation effect.",
+   "rubric": [
+    "Concludes that the direction influences the monitor despite weak decodability.",
+    "Explains that probe accuracy and causal use can diverge, and that the sign-dependent difference excludes direction-independent effects."
+   ],
+   "batch": 5,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team scales the Persistent SAE dictionary from 16,384 to 65,536 features. How does the per-token cost of the state update change, and does it depend on how long the trajectory is?",
+   "answer": "The per-token cost grows about fourfold, because the cost is linear in dictionary size. It does not depend on trajectory length, because the state is updated once per token online.",
+   "rubric": [
+    "States that the per-token update cost grows about 4\u00d7.",
+    "States that it is independent of sequence length, because the update is linear in m and done once per token from the previous state."
+   ],
+   "batch": 5,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q178",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team replicating the spliced probing gives each sequence three abstract-algebra segments for every one segment of each other subject. Which control in the paper's design have they lost, and what risk does it introduce?",
+   "answer": "They have lost the within-sequence balancing that makes each subject's prior uniform. A probe could then improve its score partly by favouring the frequent subject rather than by tracking the current subject.",
+   "rubric": [
+    "Identifies the loss of subject balancing (a uniform prior).",
+    "Explains the risk that the probe exploits subject frequency instead of tracking the current subject."
+   ],
+   "batch": 5,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q179",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Over its full training run, how many separate 256-token windows does the Persistent SAE process, each starting from a reset state?",
+   "answer": "About 1.95 million windows: 8 windows per step \u00d7 244,140 steps = 1,953,120. Each starts with h(0)=0, including later windows of long documents, which are treated as fresh sequences.",
+   "rubric": [
+    "Gives about 1,953,120 (about 1.95M) windows.",
+    "Bases this on 8 sequences per step over 244,140 steps, each with its state reset."
+   ],
+   "batch": 5,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q180",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": null,
+   "question": "In the steering analysis, what fraction of the available features does the k=128 steering vector use for the Temporal SAE's high-level group, compared with the Persistent SAE's full state?",
+   "answer": "The Temporal high-level group has about 3,277 features (20% of 16,384), so 128 is about 3.9% of it. For the full Persistent state, 128 of 16,384 is about 0.8%. The absolute number of features is matched, but the fraction of each representation's pool is not.",
+   "rubric": [
+    "Gives about 3.9% for the Temporal high-level group and about 0.8% for the full Persistent state.",
+    "Uses the 20% partition (about 3,277 features) and m=16,384, noting that the count is matched but the fraction differs."
+   ],
+   "batch": 5,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the Persistent SAE's token-wise activation a(t) had retained the injection signal across distance as well as its state h(t) did, which conclusion would lose support?",
+   "answer": "The attribution of the Persistent SAE's retention to its persistent state would lose support. If the un-integrated activations retain the signal equally well, the state update adds nothing for long-context monitoring.",
+   "rubric": [
+    "Identifies the conclusion that the carried state is responsible for retention.",
+    "Explains that the same encoder without the state update would perform equally, so the state adds no retention benefit."
+   ],
+   "batch": 5,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the decreasing-timescale ranking had matched the supervised ranking's macro ROC AUC at every feature fraction, what would that imply about the paper's aim of an unsupervised context summary?",
+   "answer": "The unsupervised timescale criterion would be selecting subject-relevant features as well as the label-informed upper reference. A compact, inspectable subject summary could then be obtained without labels.",
+   "rubric": [
+    "Concludes that the gap to the label-informed reference would be essentially zero.",
+    "Explains that timescale alone would suffice to pick a compact subject summary without supervision."
+   ],
+   "batch": 5,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the long-timescale Persistent SAE subset had high fixed-probe accuracy at late distances but its symmetric steering produced no direction-dependent change in the monitor's margin, which claim would lose support?",
+   "answer": "The claim that this representation is used by the monitor's judgement, as opposed to merely containing injection information, would lose support. The probe could be exploiting directions that the model itself does not use.",
+   "rubric": [
+    "Identifies the claim that the representation is used for (causally influences) the monitor's judgement.",
+    "Explains that probe accuracy alone shows containment, which can rest on directions the model does not use."
+   ],
+   "batch": 5,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q184",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose a dense linear map from past activations to the current hidden state recovered substantial reconstruction error, but the feature-wise context correction recovered none beyond the unrelated-text control. What would that imply for the motivation behind Persistent SAEs?",
+   "answer": "It would weaken the motivation. The dense gain would reflect only the known correlation between consecutive hidden states. The null feature-wise result would indicate that individual standard-SAE features do not carry reconstruction-relevant information forward along their own directions.",
+   "rubric": [
+    "Concludes that the motivation for feature-level persistence would weaken.",
+    "Explains that the dense gain is attributable to hidden-state correlation, whereas only the feature-wise result speaks to individual features."
+   ],
+   "batch": 5,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q185",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If every representation, including the raw hidden state, had been near chance at d=0, which part of the monitoring analysis would lose its basis?",
+   "answer": "The retention analysis would lose its basis. The probe is fitted at d=0, so with no local detection there would be no signal whose persistence could be measured at later distances. The steering directions, also built at d=0, would be uninformative too.",
+   "rubric": [
+    "Identifies the retention, or fixed-probe distance, analysis as losing its basis (steering may also be mentioned).",
+    "Explains that both depend on a probe or direction fitted at d=0, which would carry no signal."
+   ],
+   "batch": 5,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q186",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the Matryoshka SAE's predefined high-level group had been as smooth as the Temporal SAE's high-level group, what would that suggest about the Temporal SAE's contrastive objective?",
+   "answer": "Its smoothness could not be credited to the contrastive temporal objective. Matryoshka uses the same 20%/80% partition without any temporal signal, so the partition or nesting alone would account for the smoothness.",
+   "rubric": [
+    "Concludes that the contrastive objective would add little to smoothness.",
+    "Explains that Matryoshka shares the partition but has no temporal training signal, so it serves as a control."
+   ],
+   "batch": 5,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the finding of Lubana et al. that past hidden states explain much of the current hidden state establish that standard SAE features carry temporal information? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper argues that hidden-state correlation does not imply feature-level persistence. A sparse decomposition may spread the persistent part across many features or absorb it into a bias term or into features that fire on almost every token, so the question is empirical and concerns the decomposition.",
+   "rubric": [
+    "Answers not settled (it does not establish it).",
+    "Explains that hidden-state correlation can be absorbed by the decomposition (spread across features, absorbed into the bias or into ubiquitous features), so feature-level persistence is a separate empirical question."
+   ],
+   "batch": 5,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q188",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does a large direction-dependent steering effect on the monitor's yes-minus-no margin show that the monitor would then correctly flag injected trajectories? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The steering analysis measures changes in the margin, which show causal influence. Prompting the monitor alone yields AUC 0.51, and the paper evaluates no steered classification accuracy, so it does not show that steering makes the monitor flag correctly.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the analysis measures margin changes (causal influence), not flagging accuracy, and that the monitor's own answers are near chance (AUC 0.51)."
+   ],
+   "batch": 5,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the feature-wise context correction showed clear gains on a frozen BatchTopK SAE, would that establish that a Persistent SAE trained under matched settings outperforms BatchTopK? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper frames the two as answering distinct questions. The correction asks whether an atemporal decomposition leaves feature-level temporal information unused. A Persistent SAE learns a different decomposition jointly, so its outcome is not determined by the post-hoc result.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the post-hoc diagnostic and joint training answer different questions, so a positive diagnostic does not guarantee the trained model's performance."
+   ],
+   "batch": 5,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q190",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the matched training setup mean the Persistent SAE has exactly the same number of learned parameters as the BatchTopK SAE? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The setup matches width, sparsity, optimiser, steps and token budget, but the Persistent SAE additionally learns a timescale parameter for every feature. That adds about 16,384 parameters, which is small relative to the encoder and decoder.",
+   "rubric": [
+    "Answers contradicted (not exactly equal).",
+    "Explains that the Persistent SAE adds a per-feature timescale parameter (about m=16,384 extra), while the matched quantities do not include parameter count."
+   ],
+   "batch": 5,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q191",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the matched setup ensure that the Persistent SAE sees activations from as many distinct documents per step as the flat baselines? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported. The setup matches activation tokens per step, not documents. Each Persistent SAE step draws 8 contiguous 255-token windows, so about 8 documents, whereas the flat baselines draw shuffled tokens from a mixture of many documents. Per-step document diversity is therefore lower for the Persistent SAE.",
+   "rubric": [
+    "Answers that this is not ensured (contradicted or not settled, with per-step diversity likely lower).",
+    "Explains that tokens, not documents, are matched, and that the Persistent SAE uses 8 windows per step while the flat baselines mix shuffled tokens from many documents."
+   ],
+   "batch": 5,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q192",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that long-timescale Persistent SAE states track subject in ordinary Pile documents, beyond MMLU? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The subject analyses (t-SNE and spliced probing) use only five MMLU subjects. Pile is used for training and for temporal statistics, not for subject probing.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that subject evidence comes only from five MMLU subjects, with no subject evaluation on Pile."
+   ],
+   "batch": 5,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q193",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b5-p1",
+   "question": "Under the fixed d=0 probe protocol, suppose a representation encodes the injection along the same direction at every checkpoint. Would its probe accuracy be expected to drop with distance because of how it encodes the signal?",
+   "answer": "No. A fixed probe transfers when the encoding direction is stable, so this representation's accuracy would not drop because of drift.",
+   "rubric": [
+    "Answers no.",
+    "Explains that a stable encoding direction lets the d=0 probe keep working at later checkpoints."
+   ],
+   "batch": 5,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q194",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b5-p1",
+   "question": "Under the fixed d=0 probe protocol, suppose a representation encodes the injection at every checkpoint, but along a direction that rotates with distance. Would its probe accuracy be expected to drop with distance because of how it encodes the signal?",
+   "answer": "Yes. The probe was fitted to the d=0 direction and is not retrained, so drift in the encoding lowers accuracy even though the information is present. This is exactly what the fixed protocol is designed to expose.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the probe is not retrained, so a drifting encoding defeats it even when the information remains present."
+   ],
+   "batch": 5,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q195",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p2",
+   "question": "In the autointerp pipeline, if scoring used held-out contexts disjoint from those shown during explanation, would a high score reward memorisation of specific examples?",
+   "answer": "No. With disjoint held-out contexts, a high score requires the explanation to generalise to new inputs.",
+   "rubric": [
+    "Answers no.",
+    "Explains that held-out scoring contexts require generalisation beyond the explained examples."
+   ],
+   "batch": 5,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q196",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p2",
+   "question": "In the autointerp pipeline, if scoring reused the same contexts that were shown during explanation, would a high score reward memorisation of specific examples?",
+   "answer": "Yes. The judge could predict activations from having seen those exact examples, so the score would reflect memorisation rather than a generalisable description.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that reused contexts let the score come from recalling the specific examples rather than from generalisation."
+   ],
+   "batch": 5,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q197",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p3",
+   "question": "In the Appendix D persistence analysis, if a feature with clearly positive elevation at its activating tokens and plenty of valid anchors were included, would its normalised persistence measure be stable?",
+   "answer": "Yes. Normalising by a clearly non-zero elevation at the activating token gives a well-defined, stable measure.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the normalising denominator (the elevation at the activating token) is clearly non-zero."
+   ],
+   "batch": 5,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q198",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p3",
+   "question": "In the Appendix D persistence analysis, if a near-dead feature with near-zero elevation at its activating tokens were included by adding a small constant to the denominator, would its normalised persistence measure be stable?",
+   "answer": "No. With a near-zero denominator, the regularised ratio can become arbitrarily large or unstable, which is why the paper excludes such features rather than regularising them.",
+   "rubric": [
+    "Answers no.",
+    "Explains that a near-zero elevation makes the ratio blow up or become unstable even with a small added constant."
+   ],
+   "batch": 5,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q199",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p4",
+   "question": "After a standard SAE feature activates, suppose its signal lingers in the hidden state but stays below the encoder's sparsity threshold. Would tracking the sparse activation f_j at later tokens reveal the lingering signal?",
+   "answer": "No. f_j is zero whenever the feature is below the sparsity threshold, so the sub-threshold signal is invisible in the sparse activation.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the sparse activation is zeroed below the threshold."
+   ],
+   "batch": 5,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q200",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p4",
+   "question": "After a standard SAE feature activates, suppose its signal lingers in the hidden state but stays below the encoder's sparsity threshold. Would tracking the projection p_j=d_j^T x at later tokens reveal the lingering signal?",
+   "answer": "Yes. The projection is defined at every token, so it can reveal signal that is present but not selected by the encoder. It remains subject to the confound from correlated, non-orthogonal decoder directions.",
+   "rubric": [
+    "Answers yes (possibly with the correlated-direction caveat).",
+    "Explains that the projection is defined at every token regardless of the sparsity threshold."
+   ],
+   "batch": 5,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q201",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b5-p5",
+   "question": "In the steering analysis, if one representation's top-128 probe coefficients were all 10 times larger than another's, would its steering vector at the same intervention position have a larger norm?",
+   "answer": "No. The probe-weighted direction is normalised and rescaled to \u03c1=0.1 of the hidden-state norm, so the overall scale of the coefficients does not affect its magnitude.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the direction is normalised and scaled to a fixed fraction of the hidden-state norm."
+   ],
+   "batch": 5,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q202",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b5-p5",
+   "question": "In the steering analysis, if the hidden-state norm at one intervention position were 10 times larger than at another, would the steering vector applied there have a larger norm?",
+   "answer": "Yes. Its norm is set to \u03c1=0.1 of the hidden-state norm at the intervention position, so it would be 10 times larger.",
+   "rubric": [
+    "Answers yes (about 10\u00d7 larger).",
+    "Explains that the norm is defined as a fixed fraction \u03c1=0.1 of the local hidden-state norm."
+   ],
+   "batch": 5,
+   "orig_id": "q40"
+  }
+ ],
+ "rejected": [],
+ "types": {
+  "failure": 32,
+  "why": 33,
+  "counterfactual": 40,
+  "transfer": 31,
+  "connect": 32,
+  "scope": 34
+ }
+}

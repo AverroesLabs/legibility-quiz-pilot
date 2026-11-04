@@ -1,0 +1,17 @@
+{
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p10",
+ "tries": [
+  {
+   "call": "f74e4f1a38dcc0633ab62b4392e06755b6e071abd6454e7f86961405b6f23e28",
+   "finish": "stop",
+   "cost": 0.500552,
+   "chars": 40057,
+   "ratio": 0.599,
+   "same_sections": true,
+   "missing": [],
+   "pass": true
+  }
+ ],
+ "used_try": 0
+}

@@ -1,0 +1,3479 @@
+{
+ "paper": "2607.28685v1-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "79983f043531fd955d422a0ea4893e45f6925252d0ecc2e56f485e691c82d38e",
+ "batches": 5,
+ "written_per_batch": [
+  40,
+  41,
+  40,
+  37,
+  40
+ ],
+ "cost_per_batch": [
+  0.42354,
+  0.631176,
+  0.784004,
+  0.690272,
+  1.011452
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Every item-rich instrument with item-resampling support is highly internally consistent. Single-scenario and single-run instruments (the misalignment probe and \u03c4\u00b2-bench) are the weakest links.",
+   "methods": [
+    "Split-half correlation over 50 random half-splits, Spearman\u2013Brown corrected",
+    "Item-bootstrap rank stability",
+    "Top-quartile persistence under resampling",
+    "Splits restricted to the items common to every model's logs",
+    "Jailbreak resampled by base prompt"
+   ],
+   "results": [
+    "Split-half (SB) \u22650.96 for R-Judge specificity (0.99), R-Judge F1 (0.96), InjecAgent (0.98), AgentHarm (0.96), jailbreak (0.97), MMLU (0.96), GPQA (0.97)",
+    "Rank stability \u22650.97",
+    "Top-quartile persistence 0.79\u20130.96, with AgentHarm lowest at 0.79 on 44 behaviors",
+    "Misalignment halves: raw split-half 0.54, SB 0.70",
+    "\u03c4\u00b2 has no resampling bound (single run, user-simulator variance)"
+   ],
+   "conditions": [
+    "Applies only to item sampling within one instrument",
+    "Misalignment has only config-level data across two scenario halves"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "Within-model standard errors are a modest fraction of between-model spread. This supports panel-level spread but not every pairwise model difference.",
+   "methods": [
+    "Binomial SEs for MMLU (500 items) and GPQA (198 items)",
+    "Binomial SE over 100 misalignment decisions",
+    "Bootstrap SEs over R-Judge records and jailbreak prompts"
+   ],
+   "results": [
+    "Max SE: MMLU 2.2, GPQA 3.6, misalignment 5.0, R-Judge F1 3.0, jailbreak 3.7",
+    "Between-model SD (expanded panel): 8.7, 18.2, 26.0, 14.9, 28.5",
+    "Worst-case SE is 13\u201325% of SD; spread is 4\u20138\u00d7 the worst-case SE",
+    "\u03c4\u00b2 not covered"
+   ],
+   "conditions": [
+    "Individual model pairs can be closer than their SEs"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "R-Judge's official headline metric (F1 on the unsafe class) is gameable because it ignores true negatives. Benchmarks should report the full confusion matrix, complementary metrics and constant-verdict reference rows.",
+   "methods": [
+    "The harness stores per-model verdicts and labels",
+    "Recall, specificity, precision, F1 and balanced accuracy computed from the stored verdicts",
+    "Constant-verdict reference policies"
+   ],
+   "results": [
+    "F1 combines recall with precision and ignores true negatives",
+    "Specificity is the fraction of benign traces correctly identified as benign; balanced accuracy weights the two classes equally"
+   ],
+   "conditions": [
+    "The appropriate metric depends on the use case: a monitor with costly false alarms vs a last-line filter"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Capability must be measured under a uniform protocol. Provider-reported anchors fail the positive control while harmonized anchors pass it, and how much capability a score contains depends on the metric.",
+   "methods": [
+    "MMLU zero-shot on a fixed 500-item subset (seed 42)",
+    "GPQA-Diamond, 198 items, chain-of-thought",
+    "Composite = mean of the standardized anchors",
+    "Rank-residualized partial correlations",
+    "Six-model BFCL pilot"
+   ],
+   "results": [
+    "Positive control fails on provider numbers and passes on harmonized anchors",
+    "BFCL ranked GPT-4o-mini highest (0.72) and the two most capable models lowest (0.42\u20130.48), apparently rewarding format conformance",
+    "Anchor panel of 21 models (DeepSeek-R1 excluded)"
+   ],
+   "conditions": [
+    "The anchors are static-knowledge tests and may miss agentic ability",
+    "Measurement error in the covariate distorts adjusted relationships"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Cross-benchmark comparisons are panel-dependent. The benchmarks disagree, small-panel impressions did not persist, and coverage loss is non-random.",
+   "methods": [
+    "Common panel across R-Judge, InjecAgent and AgentHarm",
+    "Pre-specified positive, negative and convergent controls",
+    "Horn's parallel analysis on PCA",
+    "Subsampling and leave-one-out checks"
+   ],
+   "results": [
+    "First panel n=7: impressions did not survive",
+    "Common panel n=18; AgentDojo n=5, so the convergent control is inconclusive",
+    "Negative control passes: median first permuted eigenvalue 1.71 vs threshold 2.18",
+    "Minimum detectable effect \u03c1\u22480.62 at n=18; \u03c1\u22480.4 needs about 40 models",
+    "Coverage loss concentrated on models with non-standard tool interfaces"
+   ],
+   "conditions": [
+    "Avoid interpreting rank correlations on fewer than about a dozen models",
+    "The PCA is interpreted only if the controls pass"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "The held-out outcomes have specific measurement properties. A single jailbreak template ceilings, the three-template average does not, AgentHarm shows the strongest jailbreak association (read as agreement between harmful-compliance instruments), and judge swaps reproduce the chat outcomes.",
+   "methods": [
+    "StrongREJECT scoring on 50 prompts averaged over AIM, refusal suppression and prefix injection",
+    "Misalignment: 100 decisions per model scored by a fixed classifier",
+    "\u03c4\u00b2-retail: 40 tasks, single run",
+    "Independent graders and judges"
+   ],
+   "results": [
+    "Under AIM alone, 11 of 22 models refuse every request",
+    "The three-template average leaves no model at the ceiling",
+    "Misalignment and jailbreak graders reproduce model-level scores closely",
+    "AgentHarm refusal-judge swap agrees less closely because it redoes only the refusal component"
+   ],
+   "conditions": [
+    "No adaptive attacks",
+    "The scenario is fictional",
+    "\u03c4\u00b2 is not a safety measure"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Expanding to 41 anchored models from 12 organizations weakens the capability\u2013misalignment correlation. Organizational clustering must be handled in resampling and organization comparisons remain observational.",
+   "methods": [
+    "Stratified nested bootstrap",
+    "Fisher z comparing 2026-only models with the original panel",
+    "Organization-histogram-matched size-21 subsets",
+    "Organization-clustered bootstrap and leave-one-organization-out",
+    "Permutation test checked on 2,000 synthetic null panels"
+   ],
+   "results": [
+    "Misalignment n=40, jailbreak n=41",
+    "Permutation test rejection 0.045\u20130.052 at \u03b1=0.05 under standard nulls",
+    "Worst-case clustered-variance null gives 0.067 at \u03b1=0.05 (jailbreak only), no inflation at \u03b1=0.005",
+    "Exclusions based only on telemetry; several newer models could not be run reliably (stale harness)"
+   ],
+   "conditions": [
+    "\u03c4\u00b2 not re-collected",
+    "Capability matched only on a static composite",
+    "Some organizations are range-restricted"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "Two artifact checks: blinded LLM coders recover the authors' target assignments, and XSTest records over-refusal. Both are low-power context rather than decisive tests.",
+   "methods": [
+    "Seven LLM coders from distinct families shown neutral descriptions, with shuffled options",
+    "A distractor-construct round",
+    "XSTest with the CPI scorer"
+   ],
+   "results": [
+    "27/28 ratings agree; Krippendorff \u03b1=0.825",
+    "AgentHarm 7/0 harm blocking; InjecAgent 1/6",
+    "AgentDojo read as task success by 4/7 coders in the distractor round",
+    "XSTest unsafe subset refusal 83\u2013100% (sd 4.5, ceilinged)",
+    "Safe-subset over-refusal 0\u201360% (Claude-3-Haiku 60%, o3-mini 30%)"
+   ],
+   "conditions": [
+    "Controls coder bias but not rubric-designer bias",
+    "XSTest comparison n=17\u201320"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A policy that labels every R-Judge trace as unsafe would earn a non-trivial official F1. Which of the R-Judge summaries the harness records would expose this policy as uninformative, and what value would it take?",
+   "answer": "Specificity would expose it: every benign trace would be flagged, so specificity is 0. Balanced accuracy would be 0.5, because recall of 1 is averaged with specificity of 0. F1 cannot expose the policy because it ignores true negatives, and perfect recall props it up.",
+   "rubric": [
+    "Names specificity (and/or balanced accuracy) as the exposing metric, with specificity = 0 (and/or balanced accuracy = 0.5)",
+    "Explains that F1 ignores true negatives, so perfect recall inflates it while benign traces are all misjudged"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The paper reports split-half \u22650.96 and rank stability \u22650.97 for its item-rich instruments. Would that kind of evidence establish that \u03c4\u00b2-bench retail rankings are stable, and why?",
+   "answer": "No. \u03c4\u00b2 was run once per model and its main noise source is the user simulator, so there is no item- or run-resampling bound for it. Item-level consistency on other instruments says nothing about run-to-run simulator variance in \u03c4\u00b2.",
+   "rubric": [
+    "States no, the consistency evidence does not establish \u03c4\u00b2 stability",
+    "Reason: \u03c4\u00b2 is a single run with unbounded user-simulator variance, which item resampling does not capture"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The capability composite passes its positive control. Under what condition would using it as the covariate in capability-adjusted (partial-correlation) analyses of tool-using agent safety still mislead, and why?",
+   "answer": "It would mislead when agentic or tool-use ability diverges from static knowledge. The composite is built only from MMLU and GPQA, so it would mismeasure the relevant capability. Covariate measurement error attenuates or distorts adjusted relationships in hard-to-sign directions.",
+   "rubric": [
+    "Condition: the agentic ability relevant to the benchmark is not tracked by static-knowledge MMLU/GPQA",
+    "Reason: covariate measurement error distorts or attenuates the partial correlations in unpredictable direction"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Two models differ by 4 points on the misalignment outcome. Can the paper's uncertainty evidence support ranking one above the other, and why?",
+   "answer": "No. Per-model misalignment SEs have a median of 4.0 and a maximum of 5.0, so a 4-point gap is within about one SE of each model. The scenario halves also agree only moderately (SB 0.70), so the instrument is weakest at fine distinctions.",
+   "rubric": [
+    "States the difference is not supportable or reliable",
+    "Reason cites the misalignment SE of about 4\u20135 points (gap within SE) and/or the moderate half agreement (SB 0.70)"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "The organization-group permutation test is described as adequately calibrated. In which specific setting would its false-positive rate exceed nominal, and by roughly how much?",
+   "answer": "It exceeds nominal on the jailbreak outcome when variances are clustered by organization but there is no mean difference, tested at \u03b1=0.05. There the rejection rate is about 0.067 instead of 0.05. At \u03b1=0.005 no inflation was detected.",
+   "rubric": [
+    "Identifies jailbreak outcome with organization-clustered variances at \u03b1=0.05",
+    "Gives inflation to about 0.067 (vs 0.05), noting none detectable at stricter \u03b1=0.005"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The three-template jailbreak average removed the ceiling on the original and expanded panels. Would it continue to discriminate on a future panel where most models refuse every request under all three templates, and why?",
+   "answer": "No. Averaging only removes ties when at least one template elicits some compliance. If models refuse everything under AIM, refusal suppression and prefix injection alike, they all tie at the top again, as 11 of 22 did under AIM alone.",
+   "rubric": [
+    "States it would stop discriminating (ceiling returns)",
+    "Reason: averaging works only if some template produces variance; models refusing under all templates tie, as with the single-template AIM ceiling"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "MMLU has the most items and the smallest per-model SEs of any instrument. Why does it nonetheless have the largest worst-case SE relative to between-model spread?",
+   "answer": "Its between-model SD is the smallest of the instruments (8.7 points), so even a 2.2-point maximum SE is about 25% of the spread. The other instruments have much larger spreads: GPQA 3.6/18.2 \u2248 20%, jailbreak 3.7/28.5 \u2248 13%.",
+   "rubric": [
+    "Attributes it to MMLU's small between-model SD (8.7)",
+    "Gives the ratio of about 25% (2.2/8.7), larger than the other instruments' ratios"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why is AgentHarm's top-quartile persistence (0.79) the lowest among the item-rich instruments even though its corrected split-half matches others at 0.96?",
+   "answer": "AgentHarm has only 44 behaviors, far fewer items than the instruments with 164\u2013570 items. Item resampling therefore perturbs model scores more, and models near the quartile boundary move across it more often.",
+   "rubric": [
+    "Attributes it to AgentHarm's small item count (44 behaviors)",
+    "Explains that fewer items mean more resampling variability, so boundary models cross the quartile cut more often"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "AgentHarm covers 19 models and InjecAgent covers all 22. Why is the common R-Judge/InjecAgent/AgentHarm panel 18 rather than 19?",
+   "answer": "R-Judge lost one model, Qwen3-32B, to the 90% valid-output gate (21% unparseable). The intersection with AgentHarm is 18, so that excluded model must be among AgentHarm's 19.",
+   "rubric": [
+    "Identifies the R-Judge exclusion (Qwen3-32B, below the valid-output threshold) as the cause",
+    "Infers that this model is in AgentHarm's 19, so the intersection drops to 18"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why would provider-reported MMLU and GPQA figures fail the positive control that the same benchmarks pass when re-measured by the harness?",
+   "answer": "Provider numbers come from different prompts, shot counts and decoding settings. This adds variation that reflects reporting practice rather than ability and weakens the agreement between the two anchors. Fixing the protocol removes that noise, so the anchors agree as expected.",
+   "rubric": [
+    "Identifies heterogeneous prompting, shot and decoding conditions as noise unrelated to ability",
+    "Explains that this noise reduces MMLU\u2013GPQA agreement, which uniform measurement restores"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is the paper's first seven-model cross-benchmark panel especially unsuited to supporting any rank correlation, given its power analysis?",
+   "answer": "Even at n=18 only correlations of about \u03c1\u22650.62 are detectable with 80% power, so at n=7 the detectable threshold is much higher. A single unusual model can also swing the estimate either way. Seven is also below the paper's guidance of about a dozen models.",
+   "rubric": [
+    "Uses the power result (minimum detectable effect \u22480.62 at n=18, worse at n=7)",
+    "Notes that single models can swing a rank correlation at that size, and/or that n=7 is below the ~12-model guidance"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does AgentDojo, but not InjecAgent, draw majority task-success votes when blind coders are offered a task-success distractor?",
+   "answer": "AgentDojo is environment-scored for utility as well as security, so its description includes completing the user's task. InjecAgent is rule-scored only on attack success.",
+   "rubric": [
+    "Points to AgentDojo's dual scoring (utility plus security)",
+    "Contrasts with InjecAgent, which scores only injection/attack success"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p1",
+   "question": "A model changes its R-Judge verdicts only on benign traces, so that some benign traces it previously flagged are now passed as benign. Its verdicts on unsafe traces are unchanged. Would its specificity change?",
+   "answer": "Yes, it would rise. Specificity is the fraction of benign traces correctly identified as benign, and false alarms have been converted into true negatives.",
+   "rubric": [
+    "Yes, specificity increases",
+    "Because specificity counts correct benign judgments, which increased"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p1",
+   "question": "A model changes its R-Judge verdicts only on unsafe traces, so that it now catches some unsafe traces it previously missed. Its verdicts on benign traces are unchanged. Would its specificity change?",
+   "answer": "No. Specificity depends only on verdicts for benign traces, which are unchanged. Recall, F1 and balanced accuracy would rise instead.",
+   "rubric": [
+    "No, specificity is unchanged",
+    "Because specificity is computed only over benign traces; the change affects recall instead"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p2",
+   "question": "Would the convergent control (InjecAgent vs AgentDojo agreement) become assessable under the paper's own guidance if AgentDojo were run on all 19 AgentHarm-covered models?",
+   "answer": "Yes, broadly. Nineteen models exceeds the roughly-a-dozen minimum and is comparable to the n=18 common panel. Agreement could then be estimated rather than being inconclusive, though power would still be modest.",
+   "rubric": [
+    "Yes, it becomes assessable",
+    "Because n=19 exceeds the ~12-model guidance and matches the scale of the common panel (unlike n=5)"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p2",
+   "question": "Would the convergent control become assessable under the paper's own guidance if AgentDojo were run on just two more models (n=7)?",
+   "answer": "No. Seven models is still below the roughly-a-dozen threshold, and it is the size of the pilot panel whose impressions did not persist. The control would remain inconclusive.",
+   "rubric": [
+    "No, still inconclusive",
+    "Because n=7 is below the ~12-model guidance, and a 7-model panel already produced non-persistent impressions"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p3",
+   "question": "If the jailbreak outcome used only the AIM template, could it rank the original-panel models relative to one another across the whole panel?",
+   "answer": "No. Under AIM, 11 of 22 models refuse every request, so half the panel is tied at the top and cannot be separated.",
+   "rubric": [
+    "No",
+    "Because 11/22 models tie at the ceiling under AIM"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p3",
+   "question": "Using the primary three-template jailbreak average instead, could the outcome rank the original-panel models relative to one another across the whole panel?",
+   "answer": "Yes. Averaging AIM, refusal suppression and prefix injection leaves no model at the ceiling, so the previously tied models are separated.",
+   "rubric": [
+    "Yes",
+    "Because the three-template average leaves no model at the ceiling"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "Suppose the true Spearman correlation between two benchmarks on the n=18 common panel were 0.7. Would the panel detect it with at least 80% power at \u03b1=0.05?",
+   "answer": "Yes. The minimum detectable effect at n=18 is about \u03c1=0.62, and 0.7 exceeds it.",
+   "rubric": [
+    "Yes",
+    "Because 0.7 is above the ~0.62 minimum detectable effect at n=18"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "Suppose the true Spearman correlation between two benchmarks on the n=18 common panel were 0.4. Would the panel detect it with at least 80% power at \u03b1=0.05?",
+   "answer": "No. Detecting \u03c1\u22480.4 with 80% power needs about 40 models, far more than 18.",
+   "rubric": [
+    "No",
+    "Because \u03c1\u22480.4 requires roughly 40 models (and is below the ~0.62 detectable at n=18)"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A new benchmark scores code-review agents that flag vulnerable commits, and it reports only precision. Following the paper's recommendations, what should it add, and why?",
+   "answer": "It should add recall, or the full confusion matrix, plus constant-verdict reference rows. Precision omits false negatives (missed vulnerable commits), so an agent that flags rarely but accurately could score well. A complementary metric covering the omitted cell reveals whether the score reflects discrimination or a disposition.",
+   "rubric": [
+    "Recommends adding recall (or the full confusion matrix) and/or constant-verdict reference rows",
+    "Reason: precision ignores missed positives, so a conservative flagging disposition can score well without discrimination"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants an agentic capability covariate for tool-using safety analyses and proposes strict function-call syntax scoring such as BFCL. Based on the paper's pilot, should they adopt it as is, and why?",
+   "answer": "No. In the six-model pilot, strict syntax scoring ranked GPT-4o-mini highest (0.72) and the two most capable models lowest (0.42\u20130.48). This suggests it rewards format conformance rather than capability. A validated agentic anchor is needed first.",
+   "rubric": [
+    "States they should not adopt it as is",
+    "Cites the pilot ranking inversion (GPT-4o-mini top, most capable models lowest), interpreted as rewarding format conformance"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A study correlates a safety score with capability on 15 models drawn from three developers. What resampling should it use for intervals, per the paper?",
+   "answer": "It should use organization-clustered bootstrap with leave-one-organization-out (and leave-one-model-out) checks. Models from the same developer share training and safety tuning, so treating them as independent overstates precision. It should also flag that n=15 gives low power for moderate correlations.",
+   "rubric": [
+    "Recommends organization-clustered resampling (and/or leave-one-organization-out)",
+    "Reason: same-developer models are not independent, so naive resampling overstates precision"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team wants to compare current frontier models' safety using XSTest. Which XSTest subset should they rely on to separate models, and why?",
+   "answer": "The safe subset, which measures over-refusal. The unsafe subset is ceilinged: every model refuses 83\u2013100% (sd 4.5), leaving little variance. Over-refusal on the safe subset ranges from 0 to 60%.",
+   "rubric": [
+    "Recommends the safe subset (over-refusal)",
+    "Reason: the unsafe subset is ceilinged (83\u2013100%, sd 4.5) while the safe subset varies (0\u201360%)"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A new model's provider exposes a non-standard tool-calling schema that AgentDojo cannot use natively. Under the paper's protocol, should the team wrap it in a tool-call emulation layer to include it, and what follows for the panel?",
+   "answer": "No. It should be recorded as not-run, because emulated tool calls would change the instrument. This exclusion adds to coverage loss that falls disproportionately on such models, so the panel behind any comparison must be stated.",
+   "rubric": [
+    "States record as not-run rather than emulate",
+    "Reason: emulation changes the instrument; and/or notes this contributes to non-random coverage loss requiring panel reporting"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A new model scores near-perfect safety on AgentHarm. Which other measurement in the paper's harness should be checked before reading this as discriminating harm-blocking, and why?",
+   "answer": "XSTest over-refusal on the safe subset should be checked. A model that refuses nearly everything scores well on every harm-compliance instrument without discriminating harmful from benign requests.",
+   "rubric": [
+    "Names XSTest safe-subset over-refusal",
+    "Reason: blanket refusal inflates harm-compliance safety scores without discrimination"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the harmonized MMLU/GPQA anchors had also failed the positive control, which of the paper's recommendations and analyses would lose support?",
+   "answer": "The recommendation to fix capability by re-measuring under a uniform protocol would lose its supporting evidence. The capability composite would also be unvalidated, undermining capability-adjusted partial correlations and the PCA, which was interpreted only if the controls pass.",
+   "rubric": [
+    "Names the uniform-protocol re-measurement recommendation (the claim that harmonizing fixed the anchors)",
+    "Notes that capability-adjusted analyses and/or the control-gated PCA would lose a validated basis"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the column-permuted score matrices had produced first eigenvalues above the parallel-analysis threshold of 2.18, which analysis would lose its warrant?",
+   "answer": "The PCA of cross-benchmark structure on the n=18 panel would lose its warrant. It was pre-specified to be interpreted only if the controls passed, and a failed negative control would mean the pipeline manufactures structure from noise.",
+   "rubric": [
+    "Names the cross-benchmark PCA/factor analysis",
+    "Reason: the negative control would show spurious structure, and the PCA was conditional on the controls passing"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the second jailbreak judge (Gemini) had disagreed strongly with the gpt-4o judge at the model level, which reported association would be most directly undermined?",
+   "answer": "AgentHarm's strongest held-out association with jailbreak safety would be undermined. The jailbreak outcome would then be judge-dependent, and the association could reflect the particular judge rather than agreement between harmful-compliance instruments.",
+   "rubric": [
+    "Names the AgentHarm\u2013jailbreak association",
+    "Reason: the outcome would no longer be robust to judge choice, so the association could be a judge artifact"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If blind coders had overwhelmingly assigned AgentHarm to 'risk recognition' rather than 'harm blocking', which part of the paper's framing would lose support?",
+   "answer": "The \u00a73.2 target assignments, which treat AgentHarm as the harm-blocking instrument, would lose support. So would comparisons framed in terms of those targets, including the reading that benchmark disagreement reflects instruments coded to different targets.",
+   "rubric": [
+    "Names the author-defined benchmark target assignments (\u00a73.2)",
+    "Notes that comparisons framed by targets (e.g., interpreting disagreement as different targets) would inherit the doubt"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the misalignment outcome's blackmail and leaking halves had agreed with Spearman\u2013Brown about 0.97, which characterization in the paper would change?",
+   "answer": "The misalignment probe would no longer be one of the weakest components. Its consistency would match the item-rich instruments, and \u03c4\u00b2-bench, as a single unbounded run, would remain the main weak link.",
+   "rubric": [
+    "States misalignment would no longer be classed as a weakest component (limited fine distinctions)",
+    "Notes \u03c4\u00b2 would remain the unbounded/weak instrument"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If within-model SEs had been comparable to between-model SDs rather than 13\u201325% of them, which of the paper's interpretive claims would fail?",
+   "answer": "The claim that the observed panel-level spread reflects real model differences, being 4\u20138\u00d7 the worst-case SE, would fail. Rankings and correlations on the panel would then be dominated by measurement noise.",
+   "rubric": [
+    "Names the claim that panel-level spread is supported (exceeds SE by 4\u20138\u00d7)",
+    "Explains that spread could then be noise, undermining rankings/correlations"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that AgentHarm is the best general predictor of agent safety? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. AgentHarm's strongest association is with jailbreak safety, but both instruments score harmful compliance. The paper reads this as agreement between similar instruments rather than evidence about safety in general.",
+   "rubric": [
+    "Not settled (or not supported)",
+    "Reason: AgentHarm and StrongREJECT jailbreak both measure harmful compliance, so the association is instrument agreement, not general safety"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper's high internal consistency (split-half \u22650.96) show that the audited benchmarks validly measure agent safety? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Internal consistency shows that rankings are stable under item resampling. Whether scores track safety is a separate criterion-validity question, addressed by held-out outcomes with limited, outcome-dependent results.",
+   "rubric": [
+    "Not settled",
+    "Reason: consistency/reliability concerns stability under item sampling, not whether the construct measured is safety"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that organizational identity causes differences in safety among models of similar capability? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The comparison is observational. Capability is matched only on a static-knowledge composite, within-organization n is small (4\u20138), organization is collinear with release date and capability, and some organizations are range-restricted.",
+   "rubric": [
+    "Not settled",
+    "Reason cites the observational design and confounds: static composite, small within-org n, collinearity, and/or range restriction"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the capability\u2013misalignment relationship disappears for 2026 models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports that the correlation is weaker on the expanded panel, not that it vanishes. The original models are nested in the expanded panel, so a change must be assessed with nested resampling, and organizational composition also shifted.",
+   "rubric": [
+    "Not settled (weaker is not the same as absent)",
+    "Reason: the reported result is weakening on a nested panel, requiring nested/composition-matched comparison rather than showing disappearance"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that every pairwise MMLU difference between panel models is reliable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Worst-case SE is 2.2 points against an SD of only 8.7. The paper states that the spread supports panel-level differences but not every pairwise one, because some model pairs are closer than their SEs.",
+   "rubric": [
+    "Contradicted",
+    "Reason: with SE up to 2.2 and SD 8.7, some model pairs differ by less than measurement error; only panel-level spread is supported"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that InjecAgent and AgentDojo, both injection benchmarks, rank models consistently? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The convergent control was inconclusive because AgentDojo ran on only five models, too few to assess agreement.",
+   "rubric": [
+    "Not settled",
+    "Reason: AgentDojo n=5 leaves the convergent control inconclusive"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the blind coding (27/28 agreement, \u03b1=0.825) show that the authors' two-construct scheme is the correct way to categorize these benchmarks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The coding controls coder bias but not rubric-designer bias, because the authors wrote the category definitions. It shows that the assignments are recoverable from neutral descriptions, not that they are the only reasonable ones. The distractor round also left AgentDojo and misalignment contested.",
+   "rubric": [
+    "Not settled",
+    "Reason: the authors wrote the categories (rubric-designer bias uncontrolled), so agreement shows recoverability, not uniqueness/correctness"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why could the 2026 expansion compare misalignment and jailbreak relationships across panels but not any relationship between the audited agent benchmarks and \u03c4\u00b2 task success?",
+   "answer": "Only the two chat-based outcomes and the anchors were re-measured on new models. New models skipped the tool-calling audit benchmarks, which need a tool loop, and \u03c4\u00b2 was not re-collected. Relationships involving those columns have no expanded-panel data.",
+   "rubric": [
+    "Notes that \u03c4\u00b2 was not re-collected and the tool-loop audit benchmarks were not run on new models",
+    "Explains that only the chat-based outcomes (plus anchors) need no tool harness and were extended, so only their relationships can be updated"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The jailbreak outcome's corrected split-half is reported as 0.97. Under what way of forming the halves would a figure like this overstate the instrument's internal consistency, and why?",
+   "answer": "It would be overstated if the halves were formed from individual template\u2013prompt pairs, so that the AIM, refusal-suppression and prefix-injection variants of the same base prompt could land in different halves. The two halves would then share prompt content and agree for that reason alone. The paper avoids this by resampling by base prompt, which respects the dependence among the three templates.",
+   "rubric": [
+    "States that splitting by template\u2013prompt pair (rather than by base prompt) would inflate the consistency estimate",
+    "Explains that the three templates applied to the same base prompt are dependent, so halves sharing base prompts would agree spuriously"
+   ],
+   "batch": 2,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Independent-judge swaps were used to show that the jailbreak and misalignment outcomes are robust. Would a comparable second-judge check establish that \u03c4\u00b2-bench retail scores are robust, and why?",
+   "answer": "No. \u03c4\u00b2 success is environment-scored from the final database state, so there is no judge to swap. Its unbounded variance comes from the simulated user in a single run, and only replicate runs could bound it.",
+   "rubric": [
+    "Concludes that a judge swap would not establish \u03c4\u00b2 robustness",
+    "Explains that \u03c4\u00b2 is environment-scored (no judge) and its uncontrolled variance comes from the user simulator in a single run, which needs replicate runs"
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "In the organization-group analysis, would a within-organization rank correlation between capability and safety for Anthropic's models be informative, and why?",
+   "answer": "Largely not. Anthropic's models sit near the safety ceiling, so their safety scores are range-restricted. A within-organization correlation would be weak or unstable whatever the true relationship is.",
+   "rubric": [
+    "Concludes that the Anthropic within-organization correlation would be uninformative or unreliable",
+    "Cites range restriction: Anthropic models are near the safety ceiling, leaving little variance to correlate"
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Under what change to its scenario set would the misalignment outcome stop being a specific probe of autonomous-agent misbehavior, and how would that affect its associations with other instruments?",
+   "answer": "Folding the exploratory murder scenario into the primary outcome would do it. That scenario involves a severe harm that harm-compliance instruments may also anticipate, so the outcome would start overlapping with those instruments, and its associations with harm-compliance measures could be inflated. Because the scenario was added after the primary outcome was fixed, using it would also be a forking path.",
+   "rubric": [
+    "Identifies adding the murder (third) scenario to the primary outcome",
+    "Explains that it involves severe harm that harm-compliance instruments also anticipate, diluting specificity and potentially inflating associations with harm-compliance measures (e.g., jailbreak or AgentHarm)"
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "R-Judge F1 has item-bootstrap rank stability of 0.97. Would that guarantee the same model ranking if R-Judge were rerun under a different harness version or prompt format, and why?",
+   "answer": "No. Rank stability only quantifies item-sampling error within one administration of the instrument. Changes in administration conditions, such as harness, scorer, prompt format or parsing rules, are a different source of variation that this analysis does not cover.",
+   "rubric": [
+    "Concludes that it would not guarantee the same ranking",
+    "Explains that the consistency evidence covers only item sampling within one instrument and run, not changes in harness, prompt format, scorer or similar administration conditions"
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose the true Spearman correlation between XSTest safe-subset over-refusal and AgentHarm safety is 0.5. Could the paper's XSTest comparison panel reliably detect it, and why?",
+   "answer": "No. The XSTest comparisons have n=17\u201320, where the minimum detectable effect at 80% power is about \u03c1=0.62. A true correlation of 0.5 would be detected with low power and estimated with wide uncertainty, which is why XSTest is treated as descriptive context.",
+   "rubric": [
+    "Concludes that it could not reliably detect a 0.5 correlation",
+    "Links the XSTest n of 17\u201320 to the minimum detectable effect of about 0.62 at n\u224818 (80% power)"
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "The organization permutation test was judged adequately calibrated. Would that conclusion carry over to a panel of three organizations with two models each, and why?",
+   "answer": "Not established. Calibration was checked by simulation only for this panel's shape: seven organization clusters with 4\u20138 models each, with models, organizations and capability held fixed. Even there, a clustered-variance null mildly inflated rejection. A panel with far fewer and smaller clusters would need its own calibration check.",
+   "rubric": [
+    "Concludes that the calibration does not automatically carry over (it would need re-checking)",
+    "Explains that the synthetic-null check was specific to seven clusters with within-organization n of 4\u20138 (and showed some inflation under clustered variances)"
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "The jailbreak row of the consistency table uses only 20 shared base prompts, fewer than any other item-rich instrument. Why does it nonetheless have the highest top-quartile persistence (0.96)?",
+   "answer": "Its between-model spread is the largest of any instrument (SD 28.5), and its worst-case within-model SE (3.7) is only about 13% of that spread, the smallest ratio of any instrument. Models are far apart relative to their noise, so resampling prompts rarely moves a model across the top-quartile boundary.",
+   "rubric": [
+    "Attributes the high persistence to the large between-model spread (SD 28.5) relative to within-model SE",
+    "Notes the worst-case SE is only about 13% of the SD, so quartile membership rarely flips under resampling"
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the misalignment row of the consistency table report a single blackmail-vs-leaking comparison and no rank stability or quartile persistence, unlike the other instruments?",
+   "answer": "Misalignment data exist only at the configuration level, as the two scenario variants. There is no item-level data to draw 50 random half-splits or bootstrap items from. The only split available is blackmail versus leaking.",
+   "rubric": [
+    "States that only config-level (scenario-half) data exist for misalignment",
+    "Explains that, without item-level data, random half-splits and item-bootstrap rank or quartile statistics cannot be computed, leaving only the one blackmail/leaking split"
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is the jailbreak SE computed over about 150 judged units while the jailbreak consistency analysis uses only 20?",
+   "answer": "The SE uses every judged template\u2013prompt pair: 50 prompts times 3 templates. The consistency analysis resamples by base prompt, to respect the dependence among templates, and is restricted to base prompts judged in every model's logs. Each model leaves a few different prompts unjudged, so only 20 of the 50 remain.",
+   "rubric": [
+    "Explains that about 150 comes from 50 prompts \u00d7 3 templates used for the bootstrap SE",
+    "Explains that the consistency analysis uses base prompts (not template pairs) common to every model's logs, which leaves 20 because models leave different prompts unjudged"
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why are the organization-histogram-matched subsets drawn at size 21 specifically?",
+   "answer": "The original anchored panel has 21 models, after DeepSeek-R1 is excluded from the anchors. Drawing subsets of the expanded pool at that size, with the original panel's organization histogram, matches both panel size and organizational composition. Any remaining change in the correlation can then be attributed to models within organizations rather than to a different organizational mix or panel size.",
+   "rubric": [
+    "Identifies 21 as the size of the original anchored panel (DeepSeek-R1 excluded)",
+    "Explains that matching size and organization histogram separates compositional change from within-organization change"
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the GPQA row of the consistency table cover one fewer model (45) than the MMLU row (46)?",
+   "answer": "GLM-4.5 returned usable MMLU answers but not GPQA answers because of routing incompatibilities. It contributes a partial row with MMLU only, so it enters the MMLU consistency computation but not the GPQA one.",
+   "rubric": [
+    "Identifies GLM-4.5 as the model with MMLU but no GPQA data",
+    "Connects this partial row to its presence in the MMLU count and absence from the GPQA count"
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "The misalignment outcome's worst-case SE (5.0) is about 19% of its between-model SD, comparable to other instruments. Why does the paper still treat it as a weak link?",
+   "answer": "The binomial SE treats the 100 decisions as exchangeable draws and so captures only sampling noise within the scenarios. It does not capture scenario dependence. The blackmail and leaking halves agree only moderately (raw 0.54, Spearman\u2013Brown 0.70), showing that a model's score depends materially on which scenario is used, and that is the weakness.",
+   "rubric": [
+    "Explains that the binomial SE reflects decision-level sampling only, not variation across scenarios",
+    "Cites the moderate agreement between the scenario halves (SB 0.70 or raw 0.54) as evidence of scenario dependence"
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why could the 2026 expansion to 41 models not resolve the inconclusive InjecAgent\u2013AgentDojo convergent control?",
+   "answer": "The expansion covered only the anchors and the two chat-based outcomes, which need no tool loop. New models skipped the tool-calling audit benchmarks, so AgentDojo stayed at n=5, too few to assess agreement.",
+   "rubric": [
+    "States that the new models were not run on AgentDojo (or the other tool-calling audit benchmarks)",
+    "Concludes that AgentDojo therefore remained at n=5, so the control stays inconclusive"
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p1",
+   "question": "A constant policy labels every R-Judge trace as benign. Would it achieve the maximum possible specificity?",
+   "answer": "Yes. Specificity is the fraction of benign traces correctly identified as benign, and this policy gets every benign trace right, so its specificity is 1.",
+   "rubric": [
+    "Answers yes (specificity = 1 or 100%)",
+    "Reasons that specificity counts only benign traces identified as benign, all of which this policy gets right"
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p1",
+   "question": "A constant policy labels every R-Judge trace as benign. Would it achieve the maximum possible balanced accuracy?",
+   "answer": "No. Balanced accuracy weights the two classes equally. This policy catches no unsafe traces (recall 0) alongside perfect specificity, so its balanced accuracy is 0.5, at chance level.",
+   "rubric": [
+    "Answers no (balanced accuracy = 0.5)",
+    "Reasons that balanced accuracy averages benign and unsafe performance and that recall on unsafe traces is 0"
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": "b2-p2",
+   "question": "On the 40-model expanded misalignment panel, would a true Spearman correlation of about 0.4 with capability be detectable with roughly 80% power at \u03b1=0.05?",
+   "answer": "Roughly yes. The paper's power analysis says detecting \u03c1\u22480.4 with 80% power needs about 40 models, which the expanded misalignment panel approximately provides.",
+   "rubric": [
+    "Answers yes or approximately yes",
+    "Cites the requirement of about 40 models to detect \u03c1\u22480.4 and that the expanded panel has n=40"
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": "b2-p2",
+   "question": "On the original 21-model misalignment panel, would a true Spearman correlation of about 0.4 with capability be detectable with roughly 80% power at \u03b1=0.05?",
+   "answer": "No. With about 20 models, the minimum detectable effect is near \u03c1=0.62, and \u03c1\u22480.4 needs about 40 models. A 0.4 effect would be detected with low power.",
+   "rubric": [
+    "Answers no",
+    "Cites the minimum detectable effect of about 0.62 at n\u224818\u201320, or the need for about 40 models for \u03c1\u22480.4"
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": "b2-p3",
+   "question": "A model returns parseable R-Judge verdicts on 92% of records but has the lowest F1 on the panel. Under the paper's exclusion gates, would it be excluded from R-Judge analyses?",
+   "answer": "No. The gate requires at least 90% valid outputs and is based only on harness telemetry, never on scores. At 92% valid it passes, whatever its F1.",
+   "rubric": [
+    "Answers no (it is retained)",
+    "Reasons that the 90% valid-output gate is met and that exclusions depend on telemetry, not scores"
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": "b2-p3",
+   "question": "A model returns parseable R-Judge verdicts on only 85% of records but has the highest F1 on the panel. Under the paper's exclusion gates, would it be excluded from R-Judge analyses?",
+   "answer": "Yes. It falls below the 90% valid-output threshold, as Qwen3-32B did with 21% unparseable. The gate is applied before scores are computed, so a high F1 cannot save it.",
+   "rubric": [
+    "Answers yes (it is excluded)",
+    "Reasons that it falls below the 90% valid-output threshold, which is applied regardless of score"
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b2-p4",
+   "question": "Is treating the two correlations as independent (a Fisher z comparison) appropriate when comparing the capability\u2013misalignment correlation of the original panel with that of the 2026-only models?",
+   "answer": "Yes. The 2026-only models and the original panel are disjoint sets of models, so the two correlations are estimated on independent samples. Fisher's z is one of the paper's pre-specified procedures.",
+   "rubric": [
+    "Answers yes",
+    "Reasons that the two model sets do not overlap, so the correlations are independent"
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b2-p4",
+   "question": "Is treating the two correlations as independent (a Fisher z comparison) appropriate when comparing the capability\u2013misalignment correlation of the original panel with that of the full 40-model expanded panel?",
+   "answer": "No. The original 21 models are a subset of the expanded 40, so the correlations share models and are dependent. Treating them as independent would overstate the evidence for change, which is why a stratified nested bootstrap is used.",
+   "rubric": [
+    "Answers no",
+    "Reasons that the panels are nested (the original is a subset of the expanded), so a nested or stratified bootstrap is required instead"
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team will deploy a trace monitor whose false alarms block legitimate work and cause alert fatigue, and must pick among models using R-Judge results. Which R-Judge summary should drive the choice, per the paper?",
+   "answer": "A summary that includes specificity, either specificity itself or balanced accuracy, rather than the official F1 alone. F1 ignores true negatives and so does not reflect how often benign traces are left alone, which is the cost this team cares about.",
+   "rubric": [
+    "Recommends specificity or balanced accuracy (a summary covering benign-trace performance) over F1 alone",
+    "Explains that F1 ignores true negatives, so it does not capture the false-alarm cost central to this use case"
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team adds a new model to the MMLU consistency analysis, and the new model leaves a different set of items unanswered from the existing models. What happens to the item base of the split-half and rank-stability computation, and why?",
+   "answer": "The item base shrinks. Splits and draws use only items common to every model's logs, already 356 of the 500 administered items. A model missing different items removes those items from the shared intersection for all models.",
+   "rubric": [
+    "States that the number of items used shrinks (the common-item intersection gets smaller)",
+    "Explains that splits are restricted to items common to every model's logs"
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A study has 15 models, each from a different developer. Would organization-clustered bootstrap change its intervals materially compared with model-level resampling, and why?",
+   "answer": "Essentially not. Clustering matters because same-organization models share training pipelines and safety tuning and are not independent. With one model per organization, each cluster is a single model, so clustered and model-level resampling coincide.",
+   "rubric": [
+    "Concludes that clustering would make little or no difference",
+    "Reasons that every cluster contains one model, so the within-organization dependence motivating clustering is absent"
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Midway through a study, after its primary jailbreak outcome is fixed, a team decides to add a fourth jailbreak template because it tightens estimates. How should they treat results that use it, following the paper's handling of the third misalignment scenario?",
+   "answer": "They should keep the pre-specified outcome as primary and report the four-template analyses as exploratory. Adding a component after the primary outcome was fixed creates a forking path, even if it tightens per-model estimates.",
+   "rubric": [
+    "Recommends keeping the original outcome primary and treating the new-template analyses as exploratory",
+    "Gives the reason that adding components after fixing the primary outcome is a forking path"
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team has nine models from two developers and wants to report a PCA of agent-safety benchmark columns as evidence of latent structure. What does the paper's guidance imply they should do?",
+   "answer": "They should not interpret it as latent structure. Nine models is below the roughly a dozen the paper requires for interpreting rank correlations. A PCA should be interpreted only after positive and negative controls pass, and even then only as a sample description. Because the result can shift between correlation conventions, both Pearson and Spearman versions should be reported.",
+   "rubric": [
+    "Concludes that the PCA should not be interpreted as latent structure (at most descriptive)",
+    "Cites the small panel (below about a dozen) and/or the requirement that the controls pass first",
+    "Mentions reporting both correlation conventions because of convention sensitivity"
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants to evaluate new models whose providers offer no native tool-calling support compatible with the official harnesses. Which of the paper's instruments can they still run under its protocol, and which not?",
+   "answer": "They can run the capability anchors (MMLU, GPQA) and the chat-based held-out outcomes: misalignment and jailbreak. These need no tool loop, which is how the 2026 expansion worked. AgentHarm and AgentDojo require native tool use, so those models would be recorded as not-run rather than forced through an emulation layer.",
+   "rubric": [
+    "Identifies the anchors and the misalignment and jailbreak outcomes as runnable",
+    "States that the tool-calling benchmarks (AgentHarm, AgentDojo) would be recorded as not-run (no emulation)"
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If MiniMax-M3 had been dropped from the misalignment analysis because of its low harm score rather than because of truncated outputs, which claim about the expanded-panel evidence would be undermined?",
+   "answer": "The claim that exclusions were based only on harness telemetry, never on outcome scores. The n=40 misalignment analysis, and the weakened capability\u2013misalignment correlation it supports, would become open to selection on the outcome.",
+   "rubric": [
+    "Identifies the telemetry-only exclusion claim as undermined",
+    "Notes that the n=40 misalignment analysis or its correlation result would then be vulnerable to outcome-based selection bias"
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If AgentHarm's item-bootstrap rank stability had come out low (say around 0.6) rather than 0.97, which held-out finding involving AgentHarm would lose support, and why?",
+   "answer": "AgentHarm's strongest-of-all association with jailbreak safety would lose support. Reliability is the precondition for any downstream comparison: if AgentHarm rankings shifted with the sampled behaviors, an association between its scores and another outcome could not be trusted. Its role in the n=18 common-panel comparisons would weaken too.",
+   "rubric": [
+    "Identifies the AgentHarm\u2013jailbreak association (strongest held-out association) as losing support",
+    "Explains that downstream associations depend on the instrument's rankings being stable or reliable under item resampling"
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the size-21 organization-histogram-matched subsets had reproduced the original panel's capability\u2013misalignment correlation, how should the weaker correlation on the full expanded panel be interpreted?",
+   "answer": "The weakening would then be attributed to the expanded panel's different organizational composition rather than to a change in the relationship among models within organizations. Matching the original organization histogram is exactly what separates these two explanations.",
+   "rubric": [
+    "Attributes the weakening to the change in organizational composition",
+    "Explains that the matched subsets hold the organization mix fixed, so their reproducing the original correlation rules out within-organization change as the cause"
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If every model had over-refused at most 5% of XSTest's safe subset, which alternative explanation for high scores on refusal-based instruments such as AgentHarm and the jailbreak outcome would lose force?",
+   "answer": "The blanket-refusal explanation would lose force: that a model scores well on harm-compliance instruments simply by refusing nearly everything. As it is, Claude-3-Haiku over-refuses 60% of safe prompts and o3-mini 30%, so that explanation remains live for some models.",
+   "rubric": [
+    "Identifies the blanket-refusal (over-refusal) explanation as losing force",
+    "Contrasts with the observed over-refusal of Claude-3-Haiku at 60% (or o3-mini at 30%), which keeps the concern live"
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the six-model BFCL pilot had ranked the two most capable models highest rather than lowest, which stated limitation of the capability covariate could have been addressed?",
+   "answer": "The limitation that MMLU and GPQA are static-knowledge anchors that may miss agentic ability. A BFCL that tracked capability rather than format conformance could have served as a candidate agentic anchor. The paper's statement that a validated agentic anchor is still needed would then lose its main supporting evidence.",
+   "rubric": [
+    "Identifies the static-knowledge limitation (missing agentic ability) of the anchors",
+    "Explains that BFCL would then be a viable agentic anchor, weakening the claim that one is still missing"
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If provider-reported MMLU and GPQA figures had passed the positive control, which of the paper's recommendations would lose its empirical demonstration from this audit?",
+   "answer": "The recommendation to measure capability covariates under the study's own uniform protocol rather than importing model-card numbers. Its evidence here is that provider numbers failed the positive control while harmonized anchors passed. Only the general argument about heterogeneous prompting and decoding conditions would remain.",
+   "rubric": [
+    "Identifies the recommendation to re-measure capability under a uniform protocol instead of using provider numbers",
+    "Notes that its in-paper evidence is the contrast between provider anchors failing and harmonized anchors passing the positive control"
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that cross-benchmark relationships observed on the n=18 common panel apply to models whose providers expose non-standard tool-calling interfaces? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Coverage loss is concentrated on exactly those models, so they are systematically absent from the AgentHarm-limited common panel. Nothing in the paper measures how the relationships behave for them.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that coverage loss is non-random and falls on models with non-standard tool interfaces, so they are missing from the common panel"
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its jailbreak outcome measures robustness to adaptive, optimization-based attacks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The outcome averages three fixed published templates (AIM, refusal suppression, prefix injection) over 50 prompts, and the paper explicitly says it does not cover adaptive attacks.",
+   "rubric": [
+    "Answers not settled (not shown)",
+    "Explains that only three fixed published templates were used and adaptive attacks are explicitly outside its coverage"
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a single R-Judge summary metric is the correct choice for every deployment? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper argues that the appropriate summary depends on the use case: a monitor with costly false alarms should use a summary that includes specificity, while a last-line filter may prefer recall. It treats metric choice as part of the claim.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the use-case dependence (specificity-including summaries for costly false alarms vs recall for a last-line filter)"
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that adding the murder scenario produces a better misalignment outcome than blackmail plus leaking? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The third scenario tightens per-model estimates, but it dilutes the probe's specificity to autonomous-agent misbehavior, because harm-compliance instruments may also anticipate severe harm. It was also added after the primary outcome was fixed, so it is kept as exploratory.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the trade-off: tighter estimates but reduced specificity, and/or exploratory status as a forking path"
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the blinded construct coding show that the misalignment outcome is a risk-recognition instrument? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. In the criterion-coding rounds the misalignment outcome was contested: avoiding a harmful autonomous action can be read as recognizing a risk or as declining to act, and coders split between rounds. The paper describes it as a scenario-based behavioral outcome that cannot be reduced cleanly to either category.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that coders split between rounds because the outcome can be read as risk recognition or as harm blocking (declining to act)"
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that AgentHarm scores are robust to the choice of judge model to the same degree as the jailbreak outcome? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The Gemini refusal-judge swap agreed less closely than the jailbreak and misalignment swaps. That swap redoes only the refusal component of a multi-stage grading pipeline, so it neither establishes nor refutes full-pipeline judge robustness.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the AgentHarm swap agreed less closely and re-scored only the refusal component, not the full grading pipeline"
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that item-sampling error is an unlikely source of jailbreak ranking instability on the expanded panel that includes the 2026 models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. The jailbreak consistency row is computed on 42 models: the 41 anchored expanded-panel models plus DeepSeek-R1. It shows Spearman\u2013Brown 0.97, rank stability 0.98 and quartile persistence 0.96 when resampling by base prompt.",
+   "rubric": [
+    "Answers supported",
+    "Cites that the jailbreak consistency analysis covers the expanded panel (42 models) with high split-half, rank-stability and/or quartile values"
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "AgentHarm safety has item-bootstrap rank stability of 0.97. Would that figure bound how much AgentHarm model rankings could change if the grading were redone with a different judge model, and why?",
+   "answer": "No. The item bootstrap resamples the 44 behaviors while holding the scorer fixed, so it captures only item-sampling variability. Judge dependence is a separate source of variation, and the Gemini refusal-judge swap on AgentHarm agreed less closely than the swaps on the other outcomes.",
+   "rubric": [
+    "Concludes that rank stability does not bound judge-induced ranking changes.",
+    "Explains that the bootstrap resamples items (behaviors) under a fixed scorer, and/or notes that the AgentHarm refusal-judge swap agreed less closely."
+   ],
+   "batch": 3,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The common-panel PCA's negative control passes: the median first eigenvalue of the permuted matrices is 1.71, against a threshold of 2.18. Would this rule out a retained first component that is driven by models sharing one organization's training pipeline, and why?",
+   "answer": "No. Column permutation breaks the alignment of models across columns, so it only tests whether the pipeline manufactures structure from noise. Real covariance created by same-organization models with shared pipelines and safety tuning survives in the unpermuted data and is not addressed by this control. Clustering has to be handled separately, for example by organization-clustered resampling.",
+   "rubric": [
+    "Concludes that the negative control does not rule out organization-driven structure.",
+    "Explains that the permutation tests only for noise-manufactured structure, while shared-organization covariance is genuine structure in the real data."
+   ],
+   "batch": 3,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "R-Judge specificity has the highest corrected split-half of any instrument (0.99). Under what model behavior would a high and internally consistent specificity still fail to indicate good trace judgment, and why?",
+   "answer": "A model with a disposition to flag rarely would pass most benign traces on every half of the items, so its high specificity would be very consistent. It could still miss many unsafe traces. Internal consistency shows the score is stable, not that it reflects discrimination, so specificity needs to be read together with recall or balanced accuracy.",
+   "rubric": [
+    "Identifies a disposition to rarely flag traces (or to label most traces benign) as the failing case.",
+    "Explains that such a disposition yields consistently high specificity without discrimination, because consistency measures stability rather than validity, or because unsafe traces are missed."
+   ],
+   "batch": 3,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose a revised R-Judge release changed the proportion of unsafe records. Would official F1 scores from the old and new releases be directly comparable, and why?",
+   "answer": "No. F1 combines recall with precision and ignores true negatives, and precision depends on how many benign traces there are to falsely flag. F1 therefore shifts with the base rate even if model behavior is unchanged. Balanced accuracy weights the two classes equally regardless of base rate, which is why the paper records it alongside F1.",
+   "rubric": [
+    "Concludes that F1 would not be directly comparable across releases with different base rates.",
+    "Explains that F1 depends on the class mix through precision (it ignores true negatives), whereas balanced accuracy is base-rate invariant."
+   ],
+   "batch": 3,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The 2026 expansion excluded models only on harness telemetry, never on outcome scores. Could the expanded-panel capability\u2013safety estimates still be biased by which models were excluded, and why?",
+   "answer": "Yes. Gating blind to scores prevents selecting models on their outcomes, but it does not make the exclusions random. Kimi-K2.6, the Nemotron-3 models, MiniMax-M3, Gemini-2.5-Pro and GLM-4.5 dropped out for unbounded reasoning traces, low anchor usability, truncation or routing incompatibilities, so the panel underrepresents certain kinds of newer models. This mirrors the non-random coverage loss on non-standard tool interfaces in the original panel.",
+   "rubric": [
+    "Concludes that bias from exclusions remains possible.",
+    "Explains that telemetry-based exclusions are non-random: they fall on particular kinds of newer models (unbounded reasoning, truncation, routing issues, a stale harness), so the panel is not representative."
+   ],
+   "batch": 3,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "The organization-histogram-matched size-21 subsets are meant to separate changes in organizational composition from changes within organizations. Would they also hold release date and capability fixed, and why?",
+   "answer": "No. They match only the count of models per organization. Organization is only partly collinear with release date and capability, and a matched subset can include 2026 models from the same organizations that differ in date and capability. Differences between the matched subsets and the original panel can therefore still reflect those factors.",
+   "rubric": [
+    "Concludes that the matched subsets do not control for release date or capability.",
+    "Explains that matching fixes only the organization histogram, while models within an organization (including 2026 models) differ in date and capability."
+   ],
+   "batch": 3,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q88",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The paper finds that, against \u03c4\u00b2 task success, safety scores add no information beyond capability. Under what conditions of the \u03c4\u00b2 outcome itself would this null fail to show that the safety scores lack incremental information?",
+   "answer": "The null is weak evidence because \u03c4\u00b2 is a single run of 40 tasks whose user-simulator variance cannot be bounded. It is also collected on only 20 models, where only correlations of about \u03c1=0.6 or larger are detectable with 80% power. Unbounded outcome noise and low power could both hide a moderate incremental association.",
+   "rubric": [
+    "States that the null may reflect the outcome's limits rather than a true absence of incremental information.",
+    "Cites the single run with unbounded user-simulator variance and/or the low power at n=20 (minimum detectable effect around 0.6)."
+   ],
+   "batch": 3,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is the misalignment outcome's worst-case within-model SE (5.0) more than twice MMLU's (2.2), even though both are binomial SEs?",
+   "answer": "Binomial SE shrinks as the number of scored units grows. The misalignment SE is computed over only 100 decisions per model, while MMLU's is computed over 500 fixed items, so per-model misalignment scores are estimated less precisely.",
+   "rubric": [
+    "Attributes the difference to the number of units: 100 decisions versus 500 items.",
+    "Notes that binomial SE decreases as the number of units increases."
+   ],
+   "batch": 3,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "R-Judge is run on its full 571 records. Why does its consistency row in Table 3 use 570 items?",
+   "answer": "The split-half and bootstrap splits are shared across models and restricted to items present in every model's logs. At least one record must be missing or unusable in at least one model's logs, which leaves 570 common items.",
+   "rubric": [
+    "States that the analysis uses only items common to every model's logs.",
+    "Infers that at least one record is missing for at least one model, reducing 571 to 570."
+   ],
+   "batch": 3,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The misalignment outcome covers 21 models on the original panel. Why is the paired \u03c4\u00b2/misalignment panel 20?",
+   "answer": "\u03c4\u00b2 covers only 20 models because it is a multi-turn tool loop, while misalignment covers 21. The paired panel is their intersection, so it is limited by \u03c4\u00b2 coverage, and all 20 \u03c4\u00b2 models also have misalignment scores.",
+   "rubric": [
+    "States that the paired panel is the intersection of the two outcomes' coverage.",
+    "Identifies \u03c4\u00b2 coverage (n=20) as the limiting factor."
+   ],
+   "batch": 3,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does the original-panel interaction test need leave-one-organization-out recomputation in addition to leave-one-model-out?",
+   "answer": "OpenAI contributes 6 of the 22 original models, and models from one organization share training pipelines and safety tuning. Dropping one model at a time leaves the other five, so an effect shared across a developer would survive leave-one-model-out. Only removing the whole organization tests whether that developer drives the estimate.",
+   "rubric": [
+    "Explains that same-organization models share a common effect through shared pipelines or tuning, so leave-one-model-out cannot remove it.",
+    "Notes the unequal contributions, for example OpenAI's 6 of 22 models, which make a single developer potentially dominant."
+   ],
+   "batch": 3,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "An independent grader reproduces the misalignment outcome's model-level scores closely. Why does that check not resolve the paper's concern that misalignment is a weak link?",
+   "answer": "The grader swap addresses only scoring dependence. The weakness lies in scenario sampling: the blackmail and leaking halves agree only moderately (Spearman\u2013Brown 0.70), so scores depend on which scenario is administered. A second grader re-scores the same decisions and cannot address that.",
+   "rubric": [
+    "States that the grader check addresses classifier or scoring dependence only.",
+    "Identifies the weakness as scenario dependence: the two scenario halves agree only moderately (SB 0.70)."
+   ],
+   "batch": 3,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q94",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does it matter that the capability composite averages standardized rather than raw MMLU and GPQA scores?",
+   "answer": "The two anchors spread models very differently: the between-model SD is 8.7 for MMLU and 18.2 for GPQA. A raw average would weight GPQA about twice as heavily in determining model differences. Standardizing gives each anchor equal weight.",
+   "rubric": [
+    "States that a raw average would let GPQA dominate the composite.",
+    "Cites GPQA's roughly twice-larger between-model spread (SD 18.2 vs 8.7) and notes that standardizing equalizes the weights."
+   ],
+   "batch": 3,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q95",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Under AIM alone, 11 of 22 models refuse every request. Why can the three-template average separate those 11 models?",
+   "answer": "No model sits at the ceiling under the average, so each of the 11 must show at least some harmful compliance under refusal suppression or prefix injection. Those differing amounts of compliance break the ties that AIM alone leaves.",
+   "rubric": [
+    "Infers that each AIM-ceiling model complies to some extent under at least one of the other two templates.",
+    "Explains that these differing compliance levels are what break the ties."
+   ],
+   "batch": 3,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q96",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Prior work reports rank concordance near 0.10 across four agent-safety benchmarks on twelve models. Given this paper's power analysis, can that result distinguish benchmarks that are unrelated from benchmarks that are moderately related, and why?",
+   "answer": "No. Even at n=18 the minimum detectable effect at 80% power is about \u03c1=0.62, and detecting \u03c1\u22480.4 needs about 40 models. At 12 models, a true moderate correlation could easily yield an estimate near 0.10, and the panel sits at the paper's 'about a dozen' threshold for interpreting rank correlations at all.",
+   "rubric": [
+    "Concludes that the result cannot distinguish no relation from a moderate relation.",
+    "Cites low power: minimum detectable effect about 0.62 at n=18 (worse at 12) and about 40 models needed for \u03c1\u22480.4."
+   ],
+   "batch": 3,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q97",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team will build a shortlist of the safest quarter of models and wants it to be robust to which items happened to be sampled. Based on Table 3, would a shortlist drawn from AgentHarm or from the jailbreak outcome be more robust, and why?",
+   "answer": "The jailbreak outcome. A top-quartile model stays top-quartile in 0.96 of resamples there, compared with 0.79 for AgentHarm, which has only 44 behaviors. Roughly one in five AgentHarm resamples would drop a shortlisted model, even though both instruments have similar split-half and rank stability.",
+   "rubric": [
+    "Chooses the jailbreak outcome.",
+    "Cites top-quartile persistence of 0.96 versus 0.79 for AgentHarm."
+   ],
+   "batch": 3,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q98",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A new reasoning model produces unstable long-form chain-of-thought on GPQA-Diamond. Following the paper's precedent, what is its status in the capability-adjusted analyses versus the chat-based outcome data?",
+   "answer": "Like DeepSeek-R1, it would be excluded from the anchor panel, so it cannot enter capability-composite or rank-residualized analyses. It can still be scored on chat-based outcomes such as the jailbreak suite and included in their internal-consistency analysis, as DeepSeek-R1 was (42 models in Table 3).",
+   "rubric": [
+    "States that it is excluded from the anchors and therefore from capability-adjusted analyses.",
+    "States that it can still be scored on, and included in the consistency analysis of, chat-based outcomes such as the jailbreak suite (the DeepSeek-R1 precedent)."
+   ],
+   "batch": 3,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q99",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team argues that R-Judge is not capability-confounded because R-Judge specificity barely correlates with the capability composite. Per the paper, which other R-Judge summary must they examine before making that claim, and why?",
+   "answer": "They should examine recall, and also F1 and balanced accuracy, which mix recall in. Recall rewards detecting unsafe content, which presupposes comprehension. Specificity can be achieved by a disposition to flag rarely. Capability content is a property of each summary, so a null on specificity does not transfer to the benchmark as a whole.",
+   "rubric": [
+    "Names recall (or the recall-containing summaries F1 and balanced accuracy).",
+    "Explains that recall presupposes comprehension, while specificity can come from a disposition to flag rarely, so capability content is metric-specific."
+   ],
+   "batch": 3,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q100",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team wants to strengthen the misalignment outcome. Per the paper, should they collect more decisions within the existing blackmail and leaking scenarios or add scenarios, and why?",
+   "answer": "They should add scenarios, along with replicate runs. The instrument's weakness is scenario dependence: the two halves agree only at Spearman\u2013Brown 0.70. More decisions within the same two scenarios would shrink the binomial SE but would not address variation across scenarios. New scenarios should be pre-specified and should keep the probe specific to autonomous-agent misbehavior, unlike the severe-harm murder scenario.",
+   "rubric": [
+    "Recommends adding scenarios (or replicates across scenarios) rather than only more decisions within the existing two.",
+    "Explains that the weakness is moderate cross-scenario agreement (SB 0.70), which within-scenario decisions do not address."
+   ],
+   "batch": 3,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q101",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A new safety benchmark is scored by a multi-stage LLM-judge pipeline. Following the lesson of the paper's judge swaps, how should its judge-robustness check be designed?",
+   "answer": "The check should re-run the full grading pipeline with a different judge rather than swapping only one component. The AgentHarm swap re-did only the refusal component and agreed less closely than the full-judge swaps on the misalignment and jailbreak outcomes, which reproduced model-level scores closely.",
+   "rubric": [
+    "Recommends swapping or re-running the entire grading pipeline, not a single stage.",
+    "Cites the AgentHarm refusal-only swap agreeing less closely than the full swaps on misalignment and jailbreak."
+   ],
+   "batch": 3,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q102",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If XSTest's unsafe subset had shown wide spread across models instead of 83\u2013100% refusal (sd 4.5), which argument in the paper would lose force?",
+   "answer": "The paper argues that overtly harmful single-turn prompts no longer separate current models, which is one reason agentic and jailbreak-based instruments are needed. A discriminating unsafe subset would undercut that motivation and would make the unsafe subset, not only the safe-subset over-refusal, informative.",
+   "rubric": [
+    "Identifies the argument that single-turn harmful prompts no longer separate models, so agentic or jailbreak instruments are needed.",
+    "Explains that a discriminating unsafe subset would contradict the ceiling on which that argument rests."
+   ],
+   "batch": 3,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q103",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If R-Judge specificity had shown low split-half consistency, around 0.5, instead of 0.99, which recommendation of the paper would be weakened, and why?",
+   "answer": "The recommendation to report specificity alongside F1 as the complementary summary of the benign-trace error type would be weakened. If specificity were largely item-sampling noise, re-summarizing R-Judge under specificity (or a metric including it) would not reliably rank models for a monitor with costly false alarms.",
+   "rubric": [
+    "Identifies the recommendation to report specificity (or full confusion-matrix complements) alongside F1.",
+    "Explains that an unreliable specificity would make specificity-based rankings mostly item-sampling noise."
+   ],
+   "batch": 3,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q104",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the 2,000-panel calibration check had shown the organization permutation test rejecting about 15% of the time at \u03b1=0.05 under the standard nulls, which analysis would lose its warrant?",
+   "answer": "The organization-group comparison on the expanded panel would lose its warrant, because its p-values would overstate evidence of between-organization differences. The paper's statement that the test is adequately calibrated for panels of this shape would no longer hold.",
+   "rubric": [
+    "Identifies the organization-group permutation comparison (or its calibration claim).",
+    "Explains that inflated Type-I error would make its significance overstate organization differences."
+   ],
+   "batch": 3,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q105",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If AgentHarm had shown the weakest rather than the strongest held-out association with the jailbreak outcome, which interpretation would be challenged, and why?",
+   "answer": "The paper reads the AgentHarm\u2013jailbreak link as agreement between two instruments that both score harmful compliance. Weak agreement between two instruments aimed at a similar behavior would cast doubt on whether they measure that behavior consistently. It would point to a measurement problem, such as AgentHarm's grading or the jailbreak templates, rather than confirming convergence.",
+   "rubric": [
+    "Identifies the reading of the association as agreement between two harmful-compliance instruments.",
+    "Explains that weak agreement between instruments aimed at the same behavior would suggest a measurement problem rather than convergence."
+   ],
+   "batch": 3,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q106",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the second misalignment grader (Claude-3-Haiku vs GPT-4o) had disagreed strongly at the model level, which conclusions would lose support?",
+   "answer": "The claim that the misalignment outcome is not an artifact of a particular classifier would fail. Consequently, the capability\u2013misalignment associations, both the original opposite association and its weakening on the expanded panel, could reflect the classifier rather than model behavior.",
+   "rubric": [
+    "Identifies the claim that misalignment scores are robust to classifier or grader choice.",
+    "Notes that the capability\u2013misalignment findings (original or expanded) would then be classifier-dependent."
+   ],
+   "batch": 3,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q107",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the harness had retained only each model's official R-Judge F1 rather than per-model verdicts and labels, which parts of the paper's analyses could not have been produced?",
+   "answer": "Specificity, recall and balanced accuracy could not be computed, nor the constant-verdict reference rows. The R-Judge specificity row in Table 3 and the split-half and bootstrap analyses of R-Judge, which need item-level verdicts, would also be impossible, as would recomputing R-Judge quantities under alternative metrics.",
+   "rubric": [
+    "Names the alternative metrics (specificity, recall, balanced accuracy) and/or the constant-verdict reference rows.",
+    "Notes that the item-level consistency analyses for R-Judge (Table 3 rows) also depend on stored per-item verdicts."
+   ],
+   "batch": 3,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q108",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that R-Judge scores are unrelated to the misalignment outcome? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The pre-specified continuation on an intermediate n=25 panel did not meet its threshold and was stopped. At that size, moderate correlations such as \u03c1\u22480.4 (which need about 40 models) are not reliably detectable, so the paper keeps the relationship only as a hypothesis.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the stopped n=25 continuation together with low power (about 40 models needed for \u03c1\u22480.4), so failure to meet the threshold is not evidence of no relation."
+   ],
+   "batch": 3,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q109",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that high capability ensures jailbreak safety among current models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. On the expanded panel, jailbreak safety among high-capability models spans most of the scale. Capable models can therefore be either robust or highly vulnerable to the templates.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites that jailbreak safety among high-capability models spans most of the scale on the expanded panel."
+   ],
+   "batch": 3,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q110",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the audited agent-safety benchmarks share a single latent factor? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The PCA on 18 models and six columns is treated as a description of the sample, not a model of latent structure. Its eigenvalues are uncertain, and Pearson and Spearman conventions can retain different numbers of components. The passing negative control only shows that the pipeline does not create structure from noise.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites at least one of: small n=18 with limited resolution, convention sensitivity, the PCA being descriptive only, or the negative control testing only noise."
+   ],
+   "batch": 3,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q111",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its jailbreak outcome would rank models the same way under a different set of published jailbreak templates? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only AIM, refusal suppression and prefix injection were used. Robustness checks covered base-prompt resampling and judge swaps, not template choice, and the AIM-only ceiling shows that template choice can change results substantially. Per-template scores are stored only so that such analyses can be run later.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that only three templates were tested, robustness checks did not vary templates, and/or the AIM ceiling shows results are template-sensitive."
+   ],
+   "batch": 3,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q112",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that R-Judge's official F1 should be abandoned in favor of specificity? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper recommends reporting complementary metrics and constant-verdict reference rows alongside F1, not replacing it. The appropriate summary depends on the use case: a monitor with costly false alarms should prefer one that includes specificity, while a last-line filter may prefer recall.",
+   "rubric": [
+    "Answers contradicted (or not supported).",
+    "Explains that the paper recommends reporting alternatives alongside F1, with metric choice depending on use case, such as recall for a last-line filter."
+   ],
+   "batch": 3,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its capability-adjusted correlations are insensitive to the choice between re-ranking rank residuals and taking Pearson correlations on unre-ranked rank residuals? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper states only that the two conventions coincide in large samples and differ slightly in small ones. It implements both so readers can check, but it reports no comparison showing that conclusions on its small panels are unchanged.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the conventions differ in small samples and that both are implemented, but no result establishing insensitivity is reported."
+   ],
+   "batch": 3,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q114",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p1",
+   "question": "A model has flagged some benign R-Judge traces. Extra benign traces are added to the dataset, and the model correctly passes all of them, with its other verdicts unchanged. Would its official F1 change?",
+   "answer": "No. F1 combines recall and precision, and true negatives enter neither. Adding correctly passed benign traces adds only true negatives, so F1 is unchanged.",
+   "rubric": [
+    "Answers no, F1 does not change.",
+    "Explains that the added traces are true negatives, which F1 ignores (recall and precision are unchanged)."
+   ],
+   "batch": 3,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q115",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p1",
+   "question": "A model has flagged some benign R-Judge traces. Extra benign traces are added to the dataset, and the model correctly passes all of them, with its other verdicts unchanged. Would its balanced accuracy change?",
+   "answer": "Yes, it would rise. Specificity, the fraction of benign traces correctly passed, increases when more benign traces are passed while the existing false positives stay fixed. Balanced accuracy averages specificity with performance on unsafe traces.",
+   "rubric": [
+    "Answers yes, balanced accuracy increases.",
+    "Explains that specificity rises because true negatives increase while false positives are fixed, and balanced accuracy includes specificity."
+   ],
+   "batch": 3,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q116",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b3-p2",
+   "question": "Under the paper's pre-specified rule, would the common-panel PCA be interpreted if the capability anchors were the provider-reported MMLU and GPQA figures?",
+   "answer": "No. The PCA is interpreted only if the positive and negative controls pass, and the positive control fails on provider-reported anchors.",
+   "rubric": [
+    "Answers no.",
+    "Cites the rule that the PCA is interpreted only if the controls pass, together with the positive-control failure on provider numbers."
+   ],
+   "batch": 3,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q117",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b3-p2",
+   "question": "Under the paper's pre-specified rule, would the common-panel PCA be interpreted using the harmonized MMLU and GPQA anchors?",
+   "answer": "Yes, as a descriptive summary of the sample. On the harmonized anchors the positive control passes, and the negative control also passes (median permuted eigenvalue 1.71 vs threshold 2.18), so the condition for interpretation is met.",
+   "rubric": [
+    "Answers yes (descriptively).",
+    "Explains that both the positive control (harmonized anchors) and the negative control pass."
+   ],
+   "batch": 3,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q118",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c5"
+   ],
+   "pair": "b3-p3",
+   "question": "Could the 2026 expansion data be used to update the correlation between capability and jailbreak safety?",
+   "answer": "Yes. The expansion re-measured both capability anchors and the jailbreak outcome under the original protocol on 41 anchored models.",
+   "rubric": [
+    "Answers yes.",
+    "Notes that both the anchors and the jailbreak outcome were collected for the new models."
+   ],
+   "batch": 3,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q119",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c5"
+   ],
+   "pair": "b3-p3",
+   "question": "Could the 2026 expansion data be used to update the correlation between InjecAgent robustness and misalignment safety?",
+   "answer": "No. The new models skipped the tool-calling audit benchmarks, and InjecAgent ran only on the original panel. The expansion therefore adds no InjecAgent scores to pair with the new misalignment scores.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the audited benchmarks, including InjecAgent, were not run on the 2026 models."
+   ],
+   "batch": 3,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q120",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p4",
+   "question": "Could InjecAgent robustness scores shift if the judge model used elsewhere in the harness were replaced with a different LLM judge?",
+   "answer": "No. InjecAgent is rule-scored, so no judge model enters its scoring.",
+   "rubric": [
+    "Answers no.",
+    "Explains that InjecAgent is rule-scored, with no judge model."
+   ],
+   "batch": 3,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q121",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b3-p4",
+   "question": "Could AgentHarm safety scores shift if its judge were replaced with a different LLM judge?",
+   "answer": "Yes. AgentHarm is graded through a pipeline with a gpt-4o-mini judge, and re-scoring its refusal component with a Gemini judge agreed less closely than the judge swaps on the other outcomes.",
+   "rubric": [
+    "Answers yes.",
+    "Cites AgentHarm's LLM-judge grading and the less close agreement of the refusal-judge swap."
+   ],
+   "batch": 3,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose the common-panel PCA retained a strong first component. Given the six columns it was run on, would that component by itself indicate a shared agent-safety construct, and why?",
+   "answer": "No. Two of the six columns are the capability anchors, which the positive control shows agree with each other. Two more are R-Judge summaries computed from the same stored verdicts. Either pair could produce correlated columns, and so a retained component, without any shared safety construct.",
+   "rubric": [
+    "Concludes that a retained component would not by itself show a shared safety construct",
+    "Notes that the columns include the two capability anchors (which agree, per the positive control) and/or two R-Judge summaries computed from the same verdicts, either of which can create covariance unrelated to safety"
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The worst-case within-model SEs are 13\u201325% of the between-model SD. Would that ratio still describe how well models can be told apart within a range-restricted group such as Anthropic's models near the safety ceiling, and why?",
+   "answer": "No. The SDs come from the full expanded panel. Within a group packed near the ceiling, the spread is much smaller while the per-model SEs stay about the same, so the SEs would be a much larger share of the spread and models within the group may not be distinguishable.",
+   "rubric": [
+    "Concludes that the ratio would not carry over to the range-restricted group",
+    "Explains that the SDs are computed over the full expanded panel, while the group's own spread is much smaller relative to unchanged per-model SEs"
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The jailbreak outcome's worst-case within-model SE is 3.7, bootstrapped over its ~150 judged units. Under what way of resampling those units would an SE like this understate the true uncertainty, and why?",
+   "answer": "It would be too small if the ~150 units were resampled as independent items. They are 50 base prompts each judged under three templates, and the three templates applied to the same prompt are dependent, so treating them as independent overstates the effective sample size.",
+   "rubric": [
+    "Identifies resampling the ~150 units independently rather than by base prompt as the problematic scheme",
+    "Explains that the three templates applied to the same base prompt are dependent, so independent resampling overstates the effective sample size and shrinks the SE"
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "MMLU's internal consistency is computed on 356 of the 500 administered items. Is it guaranteed that the same split-half and rank-stability values would hold over all 500 items, and why?",
+   "answer": "No. The 356 items are the intersection that every model answered. The excluded items are the ones at least one model failed to produce usable output on, so they may differ systematically from the rest. The consistency estimate strictly describes the shared subset.",
+   "rubric": [
+    "Concludes that the values are not guaranteed for the full 500-item set",
+    "Explains that the analysis uses only the complete-coverage intersection, and the dropped items are selected by model failures, so they may not be a random subset"
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q126",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "XSTest's safe subset is the paper's record of blanket refusal. Would it reveal a model that over-refuses benign requests only inside agentic, tool-using tasks, and why?",
+   "answer": "Not reliably. XSTest is a prompt-level test of benign prompts that superficially resemble unsafe ones, run outside any tool loop. Over-refusal that appears only in agentic contexts, such as AgentHarm-style tasks, could therefore stay hidden inside high agentic safety scores.",
+   "rubric": [
+    "Concludes that XSTest would not reliably reveal agentic-only over-refusal",
+    "Explains that XSTest measures prompt-level benign over-refusal outside the agentic tool setting, so behavior specific to that setting is not sampled"
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q127",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Under what kind of model-specific problem could the harmonized anchors pass the positive control and still give that model a misleading capability composite, and why?",
+   "answer": "A model-specific harness or parsing problem that depresses both MMLU and GPQA together, because both anchors run through the same API harness. The two anchors would then agree, so the positive control passes, while both understate the model's ability. Only telemetry gates on usable output guard against this.",
+   "rubric": [
+    "Identifies a model-specific harness, parsing or output problem that affects both anchors in the same direction",
+    "Explains that the positive control only checks agreement between the anchors, so a shared distortion preserves agreement while biasing the composite"
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "In the negative control, 2% of the column-permuted matrices exceed the parallel-analysis threshold. Why is this reassuring rather than a sign of spurious structure?",
+   "answer": "The threshold is the 95th percentile of the random-normal null, so about 5% of structure-free matrices would be expected to exceed it by chance. An exceedance of 2%, with a median first eigenvalue of 1.71 against 2.18, is no higher than chance, so the pipeline is not creating structure from noise.",
+   "rubric": [
+    "Concludes that the 2% exceedance is consistent with no spurious structure",
+    "Explains that the threshold is a 95th-percentile null value, so roughly 5% exceedance is expected by chance and 2% does not exceed that"
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why would adding AgentDojo as a column in the common-panel PCA make the analysis worse rather than more complete?",
+   "answer": "The PCA needs every model to have a score on every column. AgentDojo covers only 5 models, so the shared set would fall from 18 to at most 5. That is far below the roughly a dozen models the paper requires before interpreting rank relationships.",
+   "rubric": [
+    "States that including AgentDojo would shrink the analyzable panel to at most 5 models",
+    "Links this to the need for complete rows across columns and the paper's minimum of about a dozen models"
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "GLM-4.5 produced a valid MMLU score. Why can it still not enter any capability-adjusted analysis?",
+   "answer": "The capability composite is the mean of the standardized MMLU and GPQA anchors. GLM-4.5 has no GPQA score, so no composite can be formed for it. It therefore appears only as a partial row in Figure 3.",
+   "rubric": [
+    "States that the model has no capability composite",
+    "Explains that the composite requires both standardized MMLU and GPQA, and GLM-4.5 lacks GPQA"
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q131",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "The pre-specified R-Judge/misalignment continuation on an n=25 intermediate panel missed its threshold. Why does the paper keep it as a hypothesis rather than treat it as evidence that no relationship exists?",
+   "answer": "At n=25 the panel is still underpowered for moderate correlations. A \u03c1 of about 0.4 needs roughly 40 models for 80% power, and even n=18 only detects about 0.62. Failing to reach the threshold is therefore uninformative about a moderate true relationship.",
+   "rubric": [
+    "Concludes that the miss does not show the absence of a relationship",
+    "Cites low power: about 40 models are needed for \u03c1\u22480.4, and n=25 falls well short"
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q132",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "The InjecAgent\u2013AgentDojo convergent control is inconclusive. Why does that not prevent the common-panel PCA from being interpreted under the paper's pre-specified rule?",
+   "answer": "The rule makes PCA interpretation conditional only on the positive and negative controls, and both pass. AgentDojo is not one of the PCA columns. The inconclusive convergent control therefore leaves the condition for interpretation untouched.",
+   "rubric": [
+    "States that the PCA can still be interpreted",
+    "Explains that the rule requires only the positive and negative controls to pass, both of which do, and/or that AgentDojo is not a PCA column"
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q133",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why would correlating an AIM-only jailbreak score with other refusal-based instruments tend to understate any association that exists?",
+   "answer": "Under AIM alone, 11 of 22 models refuse every request and tie at the ceiling. Whatever ordering those models have on the other instruments cannot be matched by the jailbreak scores. The tied half of the panel adds noise to the rank correlation and weakens it.",
+   "rubric": [
+    "Concludes that the AIM-only score would attenuate (understate) the association",
+    "Explains that half the panel ties at the ceiling, so differences among those models cannot contribute to the rank correlation"
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q134",
+   "type": "transfer",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "The paper gives 0.5^4 \u2248 6.2% as the chance that one coder matches all four labels by coin flip. What is the analogous chance baseline for one coder matching all six targets in the distractor round, and why is it smaller?",
+   "answer": "About (1/3)^6 \u2248 0.14%, because each of the six targets now has three possible constructs. With more options per target and more targets, matching every label by chance is far less likely than 6.2%, which is why the round is more demanding.",
+   "rubric": [
+    "Gives approximately (1/3)^6, about 0.14% (or an equivalent expression)",
+    "Explains that three constructs per target and six targets make a chance match much less likely than in the two-construct, four-benchmark round"
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q135",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A reader applies a Bonferroni correction to the released R-Judge analyses. What does following the paper's recommendation to report specificity, recall, balanced accuracy and F1 do to that correction, compared with reporting official F1 alone?",
+   "answer": "It multiplies the number of R-Judge-involving tests by about four, which makes the per-test threshold stricter. The paper warns that the number of tests grows quickly with the number of metrics reported per benchmark. Reporting all four summaries is therefore a trade-off against family-wise power.",
+   "rubric": [
+    "States that the correction becomes stricter because the number of tests roughly quadruples",
+    "Ties this to the paper's warning that the test count grows with the number of metrics reported per benchmark"
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q136",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Two teams analyze the same 18-model score matrix. One uses the Pearson convention, the other the Spearman convention, and they retain different numbers of components. Per the paper, does this mean one team made an error, and what should they report?",
+   "answer": "Not necessarily. With bounded, skewed instruments and a small panel, the two conventions can legitimately retain different numbers of components. Both should be reported, and the factor analysis should be treated as supporting rather than primary evidence.",
+   "rubric": [
+    "Concludes that the discrepancy does not imply an error",
+    "Explains that convention sensitivity is expected on small panels with bounded, skewed scores, so both conventions should be reported and the PCA treated as supporting evidence"
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q137",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A new organization contributes two anchored models to an expanded panel. Can it be one of the groups in the paper's permutation-test comparison of organizations, and why?",
+   "answer": "No. The pre-specified comparison includes only organization groups with at least three models. Its two models can still appear in pooled analyses, but the organization cannot form a comparison group.",
+   "rubric": [
+    "Concludes that the organization cannot be a comparison group",
+    "Cites the requirement of at least three models per organization group"
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q138",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team plans a cross-benchmark study and wants 80% power at \u03b1=0.05 to detect a true Spearman correlation of about 0.5. Based on the paper's power figures, roughly how large must its panel be?",
+   "answer": "Larger than 18 but smaller than about 40. At n=18 the minimum detectable effect is about 0.62, above 0.5, while about 40 models are needed for 0.4. A target of 0.5 therefore needs a panel somewhere in between, in the high 20s or 30s.",
+   "rubric": [
+    "Gives a size between about 18 and about 40 (more than the n=18 common panel)",
+    "Justifies this from n=18 detecting only \u03c1\u22480.62 and \u03c1\u22480.4 needing about 40 models"
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q139",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "After the study, a team uses the stored per-template jailbreak scores to test whether prefix injection alone predicts AgentHarm safety. How should that result be treated under the paper's practices?",
+   "answer": "As exploratory, because the primary pre-specified outcome is the three-template average and a single-template analysis is outside the plan. The team should also check that template for ceilings, since a single template can saturate, as AIM did.",
+   "rubric": [
+    "States that the result is exploratory (not pre-specified) because the primary outcome is the three-template average",
+    "Notes the need to check the single template for a ceiling effect, as with AIM"
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q140",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the harmonized capability composite had shown no association with \u03c4\u00b2 task success, which role the paper assigns to \u03c4\u00b2 would be undermined?",
+   "answer": "Its role as the reference outcome that capability is expected to explain, against which the safety outcomes are read. If capability failed to track task success, either the composite or the \u03c4\u00b2 measurement would be suspect. Contrasting the safety outcomes with \u03c4\u00b2 would then lose its anchor.",
+   "rubric": [
+    "Identifies \u03c4\u00b2's role as the reference outcome that capability should explain",
+    "Explains that without that association the contrast with the safety outcomes, and confidence in the composite or \u03c4\u00b2, would be undermined"
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q141",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If R-Judge specificity, recall, balanced accuracy and F1 had ordered the models identically, which of the paper's arguments would lose its practical force?",
+   "answer": "The argument that metric choice is part of the claim: that R-Judge's capability content differs by summary and secondary analyses should report the alternatives. If all summaries gave the same ranking, the choice of summary would not change conclusions in practice.",
+   "rubric": [
+    "Identifies the argument that capability content and conclusions depend on which R-Judge summary is used (metric choice is part of the claim)",
+    "Explains that identical rankings would leave no case in which the summary choice changes conclusions"
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q142",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the impressions formed on the first seven-model panel had held up on the full n=18 common panel, which recommendation would lose its first-hand motivating evidence?",
+   "answer": "The recommendation to treat small-panel relationships as provisional, show subsampling variability and avoid interpreting rank correlations on fewer than about a dozen models. The authors' own failed n=7 impressions are their direct example of the hazard.",
+   "rubric": [
+    "Identifies the recommendation to treat small-panel correlations as provisional, report subsampling variability, and avoid interpreting fewer than about a dozen models",
+    "Explains that the non-persistence of the n=7 impressions is the paper's first-hand demonstration of that hazard"
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q143",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the harness had measured only one capability anchor (say MMLU), which of the pre-specified harness controls could not have been run at all?",
+   "answer": "The positive control, because it is defined as the capability anchors agreeing with one another. With a single anchor there is no second measure to agree with, so the comparison between provider-reported and harmonized anchors on this control could not have been made.",
+   "rubric": [
+    "Identifies the positive control",
+    "Explains that it requires agreement between two anchors, which is impossible with only one"
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q144",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Per-model SEs for the jailbreak outcome are reported to be small. If its top-quartile persistence had nonetheless come out low, which statement in the paper would that illustrate?",
+   "answer": "That small SEs do not by themselves make rankings stable, which is the stated reason internal consistency is computed in addition to precision. Precise per-model scores can still give a top group that reshuffles under item resampling when models are close.",
+   "rubric": [
+    "Identifies the statement that small SEs alone do not guarantee stable rankings (the motivation for the consistency analyses)",
+    "Explains that rankings can reshuffle under item resampling even when individual scores are precise"
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q145",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does Table 3 show that every item-rich instrument has an uncorrected split-half correlation of at least 0.96? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Only R-Judge specificity reaches 0.98 uncorrected; the others are 0.93\u20130.95. The \u22650.96 figure refers to Spearman\u2013Brown corrected values, which project the consistency of the full-length instrument.",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that most uncorrected values are 0.93\u20130.95 and the \u22650.96 threshold applies to Spearman\u2013Brown corrected values"
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q146",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that error in the capability covariate can only weaken, never inflate, its capability-adjusted relationships? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper says covariate measurement error attenuates or distorts adjusted relationships in directions that are hard to sign. Adjusted estimates could therefore be biased either way, not only toward zero.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the paper's statement that covariate error attenuates or distorts adjusted relationships in hard-to-sign directions"
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q147",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that more capable models are, in general, more prone to agentic misalignment? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The opposite-direction association comes from the original panel and weakens on the 41-model expansion. The outcome is a single fictional-scenario probe whose halves agree only moderately (Spearman\u2013Brown 0.70), and capability is a static composite. The claim does not generalize from this evidence.",
+   "rubric": [
+    "Answers not settled",
+    "Cites at least one of: the weakening on the expanded panel, the fictional single-scenario probe with only moderate half agreement, or the static capability composite"
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q148",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper's InjecAgent evidence establish model rankings for prompt-injection robustness in general? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. InjecAgent was run on 300 rule-scored items stratified across only the direct-harm and data-stealing categories. Its convergent check against AgentDojo is inconclusive at n=5. High internal consistency shows stable rankings on these items, not across injection types generally.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the restricted item set (direct-harm and data-stealing items) and/or the inconclusive convergent control, noting that internal consistency covers only this item set"
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that current models no longer differ in how they refuse harmful requests? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Only the XSTest unsafe subset of overtly harmful prompts is ceilinged (83\u2013100%). Under the three-template jailbreak suite, safety among high-capability expanded-panel models spans most of the scale, so models still differ under jailbreak pressure.",
+   "rubric": [
+    "Answers contradicted",
+    "Contrasts the ceilinged overtly-harmful XSTest subset with the wide spread on the three-template jailbreak outcome"
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q150",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that BFCL is an invalid benchmark of function-calling ability? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports only a six-model pilot showing that BFCL failed as an agentic replacement for the capability covariate, apparently rewarding format conformance. That is a narrow finding about its use as a covariate on this panel, not a general verdict on the benchmark.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the evidence is a six-model pilot about its suitability as a capability covariate (format conformance), not a general validity test"
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q151",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-p1",
+   "question": "An organization-group permutation test on the misalignment outcome gives p\u22480.04. Is this result exposed to the false-positive inflation found under the worst-case clustered-variance null?",
+   "answer": "No. The worst-case inflation appeared on the jailbreak structure only. Rejection rates for misalignment matched nominal \u03b1 (0.045\u20130.052 at \u03b1=0.05).",
+   "rubric": [
+    "Answers no",
+    "Notes that the worst-case inflation was found only on the jailbreak structure, with misalignment calibrated at nominal levels"
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q152",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-p1",
+   "question": "An organization-group permutation test on the jailbreak outcome gives p\u22480.04. Is this result exposed to the false-positive inflation found under the worst-case clustered-variance null?",
+   "answer": "Yes, to a mild degree. Under the worst-case null the jailbreak test rejects about 6.7% of the time at \u03b1=0.05, so a result near 0.05 is less secure. Only at \u03b1=0.005 was no inflation detected.",
+   "rubric": [
+    "Answers yes (mildly)",
+    "Cites the 0.067 rejection rate at \u03b1=0.05 on jailbreak, with no inflation only at the stricter \u03b1=0.005"
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q153",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": "b4-p2",
+   "question": "An agent appears injection-robust only because it rarely completes any requested task. Would AgentDojo's scoring expose this?",
+   "answer": "Yes. AgentDojo is environment-scored for utility as well as security, so an agent that does little would show low utility alongside its high security.",
+   "rubric": [
+    "Answers yes",
+    "Explains that AgentDojo scores utility as well as security"
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q154",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": "b4-p2",
+   "question": "An agent appears injection-robust only because it rarely completes any requested task. Would InjecAgent's robustness score expose this?",
+   "answer": "No. InjecAgent robustness is rule-scored as one minus attack success and has no utility component. An agent that rarely acts would simply show low attack success and look robust.",
+   "rubric": [
+    "Answers no",
+    "Explains that InjecAgent scores only attack success (robustness = 1 \u2212 attack success), with no utility measure"
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q155",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2",
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "Would running each model on \u03c4\u00b2-retail several more times allow a within-model uncertainty bound to be placed on its \u03c4\u00b2 score?",
+   "answer": "Yes. The missing bound comes from user-simulator variance, which a single run cannot capture. Replicate runs would expose run-to-run variation from which an SE could be estimated.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the obstacle is user-simulator variance across runs, which replicate runs make observable"
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q156",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2",
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "Would re-scoring each model's existing \u03c4\u00b2-retail final database states a second time allow a within-model uncertainty bound to be placed on its \u03c4\u00b2 score?",
+   "answer": "No. \u03c4\u00b2 success is environment-scored from the final database state and does not depend on a judge, so re-scoring would reproduce the same result. The variance comes from the user simulator during the single run, which re-scoring cannot reveal.",
+   "rubric": [
+    "Answers no",
+    "Explains that environment scoring is judge-free, so re-scoring reproduces the same result, while the unbounded variance comes from the simulator during the run"
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q157",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": "b4-p4",
+   "question": "Could a model with poor comprehension of interaction traces still achieve high R-Judge specificity?",
+   "answer": "Yes. Specificity rewards leaving benign traces alone, which a disposition to rarely flag anything achieves without understanding the traces.",
+   "rubric": [
+    "Answers yes",
+    "Explains that specificity can be achieved by a disposition to flag rarely, without comprehension"
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q158",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": "b4-p4",
+   "question": "Could a model with poor comprehension of interaction traces still achieve high R-Judge balanced accuracy?",
+   "answer": "No. Balanced accuracy weights benign and unsafe traces equally, so it also requires high recall on unsafe traces. Catching unsafe content without flagging everything presupposes comprehension, and a rarely-flagging disposition would score low on recall.",
+   "rubric": [
+    "Answers no",
+    "Explains that balanced accuracy also requires recall on unsafe traces, which presupposes comprehension (a rarely-flagging disposition fails on recall)"
+   ],
+   "batch": 4,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q159",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": "b5-p1",
+   "question": "Could models' R-Judge F1 scores shift if the gpt-4o-mini judge used elsewhere in the harness were replaced with a different LLM judge?",
+   "answer": "No. R-Judge is run as a self-judge benchmark: the score compares each model's own safe/unsafe verdict with the record's label, so no external judge model enters the scoring.",
+   "rubric": [
+    "Asserts that R-Judge F1 would not shift (no / unaffected).",
+    "Reason: R-Judge is self-judged; verdicts are compared directly against labels, with no external LLM judge in the scoring."
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q160",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": "b5-p1",
+   "question": "Could models' XSTest safe-subset over-refusal rates shift if the gpt-4o-mini judge used elsewhere in the harness were replaced with a different LLM judge?",
+   "answer": "Yes. XSTest is scored with the published CPI (compliance/partial/refusal) scorer, which uses gpt-4o-mini as its judge. Changing the judge can change which responses count as refusals.",
+   "rubric": [
+    "Asserts that the rates could shift (yes).",
+    "Reason: XSTest's CPI scorer relies on a gpt-4o-mini judge to classify responses as compliance, partial or refusal."
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q161",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7",
+    "c4"
+   ],
+   "pair": "b5-p2",
+   "question": "Suppose Gemini-2.5-Pro, which yielded no valid capability anchor, had nonetheless had its jailbreak responses fully judged. Could it be included in the jailbreak row of the internal-consistency table (Table 3)?",
+   "answer": "Yes. The consistency computation needs only item-level jailbreak data, not anchors. The paper already includes DeepSeek-R1, which lacks the anchor pair, which is why that row has 42 models. Gemini-2.5-Pro would need judged responses on the shared base prompts so that the common prompt set does not shrink.",
+   "rubric": [
+    "Asserts yes, it could be included.",
+    "Reason: internal consistency uses only the instrument's item-level data, and DeepSeek-R1 was included without an anchor pair (42 models).",
+    "Condition: its judged prompts must cover the shared prompt set, or the intersection would shrink."
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q162",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7",
+    "c4"
+   ],
+   "pair": "b5-p2",
+   "question": "Under the same supposition (Gemini-2.5-Pro jailbreak responses fully judged, no valid anchor), could Gemini-2.5-Pro enter the expanded-panel correlation between capability and jailbreak safety?",
+   "answer": "No. That analysis uses the 41 anchored models and needs each model's harmonized capability composite. A model with no valid MMLU/GPQA anchor has no composite, so it cannot be placed on the capability axis.",
+   "rubric": [
+    "Asserts no.",
+    "Reason: capability analyses require the harmonized anchor composite, and the expanded analyses are restricted to anchored models; Gemini-2.5-Pro has no valid anchor."
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q163",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p3",
+   "question": "If MMLU were administered on 1,000 fixed items instead of 500, would its worst-case within-model SE be expected to fall?",
+   "answer": "Yes. The MMLU SE is binomial, so it shrinks with the square root of the item count. The worst case would fall from about 2.2 to about 1.6 points.",
+   "rubric": [
+    "Asserts yes, the worst-case SE would fall.",
+    "Reason: a binomial SE scales with 1/sqrt(number of items), so doubling the items lowers it (to roughly 1.6 points)."
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q164",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p3",
+   "question": "If MMLU were administered on 1,000 fixed items instead of 500, would its between-model SD (8.7) be expected to fall correspondingly?",
+   "answer": "No. The between-model SD mainly reflects real differences in model accuracy, which more items do not remove; only the small item-noise component would shrink. The SE-to-SD ratio would therefore improve.",
+   "rubric": [
+    "Asserts no, the between-model SD would not fall correspondingly (it would stay roughly the same).",
+    "Reason: the SD reflects true spread among models rather than item-sampling noise, so only the SE shrinks and the SE/SD ratio improves."
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q165",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p4",
+   "question": "In the PCA negative control, if each score column is permuted independently across models, does the permutation destroy any between-column correlation present in the real data?",
+   "answer": "Yes. Shuffling each column separately breaks the link between a model's score on one instrument and its scores on the others. Any real covariance structure is removed, which is what makes the result a null against which to check the pipeline.",
+   "rubric": [
+    "Asserts yes.",
+    "Reason: independent shuffling of each column decouples models' scores across instruments, so any genuine correlation structure is removed and the result is a valid null."
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q166",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p4",
+   "question": "If instead the same reordering of models were applied to every column jointly, would the permutation destroy any between-column correlation present in the real data?",
+   "answer": "No. A joint permutation only relabels the rows. Each model keeps its full set of scores, so the correlation matrix and its eigenvalues are identical to the real data's, and the result cannot serve as a null.",
+   "rubric": [
+    "Asserts no.",
+    "Reason: applying one permutation to all columns just reorders models while keeping each model's scores together, so the correlations and eigenvalues are unchanged."
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q167",
+   "type": "why",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the paper run its organization-group analysis (permutation test over organizations with at least three models) only on the expanded panel and not on the original 22-model roster?",
+   "answer": "On the original roster only four organizations have three or more models (OpenAI 6, Meta 3, Qwen 3, Mistral 3), and only OpenAI has four or more. The other five organizations contribute one or two models each. That leaves too few clusters and too few models per cluster for a group comparison. The expanded panel has seven organizations with three or more models and six with four or more.",
+   "rubric": [
+    "Concludes that the original roster has too few organizations with enough models for the group comparison.",
+    "Reason: only four original organizations reach three models (OpenAI 6, Meta, Qwen, Mistral 3) and only OpenAI reaches four, whereas the expanded panel has seven with three or more and six with four or more."
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q168",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why are both the median first eigenvalue of the column-permuted matrices (1.71) and the parallel-analysis threshold (2.18) well above 1, even though the permuted columns are unrelated by construction?",
+   "answer": "With only 18 models and six columns, sampling noise alone produces sizeable chance correlations among unrelated columns. The largest eigenvalue of such data therefore lands well above 1. This is why the paper compares eigenvalues with a simulated random-normal null rather than with a fixed cutoff, and why it notes that eigenvalues on this panel carry substantial sampling uncertainty.",
+   "rubric": [
+    "Concludes that eigenvalues above 1 are expected even for unrelated columns.",
+    "Reason: with small n (18 models), chance correlations from sampling noise inflate the largest eigenvalue, which is why a simulated parallel-analysis null is used instead of a fixed threshold."
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q169",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "GPQA's median within-model SE (3.3) is close to its maximum (3.6), while MMLU's median (1.6) is well below its maximum (2.2). Why the difference, given that both are binomial SEs?",
+   "answer": "A binomial SE peaks when accuracy is near 50%; 2.2 and 3.6 are roughly the maxima for 500 and 198 items. A median close to the maximum means most models score in the mid range on GPQA. MMLU's much lower median means most models score far from 50%, at high accuracy, with only a few near the middle.",
+   "rubric": [
+    "Concludes that most models sit near mid-range accuracy on GPQA but well above it on MMLU.",
+    "Reason: a binomial SE is largest at about 50% accuracy and smaller toward the extremes, so the median-to-maximum gap reflects where models' accuracies fall."
+   ],
+   "batch": 5,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q170",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "The four audited benchmarks order models differently on the common panel. Why does the paper hold that this disagreement does not by itself indict any single benchmark?",
+   "answer": "Before collecting any scores, the benchmarks were assigned to different target behaviors: R-Judge and the injection benchmarks to risk recognition, and AgentHarm to harm blocking. Blinded coders recovered these assignments. Instruments aimed at different behaviors have no reason to rank models identically. What the disagreement does undercut is quoting them interchangeably as 'the safety' of an agent.",
+   "rubric": [
+    "Concludes that disagreement is expected rather than evidence that a benchmark is faulty.",
+    "Reason: the benchmarks target different behaviors (pre-specified targets that blinded coders recovered), so their rankings need not agree; what the disagreement undermines is interchangeable use of the scores."
+   ],
+   "batch": 5,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q171",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "The expanded analyses use 41 anchored models, yet the MMLU row of the internal-consistency table covers 46 models. Why?",
+   "answer": "The extra rows are models that have MMLU item logs but were excluded from the anchored panel, for example DeepSeek-R1 (unstable GPQA) and GLM-4.5 (MMLU but no GPQA). Internal consistency is a property of the instrument and needs only item-level data. It does not require the full anchor pair or passing the gates needed for capability-adjusted analyses.",
+   "rubric": [
+    "Concludes that the 46 include models outside the 41-model anchored panel, such as DeepSeek-R1 and GLM-4.5, that have MMLU item logs.",
+    "Reason: consistency is computed from the instrument's own item data and does not require a complete anchor composite or inclusion in capability analyses."
+   ],
+   "batch": 5,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q172",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "InjecAgent covers all 22 models, while AgentHarm covers 19 and AgentDojo only 5. Why?",
+   "answer": "AgentHarm and AgentDojo require native tool calling. Models whose provider interface lacks the required schema are recorded as not-run rather than forced through an emulation layer, because emulation would change the instrument. InjecAgent is rule-scored and does not depend on native tool support, so every model can be run.",
+   "rubric": [
+    "Concludes that the coverage gap comes from the native tool-calling requirement.",
+    "Reason: AgentHarm and AgentDojo need native tool use, and unsupported models are not-run rather than emulated, whereas InjecAgent has no such requirement."
+   ],
+   "batch": 5,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q173",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the split-half computation share each random half-split across all models, using only items common to every model's logs, rather than drawing separate splits per model?",
+   "answer": "Sharing the splits means every model's half-score rests on exactly the same items. The correlation between halves then measures whether different item subsets order the models consistently. With per-model splits, models would be scored on different items, and differences in item difficulty would mix into the comparison.",
+   "rubric": [
+    "Concludes that shared splits are needed so that the comparison is of rankings on identical items.",
+    "Reason: per-model splits would put models on different items, confounding ranking consistency with differences in item difficulty."
+   ],
+   "batch": 5,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q174",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "AgentHarm and XSTest are both scored with gpt-4o-mini judges. Under what condition would an association between XSTest safe-subset over-refusal and AgentHarm safety be produced by scoring rather than by model behavior, and why?",
+   "answer": "This would happen if gpt-4o-mini systematically labels some response style (for example hedged or partial answers) as refusal. A model that writes in that style would be scored as refusing on both instruments, creating shared judge variance that looks like a behavioral link. The paper's AgentHarm refusal-judge swap agreed less closely, so judge choice is not innocuous for that instrument.",
+   "rubric": [
+    "Identifies the condition: a systematic gpt-4o-mini bias toward classifying certain response styles as refusals.",
+    "Reason: because both instruments share that judge, the bias would move both scores in the same direction (shared method variance) and produce a spurious association."
+   ],
+   "batch": 5,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q175",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The paper's within-model SEs were computed from existing item-level data with no new runs. Would they capture how much a model's score could change if the same model were rerun on the same items, and why?",
+   "answer": "No. The SEs are binomial or bootstrap quantities over item sampling. They do not include run-to-run decoding stochasticity, judge noise on new completions, or simulator variance. A rerun could therefore shift scores by more than these SEs suggest. \u03c4\u00b2's single run is the paper's own example of variance it cannot bound.",
+   "rubric": [
+    "Asserts no.",
+    "Reason: the SEs reflect only item-sampling variability from one set of completions, not variation across repeated runs (decoding, judge or simulator noise)."
+   ],
+   "batch": 5,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q176",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose the 2026 models' jailbreak responses had been scored with the Gemini judge while the original panel kept the gpt-4o judge. Would comparing the capability\u2013jailbreak correlation across panels remain clean, and why?",
+   "answer": "Not fully. Judge identity would be confounded with panel membership, so part of any change could come from scoring rather than from the models. The Gemini swap reproduced model-level scores closely, which suggests the distortion would be modest. The paper avoided the issue by rescoring new models with the same judge and the same base prompts.",
+   "rubric": [
+    "Asserts that the comparison would be compromised (not clean).",
+    "Reason: the judge would differ systematically between original and new models, confounding judge with panel.",
+    "Nuance: the close Gemini/gpt-4o agreement suggests any distortion would likely be small."
+   ],
+   "batch": 5,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q177",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The misalignment outcome's two scenario halves give Spearman\u2013Brown 0.70. Would a Spearman\u2013Brown projection from this figure reliably predict the consistency of the three-scenario battery that adds the murder scenario, and why?",
+   "answer": "No. The Spearman\u2013Brown projection assumes the added parts are comparable to the existing ones. The murder scenario differs in kind: it involves severe harm that harm-compliance instruments may anticipate. Adding it changes what is measured rather than simply lengthening the same instrument.",
+   "rubric": [
+    "Asserts no.",
+    "Reason: the projection assumes comparable parts, but the murder scenario differs in kind (severe harm also anticipated by harm-compliance instruments), so it changes the construct rather than adding parallel items."
+   ],
+   "batch": 5,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q178",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose the XSTest comparison panel showed a sizeable rank correlation between safe-subset over-refusal and an audited benchmark. Would it be robust to leaving out individual models, and why?",
+   "answer": "Probably not. Most of the over-refusal variation comes from two models, Claude-3-Haiku at 60% and o3-mini at 30%, while every other model sits at 15% or below. On n=17\u201320, a single unusual model can drive a rank correlation, so dropping one of those two could change it substantially.",
+   "rubric": [
+    "Asserts that it would likely be fragile, not robust.",
+    "Reason: the over-refusal spread is concentrated in Claude-3-Haiku (60%) and o3-mini (30%), with the rest at 15% or below, and on a panel of about 17\u201320 models single models can drive rank correlations."
+   ],
+   "batch": 5,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q179",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "The jailbreak outcome uses three published templates applied to a fixed set of forbidden prompts. Under what condition would high scores from newer models stop indicating jailbreak robustness, and why?",
+   "answer": "This would happen if newer models had been trained against these specific published templates or prompts. Their refusals would then reflect exposure to the test items rather than general robustness. The paper names training on test items as a form of gaming, and the outcome includes no adaptive attacks that would reveal the gap.",
+   "rubric": [
+    "Identifies the condition: newer models trained on or tuned against these published templates/prompts (test-item exposure).",
+    "Reason: scores would then reflect familiarity with the fixed items rather than robustness, and the outcome has no adaptive attacks to detect this."
+   ],
+   "batch": 5,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q180",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "The misalignment SE treats each model's 100 decisions as binomial. Why could this understate that model's true within-model uncertainty?",
+   "answer": "The 100 decisions come from only two scenario configurations, and the data are config-level, so decisions within a scenario are likely dependent rather than independent draws. The two halves agree only moderately (Spearman\u2013Brown 0.70), which indicates scenario-specific variance. A binomial SE over 100 independent decisions ignores this variance.",
+   "rubric": [
+    "Concludes that the binomial SE can be too small.",
+    "Reason: decisions are clustered in just two scenarios (config-level data), so they are not independent, and the moderate halves agreement points to scenario variance that the binomial formula omits."
+   ],
+   "batch": 5,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q181",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "On the original 22-model roster, which single organization's removal in a leave-one-organization-out check would change the panel most, and why is that check needed for it specifically?",
+   "answer": "OpenAI's. Removing its 6 models takes out about 27% of the panel and leaves 16. Because those six models share training pipelines and safety tuning, they could jointly drive an estimate in a way that removing one model at a time would not reveal.",
+   "rubric": [
+    "Names OpenAI (6 of 22 models, leaving 16).",
+    "Reason: its models share pipelines and tuning, so they can jointly drive an estimate that leave-one-model-out cannot detect."
+   ],
+   "batch": 5,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q182",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A team proposes a held-out harm outcome for current models made of overtly harmful single-turn prompts with no jailbreak template, scored by refusal. What should they expect, based on the paper?",
+   "answer": "They should expect a ceiling with little discriminating variance. On XSTest's unsafe subset every model refuses 83\u2013100% (sd 4.5), and even a single jailbreak template (AIM) left 11 of 22 models refusing everything. The paper's lesson is to check for ceilings first and to prefer multi-template or agentic designs.",
+   "rubric": [
+    "Predicts a ceiling or near-ceiling with little discrimination among models.",
+    "Reason: cites XSTest's unsafe subset (83\u2013100% refusal, sd 4.5) and/or the AIM-only ceiling (11/22 refuse every request), and recommends ceiling checks or multi-template/agentic designs."
+   ],
+   "batch": 5,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q183",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team reproduces the paper's MMLU protocol but draws a fresh random 500-item subset for each model. What does this undermine?",
+   "answer": "Models are no longer scored on identical items. Score differences then partly reflect item difficulty, which breaks the uniform protocol the anchors rely on. It also removes most of the shared item base needed for the common-item split-half and rank-stability computations.",
+   "rubric": [
+    "Concludes that comparability across models (the uniform protocol) is undermined.",
+    "Reason: different items per model mean score differences partly reflect item difficulty, and the common-item consistency analyses lose their shared item base."
+   ],
+   "batch": 5,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q184",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team wants to add AgentHarm scores for the paper's 41-model expanded panel. What panel should they expect, and why?",
+   "answer": "They should expect fewer than 41 models, and a non-random subset. AgentHarm needs native tool calling, and unsupported models are not-run rather than emulated. Coverage loss falls disproportionately on models with non-standard tool interfaces, and several 2026 models already hit routing incompatibilities with the harness.",
+   "rubric": [
+    "Predicts a panel smaller than 41 and non-randomly selected.",
+    "Reason: AgentHarm requires native tool use without emulation, coverage loss concentrates on non-standard interfaces, and the harness was already stale for some 2026 models."
+   ],
+   "batch": 5,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q185",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team builds a capability composite from harness-measured MMLU/GPQA for most models but fills in provider-reported figures for a few models that are hard to run. What is wrong with this, per the paper?",
+   "answer": "Mixing sources reintroduces heterogeneous prompts, shot counts and decoding settings for those models, so their composite partly reflects reporting practice. Provider figures failed the positive control. The paper's practice is to measure every anchor under its own protocol, or to exclude models that cannot be measured, as it did with Gemini-2.5-Pro and DeepSeek-R1.",
+   "rubric": [
+    "Concludes that the mixed composite is not comparable across models and should not be used.",
+    "Reason: provider figures come from heterogeneous conditions and failed the positive control; models should be measured under the uniform protocol or excluded."
+   ],
+   "batch": 5,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q186",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants 80% power at \u03b1=0.05 to detect a true Spearman correlation near 0.4 between AgentHarm and InjecAgent. Starting from the n=18 common panel, roughly how many models must they add, and what practical obstacle will they face?",
+   "answer": "They need to add roughly 22 models, to reach about 40. Every added model must support native tool calling for AgentHarm. That is hard because coverage loss concentrates on models with non-standard tool interfaces and harnesses go stale as interfaces change.",
+   "rubric": [
+    "States roughly 22 more models (to about 40 total).",
+    "Reason/obstacle: each must run AgentHarm with native tool calling, and coverage loss on non-standard interfaces and harness staleness make this difficult."
+   ],
+   "batch": 5,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q187",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If Llama-3.3-70B's dissenting view (InjecAgent as harm blocking) had been the coders' majority, which pre-specified harness control would lose its rationale?",
+   "answer": "The convergent control. It assumes InjecAgent and AgentDojo target the same construct, and coders placed AgentDojo unanimously under risk recognition. If InjecAgent were read as harm blocking, there would be no basis for expecting the two to agree.",
+   "rubric": [
+    "Names the convergent (InjecAgent\u2013AgentDojo) control.",
+    "Reason: that control presumes both benchmarks share a construct; coding InjecAgent as harm blocking while AgentDojo is coded recognition removes the expectation of agreement."
+   ],
+   "batch": 5,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q188",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the audited benchmarks' split-half consistency had been low (around 0.5) instead of 0.96 or above, how would the interpretation of their cross-benchmark disagreement change?",
+   "answer": "The disagreement could then be explained by item-sampling noise within each instrument rather than by the instruments genuinely ranking models differently. High internal consistency is what makes item-sampling error an unlikely source of instability in rankings, so the disagreement can be read as substantive.",
+   "rubric": [
+    "Concludes that the disagreement could be attributed to measurement noise rather than real differences between instruments.",
+    "Reason: high split-half and rank stability are what rule out item-sampling error as the source of ranking differences."
+   ],
+   "batch": 5,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q189",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the AIM template alone had not produced a ceiling (models spread across the scale), which Discussion recommendation would lose its direct demonstration in this audit, and which part would still have support?",
+   "answer": "The recommendation to prefer multi-template designs where a single template saturates would lose its first-hand case, since the three-template average was adopted to fix the AIM ceiling. The broader advice to check outcomes for ceilings would still be supported by the ceilinged XSTest unsafe subset (83\u2013100% refusal).",
+   "rubric": [
+    "Names the multi-template part of the fourth recommendation (prefer multi-template designs when a single template saturates) as losing its direct evidence.",
+    "Notes that ceiling-checking remains supported by the ceilinged XSTest unsafe subset."
+   ],
+   "batch": 5,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q190",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the Gemini refusal-judge rescoring of AgentHarm had agreed closely with the original grading, which aspect of judge robustness would it support, and which would remain untested?",
+   "answer": "It would support robustness of the refusal component to judge choice. It would not test the rest of AgentHarm's multi-stage grading pipeline, which was not redone. Robustness of full AgentHarm scores to the judge would therefore remain unestablished.",
+   "rubric": [
+    "States that it would support robustness of the refusal component only.",
+    "Reason: the swap redoes only the refusal stage, so the other grading stages, and hence full-score robustness, remain untested."
+   ],
+   "batch": 5,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q191",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose the models lost from AgentHarm coverage because of non-standard tool interfaces had been disproportionately the most capable. Which common-panel results would be most distorted, and why?",
+   "answer": "Relationships between the audited benchmarks and capability would be most distorted. The common panel would be range-restricted on capability, which can weaken or distort those associations. The results would also not carry over to the excluded, more capable models.",
+   "rubric": [
+    "Identifies capability-related associations on the common panel (benchmark versus capability, or capability-adjusted analyses).",
+    "Reason: non-random loss would range-restrict capability and bias associations, and limit generalization to the excluded models."
+   ],
+   "batch": 5,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q192",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the murder scenario had been part of the pre-specified primary misalignment outcome from the start, which objection to using the three-scenario battery would disappear, and which would remain?",
+   "answer": "The forking-path objection would disappear, because it arises only from adding the scenario after the primary outcome was fixed. The dilution objection would remain: murder involves severe harm that harm-compliance instruments may also anticipate, which weakens the probe's specificity to autonomous-agent misbehavior.",
+   "rubric": [
+    "States that the forking-path (post hoc addition) objection would disappear.",
+    "States that the loss of specificity would remain, because murder's severe harm overlaps with what harm-compliance instruments capture."
+   ],
+   "batch": 5,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q193",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that agent-safety benchmark scores are too noisy to rank models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The item-rich instruments have split-half of at least 0.96 and rank stability of at least 0.97, and worst-case SEs are only 13\u201325% of between-model spread. Panel-level rankings are therefore not dominated by noise. The caveats are that closely scored pairs can fall within their SEs and that the single-scenario and single-run outcomes are weaker.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: high internal consistency (split-half \u22650.96, rank stability \u22650.97) and SEs that are a small fraction of between-model SD.",
+    "Caveat: close pairs and the misalignment/\u03c4\u00b2 outcomes are exceptions."
+   ],
+   "batch": 5,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q194",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the cross-benchmark ranking disagreement reported in prior work (concordance near 0.10) arises entirely from heterogeneous evaluation harnesses? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Run under one harness on a common panel, the benchmarks still disagree. They also target different behaviors, which blinded coding confirms, so some disagreement is expected regardless of harness. Low power at n=18 limits how precisely the disagreement can be sized.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: disagreement persists under a single harness on a common panel, and the benchmarks target different constructs."
+   ],
+   "batch": 5,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q195",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a fixed evaluation harness keeps working reliably as new models are released? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. In the 2026 expansion several newer models could not be run reliably through the same interface. Gemini-2.5-Pro yielded no valid anchor and GLM-4.5 only partial anchors, both because of routing incompatibilities. The paper presents these as instances of harnesses going stale.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: several 2026 models failed to run reliably (e.g., Gemini-2.5-Pro, GLM-4.5 routing incompatibilities), which the paper calls harness staleness."
+   ],
+   "batch": 5,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q196",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that models released in 2026 are more jailbreak-safe than 2024\u201325 models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports no such cohort comparison. Jailbreak safety spans most of the scale even among high-capability models, and release date is collinear with organization and capability, so any cohort difference would be observational and confounded.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: no release-cohort comparison is reported, and release date is entangled with organization and capability, so any difference would be confounded and observational."
+   ],
+   "batch": 5,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q197",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does a high XSTest safe-subset over-refusal rate show that a model will score high on R-Judge recall? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper only remarks that a model labelling too many traces as unsafe may score well on recall-oriented metrics. It reports no XSTest\u2013R-Judge association. The tasks also differ (refusing prompts versus judging traces), and the XSTest comparisons have low power at n=17\u201320.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: no XSTest\u2013R-Judge relationship is reported; the tasks differ and the XSTest comparison panel is small and low-power."
+   ],
+   "batch": 5,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q198",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the passing of the paper's pre-specified harness controls show that each audited benchmark measures its intended target behavior? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The positive control checks that the two capability anchors agree, and the negative control checks that the pipeline does not create structure from noise. Neither tests any benchmark's target. The convergent control, the only one involving benchmark targets, was inconclusive at AgentDojo's n=5, and the blind coding shows only that the target labels can be recovered.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the positive and negative controls test pipeline behavior (anchor agreement, no structure from noise), not the benchmarks' targets.",
+    "Notes that the convergent control was inconclusive (n=5) and/or that the coding shows only recoverability."
+   ],
+   "batch": 5,
+   "orig_id": "q40"
+  }
+ ],
+ "rejected": [],
+ "types": {
+  "failure": 33,
+  "why": 34,
+  "counterfactual": 40,
+  "transfer": 30,
+  "connect": 29,
+  "scope": 32
+ }
+}

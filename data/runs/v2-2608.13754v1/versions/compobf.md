@@ -1,0 +1,142 @@
+The statement exhibits VX2 on 73.2% of pairs (95% CI 0.725–0.738), the modal claim holds a TN4 (TN4 denoting modal share) of 41.1%, median pairwise Jaccard is 4% and κ=0.015; standardising the metric leaves 59.4%, and removing size from the claim and fixing it leaves 27.1% (CI 0.255–0.286), across 15,840 specifications on ML4/XB8 (XB8 denoting indirect object identification), 7,561 yielding a claim, where a pre-registered crossed grid of seven analytic axes (every level from a published implementation) feeds a deterministic QM3 from circuits to Annex IV statements in a test of whether circuit-discovery evidence survives 2 competent analysts using the same system and tool with different defensible settings, a test of PD8 (PD8 denoting circuit instability), as the EU AI Act requires high-risk providers to file technical documentation on how the system decides.
+
+## 1 Introduction
+
+Pooled statistics can invert when specifications select objects of different sizes, and three of ours do, while instability survives standardising any axis, removing size from the claim, and fixing size, within contribution (i), a pre-registered seven-axis GK5 (GK5 denoting the paper's multiverse) plus a deterministic circuit→Annex IV map, and contribution (ii), measured ZK7 (ZK7 denoting the paper's filability criterion) π*≥1−α; no new method is proposed and interpretability is not called worthless, since an audit means two auditors reach the same conclusion under Reg. (EU) 2024/1689 (consolidated, amended by Reg. (EU) 2026/1744, CELEX 02024R1689-20260727, read 11 Aug 2026), where Annex IV 2(b) states "the general logic of the AI system and of the algorithms", 2(e) states "an assessment of the technical measures needed to facilitate the interpretation of the outputs", and Art. 86(1) states "clear and meaningful explanations of the role of the AI system in the decision-making procedure and the main elements of the decision taken".
+
+## 2 Related work
+
+The non-interchangeability of our circuits is given functionally in §7.6 as the answer to the possibility, CU3 (CU3 denoting phantom specialisation), that structurally distinct circuits can implement the same computation, under which VX2 (VX2 denoting the flip rate) would measure which equivalence-class member was sampled; ablation-based faithfulness is highly sensitive to minor choices, so scores reflect researcher choices, and, that sensitivity constituting one axis while seven are crossed by us, their library is our instrument, so this is a stress test by its own definitions. Per-metric EX9 values (EX9 denoting the discard rate) are reported because NV3 (NV3 denoting sufficiency) and WP6 (WP6 denoting comprehensiveness), both among our four metrics, can be inflated without changing predictions; a unique explanation need not exist, and its cost is measured by us when an explanation is filed. Certification needs standardised specification, prior calls having sought auditing standards to certify findings and standardised evaluation across methods, while a measurement and criterion are supplied by us; GK5 and KY6 (KY6 denoting the specification curve) are used by us, and undisclosed analytic flexibility can manufacture stability claims, with MI as statistical estimation and seed variance as one of our axes.
+
+## 3 What this paper is not claiming
+
+κ=0.0146 is the value at which the redescription of one mechanism is reported, while the selection of prompts by the seed constitutes evaluation-set variability, and nothing about scale is included; mechanisms agree in that YD6 (YD6 denoting the paper's functional instability) is 0.3972 pooled and 0.4777 at the smallest circuits, and circuits, being no better than random, at fixed size beat a QF4, 0.2746 vs 0.4230.
+
+## 4 Formalism
+
+Filable at α iff π*≥1−α, F≤1−1/k makes 9 classes carry ceiling 0.8889 and 0.7316 is 82.3% of it, while F=1−Σ_c n_c(n_c−1)/(N(N−1)) (2) is unbiased Gini–Simpson, unit-tested against brute force, with φ: circuit→Annex IV statement and π*=max_c n_c/N. F_within(G)=1−Σ_gΣ_c n_{g,c}(n_{g,c}−1)/Σ_g n_g(n_g−1) (3) weights pairs equally and equals (2) for empty G; D(s_i,s_j)=1−|C_i∩C_j|/|C_i∪C_j| (1); J̄ = RW5 over unordered pairs; specification s=(o,a,d,m,τ,P,r,g) has components objective, ablation, corruption distribution, metric, size threshold, prompt variant, seed, granularity, no level was invented. C(s)⊆E is asserted with |E|=32{,}491 for ML4 (ML4 denoting GPT-2 small), factorised q/k/v, the confirmation from the instrument and in closed form being that block-b attention takes 1+13b sources × 3 slots × 12 heads, that MLP b takes those sources plus own-block heads, and that the output takes all 157 non-terminal sources, while circuits draw on 156 components (144 heads, 12 MLPs).
+
+## 5 The claim map
+
+Table 1: ZK7 under alternative binnings, the range 0.70–0.77 arising across the 4× factors.
+
+| Binning | ZK7 |
+|---|---|
+| committed | 0.7316 |
+| ×0.5 | 0.7448 |
+| ×0.8 | 0.7435 |
+| ×0.9 | 0.7394 |
+| ×1.1 | 0.7289 |
+| ×1.25 | 0.7314 |
+| ×1.5 | 0.7308 |
+| ×2 | 0.7232 |
+| equal thirds | 0.7018 |
+| deciles | 0.7719 |
+| no size term (COARSE) | 0.5733 |
+
+With the finer of three nested granularities refining, while never contradicting, the coarser, and with the size bins constituting the output of a committed calibration rule applied to a measured node-count curve, φ_affected is keyed, per Art. 86(1), so as to lead with input segment, whereas φ_overseer, under Annex IV 2(e), 3 and Art. 14(4)(c), is keyed on dominant layer band, then size class, then ranked input segment, φ itself (QM3 denoting the paper's claim map) being pre-registered, deterministic, published code and not an LM, which would confound model variance.
+
+## 6 Method
+
+The pool is 52% WP6 against a 25% design, BJ9 having admitted no circuit for 8,279 specifications (52.3%), a figure disclosed pre-lock from a six-cell slice and constituting, together with the one objective that fails on all 220 cells (MSE against an integral target, inside library code)—a digest confirming the failure set to be exactly that arm, which was left unrepaired—the two exclusions whose criteria were fixed before any circuit was seen, the realised grid after them being 6 objectives, 1,320 cells and 15,840 specifications on which BJ9 (BJ9 denoting the paper's metric-relative threshold rule) operates, out of the 1,540 cells and 18,480 specifications arising from 7 objectives × 7 ablations, with 4 corruptions nested in the 5 ablations that read them (crossing would duplicate), 4 metrics, 3 thresholds, 2 prompts and 5 seeds. No cross-specification p-values were computed, the bootstrap resampling specifications rather than pairs ($B=10{,}000$) since F and J̄ are pair U-statistics, and intervals hold only given the grid; the plan was tagged before the sweep, both abstracts pre-drafted and deviations kept in a dated append-only log. Discovery took the EAP family and HZ2 (HZ2 denoting the paper's integrated edge gradients) from the faithfulness-sensitivity library and the corruption levels from the XB8 paper, the model being ML4 on XB8 [15], which matches the literature's scale, the edge count making a QF4 meaningful, with the kept and discarded counts for WP6, TR8 (TR8 denoting the paper's KL divergence), AX5 (AX5 denoting the paper's logit difference) and NV3 given in Table 2.
+
+Table 2: discards, by metric.
+
+| Metric | Kept | Discarded | Rate |
+|---|---|---|---|
+| WP6 | 3,947 | 13 | 0.003 |
+| TR8 | 1,467 | 2,493 | 0.630 |
+| AX5 | 1,270 | 2,690 | 0.679 |
+| NV3 | 877 | 3,083 | 0.779 |
+
+## 7 Results
+
+Attribution flips on 27% of pairs under the layer-band-only claim with size fixed, F=0.2706 (0.2550–0.2859) (7.4), and the pooled QF4 direction over all 32,491 edges at R=1,000, 0.7316 vs 0.6774, is a size artefact because above 1,000 edges a uniform draw touches all 156 components, while the fixed-size contrasts are 0.2746 vs 0.4230 (MEDIUM) and 0.2706 vs 0.3822 (COARSE) (7.5).
+
+Table 7: within-size F, MEDIUM; 2,692 specifications contribute no flips, and all PD8 is below 2,000 edges.
+
+| Size | n | EX9 F | Cl. | QF4 F | Cl. |
+|---|---|---|---|---|---|
+| 10 | 2,492 | 0.4543 | 3 | 0.7331 | 6 |
+| 20 | 489 | 0.3380 | 4 | 0.6622 | 3 |
+| 50 | 519 | 0.4639 | 3 | 0.7310 | 6 |
+| 100 | 242 | 0.5792 | 3 | 0.6584 | 3 |
+| 200 | 199 | 0.5122 | 4 | 0.6366 | 3 |
+| 500 | 236 | 0.4258 | 3 | 0.1421 | 3 |
+| 1,000 | 380 | 0.5133 | 3 | 0.0000 | 1 |
+| 2,000 | 312 | 0.5714 | 3 | 0.0000 | 1 |
+| 5,000 | 625 | 0.0000 | 1 | 0.0000 | 1 |
+| 10,000 | 2,067 | 0.0000 | 1 | 0.0000 | 1 |
+
+Per-example agreement is 0.6028, using the CU3 measures verbatim; the 60% raw agreement is a reflection of equal accuracy rather than shared examples, κ stays 0.016–0.047 across sizes while raw agreement rises 0.52→0.92 (accuracy 0.51→0.95), the circuits are not interchangeable, the H4 gap fails 0.10 at 6/10 sizes and is negative at 5, mechanisms differ more than filings at both ends, and the pooled gap comes from 500–2,000 edges alone (7.6).
+
+The premise that circuits are almost disjoint (7.1) rests on J̄ exact over 28,580,580 pairs (3,218 distinct circuits), D quantiles of 1%=0.196, 25%=0.788, median 0.960 and 75%=0.998, only 1% of pairs exceeding RW5 0.8, and the random line k/(2|E|−k), which gives 0.0031 at the median 200 edges so observed overlap is ~45× chance (500 edges: 0.008).
+
+VX2 clears 0.20 by >3×, with π*=0.411 against required 0.95/0.90/0.80; the top two claims (41.1%, 28.5%) contradict one another as early vs late layers, and the affected-person COARSE two-class claim still flips on 39.5% (7.2).
+
+Table 4: φ_overseer MEDIUM classes, with layer totals early 47.9% (= COARSE TN4 0.4788), late 43.6%, middle 8.5%.
+
+| Band | Size | Count | Share |
+|---|---|---|---|
+| early | distributed | 3,107 | 0.4109 |
+| late | sparse | 2,153 | 0.2848 |
+| late | moderate | 657 | 0.0869 |
+| late | distributed | 489 | 0.0647 |
+| early | sparse | 477 | 0.0631 |
+| middle | moderate | 283 | 0.0374 |
+| middle | sparse | 269 | 0.0356 |
+| middle | distributed | 90 | 0.0119 |
+| early | moderate | 36 | 0.0048 |
+
+Table 5: at α=0.20, with π*≥0.80 required, ZK7 is met by no cell.
+
+| Addressee | Gran. | Classes | F | π* |
+|---|---|---|---|---|
+| affected | COARSE | 2 | 0.3950 | 0.7291 |
+| affected | MEDIUM | 4 | 0.6597 | 0.4875 |
+| affected | FINE | 8 | 0.6744 | 0.4786 |
+| overseer | COARSE | 3 | 0.5733 | 0.4788 |
+| overseer | MEDIUM | 9 | 0.7316 | 0.4109 |
+| overseer | FINE | 12 | 0.7681 | 0.4109 |
+
+ZK7 remains unmet after standardisation, the removal attributable to any analytic axis being small (7.3), with residual F per standardised axis via (3) in Table 6; groups have 1,512–2,520 specifications and bootstrap bias <0.0006.
+
+Table 6: residual F per standardised axis via (3).
+
+| Axis | F | 95% CI | Removes |
+|---|---|---|---|
+| Metric | 0.5939 | 0.5803–0.6063 | 0.1377 |
+| Ablation | 0.7014 | 0.6939–0.7075 | 0.0302 |
+| Objective | 0.7018 | 0.6938–0.7084 | 0.0298 |
+| τ | 0.7070 | 0.6981–0.7149 | 0.0246 |
+| Corruption | 0.7092 | 0.7008–0.7166 | 0.0224 |
+| Prompt | 0.7232 | 0.7157–0.7300 | 0.0084 |
+| Seed | 0.7307 | 0.7234–0.7368 | 0.0009 |
+
+SK4 on log₁₀ circuit size gives ablation×corruption 78.8%, residual 11.5%, ablation 4.4%, threshold 4.1%, metric 0.7%; structure and claim follow different axes, so standardising ablation would barely fix filings.
+
+Table 3: pre-registered outcomes (thresholds fixed 6 Aug 2026, none revisited).
+
+| | Rule | Result | Outcome |
+|---|---|---|---|
+| P0 | J̄ reported | 0.1396 [0.1377, 0.1418] | premise holds |
+| H2 | F>0.20, CI lower bound above | 0.7316 [0.7247, 0.7380] | confirmed |
+| H3 | not separated from null | separated, disjoint | rejected |
+| H4 | F−(1−agreement)>0.10 | 0.3344 [0.3297, 0.3394] | supported |
+
+## 8 The filability protocol
+
+Reporting (5) of π*, F, per-level discard rates and within-group decompositions, with ZK7 at α (4) holding if π*≥1−α once π* and F have been computed from Eq. 2 (3), presupposes φ declared as deterministic published code, not an LM (2), and space 𝒮 declared with axes and defensible levels, each cited (1); the regulator need not judge which choice is correct.
+
+## 9 Limitations
+
+Reported either way and remaining one model, one task, the pre-registered but unrun replication is a 924-cell GF7 replication (GF7 denoting the paper's Pythia-160m), identical except 3 seeds, with replication criteria timestamped; larger models give band and size more room, the direction of the effect on VX2 being unclear, and a second task is designed, not run. VX2, a lower bound because optimal ablation is unimplemented and GK5 is as wide as the library rather than the literature, drops 0.7316→0.2746 when circuit size is fixed, more than any axis, since circuit size, an outcome and not an axis, distorted pooled VX2, null direction and functional-gap sign; EX9 is high and uneven, 52.3%, metric-imbalanced, stated rather than adjusted, while for one reported family the bootstrap is invalid, self-pairs dominating with 2–5-specification groups, point estimates only, and no post hoc estimator was built.
+
+## 10 Discussion
+
+What a regulator can take from this is that evidentiary weight is measurable, cheaply relative to the sweep, while one of seven exported objectives fails on the library's canonical task—a tooling-maturity observation on the instrument, not the headline—and no single knob fixes it, what the standardisation of one axis buys being the removal by the metric of only 0.1377 of 0.7316.
+
+## 11 Reproducibility
+
+343 tests were run; no GPU is required by the analysis. Failures numbered 0 across the 36 checks of verification, F established by three routes, brute force included; from stored results every manuscript number and table derives. Verification of a single environment across 1,320 cells was achieved from the archive, the code commit having been recovered by content-addressing (22/22 files), every number tracing to config, seed and environment fingerprint. Committed before the sweep, the pre-registration tag is prereg-p1-confirmatory.
+

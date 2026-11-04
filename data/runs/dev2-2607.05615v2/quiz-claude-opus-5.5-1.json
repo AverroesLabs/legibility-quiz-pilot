@@ -1,0 +1,497 @@
+{
+ "claims": [
+  {
+   "id": "c1",
+   "text": "The paper proposes two training-free stochastic gates on SAE feature steering. STS draws an independent Bernoulli(p) gate at every position. SBS draws a single Bernoulli(p) gate per sequence that steers a leading window of size W all-or-nothing. Neither needs a reward model or a learned gating policy, and p interpolates between no steering and full steering.",
+   "sections": [
+    "s0",
+    "s1",
+    "s3"
+   ],
+   "depends_on": []
+  },
+  {
+   "id": "c2",
+   "text": "Steering only a fraction of tokens with STS recovers most of the full-steering behavioral effect. For LLaMA it recovers more than 95% of toxicity reduction at p=0.5 and more than 75% of emotion gains by p=0.7. The steering magnitude is calibrated once at p=1 and held fixed, so sparse results get no per-p re-tuning.",
+   "sections": [
+    "s4",
+    "s10"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "STS overtakes a deliberately strong, iteratively engineered prompting baseline in five of six model-task settings. The crossover ratio depends on the task. Sadness on Gemma-2 2B is the exception, where prompting stays ahead.",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "At matched nominal p, STS produces larger behavioral shifts than SBS. However, SBS realizes a much smaller fraction of steered tokens at the same p. Once realized budgets are matched, no single ordering holds: STS keeps an advantage on toxicity, while SBS is competitive on fear.",
+   "sections": [
+    "s4",
+    "s10",
+    "s7"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Fluency degradation (perplexity, Rep-3/Rep-4) grows monotonically with steering density, so sparse operating points cost less fluency than full steering. All methods are paired with fluency guards (norm preservation, clamping, repetition penalty), and an ablation shows these guards substantially cut perplexity and repetition.",
+   "sections": [
+    "s4",
+    "s9",
+    "s7"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "The best-performing magnitude alpha* (maximizing behavioral shift subject to fluency preservation) rises as the intervention ratio falls. Residual-stream displacement grows with both p and alpha: p adds displaced positions, while alpha deepens displacement per token. This makes the two substitutable routes to the same behavioral shift.",
+   "sections": [
+    "s4",
+    "s10"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "The method differs from the concurrent SIA in several ways. It uses a fixed pretrained-SAE direction in the residual stream with no learned selector, auxiliary value model, or best-of-N. It produces a single completion with only a vector addition when the gate fires. Because protocols differ, SIA results are not directly comparable, and random gating serves as a control that selective methods should beat.",
+   "sections": [
+    "s2",
+    "s7",
+    "s1"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "Suppose the paper's SBS method is run on 100 prompts at p=0.5. Roughly how many of those sequences receive no steering at all? Explain why using SBS's gating rule.",
+   "answer": "About 50 sequences receive no steering. SBS samples a single Bernoulli(p) gate per sequence, and that gate either steers the whole leading window or none of it. So with probability 1-p = 0.5, a sequence is left entirely unsteered.",
+   "rubric": [
+    "States roughly 50 of 100 sequences get no steering",
+    "Explains that SBS draws one gate per sequence that applies to the whole window or not at all"
+   ]
+  },
+  {
+   "id": "q2",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s9"
+   ],
+   "question": "Use the paper's definition of STS and the maximum generation length stated in its implementation details. In expectation, how many generated tokens of a maximum-length completion would be steered at p=0.3?",
+   "answer": "About 38 tokens (0.3 \u00d7 128 = 38.4). STS gates each position independently with probability p, and generations run up to 128 tokens.",
+   "rubric": [
+    "Gives approximately 38 tokens (0.3 \u00d7 128)",
+    "Uses the fact that STS gates each position independently with probability p",
+    "Uses the 128-token generation cap"
+   ]
+  },
+  {
+   "id": "q3",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "textbase",
+   "sections": [
+    "s3"
+   ],
+   "question": "A reader summarizes the paper's SBS as 'steering a random half of positions in each sequence when p=0.5.' Why is this summary wrong according to the paper's definition?",
+   "answer": "SBS does not select individual positions at random. It draws a single gate per sequence, so either the entire leading window of W positions is steered or nothing is. Positions after the window are never steered, regardless of p.",
+   "rubric": [
+    "Says the gate is drawn once per sequence (all-or-nothing), not per position",
+    "Notes that steering is confined to the leading window and positions beyond W are never steered"
+   ]
+  },
+  {
+   "id": "q4",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s10"
+   ],
+   "question": "Use the paper's matched-budget table for Gemma-2 2B. What fraction of STS's toxicity reduction at p=0.9 is already achieved at p=0.5? What does this say about the paper's redundancy claim?",
+   "answer": "About 90% (0.237/0.263). Steering roughly half the tokens achieves nearly all of the near-dense effect, which supports the claim that most per-token interventions are redundant for toxicity.",
+   "rubric": [
+    "Computes roughly 0.9 (0.237 / 0.263)",
+    "Interprets this as most of the effect being retained with about half the tokens steered, consistent with redundancy"
+   ]
+  },
+  {
+   "id": "q5",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s10",
+    "s4"
+   ],
+   "question": "In the paper's matched-budget table for Gemma-2 2B, compare the share of the p=0.9 STS effect that STS keeps at p=0.5 on the fear task with the share it keeps on the toxicity task. What does the difference indicate about task dependence?",
+   "answer": "On fear, STS at p=0.5 keeps only about 43% of its p=0.9 gain (0.108/0.251), compared with about 90% on toxicity. Emotion elicitation therefore needs a higher intervention ratio than toxicity suppression, matching the paper's statement that the required ratio is task dependent.",
+   "rubric": [
+    "Computes the fear share as roughly 0.43 and contrasts it with the much higher toxicity share",
+    "Concludes that emotion steering needs a higher ratio than toxicity reduction (task dependence)"
+   ]
+  },
+  {
+   "id": "q6",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s10",
+    "s4"
+   ],
+   "question": "Under the paper's experimental protocol, what steering magnitude alpha is used when running STS at p=0.3 for LLaMA 3.1-8B on the fear task? Why?",
+   "answer": "Alpha = 2.5. The paper calibrates alpha once per model and task under full steering (p=1) and holds it fixed across all ratios and methods. The calibrated LLaMA fear value is 2.5.",
+   "rubric": [
+    "Gives alpha = 2.5",
+    "Explains that alpha is calibrated at p=1 and held fixed across all p, with no per-p re-tuning"
+   ]
+  },
+  {
+   "id": "q7",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s4"
+   ],
+   "question": "A practitioner wants to steer LLaMA 3.1-8B toward sadness but can only afford to steer about half of the tokens with STS. Based on the paper's results, should they expect STS to beat the prompting baseline? Why or why not?",
+   "answer": "No. For LLaMA sadness, STS crosses over the prompting baseline only at higher ratios (around p\u22480.7). At p\u22480.5 prompting would still be ahead.",
+   "rubric": [
+    "Concludes STS would likely not beat prompting at p\u22480.5",
+    "Cites the crossover for LLaMA sadness occurring around p\u22480.7"
+   ]
+  },
+  {
+   "id": "q8",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "question": "Why does the paper treat STS overtaking its prompting baseline as meaningful evidence, rather than a comparison against a strawman? Point to how that baseline was constructed.",
+   "answer": "The prompting baselines were built through iterative prompt engineering. The paper selected the variant that minimized toxicity, or maximized target-emotion probability, on a held-out set, and made them intentionally strong. Surpassing such a tuned instruction while perturbing only a fraction of tokens is therefore a meaningful improvement.",
+   "rubric": [
+    "Notes the prompts were iteratively engineered and selected on held-out data to be strong",
+    "Concludes that beating them shows a real advantage rather than beating a weak baseline"
+   ]
+  },
+  {
+   "id": "q9",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s4"
+   ],
+   "question": "Across the paper's six model-task settings, for which one would a practitioner seeking the strongest effect prefer prompting over STS at every tested ratio? What does the paper report about it?",
+   "answer": "Sadness steering on Gemma-2 2B. The paper reports this as the one exception where prompting remains ahead of STS across all ratios tested.",
+   "rubric": [
+    "Identifies sadness steering on Gemma-2 2B",
+    "States that prompting stays ahead of STS at all tested ratios there"
+   ]
+  },
+  {
+   "id": "q10",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s10"
+   ],
+   "question": "Someone cites the paper's finding that STS at p=0.5 roughly doubles SBS (W=32) on fear as proof that token-level gating is intrinsically more efficient per steered token. Using the paper's matched-budget analysis, why is this inference unsupported?",
+   "answer": "At the same nominal p, SBS steers far fewer tokens. For example, on Gemma at p=0.5, SBS W=32 has a realized ratio of about 0.13 versus about 0.49 for STS, so nominal-p comparisons give SBS less intervention. Once realized budgets are matched, the paper finds no single ordering, and SBS is competitive on fear.",
+   "rubric": [
+    "Points out that SBS's realized ratio is much lower than STS's at the same nominal p",
+    "Notes that at matched realized budgets the ordering is not consistent (SBS competitive on fear)"
+   ]
+  },
+  {
+   "id": "q11",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s10"
+   ],
+   "question": "In the paper's matched-budget table for Gemma-2 2B, compare SBS (W=64) at p=0.9 with STS at p=0.5, which have similar realized ratios. How do the two methods compare on toxicity and on fear?",
+   "answer": "Realized ratios are similar (0.531 vs 0.492). Toxicity reduction is nearly equal (0.232 vs 0.237). On fear, SBS is ahead (0.135 vs 0.108). This illustrates that block gating is competitive on fear once budgets are matched, while STS holds its own on toxicity.",
+   "rubric": [
+    "States toxicity reductions are roughly equal (about 0.23 vs 0.24)",
+    "States SBS has the higher fear gain (about 0.135 vs 0.108)",
+    "Connects this to there being no single ordering at matched budgets"
+   ]
+  },
+  {
+   "id": "q12",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s10"
+   ],
+   "question": "Suppose the paper's SBS window size were set equal to the full sequence length. How would its expected realized ratio relate to p? What would still distinguish it from STS?",
+   "answer": "The expected realized ratio would roughly equal p, matching STS in expectation, because the window would no longer cap the steered positions. It would still differ in that each sequence is steered entirely or not at all, with one gate per sequence, rather than through independent per-token gates.",
+   "rubric": [
+    "States that the expected realized ratio would be about p (no longer capped by the window)",
+    "Notes the remaining difference: one all-or-nothing gate per sequence versus independent per-token gates"
+   ]
+  },
+  {
+   "id": "q13",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s9",
+    "s7",
+    "s4"
+   ],
+   "question": "The paper's implementation appendix describes how steered activations drift off the natural manifold. Using that description, why should steering fewer positions reduce fluency degradation?",
+   "answer": "The paper says drift grows as the intervention accumulates across tokens, as well as with strength. Gating leaves many positions unperturbed, so the residual stream stays closer to its native distribution, yielding lower perplexity and repetition.",
+   "rubric": [
+    "Cites drift accumulating across steered tokens as the source of fluency loss",
+    "Concludes that fewer steered positions keep activations closer to the native distribution, so fluency degrades less"
+   ]
+  },
+  {
+   "id": "q14",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s9"
+   ],
+   "question": "A reviewer suggests that the lower perplexity the paper finds at small intervention ratios is caused by its repetition penalty and other fluency guards, not by sparsity. Why does the paper's setup rule this out as an explanation of the trend across ratios?",
+   "answer": "The guards (norm preservation, clamping, repetition penalty) are paired with every steering method and held fixed across all ratios, including full steering. Since the guards are constant, the differences in fluency across p reflect steering density rather than the guards.",
+   "rubric": [
+    "Notes that the guards are applied identically to all methods and ratios, including full steering",
+    "Concludes that the fluency differences across p must come from density"
+   ]
+  },
+  {
+   "id": "q15",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s9"
+   ],
+   "question": "In the paper's fluency-preservation ablation, roughly by what factor does enabling preservation reduce perplexity? Why does the paper argue the gain is not from weakening the steering?",
+   "answer": "By roughly 2.7\u00d7 (from about 82 to about 30). The paper argues the behavioral steering effect is applied identically in both conditions, so the improvement reflects keeping generation on the natural manifold, not a weaker signal.",
+   "rubric": [
+    "Gives a factor of roughly 2.5\u20133 (about 82 to 30)",
+    "States the steering intervention is applied identically in both conditions"
+   ]
+  },
+  {
+   "id": "q16",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s10",
+    "s4"
+   ],
+   "question": "A reader argues that lowering p should leave the ideal per-token magnitude unchanged, because p only controls how many tokens are steered. Using the paper's residual-stream shift analysis, why is this reasoning incomplete?",
+   "answer": "The paper shows that p and alpha both enlarge residual displacement: p adds displaced positions, while alpha deepens displacement per token. Since both act along the target-aligned direction, they substitute for each other. Lower p therefore needs a larger alpha to recover the same behavioral shift, matching the rising alpha* trend.",
+   "rubric": [
+    "Explains that p adds displaced positions while alpha deepens per-token displacement",
+    "Concludes that they are substitutable, so lower p calls for higher alpha"
+   ]
+  },
+  {
+   "id": "q17",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s10"
+   ],
+   "question": "Given how the paper defines alpha* in its magnitude-versus-ratio analysis, why does the rising trend at low p not imply that alpha should simply be made as large as possible?",
+   "answer": "Alpha* maximizes behavioral shift subject to fluency preservation. The calibration sweeps show perplexity and repetition degrade sharply beyond an inflection point, so alpha is bounded by fluency even as its optimum shifts upward at lower p.",
+   "rubric": [
+    "States that alpha* is constrained by fluency preservation, not just behavioral shift",
+    "Notes that large alpha causes a sharp perplexity/repetition inflection, which limits how high alpha can go"
+   ]
+  },
+  {
+   "id": "q18",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s10"
+   ],
+   "question": "The paper's residual-shift appendix argues that alpha and p are substitutable routes to the same behavioral shift. Which premise of that argument would fail if the injected direction were not aligned with the target feature, and what would follow?",
+   "answer": "The argument relies on the injected direction being aligned with the target feature, so that any added displacement translates into the target behavioral shift. Without that alignment, larger displacement from more alpha or more p need not produce the target behavior, so trading alpha for p would not be justified.",
+   "rubric": [
+    "Identifies alignment of the steering direction with the target feature as the premise",
+    "Explains that without it, displacement would not reliably map to the behavioral shift, breaking substitutability"
+   ]
+  },
+  {
+   "id": "q19",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s2",
+    "s7",
+    "s1"
+   ],
+   "question": "For producing one steered completion, contrast what the paper's STS must compute at decoding time with what SIA requires, according to the paper.",
+   "answer": "STS generates a single completion and only adds an activation vector at positions where the gate fires; there is no auxiliary model. SIA must store and query a separately trained token-level value model during decoding, and its reported protocol uses best-of-N candidates with reward-model scoring.",
+   "rubric": [
+    "States STS needs only a vector addition when the gate fires and a single completion, with no auxiliary model",
+    "States SIA needs a trained value model queried during decoding plus best-of-N / reward-model scoring"
+   ]
+  },
+  {
+   "id": "q20",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s7"
+   ],
+   "question": "A new paper proposes a learned selector that picks which tokens to steer with an SAE direction. According to this paper's stated view of its random-selection result, what comparison should that new method include?",
+   "answer": "It should be compared against random position-agnostic gating such as STS at matched intervention ratios. The paper positions its random-selection result as a training-free control that any selective method should be evaluated against.",
+   "rubric": [
+    "Says the selector should be compared with random gating (STS) at matched ratios",
+    "Explains that the paper frames random selection as the baseline/control for selective methods"
+   ]
+  },
+  {
+   "id": "q21",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "textbase",
+   "sections": [
+    "s2",
+    "s7"
+   ],
+   "question": "Someone tabulates SIA's reported alignment numbers next to this paper's toxicity reductions to claim one method wins. Why does the paper consider this comparison invalid?",
+   "answer": "The two methods differ in intervention space (logit-space reweighting versus residual-stream SAE direction), in training (a learned value model versus none), and in inference and evaluation (best-of-N and reward-model scoring versus a single completion scored by classifiers). Their reported results are therefore not commensurable.",
+   "rubric": [
+    "Concludes that the numbers are not directly comparable",
+    "Cites differences in intervention space, training, and inference/evaluation protocol (e.g., best-of-N and reward-model scoring)"
+   ]
+  },
+  {
+   "id": "q22",
+   "claim": "c2",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s10"
+   ],
+   "question": "The paper's sparse-steering effectiveness results hold alpha at its full-steering calibrated value. Given the paper's finding about how alpha* varies with the intervention ratio, are those sparse results more likely to underestimate or overestimate the effect achievable at low p? Explain.",
+   "answer": "They likely underestimate it. Alpha was calibrated as optimal at p=1, but the paper finds alpha* rises as p falls. At low p, the fixed alpha is therefore below the best-performing magnitude, and re-tuning would likely increase the sparse behavioral effect.",
+   "rubric": [
+    "Concludes the sparse results likely underestimate the achievable effect",
+    "Notes alpha was fixed at the p=1 calibration",
+    "Uses the finding that alpha* increases as p decreases"
+   ]
+  },
+  {
+   "id": "q23",
+   "claim": "c4",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s7",
+    "s10"
+   ],
+   "question": "The paper notes that SIA found position-based gating competitive for safety alignment but weaker on helpfulness. Does the paper's own matched-budget comparison of STS and SBS on Gemma-2 2B show the analogous pattern of the position-anchored method doing relatively better on the safety-like task? Explain.",
+   "answer": "Not straightforwardly; it is roughly reversed. At matched realized budgets, STS retains its advantage on toxicity reduction, the safety-like task, while the position-anchored SBS is competitive mainly on fear elicitation. The paper's nominal-p result (SBS underperforms STS) mirrors SIA, but the matched-budget pattern does not neatly align.",
+   "rubric": [
+    "States that the matched-budget pattern does not match SIA's (it is roughly reversed)",
+    "Notes that STS leads on toxicity at matched budgets while SBS is competitive on fear"
+   ]
+  },
+  {
+   "id": "q24",
+   "claim": "c5",
+   "kind": "integration",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "A practitioner using LLaMA 3.1-8B for toxicity reduction wants nearly the full-steering behavioral effect at lower fluency cost. Based on the paper's effectiveness and fluency results, what STS setting is a reasonable choice, and why does it improve on full steering?",
+   "answer": "Around p=0.5. The paper reports that STS at p=0.5 recovers over 95% of full-steering toxicity reduction on LLaMA. Fluency degradation grows monotonically with density, so steering half the tokens should cost less fluency than full steering.",
+   "rubric": [
+    "Recommends approximately p=0.5 with STS",
+    "Cites recovery of over 95% of the full-steering toxicity reduction at that ratio",
+    "Uses the monotonic rise of fluency cost with density to argue it costs less fluency than full steering"
+   ]
+  }
+ ],
+ "paper": "2607.05615v2",
+ "writer": "anthropic/claude-opus-5.5",
+ "seed": 1,
+ "prompt_version": "p2",
+ "paper_sha256": "0a366178ae904d3731c58b356856b6de19f4c1d755a1da3b0b716fbe8e1bb17b",
+ "problems": []
+}

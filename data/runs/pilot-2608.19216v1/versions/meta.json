@@ -1,0 +1,27 @@
+{
+ "paper": "2608.19216v1",
+ "quiz": "quiz-claude-opus-5.5-1-screened.json",
+ "section": "s4",
+ "title": "4 Empirical Methodology: Synthetic Access-Ablation",
+ "eligible": [
+  "s3",
+  "s4",
+  "s5",
+  "s6",
+  "s7"
+ ],
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p2",
+ "seeded_pick": "s4",
+ "call": "03a6c348049d29869f3ff9f1e704893b62a43f0bc63bc40d52e16f9488ff8e7f",
+ "finish": "stop",
+ "chars_before": 8186,
+ "chars_after": 8470,
+ "items_tagged": [
+  "q8",
+  "q9",
+  "q13",
+  "q17",
+  "q25"
+ ]
+}

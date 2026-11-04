@@ -1,0 +1,29 @@
+{
+ "paper": "2607.17117v2",
+ "quiz": "quiz-claude-opus-5.5-1-screened.json",
+ "section": "s6",
+ "title": "6 Conclusion and Discussion",
+ "eligible": [
+  "s3",
+  "s4",
+  "s5",
+  "s6",
+  "s8",
+  "s9",
+  "s10",
+  "s11",
+  "s12",
+  "s13",
+  "s14"
+ ],
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p2",
+ "seeded_pick": "s6",
+ "call": "285b83487984a18e7f4dbd037b68bf305ca08b8ccce3f2ec24bdb323620517f4",
+ "finish": "stop",
+ "chars_before": 1230,
+ "chars_after": 1343,
+ "items_tagged": [
+  "q20"
+ ]
+}

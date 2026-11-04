@@ -1,0 +1,442 @@
+[
+ {
+  "model": "moonshotai/kimi-k3",
+  "effort": "medium",
+  "section": "s1",
+  "src_chars": 2941,
+  "chars": 2000,
+  "ratio": 0.68,
+  "missing": [],
+  "tries": [
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "1b4dd8644f407dc355bffea5558860cdd6f5277476c8ec1a4252fa25d0c66bd6",
+    "finish": "stop",
+    "cost": 0.009528,
+    "reasoning_effort": "medium",
+    "chars": 2319,
+    "ratio": 0.789,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "6e396e2eadca85f8d282a79d7ece8ea1f5588cfb3234b1c69e098002d63febf0",
+    "finish": "stop",
+    "cost": 0.0067434,
+    "reasoning_effort": "medium",
+    "chars": 2000,
+    "ratio": 0.68,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "5090ae7a90dab13978bc31ae08b94aea0ba507fd00ea18445dddfe72a34fe986",
+    "finish": "stop",
+    "cost": 0.0071784,
+    "reasoning_effort": "medium",
+    "chars": 2171,
+    "ratio": 0.738,
+    "missing": []
+   }
+  ],
+  "used_try": 1
+ },
+ {
+  "model": "moonshotai/kimi-k3",
+  "effort": "medium",
+  "section": "s3",
+  "src_chars": 4331,
+  "chars": 2700,
+  "ratio": 0.623,
+  "missing": [],
+  "tries": [
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "bbbe079d713bf55d452a32711eab67541f3f93b28c73408b74687e6840a1dd7d",
+    "finish": "stop",
+    "cost": 0.018678,
+    "reasoning_effort": "medium",
+    "chars": 3171,
+    "ratio": 0.732,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "3fb0a015ad3c425478d425381b95cfb5158856caf08ef107271a05c043a5d76c",
+    "finish": "stop",
+    "cost": 0.014421,
+    "reasoning_effort": "medium",
+    "chars": 2789,
+    "ratio": 0.644,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "8144b838e27e8474e7a49e9369c5d743aa992a4efcf32bde66155d4e255f6a05",
+    "finish": "stop",
+    "cost": 0.013716,
+    "reasoning_effort": "medium",
+    "chars": 2700,
+    "ratio": 0.623,
+    "missing": []
+   }
+  ],
+  "used_try": 2
+ },
+ {
+  "model": "moonshotai/kimi-k3",
+  "effort": "medium",
+  "section": "s4",
+  "src_chars": 5701,
+  "chars": 3507,
+  "ratio": 0.615,
+  "missing": [],
+  "tries": [
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "90c9e444507761be2543b486f4b04aa5be7922c5f3014b352dca51a84c0f63c3",
+    "finish": "stop",
+    "cost": 0.019485,
+    "reasoning_effort": "medium",
+    "chars": 4136,
+    "ratio": 0.725,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "1fc870bcfecd8aa15bd20826447e90d547b1305ba17faeb08a5afc9f082eefdb",
+    "finish": "stop",
+    "cost": 0.0147468,
+    "reasoning_effort": "medium",
+    "chars": 3754,
+    "ratio": 0.658,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "72433110a854fbc542e079b054e311be390794e8521e21d78a3c6dc5b89f6f20",
+    "finish": "stop",
+    "cost": 0.0140268,
+    "reasoning_effort": "medium",
+    "chars": 3507,
+    "ratio": 0.615,
+    "missing": []
+   }
+  ],
+  "used_try": 2
+ },
+ {
+  "model": "moonshotai/kimi-k3",
+  "effort": "medium",
+  "section": "s7",
+  "src_chars": 8038,
+  "chars": 4446,
+  "ratio": 0.553,
+  "missing": [],
+  "tries": [
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "9eb8771933499282d177861a80da5b7ff91ec89780502acfdfd121740d78e36a",
+    "finish": "stop",
+    "cost": 0.021501,
+    "reasoning_effort": "medium",
+    "chars": 5668,
+    "ratio": 0.705,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "a99322d7ab6fe7cc095f83783fb27a8108aebdbee1354f4adb1a177d6ac7d391",
+    "finish": "stop",
+    "cost": 0.0156366,
+    "reasoning_effort": "medium",
+    "chars": 5106,
+    "ratio": 0.635,
+    "missing": []
+   },
+   {
+    "model": "moonshotai/kimi-k3",
+    "call": "a28293623182428b3eb29c93e633f5fa5c65dc0beeb32d9ac76053ed64a19f04",
+    "finish": "stop",
+    "cost": 0.0138366,
+    "reasoning_effort": "medium",
+    "chars": 4446,
+    "ratio": 0.553,
+    "missing": []
+   }
+  ],
+  "used_try": 2
+ },
+ {
+  "model": "qwen/qwen3.8-27b",
+  "effort": null,
+  "section": "s1",
+  "src_chars": 2941,
+  "chars": 1283,
+  "ratio": 0.436,
+  "missing": [],
+  "tries": [
+   {
+    "model": "qwen/qwen3.8-27b",
+    "call": "6006d739a8d638fc979ba9922a68438b5bbb9dc6f00fde3c87c4349b20648fa4",
+    "finish": "stop",
+    "cost": 0.058397325,
+    "reasoning_effort": null,
+    "chars": 1283,
+    "ratio": 0.436,
+    "missing": []
+   }
+  ],
+  "used_try": 0
+ },
+ {
+  "model": "qwen/qwen3.8-27b",
+  "effort": null,
+  "section": "s3",
+  "src_chars": 4331,
+  "chars": 2907,
+  "ratio": 0.671,
+  "missing": [],
+  "tries": [
+   {
+    "model": "qwen/qwen3.8-27b",
+    "call": "d2c8c8ae089125d0694277b6eb6bed797a12b82adf94998fc3d29fbda6ffe2fa",
+    "finish": "stop",
+    "cost": 0.0248088,
+    "reasoning_effort": null,
+    "chars": 2907,
+    "ratio": 0.671,
+    "missing": []
+   },
+   {
+    "model": "qwen/qwen3.8-27b",
+    "call": "050361d1f08ee29e8c990daca1b2ab5ca8bfee3ebf101702d45a15834ba1e9cb",
+    "finish": "stop",
+    "cost": 0.048212025,
+    "reasoning_effort": null,
+    "chars": 2729,
+    "ratio": 0.63,
+    "missing": [
+     "2.0"
+    ]
+   },
+   {
+    "model": "qwen/qwen3.8-27b",
+    "call": "737a0c8bbf75288789eeda8a699f45d52f7344497236c1cfb372cbed35a0664b",
+    "finish": "stop",
+    "cost": 0.042275475,
+    "reasoning_effort": null,
+    "chars": 3067,
+    "ratio": 0.708,
+    "missing": []
+   }
+  ],
+  "used_try": 0
+ },
+ {
+  "model": "qwen/qwen3.8-27b",
+  "effort": null,
+  "section": "s4",
+  "src_chars": 5701,
+  "chars": 2964,
+  "ratio": 0.52,
+  "missing": [],
+  "tries": [
+   {
+    "model": "qwen/qwen3.8-27b",
+    "call": "5a8b61190032d728af23255d2fbd587dd5f616d694d67b4461f587bd08e6c5e1",
+    "finish": "stop",
+    "cost": 0.03379335,
+    "reasoning_effort": null,
+    "chars": 2964,
+    "ratio": 0.52,
+    "missing": []
+   }
+  ],
+  "used_try": 0
+ },
+ {
+  "model": "qwen/qwen3.8-27b",
+  "effort": null,
+  "section": "s7",
+  "src_chars": 8038,
+  "chars": 4182,
+  "ratio": 0.52,
+  "missing": [],
+  "tries": [
+   {
+    "model": "qwen/qwen3.8-27b",
+    "call": "5ee1cd1564ba61be719fc3a916fc464a3297af66ed5392e6fb1675bbd86392c1",
+    "finish": "stop",
+    "cost": 0.005232825,
+    "reasoning_effort": "low",
+    "chars": 4182,
+    "ratio": 0.52,
+    "missing": []
+   }
+  ],
+  "used_try": 0
+ },
+ {
+  "model": "openai/gpt-oss-20b",
+  "effort": "medium",
+  "section": "s1",
+  "src_chars": 2941,
+  "chars": 1883,
+  "ratio": 0.64,
+  "missing": [],
+  "tries": [
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "2b95a749151af6786cccac17eeec41753a595d9851851024582c8380490bcc7e",
+    "finish": "stop",
+    "cost": 0.00012658,
+    "reasoning_effort": "medium",
+    "chars": 2196,
+    "ratio": 0.747,
+    "missing": []
+   },
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "342a6a965c9f70352b0274b32d7d69809716624699f6c508d5bbb45712d2d7da",
+    "finish": "stop",
+    "cost": 0.00025075,
+    "reasoning_effort": "medium",
+    "chars": 1883,
+    "ratio": 0.64,
+    "missing": []
+   },
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "d4177ebeb04def432ed7219681b22a6c334393dd9beddff82524105d2d05283f",
+    "finish": "stop",
+    "cost": 0.00014272,
+    "reasoning_effort": "medium",
+    "chars": 2103,
+    "ratio": 0.715,
+    "missing": []
+   }
+  ],
+  "used_try": 1
+ },
+ {
+  "model": "openai/gpt-oss-20b",
+  "effort": "medium",
+  "section": "s3",
+  "src_chars": 4331,
+  "chars": 3178,
+  "ratio": 0.734,
+  "missing": [],
+  "tries": [
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "9a6f46b9550ce59581dba8ab466cccd8c33f435257ce8e8f5bad54ee508dc7cd",
+    "finish": "stop",
+    "cost": 0.00018489,
+    "reasoning_effort": "medium",
+    "chars": 2521,
+    "ratio": 0.582,
+    "missing": [
+     "2.0"
+    ]
+   },
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "b1b56f097e73812f9f9419042daee3a25a5e518949385b03dc9cbb1b31bd08e4",
+    "finish": "stop",
+    "cost": 0.00035837,
+    "reasoning_effort": "medium",
+    "chars": 3178,
+    "ratio": 0.734,
+    "missing": []
+   },
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "7c1ae70df80ba9948d3735e2f78196daf68d1c2046db967ed701271a37ea092f",
+    "finish": "stop",
+    "cost": 0.00036184,
+    "reasoning_effort": "medium",
+    "chars": 2578,
+    "ratio": 0.595,
+    "missing": [
+     "2.0"
+    ]
+   }
+  ],
+  "used_try": 1
+ },
+ {
+  "model": "openai/gpt-oss-20b",
+  "effort": "medium",
+  "section": "s4",
+  "src_chars": 5701,
+  "chars": 1995,
+  "ratio": 0.35,
+  "missing": [],
+  "tries": [
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "372ea5ac1365f0c629269bd49464862357c95a815421bf970d35d051d8b55f4e",
+    "finish": "stop",
+    "cost": 0.00043518,
+    "reasoning_effort": "medium",
+    "chars": 3679,
+    "ratio": 0.645,
+    "missing": []
+   },
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "f26ea627333f01d7d2ebd4f78b194cbbf6e7e9504f3a714f0f6a6bd9aed932e9",
+    "finish": "stop",
+    "cost": 0.00029246,
+    "reasoning_effort": "medium",
+    "chars": 1995,
+    "ratio": 0.35,
+    "missing": []
+   }
+  ],
+  "used_try": 1
+ },
+ {
+  "model": "openai/gpt-oss-20b",
+  "effort": "medium",
+  "section": "s7",
+  "src_chars": 8038,
+  "chars": 4372,
+  "ratio": 0.544,
+  "missing": [],
+  "tries": [
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "c0e45ccf632221be374e42680637b36bd8a069cb7a4fbb667c24f900005bec27",
+    "finish": "stop",
+    "cost": 0.00021704,
+    "reasoning_effort": "medium",
+    "chars": 5105,
+    "ratio": 0.635,
+    "missing": []
+   },
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "326444f7c32ddea711520673c6fa4e55810a10dce0164467393075023e173998",
+    "finish": "stop",
+    "cost": 0.00041687,
+    "reasoning_effort": "medium",
+    "chars": 5517,
+    "ratio": 0.686,
+    "missing": []
+   },
+   {
+    "model": "openai/gpt-oss-20b",
+    "call": "30b7f8b26ec3ac1b2d9402e22edf64767db2abf4913f00181337310d57f60e5b",
+    "finish": "stop",
+    "cost": 0.0002324,
+    "reasoning_effort": "medium",
+    "chars": 4372,
+    "ratio": 0.544,
+    "missing": []
+   }
+  ],
+  "used_try": 2
+ }
+]

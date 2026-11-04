@@ -1,0 +1,32 @@
+{
+ "terms": [
+  "NLA: a verbalizer (AV) maps an activation h to text z, and a reconstructor (AR) maps z back to \u0125. Training maximizes cos(AR(AV(h)), h) with the target model frozen (Eq. 1) (\u00a72.1).",
+  "Normalized reconstruction: r\u0303 = (cos(\u0125,h) \u2212 floor)/(1 \u2212 floor), where the floor is the mean cosine against mismatched activations (\u00a72.1).",
+  "Grounding: \u0394r\u0303(c) = r\u0303(z) \u2212 r\u0303(z_\u00acc) for a minimal-pair flip of claim c. A claim is grounded if \u0394r\u0303 \u2265 \u03c4. Each edit is validity-filtered (\u00a72.1, App. A).",
+  "Grounded-vs-truth cross: crossing grounded/ungrounded with true/false gives four cases. A private code is wording that is grounded but false and specific to the co-trained pair, as revealed by swapping in an independent evaluator. The evaluator gap is r\u0303_co \u2212 r\u0303_ind (\u00a72.1).",
+  "Terms: the tap is the layer and position read. A probe is a freshly fitted linear decoder. Content is designated if it is co-trained via a head and decodable if a fresh probe can read it. Gist is overall meaning as opposed to specific facts. Faithfulness means claim-level truth plus grounding (\u00a72.1).",
+  "RECAP: min over \u03b8,\u03c6 of L_LM(\u03b8) + w\u00b7L_\u03c6(h(\u03b8), y), using linear heads on the tap with external targets y. In the sandbox the targets are slot values. At scale they are a class-balanced presence BCE plus identity CE (Eq. 3) (\u00a75.1).",
+  "Tax: held-out LM loss minus that of a shared control, in nats (\u00a72.1).",
+  "Sandbox slots: retained, faded (pre-tap), or unread (post-tap, provably absent) (\u00a72.1, App. D)."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  true,
+  true,
+  true,
+  false,
+  true,
+  true,
+  true
+ ]
+}

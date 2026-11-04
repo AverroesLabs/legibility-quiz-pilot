@@ -1,0 +1,35 @@
+{
+ "terms": [
+  "Computational graph and circuit: nodes are attention heads or feedforward neurons, edges are flows through the residual stream, and a circuit is the subgraph responsible for task performance (Preliminaries and Definitions).",
+  "Functional node: actively transforms its input, producing output whose representation or semantics differs substantially. Passthrough node: relocates input features downstream with minimal modification (Preliminaries and Definitions).",
+  "Masking coefficients c_n = {c_{n,u}, c_{n,p}, c_{n,f}}: probabilities that a node is unimportant, passthrough, or functional, summing to 1. A node is a candidate if c_p + c_f > c_u. Masks are soft in training and hard via argmax at evaluation (S\u00b3martCirc Overview).",
+  "Sim(A) = \u00c2\u00c2^T \u2299 (11^T \u2212 I): pairwise cosine similarity between token rows, excluding self-similarity (Important Node Classification).",
+  "FI(X,Y) = ||Sim(X) \u2212 Sim(Y)||_F / ||Sim(X)||_F: normalized change in token-similarity structure from a node's input to its output (Important Node Classification).",
+  "L_disc = \u03b1\u00b7KL(P_orig || P_mask) \u2212 (1\u2212\u03b1)\u00b7log P_mask(y) (Important Node Discovery).",
+  "L_class = \u03a3 over important nodes of [\u2212c_f\u00b7FI \u2212 c_p/FI], which rewards high FI for functional nodes and low FI for passthrough nodes (Important Node Classification).",
+  "L_sparsity: three terms, for confidence (push coefficients to binary values), validity (coefficients sum to 1), and sparsity (penalize c_p + c_f) (S\u00b3martCirc Training Process).",
+  "Evaluation metrics: Circuit Size is the number of nodes in the end-to-end connected circuit. Acc. is the percent accuracy drop when the circuit nodes are masked. Logit. is the change in logit for the original prediction (Experiment Setup)."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  false,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  true,
+  true,
+  false,
+  true,
+  true,
+  false,
+  false,
+  true
+ ]
+}

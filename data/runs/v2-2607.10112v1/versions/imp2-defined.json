@@ -1,0 +1,38 @@
+{
+ "terms": [
+  "Section 3 (Base corpus): Minionese pairs each of 385 AdvBench harmful prompts with a GPT-generated harmless counterpart of matched structure and length. It spans 18 languages \u00d7 4 perturbations, for 55,440 prompts.",
+  "Section 3 (Languages and resource tiers): four resource tiers based on training-data availability. Tier 1 is English, Spanish, Chinese, German and French. Tier 4 is Yoruba, Zulu, Scottish Gaelic, Guaran\u00ed and Javanese.",
+  "Section 3.1: the four perturbations. Standard translation translates the full prompt. Code-switching translates only the minimal span that distinguishes the harmful prompt from its harmless pair. Transliteration romanizes non-Latin-script text, or renders Latin-script text in Latin-Cyrillic. Translationese applies three-step round-trip translation.",
+  "Section 4.1.3: ASR is the fraction of harmful prompts whose back-translated response WildGuard does not classify as a refusal. \u0394ASR is ASR relative to the English baseline.",
+  "Section 4.1.2: coherence filtering marks a response incoherent based on langdetect target/English match, confidence <0.3, Unicode validity <0.8, or length <20 characters.",
+  "Section 5.1 (Harmfulness subspace): the column space of the top-k right singular vectors of stacked logistic-probe weights per (language, layer), with k chosen to explain \u226595% of spectral mass.",
+  "Section 5.1 (Refusal direction): the normalized difference of mean English activations between refused and complied sets, taken at the last post-instruction token.",
+  "Section 5.1 (Failure classification): failures are classified as upstream (harm subspace too weak), downstream (harm present but refusal suppressed) or mixed. Subthreshold activation means the refusal projection fails to exceed \u03c4=0.95 despite a nontrivial harm signal.",
+  "Section 5.2: semantic recovery failure is the collapse of the harm representation itself, with probe AUC near chance.",
+  "Section 5.3: a refusal cone is an orthonormal basis B of N directions seeded with r\u0302 and optimized on the Stiefel manifold for English margin plus cross-lingual margin. CL-RepInd is the Pearson correlation between the per-language margin vectors of two basis directions."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  false,
+  true,
+  false,
+  true
+ ]
+}

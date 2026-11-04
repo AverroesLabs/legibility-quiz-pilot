@@ -1,0 +1,960 @@
+{
+ "papers": {
+  "2607.10112v1": {
+   "kept": 11,
+   "gated": false,
+   "ratio": 0.664,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     false,
+     true,
+     false,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.8939,
+     "imp2": 0.803,
+     "drop": 0.0909,
+     "drop_ci95": [
+      0.0,
+      0.197
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.7424,
+     "imp2": 0.7273,
+     "drop": 0.0152,
+     "drop_ci95": [
+      -0.2273,
+      0.2424
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.6667,
+     "imp2": 0.6212,
+     "drop": 0.0455,
+     "drop_ci95": [
+      -0.0303,
+      0.1212
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.2273,
+     "imp2": 0.3333,
+     "drop": -0.1061,
+     "drop_ci95": [
+      -0.2576,
+      0.0303
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.8983,
+    "pass": false
+   }
+  },
+  "2607.17117v2": {
+   "kept": 38,
+   "gated": true,
+   "ratio": 0.599,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     false,
+     true,
+     true,
+     true,
+     true,
+     true,
+     false,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.7895,
+     "imp2": 0.7982,
+     "drop": -0.0088,
+     "drop_ci95": [
+      -0.0526,
+      0.0351
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.4912,
+     "imp2": 0.5219,
+     "drop": -0.0307,
+     "drop_ci95": [
+      -0.0833,
+      0.0263
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3947,
+     "imp2": 0.3026,
+     "drop": 0.0921,
+     "drop_ci95": [
+      0.0307,
+      0.1579
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.136,
+     "imp2": 0.1316,
+     "drop": 0.0044,
+     "drop_ci95": [
+      -0.0482,
+      0.057
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 1.011,
+    "pass": true
+   }
+  },
+  "2607.20379v2": {
+   "kept": 63,
+   "gated": true,
+   "ratio": 0.623,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     true,
+     false,
+     true,
+     true,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.7549,
+     "imp2": 0.7716,
+     "drop": -0.0168,
+     "drop_ci95": [
+      -0.0556,
+      0.0229
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.5608,
+     "imp2": 0.5714,
+     "drop": -0.0106,
+     "drop_ci95": [
+      -0.0608,
+      0.0397
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.4021,
+     "imp2": 0.3492,
+     "drop": 0.0529,
+     "drop_ci95": [
+      -0.0079,
+      0.1138
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.1473,
+     "imp2": 0.1067,
+     "drop": 0.0406,
+     "drop_ci95": [
+      0.0062,
+      0.0767
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 1.0221,
+    "pass": true
+   }
+  },
+  "2607.28685v1": {
+   "kept": 71,
+   "gated": true,
+   "ratio": 0.64,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     false,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     false
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.8341,
+     "imp2": 0.8247,
+     "drop": 0.0094,
+     "drop_ci95": [
+      -0.0313,
+      0.0532
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.5822,
+     "imp2": 0.5822,
+     "drop": -0.0,
+     "drop_ci95": [
+      -0.0516,
+      0.0516
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3474,
+     "imp2": 0.331,
+     "drop": 0.0164,
+     "drop_ci95": [
+      -0.0329,
+      0.0657
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.1142,
+     "imp2": 0.1142,
+     "drop": 0.0,
+     "drop_ci95": [
+      -0.0282,
+      0.029
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.9887,
+    "pass": true
+   }
+  },
+  "2608.13754v1": {
+   "kept": 61,
+   "gated": true,
+   "ratio": 0.559,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     false,
+     true,
+     true,
+     false,
+     false,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     false,
+     false,
+     true,
+     false,
+     false,
+     false,
+     true,
+     true,
+     false
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.7787,
+     "imp2": 0.7514,
+     "drop": 0.0273,
+     "drop_ci95": [
+      -0.0137,
+      0.0683
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.5137,
+     "imp2": 0.4344,
+     "drop": 0.0792,
+     "drop_ci95": [
+      0.0328,
+      0.1284
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3388,
+     "imp2": 0.2623,
+     "drop": 0.0765,
+     "drop_ci95": [
+      0.0273,
+      0.1284
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.1202,
+     "imp2": 0.0984,
+     "drop": 0.0219,
+     "drop_ci95": [
+      -0.0137,
+      0.0601
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.9649,
+    "pass": true
+   }
+  },
+  "2608.19216v1": {
+   "kept": 42,
+   "gated": true,
+   "ratio": 0.658,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     false,
+     false,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.7474,
+     "imp2": 0.7421,
+     "drop": 0.0053,
+     "drop_ci95": [
+      -0.0278,
+      0.0357
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.619,
+     "imp2": 0.6468,
+     "drop": -0.0278,
+     "drop_ci95": [
+      -0.0794,
+      0.0278
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.5556,
+     "imp2": 0.4683,
+     "drop": 0.0873,
+     "drop_ci95": [
+      0.0159,
+      0.1587
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.25,
+     "imp2": 0.2884,
+     "drop": -0.0384,
+     "drop_ci95": [
+      -0.0899,
+      0.0132
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.9929,
+    "pass": true
+   }
+  },
+  "2608.25490v1": {
+   "kept": 95,
+   "gated": true,
+   "ratio": 0.581,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.8468,
+     "imp2": 0.8561,
+     "drop": -0.0094,
+     "drop_ci95": [
+      -0.0287,
+      0.0099
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.5708,
+     "imp2": 0.5404,
+     "drop": 0.0304,
+     "drop_ci95": [
+      -0.0029,
+      0.0649
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3538,
+     "imp2": 0.345,
+     "drop": 0.0088,
+     "drop_ci95": [
+      -0.0316,
+      0.0474
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.1298,
+     "imp2": 0.1503,
+     "drop": -0.0205,
+     "drop_ci95": [
+      -0.0468,
+      0.0064
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 1.011,
+    "pass": true
+   }
+  },
+  "2608.30724v1": {
+   "kept": 85,
+   "gated": true,
+   "ratio": 0.722,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.8176,
+     "imp2": 0.7915,
+     "drop": 0.0261,
+     "drop_ci95": [
+      -0.0111,
+      0.0673
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.4438,
+     "imp2": 0.4673,
+     "drop": -0.0235,
+     "drop_ci95": [
+      -0.0601,
+      0.0124
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3745,
+     "imp2": 0.3431,
+     "drop": 0.0314,
+     "drop_ci95": [
+      -0.0131,
+      0.0778
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.1758,
+     "imp2": 0.168,
+     "drop": 0.0078,
+     "drop_ci95": [
+      -0.0235,
+      0.0392
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.9681,
+    "pass": true
+   }
+  },
+  "2609.00755v1": {
+   "kept": 80,
+   "gated": true,
+   "ratio": 0.564,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     false,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     false,
+     true,
+     true,
+     false,
+     false,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.7764,
+     "imp2": 0.7576,
+     "drop": 0.0187,
+     "drop_ci95": [
+      -0.0153,
+      0.0535
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.4194,
+     "imp2": 0.4215,
+     "drop": -0.0021,
+     "drop_ci95": [
+      -0.0431,
+      0.0382
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3076,
+     "imp2": 0.3285,
+     "drop": -0.0208,
+     "drop_ci95": [
+      -0.0625,
+      0.0208
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.1778,
+     "imp2": 0.1535,
+     "drop": 0.0243,
+     "drop_ci95": [
+      -0.0104,
+      0.0583
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.9758,
+    "pass": true
+   }
+  },
+  "2609.02893v1": {
+   "kept": 53,
+   "gated": true,
+   "ratio": 0.586,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     false
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     false,
+     true,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.7453,
+     "imp2": 0.7233,
+     "drop": 0.022,
+     "drop_ci95": [
+      -0.0273,
+      0.0713
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.4036,
+     "imp2": 0.4036,
+     "drop": 0.0,
+     "drop_ci95": [
+      -0.0482,
+      0.0503
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3512,
+     "imp2": 0.3333,
+     "drop": 0.0178,
+     "drop_ci95": [
+      -0.0252,
+      0.065
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.2432,
+     "imp2": 0.2243,
+     "drop": 0.0189,
+     "drop_ci95": [
+      -0.021,
+      0.0566
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.9705,
+    "pass": true
+   }
+  },
+  "2609.30094v2": {
+   "kept": 73,
+   "gated": true,
+   "ratio": 0.617,
+   "defined": {
+    "orig": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.8333,
+     "imp2": 0.8295,
+     "drop": 0.0038,
+     "drop_ci95": [
+      -0.0251,
+      0.0297
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.5799,
+     "imp2": 0.5282,
+     "drop": 0.0518,
+     "drop_ci95": [
+      0.0107,
+      0.0936
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.2062,
+     "imp2": 0.2275,
+     "drop": -0.0213,
+     "drop_ci95": [
+      -0.0624,
+      0.0205
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.0807,
+     "imp2": 0.1202,
+     "drop": -0.0396,
+     "drop_ci95": [
+      -0.0791,
+      -0.0008
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 0.9954,
+    "pass": true
+   }
+  },
+  "2609.34091v1": {
+   "kept": 44,
+   "gated": true,
+   "ratio": 0.839,
+   "defined": {
+    "orig": [
+     true,
+     false,
+     true,
+     false,
+     true,
+     false,
+     true,
+     true,
+     false,
+     true,
+     true,
+     true
+    ],
+    "imp2": [
+     true,
+     false,
+     true,
+     false,
+     false,
+     false,
+     true,
+     true,
+     false,
+     true,
+     true,
+     true
+    ]
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "orig": 0.7765,
+     "imp2": 0.7992,
+     "drop": -0.0227,
+     "drop_ci95": [
+      -0.0758,
+      0.0303
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "orig": 0.4167,
+     "imp2": 0.3636,
+     "drop": 0.053,
+     "drop_ci95": [
+      -0.0227,
+      0.1326
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "orig": 0.3106,
+     "imp2": 0.2614,
+     "drop": 0.0492,
+     "drop_ci95": [
+      -0.0,
+      0.0985
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "orig": 0.1212,
+     "imp2": 0.1136,
+     "drop": 0.0076,
+     "drop_ci95": [
+      -0.0265,
+      0.0417
+     ]
+    }
+   },
+   "information_check": {
+    "ratio": 1.0292,
+    "pass": true
+   }
+  }
+ },
+ "pooled": {
+  "openai/gpt-5.6-sol": {
+   "drop": {
+    "mean": 0.0063,
+    "ci95": [
+     -0.005,
+     0.0179
+    ],
+    "papers": 11,
+    "papers_mean_above_0": 7
+   }
+  },
+  "google/gemma-4-31b-it": {
+   "drop": {
+    "mean": 0.0123,
+    "ci95": [
+     -0.0018,
+     0.0265
+    ],
+    "papers": 11,
+    "papers_mean_above_0": 5
+   },
+   "drop_minus_smart": {
+    "mean": 0.006,
+    "ci95": [
+     -0.0117,
+     0.0234
+    ],
+    "papers": 11,
+    "papers_mean_above_0": 5
+   }
+  },
+  "mistralai/ministral-8b-2512": {
+   "drop": {
+    "mean": 0.028,
+    "ci95": [
+     0.013,
+     0.0429
+    ],
+    "papers": 11,
+    "papers_mean_above_0": 9
+   },
+   "drop_minus_smart": {
+    "mean": 0.0217,
+    "ci95": [
+     0.0035,
+     0.0398
+    ],
+    "papers": 11,
+    "papers_mean_above_0": 8
+   }
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+   "drop": {
+    "mean": 0.0022,
+    "ci95": [
+     -0.0084,
+     0.0128
+    ],
+    "papers": 11,
+    "papers_mean_above_0": 8
+   },
+   "drop_minus_smart": {
+    "mean": -0.0041,
+    "ci95": [
+     -0.0199,
+     0.0116
+    ],
+    "papers": 11,
+    "papers_mean_above_0": 4
+   }
+  }
+ },
+ "ratings": {
+  "openai/gpt-5.6-sol": {
+   "orig": 7.694,
+   "imp2": 7.222,
+   "orig_same_papers": 7.694,
+   "imp2_minus_orig": -0.472
+  },
+  "google/gemma-4-31b-it": {
+   "orig": 9.694,
+   "imp2": 8.861,
+   "orig_same_papers": 9.694,
+   "imp2_minus_orig": -0.833
+  },
+  "mistralai/ministral-8b-2512": {
+   "orig": 7.5,
+   "imp2": 6.222,
+   "orig_same_papers": 7.5,
+   "imp2_minus_orig": -1.278
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+   "orig": 6.139,
+   "imp2": 5.611,
+   "orig_same_papers": 6.139,
+   "imp2_minus_orig": -0.528
+  }
+ },
+ "information_check_pass": "11 of 11 gated papers",
+ "share_of_defined_terms_undefined_in_imp2": {
+  "mean": 0.164,
+  "papers": 12
+ }
+}

@@ -1,0 +1,3194 @@
+{
+ "paper": "2609.02893v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p8",
+ "paper_sha256": "06cffdf1d0e50b5a59c2118c6d8d0ec20cff8093b1c5cba67e2e6f1e491730ab",
+ "batches": 5,
+ "written_per_batch": [
+  40,
+  40,
+  38,
+  38,
+  23
+ ],
+ "cost_per_batch": [
+  0.46972,
+  0.652344,
+  0.77432,
+  0.98446,
+  0.79074
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Source-trained probes on full representations transfer unevenly to the three targets. The top-100 source-PC subspace is not the bottleneck: the source probe simply learns a direction that does not generalize.",
+   "methods": [
+    "Logistic regression probes (lambda=10) on layer-15 Llama-3.1-8B-Instruct activations, mean-pooled over assistant tokens and standardized with source statistics",
+    "PCA on source (Roleplaying) activations, keeping the top 100 PCs",
+    "Target-trained probe on the top-100 source PCs with 5-fold CV"
+   ],
+   "results": [
+    "Baseline AUROC: Insider Trading Report 0.706, Insider Trading Confirm 0.874, Sandbagging 0.606",
+    "Target-trained 100-PC probe: 0.936 / 0.950 / 0.869"
+   ],
+   "conditions": [
+    "Single source dataset (Roleplaying)",
+    "Ambiguous labels removed"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "A small transferable subspace exists. Target-guided greedy PC selection with source-fit probe weights nearly matches target-trained probes.",
+   "methods": [
+    "Greedy forward selection over the top 100 PCs, adding the PC that most improves target AUROC, stopping when the gain is below 0.001",
+    "5-fold CV over the target; selection on non-held-out folds"
+   ],
+   "results": [
+    "Average subset size: 15 (Report), 8 (Confirm), 14 (Sandbagging)",
+    "Gain over baseline of +0.22 AUROC on Report and +0.23 on Sandbagging",
+    "Full-data greedy k = 13 / 7 / 14; greedy oracle 0.929 on Report and 0.832 on Sandbagging"
+   ],
+   "conditions": [
+    "Greedy is an upper bound, not an unbiased OOD estimate, because it uses target labels"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Variance explained does not predict a PC's usefulness for transfer.",
+   "methods": [
+    "Top-k-by-variance control with k matched to greedy (Section 4.2)",
+    "Top-19-by-variance control (Section 4.5)"
+   ],
+   "results": [
+    "The variance control matches greedy only on Insider Trading Confirm and falls far behind on Report and Sandbagging",
+    "Top-19 variance loses to interp-selected by wide margins on Report and Sandbagging"
+   ],
+   "conditions": [
+    "Confirm is the easy case, with high baseline transfer"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Neither source-side nor target-side probe-weight rankings recover the transferable subspace.",
+   "methods": [
+    "Rank PCs by standardized coefficient of a source-PCA probe or a target-PCA probe",
+    "Train on source data projected onto the top-k ranked PCs, with k from full-data greedy",
+    "Jaccard overlap between greedy and target-PCA PC sets"
+   ],
+   "results": [
+    "Source-PCA probe transfers about as well as the baseline",
+    "Target-PCA probe does well on Report, worse than greedy on Confirm, and below random on Sandbagging",
+    "Jaccard (greedy vs target-PCA): 0.182 / 0.077 / 0.167"
+   ],
+   "conditions": [
+    "Probe weights are always fit on source data"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "An LLM judge that scores PCs from their source extremes partially recovers the transferable subspace without any target data.",
+   "methods": [
+    "GPT-5-mini sees the 8 most and 8 least activating source examples per PC and gives a 1-10 OOD score",
+    "Keep PCs scoring the maximum observed score (6) in both of two runs, giving 19 PCs",
+    "Controls: baseline, top-19 by variance, and the 81 interp-ablated PCs"
+   ],
+   "results": [
+    "3 of 5 PCs that appear in multiple targets' greedy sets got the max score (PC62, PC57, PC86); PC9 and PC81 got 3",
+    "Only 1 of the top 5 source-PCA PCs (PC4) got the max score",
+    "Interp-selected beats baseline, variance-19 and ablated-81 on all three targets",
+    "Report: 0.706 to 0.881, closing 78% of the gap to 0.929",
+    "Sandbagging: 0.606 to 0.662, closing 25% of the gap to 0.832",
+    "Confirm is uninformative"
+   ],
+   "conditions": [
+    "Judge scores are noisy",
+    "Judge sees only Roleplaying examples"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Directions the source probe weights heavily encode source-specific surface cues. Transferable directions encode the contrast more abstractly.",
+   "methods": [
+    "Natural-language interpretation of PC poles (Tables 3 and 4)"
+   ],
+   "results": [
+    "Source-heavy PC7, PC8, PC11 and PC12 are scored 3-4 and described as surface cues (explicit No/Yes, word order, style)",
+    "PC62, PC57 and PC86 are described as general deny/deflect or hedging strategies and scored 6",
+    "Greedy sets contain many high-index PCs (e.g., PC89, PC93, PC97); source-probe top PCs are mostly PC1-PC12"
+   ],
+   "conditions": [
+    "Descriptive only; no causal validation"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "The claims are narrow in scope.",
+   "methods": [
+    "One model, one layer, one source dataset, a linear pipeline",
+    "Choice of top-100 PCs justified by SAE decoder alignment decreasing with PC index"
+   ],
+   "results": [
+    "Spearman rho = -0.857 / -0.917 for SAE alignment vs PC index",
+    "Confirm baseline already 0.874"
+   ],
+   "conditions": [
+    "No causal ablation",
+    "Nonlinear probes and other models untested"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Interp-selection judges each PC only from its most and least activating Roleplaying examples. Would it reliably pick a PC whose transferable meaning shows up mainly in target domains rather than in its source extremes? Use the paper's evidence.",
+   "answer": "No. The judge only sees source examples, so a PC whose source extremes look like surface or domain cues will be scored low even if it transfers. PC9 and PC81 appear in multiple targets' greedy sets yet scored only 3, because their source extremes looked lexical or task-specific.",
+   "rubric": [
+    "Says the judge would not reliably select such PCs",
+    "Reason: the judge only sees source extremes, so surface-looking source examples lead to low scores",
+    "Cites PC9 and/or PC81 (multi-target greedy PCs scored 3) as evidence"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Interp-selection keeps PCs that received the maximum observed OOD score in both runs. How would the method's advantage change if the judge had given that maximum score to nearly all 100 PCs, and why?",
+   "answer": "The advantage would largely disappear. The selected set would approach the full 100-PC space, which again contains the source-heavy surface PCs (e.g., PC7, PC8, PC11, PC12) that the source probe leans on. The benefit comes from filtering those out.",
+   "rubric": [
+    "Says the advantage over baseline would shrink or vanish",
+    "Reason: the selection would approach all 100 PCs, re-including the source-heavy non-transferable PCs the probe relies on"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would ranking PCs by target-probe weights be a dependable selection rule for a new target domain? Answer using the paper's per-target results.",
+   "answer": "No. It worked on Insider Trading Report but fell below random on Sandbagging. PCs that separate target classes can carry a different label relationship in the source data, and the weights are fit on source data.",
+   "rubric": [
+    "Says it is not dependable",
+    "Cites the inconsistency: good on Report, below random on Sandbagging (and worse than greedy on Confirm)",
+    "Reason: weights are fit on source, where those PCs may relate to labels differently"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Would interp-selection be expected to give a large AUROC gain over the baseline on a new target that closely resembles the Roleplaying source? Use the paper's results.",
+   "answer": "Probably not. When the baseline already transfers well there is little headroom. On Insider Trading Confirm the baseline was 0.874 against a target-trained ceiling of 0.950, and all selection methods performed about the same.",
+   "rubric": [
+    "Says the gain would likely be small",
+    "Reason: little headroom when the baseline already transfers well, as on Confirm (0.874 vs 0.950)"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The judge scored PC4 a 6 but PC7 and PC8 a 3 and a 4, although all three are described as deny-versus-admit contrasts. What does this imply about how robust interp-selection is to the choice or variability of the judge?",
+   "answer": "Selection hinges on fine judgments about how surface-dependent a similar contrast is. A slightly different judge or run could flip PCs across the threshold and change the selected subspace. This sensitivity is why the authors required the maximum score in both runs.",
+   "rubric": [
+    "Says the selection is fragile or sensitive to judge variation",
+    "Reason: near-identical contrasts land on different sides of the threshold based on subtle surface-cue judgments"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Many greedy-selected PCs for Insider Trading Report have high indices (PC89, PC93, PC97). Should interp-selection be expected to recover such PCs well, given the paper's appendix analysis?",
+   "answer": "Less well. SAE decoder alignment decreases with PC index, so high-index PCs are less amenable to natural-language interpretation. The judge may therefore fail to describe them as general strategies, which fits interp-selection recovering the subspace only partially.",
+   "rubric": [
+    "Says such PCs are less likely to be recovered",
+    "Reason: SAE alignment, and hence interpretability, decreases with PC index (Appendix C)"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would the reported target AUROCs be expected to carry over to a deployed monitor that receives every response, including ones GPT-4o would label ambiguous?",
+   "answer": "Not necessarily. Ambiguous responses were removed from both training and evaluation, and they are a large share of the data (e.g., 140 of 371 Roleplaying and 218 of 473 Report examples). Performance on them is untested.",
+   "rubric": [
+    "Says the AUROCs may not carry over / are not established for such traffic",
+    "Reason: ambiguous responses were excluded from training and evaluation and form a large fraction of the data"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Using the judge's interpretations of the source probe's top-weighted PCs, why does the source-PCA probe transfer no better than the full-representation baseline?",
+   "answer": "Its top PCs (PC7, PC8, PC11, PC12) were interpreted as surface cues such as explicit No/Yes, word order and assertive style, and scored 3-4. These are source-specific patterns, so concentrating on them reproduces the baseline's non-transferable direction.",
+   "rubric": [
+    "Says the source-heavy PCs encode source-specific surface cues",
+    "Supports this with the low judge scores (3-4) or the descriptions of PC7/PC8/PC11/PC12"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Using the PC lists in Appendix D, why does top-k-by-variance fall far behind greedy on Insider Trading Report?",
+   "answer": "Greedy for Report picks mostly low-variance, high-index PCs (PC89, PC62, PC66, PC57, PC93, PC97, etc.). Top-13 by variance contains PC1-PC13, which overlaps with greedy only in PC6 and PC9, so it misses most of the transferable components.",
+   "rubric": [
+    "Notes that greedy selects mostly high-index (low-variance) PCs",
+    "Reason: the top-variance set therefore overlaps very little with greedy (only PC6/PC9) and misses the transferable PCs"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "How can the target-PCA probe score below random on Sandbagging when its PCs are chosen precisely because they separate Sandbagging classes?",
+   "answer": "The PCs are chosen by target separability, but the probe weights on them are fit on Roleplaying data. In the source, those PCs can relate to the honest/deceptive label with the opposite sign or a different meaning, so the source-fit direction anti-correlates with target labels.",
+   "rubric": [
+    "Points out that weights are fit on source data, not target",
+    "Reason: the source label relationship on those PCs can be reversed or different, producing an anti-correlated direction"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is Insider Trading Confirm uninformative for comparing selection methods, quantitatively?",
+   "answer": "The baseline already reaches 0.874 and the target-trained ceiling is 0.950, leaving only about 0.08 AUROC of headroom. Differences between methods are then too small relative to the confidence intervals to discriminate between them.",
+   "rubric": [
+    "Computes or states that the headroom is small (~0.08 = 0.950 - 0.874)",
+    "Reason: small headroom means method differences cannot be meaningfully distinguished"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the interp-ablated 81-PC probe underperform the 19-PC interp-selected probe, even though it has more PCs and includes some greedy-selected PCs?",
+   "answer": "The ablated set retains the source-heavy surface PCs the judge scored low, such as PC7, PC8, PC11 and PC12. A source-trained probe leans on these and learns a non-transferable direction.",
+   "rubric": [
+    "Says the ablated set still contains the surface/source-heavy PCs",
+    "Reason: the source probe leans on those PCs, which do not transfer"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is '3 of 5 multi-target greedy PCs received the maximum OOD score' better than chance, given how many PCs got the maximum score overall?",
+   "answer": "Only 19 of 100 PCs received the maximum score in both runs, a base rate of about 19%, so about 1 of 5 would be expected by chance. Getting 3 of 5 (60%) is roughly three times the base rate.",
+   "rubric": [
+    "Identifies the base rate of ~19% (19/100), implying ~1 expected of 5",
+    "Concludes that 3/5 is well above the chance expectation"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the small interp gain on Sandbagging be attributed to a selection failure rather than missing information?",
+   "answer": "Within the same 100-PC space, a target-trained probe reaches 0.869 and a source-fit greedy subset reaches 0.832. The information and a transferable subset exist, so the judge's 0.662 reflects not finding the right PCs.",
+   "rubric": [
+    "Cites the target-trained 0.869 and/or greedy 0.832 within the same 100 PCs",
+    "Concludes that the shortfall is a selection problem, not absent information"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c6",
+    "c4"
+   ],
+   "pair": "b1-p1",
+   "question": "Suppose the judge had additionally given the maximum score to PC7, PC8, PC11 and PC12. Would you expect the interp-selected probe's advantage over the baseline to grow?",
+   "answer": "No, it would likely shrink. These are the source probe's top-weighted, surface-cue PCs, and a source probe relying on them transfers about as poorly as the baseline.",
+   "rubric": [
+    "Says no / the advantage would likely shrink",
+    "Reason: these are source-heavy surface PCs that the source-PCA result shows do not transfer"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "Suppose the judge had additionally given the maximum score to PC89, PC93 and PC97. Would you expect the interp-selected probe's advantage over the baseline on Insider Trading Report to grow?",
+   "answer": "Yes, likely. These are greedy-selected PCs for Report, and greedy subsets transfer nearly as well as target-trained probes, so adding them should move interp-selection toward the 0.929 oracle.",
+   "rubric": [
+    "Says yes / the advantage would likely grow",
+    "Reason: these PCs are in the Report greedy set, which transfers near the oracle level"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": "b1-p2",
+   "question": "If the Insider Trading Report results were dropped, leaving only Confirm and Sandbagging, would the claim that interp-selection gives a meaningful improvement on generalization tasks remain well supported?",
+   "answer": "No, it would be much weaker. Confirm is uninformative because of the ceiling, and Sandbagging shows only a 0.056 AUROC gain (25% of the gap). Report's 78% recovery is the main evidence.",
+   "rubric": [
+    "Says no / support becomes weak",
+    "Reason: Confirm is uninformative and Sandbagging's gain is small; Report carries the claim"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": "b1-p2",
+   "question": "If the Insider Trading Confirm results were dropped, leaving only Report and Sandbagging, would the claim that interp-selection gives a meaningful improvement on generalization tasks remain well supported?",
+   "answer": "Yes, essentially unchanged. Confirm was already deemed uninformative because of near-ceiling baseline transfer, so the claim rests on Report (and modestly Sandbagging).",
+   "rubric": [
+    "Says yes / support is essentially unchanged",
+    "Reason: Confirm contributed no informative evidence because of the ceiling"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b1-p3",
+   "question": "Is there any PC that the full-data greedy search selected for both Insider Trading Report and Insider Trading Confirm?",
+   "answer": "No. The Report greedy set (PC6, 89, 62, 66, 26, 14, 57, 25, 93, 9, 70, 97, 78) and the Confirm set (PC71, 53, 28, 86, 32, 81, 77) share no PCs.",
+   "rubric": [
+    "Says no shared PCs",
+    "Supports this by comparing the two greedy lists"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": "b1-p3",
+   "question": "Is there any PC that the full-data greedy search selected for both Insider Trading Report and Sandbagging?",
+   "answer": "Yes. PC62, PC57 and PC9 appear in both greedy sets.",
+   "rubric": [
+    "Says yes",
+    "Names at least one of PC62, PC57, PC9"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p4",
+   "question": "If the paper had evaluated only on Insider Trading Report, would its conclusion that target-side probe-weight ranking fails to recover the transferable subspace be supported?",
+   "answer": "No. On Report the target-PCA probe did well, so the failure would not have been visible.",
+   "rubric": [
+    "Says no",
+    "Reason: the target-PCA probe performed well on Report"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p4",
+   "question": "If the paper had evaluated only on Sandbagging, would its conclusion that target-side probe-weight ranking fails to recover the transferable subspace be supported?",
+   "answer": "Yes. On Sandbagging the target-PCA probe transferred below random, far below greedy.",
+   "rubric": [
+    "Says yes",
+    "Reason: the target-PCA probe was below random on Sandbagging"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team must deploy a deception probe to a new domain where they have no labeled examples at all. Among greedy selection, target-PCA ranking and interp-selection, which can they use, and why?",
+   "answer": "Only interp-selection. Greedy needs target labels to score candidate PCs, and target-PCA ranking needs a probe trained on labeled target data. Interp-selection uses only source examples and an LLM judge.",
+   "rubric": [
+    "Chooses interp-selection",
+    "Reason: greedy and target-PCA both require labeled target data, while interp uses only source data"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team has plenty of labeled examples from their target domain. Based on the paper's numbers, should they prefer a greedy-selected source-fit probe or a probe trained directly on the target within the 100-PC space?",
+   "answer": "Train directly on the target. The target-trained 100-PC probe (0.936 Report, 0.869 Sandbagging) matches or exceeds greedy (about 0.93 and 0.83), and greedy is itself only an upper bound for source-fit transfer.",
+   "rubric": [
+    "Recommends training directly on target data",
+    "Reason: target-trained AUROCs are at least as high as greedy's (e.g., 0.869 vs ~0.83 on Sandbagging)"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team's source-trained full-representation probe already reaches about 0.88 AUROC on their new target. Is it worth investing in interp-selection, according to the paper?",
+   "answer": "Probably not much. This mirrors Insider Trading Confirm (baseline 0.874), where there was little headroom and all selection methods performed about the same.",
+   "rubric": [
+    "Says the expected benefit is small",
+    "Reason: analogous to Confirm, where near-ceiling baseline left little headroom and methods were indistinguishable"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "To save cost, a team proposes skipping the LLM judge and just training on the top 19 PCs by variance. What does the paper predict for hard targets like Report and Sandbagging?",
+   "answer": "It predicts clearly worse transfer than interp-selection. Top-19 by variance lost to the interp-selected probe by wide margins on Report and Sandbagging, and variance does not predict transferability.",
+   "rubric": [
+    "Predicts worse performance than interp-selection on hard targets",
+    "Reason: the paper's top-19 variance control lost by wide margins there / variance does not predict usefulness"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants a few fixed PCs from this paper's basis as promising candidates for a monitor covering several deception settings. Which PCs does the paper's evidence point to most strongly, and why?",
+   "answer": "PC62, PC57 and PC86. Each was greedy-selected for more than one target and received the judge's maximum OOD score, so both target performance and interpretation support them.",
+   "rubric": [
+    "Names PC62, PC57 and PC86 (at least two)",
+    "Reason: they are both multi-target greedy picks and max-score judge picks"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team needs to monitor for sandbagging-like behavior. How much should they rely on an interp-selected probe trained on Roleplaying, based on the paper?",
+   "answer": "Only modestly. On Sandbagging it reached 0.662 AUROC, recovering only 25% of the gap to the 0.832 oracle and far below the 0.869 target-trained probe, so it remains a weak detector.",
+   "rubric": [
+    "Says reliance should be limited / it is a weak detector",
+    "Cites the 0.662 AUROC or the 25% gap closure on Sandbagging"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the target-trained probe on the top-100 source PCs had scored near the baseline (e.g., about 0.62 on Sandbagging), which of the paper's conclusions would lose its support?",
+   "answer": "The conclusion that the 100-PC subspace is not the bottleneck, i.e., that failure stems from the probe's learned direction rather than missing information. That premise justifies searching for a transferable subset within those 100 PCs.",
+   "rubric": [
+    "Identifies the 'subspace is not the bottleneck / direction, not missing information' conclusion",
+    "Notes that this premise underpins the subset-selection approach"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the top-19-by-variance control had matched the interp-selected probe on Report and Sandbagging, which conclusion would be undermined?",
+   "answer": "The conclusion that the judge's interpretations specifically identify transferable PCs. Gains could instead be explained by simply using a smaller subspace of 19 PCs.",
+   "rubric": [
+    "Identifies the claim that interpretation-based selection adds value",
+    "Reason: gains could then be attributed merely to dimensionality reduction to 19 PCs"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the 81-PC interp-ablated probe had performed as well as the interp-selected probe, which inference would lose support?",
+   "answer": "The inference that the transfer signal is concentrated in the judge-selected PCs. The remaining PCs would carry equally transferable information, so selection by interpretation would not be what matters.",
+   "rubric": [
+    "Identifies the inference that the selected PCs specifically carry the transferable signal",
+    "Reason: the complement would be equally good, so the selection would not be discriminative"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If none of the 5 PCs appearing in multiple targets' greedy sets had received the maximum OOD score, which claim from Section 4.4 would lose its support?",
+   "answer": "The claim that LLM interpretations can partially recover transferable directions. Its direct descriptive evidence is that 3 of 5 multi-target greedy PCs got the maximum score, against only 1 of 5 source-PCA top PCs.",
+   "rubric": [
+    "Identifies the claim that the judge partially recovers transferable directions",
+    "Reason: the 3-of-5 overlap is its direct evidence"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the source-PCA probe (ranked by source-probe weights) had matched greedy performance, which claims would be undermined?",
+   "answer": "The claim that the source probe's heavily weighted directions are source-specific surface features that do not transfer. The second hypothesis, that greedy just rediscovers the source signal compactly, would be supported instead.",
+   "rubric": [
+    "Identifies the claim that source-heavy directions are non-transferable surface features",
+    "Notes that the 'greedy rediscovers source signal' hypothesis would then be supported"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If SAE decoder alignment had not decreased with PC index, which part of the paper's design rationale would be weakened, and would the transfer results themselves be affected?",
+   "answer": "It would weaken the justification for restricting to the top 100 PCs, namely that lower-index PCs are more interpretable and comparable with interpretability-driven selection. The measured transfer AUROCs would be unaffected, since that choice was only a rationale.",
+   "rubric": [
+    "Identifies the justification for using the top 100 PCs (interpretability of lower PCs)",
+    "States that the empirical transfer results themselves would not change"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that interp-selection improves OOD transfer of deception probes for other model families? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All experiments use Llama-3.1-8B-Instruct at layer 15 with a single source dataset, and the PCA basis and judge scores are specific to that setup.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: single model, layer and source dataset were tested"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the PCs a source probe weights most heavily are the best candidates for a transferable probe? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Training on the top source-weighted PCs transferred only about as well as the baseline, and those PCs were judged surface cues (only 1 of the top 5 got the max score).",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: the source-PCA probe matched the baseline / its PCs were mostly surface cues"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that interp-selection closes most of the baseline-to-oracle gap across deception targets? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted as a general claim. It closes 78% on Report but only 25% on Sandbagging, and Confirm is uninformative.",
+   "rubric": [
+    "Answers contradicted (or not supported as general)",
+    "Reason: only 25% on Sandbagging versus 78% on Report; Confirm is uninformative"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that selecting PCs by variance never matches greedy selection? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. On Insider Trading Confirm the top-k-by-variance control matched greedy; it fell behind only on the harder targets.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: variance matched greedy on Confirm"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that higher judge OOD scores reliably indicate better-transferring PCs across the score range? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Scores were used only as a binary filter at the maximum observed score of 6, with no graded analysis. Some multi-target greedy PCs (PC9, PC81) scored only 3.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: scores were only thresholded at max (6), not analyzed as graded, and some transferable PCs scored low"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that high-index (low-variance) PCs generalize better than low-index PCs in general? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Greedy sets lean toward higher-index PCs but also include low-index ones (PC6, PC9), interp-selection includes PC4, only the top 100 PCs were examined, and the paper only shows that variance does not predict usefulness.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: mixed evidence (greedy includes low-index PCs), only the top 100 PCs examined, and the paper claims only that variance is not predictive"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose a team takes a source-trained probe, fixes its decision threshold using Roleplaying data, and deploys it on Insider Trading Report. Do the paper's reported AUROCs establish that this thresholded monitor will work, and why?",
+   "answer": "No. AUROC is threshold-free, so it says nothing about whether a cutoff calibrated on the source holds. The class balance also flips between domains: after ambiguous labels are removed, Roleplaying is about 74% deceptive (172 vs 59), while Report is about 24% deceptive (61 vs 194). A source-calibrated threshold could therefore be badly miscalibrated even where AUROC is good.",
+   "rubric": [
+    "States that the reported results do not establish that a source-calibrated threshold works on Report",
+    "Gives the reason that AUROC does not depend on any threshold or calibration, and/or that the deceptive base rate differs sharply (majority deceptive in Roleplaying, minority in Report)"
+   ],
+   "batch": 2,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Greedy selection adds any PC that improves target AUROC by more than 0.001, using the non-held-out target folds. Why could this make the greedy upper bound less trustworthy on Insider Trading Report specifically?",
+   "answer": "Report has only 61 deceptive examples, so each fold's training portion contains only about 49 positives. On a sample that small, AUROC gains of around 0.001 can reflect noise rather than real transfer. Greedy can then add PCs that fit fold-specific quirks, making the upper bound noisy or optimistic.",
+   "rubric": [
+    "States that the greedy bound can be noisy or inflated for Report",
+    "Links this to the very small improvement threshold (0.001) combined with few deceptive examples (61 in total), so small gains can be noise"
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Can the greedy AUROCs in Figure 4 (Section 4.3) be read as estimates of performance on unseen target examples, and why?",
+   "answer": "No. In Section 4.3 greedy was run on the full target dataset to obtain a single PC set, and no target fold was held out. Selection and evaluation therefore use the same labelled target data, so these numbers are even more optimistic than the cross-validated greedy numbers of Section 4.2.",
+   "rubric": [
+    "States that they are not valid held-out or unseen-data estimates",
+    "Explains that the Section 4.3 greedy selected PCs using all target labels (no held-out fold), unlike the 5-fold CV version"
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "For a new target, a probe trained directly on target data within the top-100 source PCs reaches only about 0.65 AUROC. Could greedy or interp-selection be expected to rescue source-to-target transfer there, and why?",
+   "answer": "No, not much. Both methods only choose subsets of those same 100 PCs and fit the weights on source data. The target-trained 100-PC probe is the paper's check that the needed information exists in the subspace. If that check fails, the subspace itself is the bottleneck, and no selection within it can exceed that ceiling by much.",
+   "rubric": [
+    "States that selection cannot be expected to rescue transfer substantially",
+    "Explains that both methods select only among the top-100 source PCs, so a low target-trained 100-PC probe means the information is missing from that subspace (the ceiling is low)"
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Interp-selection keeps PCs that reach the maximum observed OOD score (6 in this paper) in both runs. Suppose a different judge used the full 1\u201310 scale and only one PC received its top score. What would happen to the selected subspace, and why?",
+   "answer": "The selected subspace could shrink to a single PC or a handful. The rule is defined relative to the maximum observed score, not a fixed cutoff, so its size depends on how the judge spreads its scores. The paper's 19-PC result therefore depends on this judge's calibration, and a narrow subspace may lose much of the transferable signal.",
+   "rubric": [
+    "States that the selected set could become very small (e.g., one or a few PCs) and performance could suffer",
+    "Explains that the rule depends on the maximum observed score, a relative threshold, rather than a fixed absolute cutoff"
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Consider a target domain where deceptive responses mostly consist of elaborate fabricated details rather than denials. Would PC62, one of the paper's best multi-target PCs, be expected to flag them reliably? Use the paper's own interpretation of PC62.",
+   "answer": "No. The judge's interpretation of PC62 contrasts deny/deflect with providing details. It explicitly notes that liars sometimes produce elaborate fabricated detail and that honest speakers also deny. Deceptive responses full of detail would sit toward the 'provide details' pole, looking honest, so PC62 would tend to miss them.",
+   "rubric": [
+    "States that PC62 would not reliably flag such responses",
+    "Explains that PC62 encodes deny/deflect versus providing details, so detailed fabrications fall on the honest-looking pole, as the judge's own caveat notes"
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the Section 4.2 variance control use k equal to the number of PCs greedy selected, rather than some fixed number?",
+   "answer": "Matching k holds the size of the subspace constant. Any gap between greedy and the control then reflects which PCs were chosen, not how many dimensions the probe had. This is what lets the paper conclude that variance explained does not predict usefulness.",
+   "rubric": [
+    "States that matching k controls for subspace size or dimensionality",
+    "Explains that the comparison then isolates PC identity (which PCs) as the cause of the performance difference, supporting the claim that variance does not predict usefulness"
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the interp-selected probe's AUROCs be read as genuine out-of-distribution estimates, when the greedy probe's cannot?",
+   "answer": "Interp-selection picks PCs using only Roleplaying examples and the judge, with no target data or labels. The target sets are therefore untouched when they evaluate it. Greedy picks PCs by maximizing target AUROC, so even its cross-validated numbers reflect target-guided selection and act only as an upper bound.",
+   "rubric": [
+    "States that interp-selection gives a genuine OOD estimate while greedy gives an upper bound",
+    "Explains that interp-selection uses no target data in selection, whereas greedy chooses PCs using target labels"
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is it unsurprising that the source probe's top-ranked PCs are mostly low-index (PC1\u2013PC12), given how Section 4.3 defines a PC's rank?",
+   "answer": "Section 4.3 ranks PCs by standardized coefficient: the absolute probe weight times that PC's standard deviation. Low-index PCs have the largest variance by construction. The ranking therefore favours them unless high-index PCs receive much larger raw weights.",
+   "rubric": [
+    "States that the ranking is biased toward low-index or high-variance PCs",
+    "Explains that the standardized coefficient multiplies the weight by the PC's standard deviation, which is largest for low-index PCs"
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Using the dataset descriptions and the interpretations of the max-scored PCs, why might interp-selection help much more on Insider Trading Report than on Sandbagging?",
+   "answer": "The max-scored PCs encode general deny/deflect or hedging versus admitting or giving details (e.g., PC62, PC57, PC86). This matches Report, where the model decides whether to honestly disclose its use of insider information. In Sandbagging the deception is deliberate underperformance on tasks, which is less a denial-versus-admission contrast. The judge's abstract deny/admit directions therefore fit it less well, consistent with the paper calling Sandbagging the most out-of-distribution target.",
+   "rubric": [
+    "States that the selected PCs match Report's form of deception better than Sandbagging's",
+    "Explains that the max-scored PCs encode deny/deflect/hedge versus admit/detail, which fits Report's disclose-or-conceal choice but not Sandbagging's deliberate underperformance"
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Using Appendix D, why does ranking PCs by target-probe weights work well on Insider Trading Report?",
+   "answer": "For Report, the top-13 target-separability ranking shares 4 PCs with the greedy set (PC6, PC89, PC14, PC66), giving the 0.182 Jaccard overlap. It also includes none of the source-heavy surface PCs PC7, PC8, PC11 or PC12. Its source-fit probe therefore draws on several directions that actually transfer.",
+   "rubric": [
+    "States that the ranking overlaps meaningfully with the transferable (greedy) set on Report",
+    "Cites the shared PCs (e.g., PC6, PC89, PC14, PC66 / 4 of 13 / Jaccard 0.182), and/or the absence of surface PCs PC7, PC8, PC11, PC12"
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Using the dataset descriptions and the interpretations of the source probe's top PCs, why might Insider Trading Confirm already transfer well (0.874) under the baseline?",
+   "answer": "In Confirm, the deceptive response is a direct denial when the model is asked to confirm it used no insider information. The source probe's heavily weighted PCs (PC7, PC8, PC4) encode deny-versus-admit contrasts carried by explicit No/Yes surface cues. Those source-specific cues happen to line up with Confirm's labels. Consistent with this, PC4, PC8 and PC7 appear among Confirm's top target-separability PCs.",
+   "rubric": [
+    "States that the source probe's surface cues happen to match Confirm's honest/deceptive contrast",
+    "Explains that Confirm's deception is an explicit denial and that the source-heavy PCs (PC7, PC8, PC4) encode No/Yes deny-versus-admit cues"
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why must target activations be standardized with the source statistics, rather than their own, before the paper's PC-subspace probes can be applied?",
+   "answer": "PCA is fit on the standardized source activations, and the probes are fit on source projections. Target activations must sit in the same coordinate system for the projections onto those PCs, and the source-fit weights, to mean the same thing. Per-target standardization would also partly remove the distribution shift the paper is measuring.",
+   "rubric": [
+    "States that this keeps targets in the same coordinate frame as the source PCA basis and the source-fit weights",
+    "Explains that the PCs and probe weights were computed on source-standardized data, so the projections are only comparable under the same scaling"
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c4",
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "Does the full-data greedy set for Insider Trading Report contain any PC from the source-probe-weight list in Appendix D?",
+   "answer": "Yes. PC6 is both in the source probe's top-weighted list and in the Report greedy set.",
+   "rubric": [
+    "Answers yes",
+    "Identifies PC6 as the shared PC"
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c4",
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "Does the full-data greedy set for Insider Trading Confirm contain any PC from the source-probe-weight list in Appendix D?",
+   "answer": "No. The Confirm greedy PCs (PC71, PC53, PC28, PC86, PC32, PC81, PC77) do not overlap with the source-probe list (PC1\u2013PC8, PC11, PC12, PC18, PC21, PC22, PC27, PC41).",
+   "rubric": [
+    "Answers no",
+    "Supports this by comparing the two lists (e.g., Confirm greedy PCs are all PC28 or higher and none of them is in the source list)"
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": "b2-p2",
+   "question": "Does the top-k target-separability ranking for Insider Trading Confirm (k=7) include any of the surface-cue PCs PC7, PC8, PC11 or PC12?",
+   "answer": "Yes. Its top 7 (PC4, PC1, PC8, PC53, PC30, PC7, PC13) include PC8 and PC7. This helps explain why the source-fit target-PCA probe falls short of greedy on Confirm.",
+   "rubric": [
+    "Answers yes",
+    "Names PC8 and PC7 as the included surface PCs"
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": "b2-p2",
+   "question": "Does the top-k target-separability ranking for Insider Trading Report (k=13) include any of the surface-cue PCs PC7, PC8, PC11 or PC12?",
+   "answer": "No. Its top 13 (PC5, PC6, PC89, PC18, PC79, PC46, PC87, PC4, PC14, PC34, PC29, PC1, PC66) contain none of these four PCs.",
+   "rubric": [
+    "Answers no",
+    "Supports this from the Appendix D list for Report (top 13 excludes PC7, PC8, PC11 and PC12)"
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": "b2-p3",
+   "question": "On Insider Trading Confirm, does the interp-selected probe outperform the full-representation baseline?",
+   "answer": "Yes. The paper reports that the interp-selected probe beats the baseline on all three targets, Confirm included, though the margin there is small because of the high baseline.",
+   "rubric": [
+    "Answers yes",
+    "Notes that the interp-selected probe beats the baseline on all three targets (the margin on Confirm is small or near the ceiling)"
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": "b2-p3",
+   "question": "On Insider Trading Confirm, does the interp-selected probe clearly outperform the top-19-by-variance control?",
+   "answer": "No. On Confirm every selection method except the interp-ablated one performs roughly the same. The wide margins over variance-19 appear only on Report and Sandbagging.",
+   "rubric": [
+    "Answers no (no clear advantage)",
+    "Explains that on Confirm all methods except interp-ablated perform about equally, and the wide margins are only on Report and Sandbagging"
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": "b2-p4",
+   "question": "If the ceiling for gap closure were the target-trained 100-PC probe (0.936) instead of the greedy oracle, would interp-selection still close more than half the gap on Insider Trading Report?",
+   "answer": "Yes. (0.881 \u2212 0.706) / (0.936 \u2212 0.706) = 0.175 / 0.230 \u2248 76%, still well over half.",
+   "rubric": [
+    "Answers yes",
+    "Gives a computation of about 76% using 0.881, 0.706 and 0.936"
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": "b2-p4",
+   "question": "If the ceiling for gap closure were the target-trained 100-PC probe (0.869) instead of the greedy oracle, would interp-selection close more than half the gap on Sandbagging?",
+   "answer": "No. (0.662 \u2212 0.606) / (0.869 \u2212 0.606) = 0.056 / 0.263 \u2248 21%, far below half and even lower than the reported 25%.",
+   "rubric": [
+    "Answers no",
+    "Gives a computation of about 21% using 0.662, 0.606 and 0.869"
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team wants to use the paper's 19 interp-selected PCs (e.g., PC62, PC57, PC86) directly as a probe subspace for a Gemma model. Is that justified by the paper?",
+   "answer": "No. The PCs are directions computed from layer-15 Llama-3.1-8B-Instruct activations on Roleplaying, so the indices have no meaning in another model's activation space. The team would need to recompute PCA and rerun the judge. Even then, the paper leaves open whether the results hold for other model families.",
+   "rubric": [
+    "States that the PCs cannot be reused directly",
+    "Explains that the PCs are specific to Llama-3.1-8B layer-15 Roleplaying activations, so they must be recomputed, and that other models are untested"
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team wants to apply interp-selection with a different source dataset (for example, a customer-service lying scenario). Besides recomputing the PCs, what part of the judge setup must change, and why?",
+   "answer": "The judge prompt must be rewritten. It explicitly tells the judge that the examples come from a Roleplay setup where the model has a strategic chance to lie. The judge interprets and scores PCs relative to that stated source context, so a mismatched description could distort what it counts as surface cues versus general deception strategy.",
+   "rubric": [
+    "States that the dataset description in the judge prompt must be changed",
+    "Explains that the prompt hard-codes the Roleplaying setup, and the judge's interpretations and OOD scores depend on that context"
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team wants to extend interp-selection to PCs 101\u2013300 in the hope of finding more transferable directions. What does the paper suggest about how well the judge would interpret them?",
+   "answer": "Probably worse. Appendix C shows that alignment with SAE decoder features falls steadily with PC index (Spearman rho \u22120.857 and \u22120.917). The paper uses this trend to argue that lower-index PCs are more amenable to natural-language interpretation, so PCs beyond 100 would likely get less reliable descriptions. The paper never tested them.",
+   "rubric": [
+    "Predicts that interpretations or judge scores would be less reliable for PCs beyond 100",
+    "Cites the decreasing SAE decoder alignment with PC index (Appendix C) and notes that these PCs were not tested"
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "To cut judge costs, a team plans to score only PC1\u2013PC30. What would they lose, according to the paper's multi-target evidence?",
+   "answer": "They would never see PC62, PC57 or PC86. These are the three PCs that appear in more than one target's greedy set and received the maximum judge score. Of the five multi-target PCs, only PC9 falls in range, and the judge scored it 3. The team would mostly be left with the low-index range where the source-heavy surface-cue PCs (PC7, PC8, PC11, PC12) live.",
+   "rubric": [
+    "States that they would miss the strongest transferable candidates",
+    "Names PC62, PC57 and PC86 (all above 30) as the max-scored multi-target PCs, and/or notes that the low-index range holds the source-specific surface PCs"
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team has no labels for a new insider-trading-report setting similar to the paper's Report target. What performance should they expect from interp-selection compared with the baseline, and how far would they be from the label-using ceiling?",
+   "answer": "On the paper's Report target, interp-selection reaches about 0.88 AUROC against about 0.71 for the baseline. That is roughly 0.05 below the greedy oracle (0.929), which closes 78% of the gap. This is the paper's more robust result, though it holds for one model and one source.",
+   "rubric": [
+    "Expects about 0.88 AUROC versus about 0.71 for the baseline",
+    "States that this is about 0.05 below the greedy oracle (0.929), i.e., about 78% of the gap closed"
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team proposes running the LLM judge once instead of twice and keeping every PC that gets the top score. What risk does the paper's design point to?",
+   "answer": "The selection would admit more PCs that reached the top score only by chance. The paper calls the judge scores noisy and keeps only PCs that hit the maximum in both runs to filter out such noise. A single run would likely give a larger, noisier subspace that may include non-transferable PCs.",
+   "rubric": [
+    "States that a single run would admit more spurious or noisy PCs",
+    "Explains that the paper's two-run intersection exists because judge scores are noisy"
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the Jaccard overlap between greedy and target-PCA PC sets had been close to 1 on every target, which conclusion of the paper would lose its support?",
+   "answer": "The conclusion that the transferable subspace is not the part of representation space most discriminative on the target (Appendix D, Section 4.3). High overlap would instead support the first hypothesis: greedy simply finds the PCs that separate the target classes. Target-side ranking would then be expected to recover the subspace.",
+   "rubric": [
+    "Identifies the claim that target-side separability does not recover the transferable subspace (the transferable subspace is not the most target-discriminative part)",
+    "Explains that high overlap would mean greedy is just picking target-discriminative PCs, supporting the first hypothesis of Section 4.3"
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If greedy selection had needed around 80 of the 100 PCs to reach its performance, which part of the paper's argument would be weakened?",
+   "answer": "The claim that a small transferable subspace exists (8\u201315 PCs), along with the conclusion's idea that sparse PC subspaces isolate general behavioural structure. Transfer would still be possible, but the argument for a compact, interpretable transferable set would lose force.",
+   "rubric": [
+    "Identifies the 'small' transferable subspace claim and/or the sparse-subspace framing of the conclusion",
+    "Explains that needing most of the PCs would contradict compactness (8\u201315 PCs)"
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the greedy oracle had stayed near the baseline on Insider Trading Report and Sandbagging, which of the paper's reported results would lose its meaning, in addition to the existence claim?",
+   "answer": "The gap-closure percentages for interp-selection (78% on Report, 25% on Sandbagging). They are computed relative to the greedy oracle, so with no baseline-to-oracle gap there would be nothing meaningful to close. The claim that a transferable subspace exists would also lose its support.",
+   "rubric": [
+    "Identifies the interp-selection gap-closure percentages (78% / 25%)",
+    "Explains that these are defined relative to the greedy oracle, so a negligible oracle gain would leave no meaningful gap to measure"
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the top-k-by-variance control (k matched to greedy) had matched greedy on Report and Sandbagging, which claim would be undermined?",
+   "answer": "The claim that variance explained does not predict a PC's usefulness for transfer. If the highest-variance PCs worked as well as greedy's choices, simply truncating PCA would suffice, and which PCs are chosen would matter less.",
+   "rubric": [
+    "Identifies the claim that variance explained does not predict usefulness (c3)",
+    "Explains that the claim rests on the variance control falling far behind greedy on these two targets"
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the judge had described PC7, PC8, PC11 and PC12 as abstract, general deception strategies and scored them 6, which interpretive claim would lose its support?",
+   "answer": "The claim that the directions a source probe weights heavily encode source-specific surface cues, while transferable directions encode the contrast more abstractly. That claim is what explains the source-PCA probe's poor transfer as reliance on surface features. Without it, the source-PCA failure would lack that account.",
+   "rubric": [
+    "Identifies the claim that source-heavy PCs encode surface cues while transferable PCs are abstract (c6)",
+    "Notes that this would remove the explanation for why the source-PCA probe transfers poorly"
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the cross-validated greedy AUROCs (Section 4.2) had been far below the full-data greedy AUROCs, which claim would be weakened, and why?",
+   "answer": "The claim that a transferable subspace nearly matches target-trained probes would be weakened. A large drop on held-out folds would mean greedy's gains largely come from fitting the specific target labels used for selection, not from a subspace that transfers. The held-out CV numbers are the paper's guard against this.",
+   "rubric": [
+    "Identifies the existence/near-matching claim for the transferable subspace (c2)",
+    "Explains that a large CV drop would indicate greedy overfits the target labels used in selection"
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that PCs the judge describes as domain-specific or surface-level cues do not transfer? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The judge scored PC9 a 3 as domain-specific lexical cues and PC81 a 3 as surface/formal cues. Yet each appears in two targets' greedy sets (PC9: Report and Sandbagging; PC81: Confirm and Sandbagging).",
+   "rubric": [
+    "Answers contradicted",
+    "Cites PC9 and/or PC81: scored 3 as surface or lexical, yet selected by greedy for more than one target"
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that layer 15 is the best layer at which to do PC subspace selection for deception probes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Layer 15 was taken from prior work, where it gave the highest cross-domain AUROC for ordinary probes. The paper runs every experiment at that single layer and compares no other layers for subspace selection.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that only layer 15 was used, chosen from prior work's probe analysis, with no layer comparison"
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that PC62 and PC57 carry the deny/deflect contrast in the model's computation? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The descriptions come from an LLM judge reading top- and bottom-activating examples, and the paper states these are descriptive claims only. The PCs were never ablated during inference to verify the contrast.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the interpretations are descriptive (judge over extreme examples), with no causal ablation"
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that smaller PC subspaces transfer better, whatever PCs they contain? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Subspaces of equal size perform very differently. The top-k-by-variance control has the same k as greedy but falls far behind on Report and Sandbagging. Top-19 by variance loses to the 19 interp-selected PCs by wide margins on those targets. What matters is which PCs are chosen, not how many.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the size-matched comparisons (variance-k vs greedy, or variance-19 vs interp-19), which show that identity rather than size drives transfer"
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the greedy-selected PC set is the unique transferable subspace for each target? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Greedy forward selection follows a single path and returns one set per run. The cross-validated runs average different subset sizes (e.g., 15 for Report) from the full-data run (13), so the chosen set varies with the data. The paper does not explore whether other subsets would transfer equally well.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that greedy finds one path-dependent set, that the sets vary across folds and data (CV vs full-data sizes), and that alternatives were not examined"
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the LLM judge's OOD scores are consistent from run to run? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper says the scores are noisy and keeps only PCs that got the maximum in both of two runs. It reports no agreement statistic between runs, so how consistent the scores are is never quantified.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the paper acknowledges noise and uses a two-run intersection but reports no measure of run-to-run agreement"
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that every PC the source probe weights heavily fails to transfer? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. PC6 is in the source probe's top-weighted list and also in the Report greedy set. PC41 is in that list and in the Sandbagging greedy set. PC4, also heavily weighted, received the maximum judge score. The failure lies in the overall mix the source probe relies on, not in every heavily weighted PC.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites PC6 (Report greedy) and/or PC41 (Sandbagging greedy) appearing in the source-probe list, or PC4 receiving the max score"
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "On Insider Trading Confirm, would a difference of about 0.02 AUROC between two selection methods be trustworthy, given the size of the evaluation data after ambiguous labels are removed?",
+   "answer": "No. After removing ambiguous labels, Confirm has only 122 examples (38 honest, 84 deceptive), so a 5-fold held-out fold has roughly 24 examples with only about 7\u20138 honest ones. AUROC estimated on so few examples is very noisy, so small differences between methods are within noise. This adds to the ceiling problem.",
+   "rubric": [
+    "Concludes that such a small difference on Confirm is not trustworthy / not meaningful",
+    "Reason: Confirm has only ~122 non-ambiguous examples (38 honest), giving tiny folds (~24 examples, ~8 honest) and noisy AUROC / wide CIs"
+   ],
+   "batch": 3,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Consider a target domain where honest responses often use polite hedging or privacy-protecting refusals. Would PC86, one of the max-scored multi-target PCs, be expected to separate honest from deceptive responses reliably there? Use the paper's own interpretation of PC86.",
+   "answer": "Probably not. The judge describes PC86 as hedging and defensive PR-style wording, and it explicitly warns that this wording is used legitimately for privacy, politeness or negotiation and will produce false positives. In a domain where honest responses hedge routinely, honest examples would score high along PC86, which would blur the separation.",
+   "rubric": [
+    "Concludes PC86 would be unreliable / would produce false positives in such a domain",
+    "Reason: PC86 encodes hedging/defensive wording, which the judge notes is also used legitimately (privacy, politeness), so honest hedges would activate it"
+   ],
+   "batch": 3,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "The 78% and 25% gap-closure figures use the greedy oracle as the ceiling. If the greedy oracle is optimistically biased, would these percentages overstate or understate how much of the true achievable transfer interp-selection recovers?",
+   "answer": "They would understate it, so the figures are conservative. Greedy uses target labels to pick PCs, so its AUROC is an upper bound that is likely inflated. An inflated ceiling enlarges the denominator of the gap while the interp numerator stays the same, which shrinks the closure percentage relative to an unbiased ceiling.",
+   "rubric": [
+    "Concludes the percentages would understate recovery (i.e., they are conservative)",
+    "Reason: a greedy ceiling inflated by target-label selection makes the baseline-to-ceiling gap larger, lowering the computed fraction closed"
+   ],
+   "batch": 3,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "How robust is the list of five PCs that appear in more than one target's greedy set (the yardstick used to evaluate the judge) to the particular greedy run?",
+   "answer": "It is not guaranteed to be robust. The list comes from a single full-data greedy run per target. The cross-validated runs give different average subset sizes (15 vs 13 on Report, 8 vs 7 on Confirm), which shows that selection varies with the data used. Greedy also adds PCs for gains as small as 0.001, so near-tied PCs could swap in another run and change which PCs count as multi-target.",
+   "rubric": [
+    "Concludes the multi-target list may not be stable / depends on the specific run",
+    "Reason: it comes from one full-data greedy run; CV subset sizes differ from full-data sizes, and the 0.001 stopping threshold lets near-tied PCs swap"
+   ],
+   "batch": 3,
+   "orig_id": "q84"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "PC4 received the maximum OOD score. Would it be expected to help on a target where deceptive answers avoid explicit 'Yes'/'No' turns and use subtler phrasing? Use the paper's interpretation of PC4.",
+   "answer": "Probably not much. Although the judge scored PC4 a 6 as a general deny-versus-admit strategy, its own explanation says PC4 leans on surface cues such as explicit 'Yes'/'No' turns and common defensive phrasings. It also says PC4 may be brittle when lies use different wording or subtler tactics, so its signal would weaken on such a target.",
+   "rubric": [
+    "Concludes PC4 would likely help little / be unreliable on such a target",
+    "Reason: the judge's interpretation says PC4 relies partly on explicit Yes/No turns and defensive phrasing and is brittle under different wording or subtler tactics"
+   ],
+   "batch": 3,
+   "orig_id": "q85"
+  },
+  {
+   "id": "q86",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The full standardized activations contain every direction in the top-100 source-PC subspace, including the ones greedy finds transferable. Why does the full-representation baseline still transfer poorly?",
+   "answer": "Having the transferable directions available does not mean the probe weights them. The probe's weights are fit to maximize separation on Roleplaying, so they load heavily on directions that are most predictive there. The paper interprets those directions (e.g., PC7, PC8, PC11, PC12) as source-specific surface cues, so the learned direction is dominated by non-generalizing cues.",
+   "rubric": [
+    "States that availability of the transferable directions does not ensure the source-fit probe weights them",
+    "Reason: source fitting puts weight on directions most predictive on Roleplaying, which are source-specific surface cues (e.g., PC7/8/11/12)"
+   ],
+   "batch": 3,
+   "orig_id": "q86"
+  },
+  {
+   "id": "q87",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Greedy selection uses target labels, yet its oracle (0.929 Report, 0.832 Sandbagging) stays below the target-trained 100-PC probe (0.936, 0.869). Why?",
+   "answer": "Greedy uses target labels only to choose which PCs to keep. The probe weights on those PCs are still fit on Roleplaying, so they need not be the best weights for the target. The target-trained probe instead fits its weights on target data across all 100 PCs, so it can do at least as well.",
+   "rubric": [
+    "States that greedy still uses source-fit weights / labels only guide subset choice",
+    "Reason: the target-trained probe optimizes weights on target data over all 100 PCs, so it can exceed any source-weighted subset"
+   ],
+   "batch": 3,
+   "orig_id": "q87"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Using the label counts in Appendix A, why is AUROC a sensible metric for comparing transfer across these four datasets, rather than accuracy?",
+   "answer": "After ambiguous labels are removed, the deceptive share differs widely: about 74% in Roleplaying (172/231), 24% in Report (61/255), 69% in Confirm (84/122) and 40% in Sandbagging (246/621). Accuracy would depend on these base rates and on a threshold set on the source. AUROC measures ranking quality and is independent of both prevalence and threshold, so comparisons stay meaningful across the shifts in class balance.",
+   "rubric": [
+    "States that class proportions differ greatly across datasets (e.g., ~74% deceptive in Roleplaying vs ~24% in Report)",
+    "Reason: AUROC is threshold- and prevalence-independent, whereas accuracy would be confounded by base rates and source-set thresholds"
+   ],
+   "batch": 3,
+   "orig_id": "q88"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is it sensible to test the judge against the PCs that appear in more than one target's greedy set, rather than against every greedy-selected PC?",
+   "answer": "A PC selected for only one target may reflect something specific to that target, or the greedy fit to that target's labels. A PC selected independently for two different targets is better evidence of a direction that transfers broadly. That broad transfer is exactly the out-of-domain generality the judge is asked to rate.",
+   "rubric": [
+    "States that multi-target PCs are better evidence of general (not target-specific) transferability",
+    "Reason: single-target selections may reflect target-specific signal or greedy fitting, while the judge rates general OOD usefulness"
+   ],
+   "batch": 3,
+   "orig_id": "q89"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Using the target-separability rankings in Appendix D, why might top-k-by-variance match greedy on Insider Trading Confirm even though it fails on the other targets?",
+   "answer": "Confirm's class signal sits largely in high-variance source PCs. Four of its top-7 target-separability PCs (PC4, PC1, PC8, PC7) lie within PC1\u2013PC8, so taking the top 7\u20138 PCs by variance already captures directions that separate Confirm well. The other targets' discriminative PCs are mostly higher-index.",
+   "rubric": [
+    "States that Confirm's discriminative PCs are mostly low-index / high-variance",
+    "Reason/evidence: Confirm's top target-separability PCs include PC4, PC1, PC8, PC7, which fall inside the top-7/8 variance set"
+   ],
+   "batch": 3,
+   "orig_id": "q90"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "For Sandbagging, the top-14-by-variance control contains PC9, a PC greedy picked for both Report and Sandbagging. Why does it still fall far behind greedy?",
+   "answer": "PC1\u2013PC14 also contains most of the source probe's heavily weighted, surface-cue PCs (PC1\u2013PC8, PC11, PC12). When weights are fit on Roleplaying, these PCs dominate the probe. The other greedy Sandbagging PCs, such as PC62, PC57 and PC86, are absent, so one transferable PC among many source-specific ones is not enough.",
+   "rubric": [
+    "States that the rest of PC1\u2013PC14 is dominated by source-heavy/surface-cue PCs (PC1\u20138, PC11, PC12)",
+    "Reason: source-fit weights lean on those PCs, and the other greedy PCs (e.g., PC62, PC57, PC86) are missing, so PC9 alone cannot drive transfer"
+   ],
+   "batch": 3,
+   "orig_id": "q91"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Given the judge prompt in Appendix B, why would PC9 and PC81 be expected to miss the interp-selected set even though each helped transfer on two targets?",
+   "answer": "The prompt tells the judge to give low scores (1\u20134) to directions that are mainly surface cues, lexical habits or task-specific phrasing. The judge described PC9 as domain-specific lexical cues (medical/leave vs project/status language) and PC81 as relying on surface and formal cues. Following the rule, it scored both 3, below the maximum of 6 needed for selection.",
+   "rubric": [
+    "States that the judge scored them low (3) and so they were not selected",
+    "Reason: their interpretations were surface/lexical or domain-specific cues, which the prompt explicitly instructs the judge to score low"
+   ],
+   "batch": 3,
+   "orig_id": "q92"
+  },
+  {
+   "id": "q93",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b3-p1",
+   "question": "On Insider Trading Report, is the interp-selected probe's absolute AUROC gain over the full-representation baseline larger than 0.15?",
+   "answer": "Yes. It rises from 0.706 to 0.881, a gain of 0.175 AUROC.",
+   "rubric": [
+    "Answers yes",
+    "Supports with the gain of ~0.175 (0.881 \u2212 0.706)"
+   ],
+   "batch": 3,
+   "orig_id": "q93"
+  },
+  {
+   "id": "q94",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b3-p1",
+   "question": "On Sandbagging, is the interp-selected probe's absolute AUROC gain over the full-representation baseline larger than 0.15?",
+   "answer": "No. It rises only from 0.606 to 0.662, a gain of about 0.056 AUROC.",
+   "rubric": [
+    "Answers no",
+    "Supports with the gain of ~0.056 (0.662 \u2212 0.606)"
+   ],
+   "batch": 3,
+   "orig_id": "q94"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "On Insider Trading Report, does the target-trained 100-PC probe exceed the full-data greedy oracle by more than 0.02 AUROC?",
+   "answer": "No. The two are 0.936 and 0.929, a difference of only about 0.007, so greedy essentially matches the target-trained probe.",
+   "rubric": [
+    "Answers no",
+    "Supports with the difference of ~0.007 (0.936 vs 0.929)"
+   ],
+   "batch": 3,
+   "orig_id": "q95"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "On Sandbagging, does the target-trained 100-PC probe exceed the full-data greedy oracle by more than 0.02 AUROC?",
+   "answer": "Yes. The two are 0.869 and 0.832, a difference of about 0.037, so greedy falls noticeably short of the target-trained probe.",
+   "rubric": [
+    "Answers yes",
+    "Supports with the difference of ~0.037 (0.869 vs 0.832)"
+   ],
+   "batch": 3,
+   "orig_id": "q96"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": "b3-p3",
+   "question": "Does the top-k-by-variance control for Insider Trading Confirm (k = 7, or 8 in the CV setting) share any PC with the full-data greedy set for Confirm?",
+   "answer": "No. The Confirm greedy set is PC71, PC53, PC28, PC86, PC32, PC81 and PC77, all with index 28 or higher, so it is disjoint from PC1\u2013PC8. The two sets still perform about equally on Confirm.",
+   "rubric": [
+    "Answers no (no overlap)",
+    "Supports by noting the Confirm greedy PCs all have index \u2265 28 while the control is PC1\u2013PC7/8"
+   ],
+   "batch": 3,
+   "orig_id": "q97"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": "b3-p3",
+   "question": "Does the top-k-by-variance control for Sandbagging (k = 14) share any PC with the full-data greedy set for Sandbagging?",
+   "answer": "Yes. PC9 lies within PC1\u2013PC14 and is in the Sandbagging greedy set. It is the only shared PC.",
+   "rubric": [
+    "Answers yes",
+    "Identifies PC9 as the shared PC"
+   ],
+   "batch": 3,
+   "orig_id": "q98"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": "b3-p4",
+   "question": "Does the top-19-by-variance control include any of the five PCs that appear in more than one target's greedy set?",
+   "answer": "Yes. PC9, which was selected for both Report and Sandbagging, falls within PC1\u2013PC19.",
+   "rubric": [
+    "Answers yes",
+    "Identifies PC9 as the included multi-target PC"
+   ],
+   "batch": 3,
+   "orig_id": "q99"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": "b3-p4",
+   "question": "Does the top-19-by-variance control include any multi-target greedy PC that the judge gave the maximum OOD score?",
+   "answer": "No. The max-scored multi-target PCs are PC62, PC57 and PC86, all well outside PC1\u2013PC19.",
+   "rubric": [
+    "Answers no",
+    "Notes that PC62, PC57 and PC86 all have indices above 19"
+   ],
+   "batch": 3,
+   "orig_id": "q100"
+  },
+  {
+   "id": "q101",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team has only about 20 labeled examples from their new target domain. Should they use greedy selection or interp-selection to choose PCs, based on the paper?",
+   "answer": "Interp-selection is the safer choice. Greedy picks PCs by target AUROC and keeps adding them for gains as small as 0.001, so with about 20 labels it would largely fit noise. Even with hundreds of labels the paper treats greedy only as an optimistic upper bound. Interp-selection needs no target labels and still improved all three targets.",
+   "rubric": [
+    "Recommends interp-selection over greedy",
+    "Reason: greedy selects on target AUROC with a 0.001 threshold, so with very few labels it overfits noise (and is only an upper bound), whereas interp needs no labels"
+   ],
+   "batch": 3,
+   "orig_id": "q101"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team's new target closely resembles the source, and their full-representation probe already transfers well. Would the cheap top-k-by-variance control likely be enough there, based on the paper?",
+   "answer": "Likely yes. On Confirm, the easy case with a 0.874 baseline, the top-k-by-variance control matched greedy. Variance failed only on the harder targets, Report and Sandbagging, where the source's high-variance directions do not carry the target signal.",
+   "rubric": [
+    "Concludes top-k variance would likely suffice on an easy, source-like target",
+    "Reason: on Confirm (easy, high baseline) variance matched greedy, failing only on the harder targets"
+   ],
+   "batch": 3,
+   "orig_id": "q102"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants to use interp-selection to build a probe for sycophancy rather than deception, keeping the same source-PC pipeline. What part of the judge setup must change, and why?",
+   "answer": "They must change the scoring criterion in the judge prompt. The current prompt asks how useful each direction is for out-of-distribution deception and reserves high scores for general deception strategies. Left unchanged, it would select deny/deflect-style deception directions rather than sycophancy-relevant ones.",
+   "rubric": [
+    "States that the judge's rating criterion/prompt must be rewritten for the new behavior",
+    "Reason: the current prompt scores usefulness for OOD deception and rewards deception strategies, so it would select deception directions"
+   ],
+   "batch": 3,
+   "orig_id": "q103"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team ran greedy selection on one labeled deception target and wants to reuse that exact PC set for a different, unlabeled deception target. Does the paper's evidence support this?",
+   "answer": "Not well. The full-data greedy sets are largely target-specific. Report's and Confirm's sets share no PCs, and the largest overlap is only three PCs (PC62, PC57, PC9, between Report and Sandbagging). A set tuned to one target's labels mostly contains PCs that the other target's greedy search did not pick.",
+   "rubric": [
+    "Concludes reuse is not well supported",
+    "Reason: greedy sets overlap little across targets (Report and Confirm share none; at most 3 shared PCs)"
+   ],
+   "batch": 3,
+   "orig_id": "q104"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Inspired by the finding that source-heavy PCs are low-index, a team proposes simply dropping PC1\u2013PC12 and probing on PC13\u2013PC100. Does the paper directly support this rule?",
+   "answer": "No, it is not directly tested. The evidence is only suggestive: the source probe's top PCs are mostly PC1\u2013PC12 and are described as surface cues, and many greedy PCs are high-index. But greedy also picks low-index PCs (PC6 and PC9 for Report, PC9 for Sandbagging), and the paper never evaluates a PC13\u2013PC100 probe. The closest test, a large leftover set (the 81 interp-ablated PCs), underperformed.",
+   "rubric": [
+    "Concludes the rule is not directly supported/tested by the paper",
+    "Reason: some greedy PCs are low-index (e.g., PC6, PC9) and no PC13\u2013100 probe was evaluated; large leftover sets like the ablated-81 did poorly"
+   ],
+   "batch": 3,
+   "orig_id": "q105"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants a label-free diagnostic for whether their own source-trained deception probe relies on surface cues. Could they run the paper's judge on the PCs their probe weights most heavily, and how far could they trust the result?",
+   "answer": "Yes, as a descriptive diagnostic. In the paper the judge scored most of the source probe's top PCs (PC7, PC8, PC11, PC12) 3\u20134 and described them as surface cues, consistent with the source-PCA probe transferring only at baseline. Trust should be limited, though: the scores are noisy, and PC4, also a deny/admit direction, got a 6. The interpretations are not causally validated.",
+   "rubric": [
+    "Concludes it is usable as a descriptive/heuristic diagnostic",
+    "Reason: in the paper the judge flagged the source probe's top PCs as surface cues (scores 3\u20134), matching their poor transfer",
+    "Condition: limited trust because judge scores are noisy (e.g., PC4 scored 6) and not causally validated"
+   ],
+   "batch": 3,
+   "orig_id": "q106"
+  },
+  {
+   "id": "q107",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the interp-selected probe had lost to the full-representation baseline on Insider Trading Confirm only, which of the paper's statements would fail, and would the main interp-selection conclusion survive?",
+   "answer": "The statement that interp-selection beats the baseline on all three targets would fail. The main conclusion would largely survive, because the paper treats Confirm as uninformative: its baseline is already 0.874, near the ceiling, and every method except the ablated one performs about equally there. The meaningful-improvement claim rests on Report and Sandbagging.",
+   "rubric": [
+    "Identifies the 'outperforms baseline on all 3 targets' statement as the one that fails",
+    "States the main conclusion survives because Confirm is uninformative (near-ceiling baseline) and the claim rests on Report/Sandbagging"
+   ],
+   "batch": 3,
+   "orig_id": "q107"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Suppose the target-PCA probe had matched greedy AUROC on all three targets while its Jaccard overlap with greedy stayed at 0.08\u20130.18. Would the conclusion that target-side rankings fail to recover the transferable subspace still hold?",
+   "answer": "No. That conclusion rests mainly on performance: the target-PCA probe falls short of greedy on Confirm and goes below random on Sandbagging. If it matched greedy, a target-side ranking would recover transferable performance. The low Jaccard would then only show that different PC sets can transfer equally well, not that target ranking fails.",
+   "rubric": [
+    "Concludes the c4 conclusion would no longer hold",
+    "Reason: the conclusion rests on target-PCA's performance shortfall; low overlap alone would just show multiple sets can work"
+   ],
+   "batch": 3,
+   "orig_id": "q108"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c2",
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the full-representation baseline on Sandbagging had been about 0.85, close to the target-trained 100-PC probe (0.869), which reported Sandbagging results would lose their meaning?",
+   "answer": "The greedy gain of +0.23 over the baseline would be impossible, since it would push AUROC above 1. The 25% gap closure and the description of Sandbagging as the most out-of-distribution, hardest target would also no longer apply. Sandbagging would become near-ceiling and uninformative, like Confirm.",
+   "rubric": [
+    "Identifies the greedy +0.23 gain and/or the 25% gap-closure result as losing meaning",
+    "Reason: a near-ceiling baseline leaves no headroom, making Sandbagging uninformative like Confirm and undercutting its 'most OOD' characterization"
+   ],
+   "batch": 3,
+   "orig_id": "q109"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the source-heavy PCs PC7, PC8, PC11 and PC12 had each appeared in the greedy sets of two or more targets, which interpretive claim would lose its support?",
+   "answer": "The claim that the directions the source probe weights heavily encode source-specific surface cues, while the transferable directions encode the contrast more abstractly, would lose support. Directions the judge described as surface cues would then be among the most transferable, so the contrast between the two groups would collapse.",
+   "rubric": [
+    "Identifies the c6 claim (source-heavy = surface cues vs transferable = abstract) as undermined",
+    "Reason: surface-cue PCs would themselves be repeatedly selected as transferable, erasing the contrast"
+   ],
+   "batch": 3,
+   "orig_id": "q110"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the greedy oracle on Insider Trading Report had been only 0.80 while interp-selection still reached 0.881, which framing in the paper would be undermined?",
+   "answer": "Treating greedy as the upper bound or oracle, and describing interp-selection as partially recovering the transferable subspace, would both be undermined. Interp would exceed the oracle, so gap closure would be over 100% (about 0.175/0.094, roughly 186%). That would show greedy forward search had not found the best transferable subspace.",
+   "rubric": [
+    "Identifies the greedy-as-upper-bound/oracle framing (and 'partial recovery') as undermined",
+    "Reason: interp would exceed the oracle, giving >100% gap closure, so greedy would not be finding the best subspace"
+   ],
+   "batch": 3,
+   "orig_id": "q111"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If PC62 had appeared only in Report's greedy set and not in Sandbagging's, how would the multi-target evidence for the judge change?",
+   "answer": "There would be four multi-target PCs (PC57, PC9, PC81, PC86), and only two of them (PC57, PC86) would have the maximum score, i.e., 2 of 4 instead of 3 of 5. This is still above the source-PCA comparison (1 of top 5) but weaker, so the support for the judge partially recovering transferable directions would be thinner.",
+   "rubric": [
+    "States the count becomes 2 of 4 multi-target PCs with max score (PC57, PC86)",
+    "Concludes the evidence for c5 weakens (though still above the 1-of-5 source-PCA comparison)"
+   ],
+   "batch": 3,
+   "orig_id": "q112"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that interp-selection beats a randomly chosen 19-PC subset of the top 100 PCs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The controls are the full-representation baseline, the top-19 PCs by variance and the 81 interp-ablated PCs. No random 19-PC subset was evaluated, so the paper cannot rule out that many arbitrary small subsets of mostly higher-index PCs would also do well.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: no random-subset control was run; controls were baseline, top-19 variance and ablated-81"
+   ],
+   "batch": 3,
+   "orig_id": "q113"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the existence of an 8\u201315 PC transferable subspace show that Llama-3.1-8B-Instruct internally represents deception in a low-dimensional subspace? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The subspace is found by a target-guided greedy search that uses target labels. The pipeline is fully linear, and the paper itself calls the existence perhaps unsurprising. No causal ablation shows that the model uses these PCs, so the result concerns probe readout, not the model's internal representation.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: selection uses target labels in a linear pipeline and there is no causal validation, so it shows a readable subspace, not how the model represents deception"
+   ],
+   "batch": 3,
+   "orig_id": "q114"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the full-representation probe's poor transfer cannot be fixed by stronger regularization? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All probes use a single regularization strength (\u03bb = 10), and no other values were tried. The paper shows that subspace selection fixes transfer, but it does not test whether changing regularization would help.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: only \u03bb = 10 was used; regularization strength was never varied"
+   ],
+   "batch": 3,
+   "orig_id": "q115"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper establish, with a direct measure of distribution shift, that Sandbagging is the most out-of-distribution target? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper asserts that Sandbagging is the most out-of-distribution target and that the modest gain 'likely reflects' this. However, the only evidence is indirect, such as its lowest baseline AUROC (0.606) and the task description. No distance or shift statistic between Roleplaying and the targets is reported.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: the claim rests on indirect evidence (lowest baseline, task description) and is hedged ('likely'); no direct shift measure is reported"
+   ],
+   "batch": 3,
+   "orig_id": "q116"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the PCs the source probe weights heavily carry no information about deception in the target domains? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Several source-heavy PCs rank high in target separability: PC4, PC1, PC8 and PC7 for Confirm, and PC5, PC6, PC4, PC1 and PC18 for Report. Some also appear in greedy sets, such as PC6 for Report and PC41 for Sandbagging. They carry target signal; the problem is how source fitting weights them.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: source-heavy PCs (e.g., PC4, PC1, PC7, PC8, PC6) appear in target-separability rankings and some in greedy sets, so they do carry target information"
+   ],
+   "batch": 3,
+   "orig_id": "q117"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that using SAE features instead of PCs as the selection basis would give better-transferring deception probes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. SAE features appear only in Appendix C, where the decoder alignment of each PC is used to justify keeping the top 100 PCs because they are more interpretable. No probe was trained on an SAE-feature basis, so the paper says nothing about whether such a basis would transfer better.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: SAEs are used only to justify the 100-PC cutoff via alignment; no SAE-basis probe was trained or evaluated"
+   ],
+   "batch": 3,
+   "orig_id": "q118"
+  },
+  {
+   "id": "q119",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team recomputes the source PCA on a larger Roleplaying sample, keeping the same model, layer and pipeline. Can they keep using the paper's 19 interp-selected PC indices (e.g., PC62, PC57, PC86) without re-running the judge, and why?",
+   "answer": "No. The interp-selected set is a list of indices into one specific Roleplaying PCA basis. Recomputing PCA on different source data changes the components and their order, so 'PC62' would no longer name the same direction. The judge has to re-score the new PCs from their own source extremes. The paper only ever uses one basis.",
+   "rubric": [
+    "Says the indices cannot simply be reused, or that the judge must be re-run.",
+    "Reason: the selection refers to directions in one specific PCA basis, and recomputing PCA on new data changes or reorders the components."
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q120",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The judge prompt shows each PC's extreme examples as token-by-token activations, but the PCs and probes are built from response-level vectors. For which kind of PC could this make the judge's interpretation unreliable, and why?",
+   "answer": "The risk is a PC whose discriminative effect exists only at the level of the averaged response vector and has no salient token-level pattern. The judge infers the contrast from per-token activations. The PCA and probes, however, run on activations mean-pooled over the assistant response. The judge may therefore latch onto whatever lexical tokens stand out, rather than the response-level property the probe actually uses. The paper does not test this mismatch.",
+   "rubric": [
+    "Identifies PCs whose signal is diffuse or response-level rather than concentrated in particular tokens as the vulnerable case.",
+    "Reason: the judge sees token-level activations, while PCA and probes use mean-pooled response vectors, so the judge's evidence may not match what the probe uses."
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Section 4.2 calls the greedy probe an upper bound on transfer. Under what circumstance could some other source-fit PC subset beat it, and why is that possible given how greedy is run?",
+   "answer": "A better subset could exist if it can only be reached by adding PCs that do not individually raise AUROC by more than 0.001, or by combining PCs that greedy never tries together. Greedy forward selection adds one PC at a time and stops early, and it never searches all subsets. So 'upper bound' means it is optimistic because it uses target labels, not that it is the best possible subset.",
+   "rubric": [
+    "Says a better subset can exist, so greedy is not a guaranteed maximum.",
+    "Reason: greedy is one-at-a-time forward selection with a 0.001 stopping rule, not an exhaustive search; its 'upper bound' status comes from using target labels."
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team wants a single probe that also monitors held-out Roleplaying-style conversations. Does the paper establish that the 19-PC interp-selected probe will do as well in-distribution as the full-representation probe, and what does its account suggest?",
+   "answer": "The paper does not establish this, because it reports no held-out Roleplaying results for the interp probe. Its account suggests a possible in-distribution cost. The interp set leaves out the source probe's top-weighted PCs PC7, PC8, PC11 and PC12, which scored 3\u20134. The Conclusion says such surface cues support high in-distribution accuracy while hurting transfer.",
+   "rubric": [
+    "Says the paper does not establish in-distribution parity, or says a drop is plausible.",
+    "Reason: interp-selection drops the source-heavy surface-cue PCs (PC7, PC8, PC11, PC12) that the paper says support in-distribution accuracy, and no in-distribution numbers are reported."
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Could a reader rebuild the exact full-data Sandbagging greedy set used in Section 4.3 from Appendix D's 'Greedy selection / Sandbagging' row? Use the Jaccard value to explain.",
+   "answer": "Not exactly. The row lists 15 PCs, but Section 4.3 says k = 14. The Jaccard of 0.167 equals 4/24, which fits a 14-PC greedy set sharing four PCs (PC51, PC86, PC62, PC41) with the top-14 target ranking. With all 15 listed PCs it would be 4/25 = 0.16. So one of the listed PCs that is not shared is extra, and the paper does not say which.",
+   "rubric": [
+    "Says the listed row cannot be taken as the exact k = 14 set (it has 15 PCs).",
+    "Reason: the Jaccard of 0.167 matches 4 shared PCs out of a 24-PC union (14 + 14), not 15 + 14, so one non-shared listed PC is extra."
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q124",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why might no PC have scored above 6 on the judge's 1\u201310 OOD scale, given the judge prompt and the judge's own explanations for its top-scored PCs?",
+   "answer": "The prompt is built to be conservative. It asks for the narrowest accurate description, low scores (1\u20134) for surface, brittle or context-dependent directions, and scores of 5 or more only for plausibly general strategies. Even the general-looking PCs come with caveats in the judge's explanations. PC62 is noisy because honest speakers also deny, PC57 is brittle and lexical, and PC86 gives false positives from politeness or privacy. Those caveats hold the scores down to the low end of the 5+ band.",
+   "rubric": [
+    "Attributes the 6 ceiling to the prompt's conservative scoring instructions (narrowest description, 1\u20134 for brittle or surface cues, 5+ only for general strategies).",
+    "Notes that even the best PCs' explanations list noise or brittleness caveats, which keep their scores moderate."
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q125",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "PC4 ranks in the top-k target-separability list for all three targets, got the maximum OOD score, and is a top-5 source-probe PC. Why does it appear in none of the full-data greedy sets?",
+   "answer": "Greedy keeps PCs that help transfer when their weights are fit on source data, not PCs that separate the target when weighted on target data. PC4's source-side contrast leans on surface cues such as explicit 'Yes'/'No' turns and defensive phrasing. Its source-fit weight therefore does not carry over well. This is the paper's general finding that the best target-separating PCs are not the ones that keep transferring when weighted using source data.",
+   "rubric": [
+    "States that target separability does not imply transfer once the weights are fit on source data.",
+    "Links this to PC4 relying on source surface cues (explicit Yes/No, defensive phrasing), so its source-fit weight does not carry over."
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The top-19-by-variance control contains three Report greedy PCs (PC6, PC9, PC14) and the max-scored PC4, yet it loses badly to interp-selection on Insider Trading Report. Why?",
+   "answer": "PC1\u2013PC19 also include PC7, PC8, PC11 and PC12, along with PC1\u2013PC3 and PC5. These are the PCs the source probe weights most heavily, and the judge describes the first four as surface cues. A probe fit on source data in this subspace leans on them again. The source-PCA probe built on such PCs transfers only about as well as the baseline, so having a few useful PCs present does not rescue transfer.",
+   "rubric": [
+    "Points out that the variance-19 set also contains the source-heavy surface-cue PCs (PC7, PC8, PC11, PC12, and/or PC1\u2013PC5).",
+    "Reason: a source-fit probe leans on those PCs, as shown by the source-PCA probe transferring about as well as the baseline, which swamps the useful PCs."
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the Limitations section call the existence of a transferable subspace 'perhaps unsurprising', given the Section 4.1 results?",
+   "answer": "In the same 100-PC space, a target-trained linear probe reaches 0.936, 0.950 and 0.869. So a good linear separator for each target already exists there. Greedy uses target labels to choose which coordinates the source-fit probe may use. In a fully linear pipeline, finding a subset where the source-fit weights roughly line up with that separator is a modest requirement.",
+   "rubric": [
+    "Notes that target-trained linear probes in the same 100-PC space already separate the targets well (0.87\u20130.95).",
+    "Reason: greedy only needs to use target labels to pick coordinates where the source-fit linear weights approximate that separator, which is easy in a linear pipeline."
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why does greedy selection stop at 8\u201315 PCs rather than growing toward all 100, even though each added PC gives the probe more information?",
+   "answer": "Each added PC also gives the source-fit probe more room to put weight on directions that do not generalize. The limiting case, training on everything, is the poorly transferring baseline. After the first few transferable PCs, further additions stop raising target AUROC by more than 0.001, so greedy stops.",
+   "rubric": [
+    "States that adding more PCs lets the source-fit probe re-weight toward non-generalizing directions, so target AUROC stops improving.",
+    "Supports this with the poor transfer of the full-representation baseline (the 'use everything' limit) together with the 0.001 stopping rule."
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Sandbagging has more evaluation examples than Insider Trading Report (621 vs 255 after removing ambiguous labels). Why does the paper still treat the Report interp result as the more robust one?",
+   "answer": "Robustness here is about effect size, not sample size. On Report, interp-selection gains 0.175 AUROC (0.706 to 0.881) and closes 78% of the gap. On Sandbagging it gains only 0.056 (0.606 to 0.662) and closes 25%. A more precisely measured small effect is still a small effect.",
+   "rubric": [
+    "Says the Report result is more robust because its gain is much larger (about 0.175 vs 0.056, or 78% vs 25% gap closure).",
+    "Notes that Sandbagging's larger sample gives a more precise estimate but does not make a small gain larger or more convincing."
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q131",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-p2",
+   "question": "Does PC4 appear in the top-k target-separability ranking (k = 13 / 7 / 14) of at least one target?",
+   "answer": "Yes, in all three. It is 8th for Report, 1st for Confirm and 7th for Sandbagging, all within the respective k.",
+   "rubric": [
+    "Answers yes.",
+    "Says it appears for every target, or gives its positions within k (8th, 1st, 7th)."
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q132",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-p2",
+   "question": "Does PC4 appear in at least one target's full-data greedy set?",
+   "answer": "No. PC4 is absent from the Report, Confirm and Sandbagging greedy sets, despite its strong target separability and its maximum OOD score.",
+   "rubric": [
+    "Answers no.",
+    "Says it is absent from all three greedy sets."
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q133",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p3",
+   "question": "On Insider Trading Report, do the full-data greedy set and the top-13 target-separability ranking share more than one PC?",
+   "answer": "Yes, four: PC6, PC89, PC14 and PC66. This matches the Jaccard of 0.182 = 4/(13 + 13 \u2212 4).",
+   "rubric": [
+    "Answers yes (four shared PCs).",
+    "Supports it by listing the shared PCs or by deriving 4 from the Jaccard of 0.182 with two 13-PC sets."
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q134",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p3",
+   "question": "On Insider Trading Confirm, do the full-data greedy set and the top-7 target-separability ranking share more than one PC?",
+   "answer": "No, only PC53. This matches the Jaccard of 0.077 = 1/13.",
+   "rubric": [
+    "Answers no (only one shared PC).",
+    "Names PC53 or derives one overlap from the Jaccard of 0.077 with two 7-PC sets."
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q136",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": "b4-p5",
+   "question": "Does any of PC1\u2013PC5 appear in any target's full-data greedy set?",
+   "answer": "No. None of the five highest-variance PCs is selected by greedy for Report, Confirm or Sandbagging.",
+   "rubric": [
+    "Answers no.",
+    "Says none of the three greedy sets contains PC1\u2013PC5."
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q137",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": "b4-p5",
+   "question": "Does any of PC6\u2013PC10 appear in any target's full-data greedy set?",
+   "answer": "Yes. PC6 is in the Report greedy set, and PC9 is in both the Report and Sandbagging greedy sets.",
+   "rubric": [
+    "Answers yes.",
+    "Names PC6 (Report) and/or PC9 (Report and Sandbagging)."
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q138",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team has a modest labeled set from a new target and wants to know, before investing in PC selection, whether selection has room to help. Which of the paper's experiments should they replicate, and how should they read it?",
+   "answer": "They should replicate Section 4.1: train a target-trained probe on the top-100 source PCs with cross-validation, and compare it to the source-trained full-representation baseline. A small gap, as on Confirm (0.874 vs 0.950), means little headroom. Large gaps, as on Report (0.706 vs 0.936) and Sandbagging (0.606 vs 0.869), mean the information is present and the source probe's direction is the problem, which is where selection paid off.",
+   "rubric": [
+    "Recommends comparing a target-trained 100-PC probe (CV) with the source-trained baseline.",
+    "Reads the result as follows: a large gap means selection can help (as on Report and Sandbagging), and a small gap means little headroom (as on Confirm)."
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q139",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team proposes replacing the logistic-regression probe on full representations with a nonlinear MLP probe trained on Roleplaying, hoping this fixes OOD transfer. Does the paper's evidence support that expectation?",
+   "answer": "No. The paper finds that capacity is not the bottleneck: linear probes trained on target data in the same 100-PC space reach 0.87\u20130.95. Transfer fails because the source probe learns a direction that does not generalize. A more flexible source-trained probe has, if anything, more freedom to fit source-specific cues. Nonlinear probes are explicitly untested.",
+   "rubric": [
+    "Says the paper does not support expecting a nonlinear probe to fix transfer (untested, or doubtful).",
+    "Reason: linear target-trained probes already succeed, so the failure lies in which direction is learned from source data, not in probe capacity."
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team has labels for only one target and wants to validate an LLM judge the way Section 4.4 does. Can they reproduce that validation, and why?",
+   "answer": "Not as designed. Section 4.4 checks the judge against PCs that appear in more than one target's greedy set, and that requires greedy runs on at least two labeled targets. With one target they can only compare against that target's greedy set. That set mixes in target-specific PCs, so it is a weaker yardstick.",
+   "rubric": [
+    "Says the multi-target validation cannot be reproduced with only one labeled target.",
+    "Reason: it needs greedy sets from two or more targets in order to find shared PCs, and a single target's set includes target-specific PCs."
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q141",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants a larger interp subspace and proposes keeping every PC the judge scored 5 or 6 instead of only PCs scored 6 in both runs. What does the paper say about how this would perform?",
+   "answer": "The paper does not settle this. Its prompt reserves 5+ for directions plausibly tied to general deception strategies, so 5s are judge-endorsed to some degree. But the paper only evaluates the stricter 6-in-both-runs set. It does show that adding non-selected PCs (the 81-PC ablated set) performs worse, so a looser threshold risks diluting the subspace.",
+   "rubric": [
+    "Says the outcome is untested, or not settled, by the paper.",
+    "Notes that only the max-in-both-runs set was evaluated, and/or that adding non-selected PCs (ablated-81) does worse, so dilution is a risk."
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team with no target labels must choose between a probe on the top-k PCs ranked by source-probe weights and the interp-selected 19-PC probe. Which should they pick, based on the paper?",
+   "answer": "The interp-selected probe. The source-PCA-ranked probe transfers about as well as the full-representation baseline. The interp-selected probe beats the baseline on all three targets, by a lot on Report (0.706 to 0.881). Neither method needs target labels.",
+   "rubric": [
+    "Chooses the interp-selected probe.",
+    "Reason: the source-weight ranking only matches the baseline, while interp-selection beats the baseline on every target; both are label-free."
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q143",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If PC4 had turned up in all three targets' greedy sets, which of the paper's claims would be weakened?",
+   "answer": "It would weaken the claim that the PCs the source probe relies on are the ones that do not generalize, and the split between source-heavy surface directions and transferable ones (c4, c6). PC4 is one of the source probe's top five PCs, so a source-heavy PC would be transferring on every target.",
+   "rubric": [
+    "Names the claim that source-heavy PCs don't generalize, or the surface-vs-transferable distinction (c4 and/or c6).",
+    "Reason: PC4 is a top-5 source-probe PC, so its presence in every greedy set would show a source-heavy direction transferring."
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q144",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If Sandbagging's greedy set had shared no PCs with the other two targets' greedy sets, what would happen to Section 4.4's evidence that the judge recovers transferable directions?",
+   "answer": "It would disappear. All five multi-target PCs involve Sandbagging (PC62, PC57 and PC9 shared with Report; PC81 and PC86 shared with Confirm), and Report and Confirm share none. So there would be no multi-target PCs, and the '3 of 5 got the maximum score' check could not be made.",
+   "rubric": [
+    "Says the 3-of-5 multi-target evidence would vanish.",
+    "Reason: every multi-target PC involves Sandbagging, and Report and Confirm share no greedy PCs, so there would be zero multi-target PCs."
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q145",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Section 4.3 sets k for the probe-weight rankings from a single full-data greedy run (13 / 7 / 14). If the cross-validated greedy subset sizes had varied wildly instead of averaging 15 / 8 / 14, which part of Section 4.3 would be weakened, and why?",
+   "answer": "The fairness of the ranking-versus-greedy comparison, and with it the conclusion that both rankings fail, would be weakened. That comparison relies on full-data greedy giving one stable k that fairly sizes the rankings. If the CV subset sizes had varied wildly, that k would look arbitrary, and the ranking results might reflect a poor choice of k.",
+   "rubric": [
+    "Names the k-matching in Section 4.3 and the conclusion that the probe-weight rankings fail.",
+    "Reason: the comparison depends on full-data greedy giving a stable, representative k, which the close CV averages currently support."
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q146",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose the source-trained probe on all top-100 PCs (Figure 2, orange) had transferred nearly as well as the target-trained 100-PC probe. Which conclusion from Section 4.1 would fail?",
+   "answer": "The conclusion that the source probe learns a direction within the subspace that does not generalize would fail. Restricting to the top-100 PCs would itself fix transfer, so the case for selecting a subset within the 100 PCs would lose its motivation.",
+   "rubric": [
+    "Names the conclusion that the source probe learns a non-generalizing direction within the subspace (and/or the need for subset selection).",
+    "Reason: if the full 100-PC source probe transferred well, projecting onto those PCs would be enough and selection would be unnecessary."
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q147",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the judge had described PC62, PC57 and PC86 as lexical or stylistic surface cues, while they remained in multiple greedy sets, which interpretive claim would lose its support?",
+   "answer": "The claim that transferable directions encode the contrast more abstractly, as deny/deflect or hedging strategies, would lose its support. So would the explanation for why the judge can pick them out. The paper's main evidence for 'abstract' is exactly these judge descriptions of the multi-target PCs.",
+   "rubric": [
+    "Names the claim that transferable PCs encode abstract or general strategies (c6), and/or the judge's mechanism for recovering them (c5).",
+    "Reason: that claim rests on the judge's descriptions of these multi-target PCs as general strategies."
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q148",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If interp-selection had closed 78% of the gap on Sandbagging but only 25% on Insider Trading Report, which explanation in the Limitations section would be contradicted?",
+   "answer": "The explanation that Sandbagging's modest gain reflects it being the most out-of-distribution target would be contradicted, along with the statement that the Report result is the more robust one. The target described as most shifted would then show the larger recovery.",
+   "rubric": [
+    "Names the distribution-shift explanation for Sandbagging's small gain, and/or the claim that Report's result is more robust.",
+    "Reason: the most-OOD target would then show the larger gain, which contradicts that account."
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that PCs which individually separate target classes well do not transfer when fit on source data? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The hypothesis is about PCs that separate the target classes 'by themselves', but the test ranks PCs by standardized coefficients in a joint probe trained on target data. A coefficient reflects a PC's contribution given the other PCs, not its standalone separability. So single-PC separability was never directly tested.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the ranking uses joint multivariate probe coefficients rather than each PC's individual separability."
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q150",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the judge never gives the maximum OOD score to a PC the source probe weights heavily? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. PC4 is one of the source probe's top five PCs and received the maximum score of 6. The paper notes that 1 of the top 5 source PCs got the maximum score.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites PC4, a top-5 source-probe PC scored 6."
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q151",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that targets drawn from the same scenario (Insider Trading Report and Insider Trading Confirm) share a common transferable subspace? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted, at least for the greedy sets. Report's and Confirm's greedy sets share no PCs. Each shares PCs only with Sandbagging: PC62, PC57 and PC9 with Report, and PC81 and PC86 with Confirm.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: the Report and Confirm greedy sets have no PCs in common, and their overlaps are only with Sandbagging."
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q152",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that every PC appearing in more than one target's greedy set encodes an abstract, general deception strategy? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted by its own Table 3. PC9 is described as domain-specific lexical cues (medical/leave vs project language), and PC81 as relying on surface and formal cues. Both scored 3 even though each helped two targets.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites PC9 and/or PC81 as multi-target greedy PCs described as surface or domain cues."
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q153",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that interp-selection's gain on a target grows with the number of that target's greedy PCs the judge recovers? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled, and the visible evidence points the other way. Among the known max-scored PCs, Sandbagging's greedy set contains three (PC62, PC57, PC86) and Report's only two (PC62, PC57). Yet Report gains far more (78% vs 25% gap closure). The overlap for the other interp-selected PCs is not reported, so no relationship is established.",
+   "rubric": [
+    "Answers not settled (or says the evidence runs against it).",
+    "Reason: Sandbagging contains at least as many known max-scored greedy PCs as Report yet gains less, and the full overlaps are not reported."
+   ],
+   "batch": 4,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q154",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that reliance on source-specific surface cues is what causes the full-representation probe's poor transfer? Answer supported, contradicted or not settled, and why.",
+   "answer": "Only partly. Changing which PCs the probe may use does change transfer: source-heavy PCs give baseline-level transfer, while greedy and interp subsets do better. But the claim that those PCs are 'surface cues' rests on the judge's descriptions, and the authors state these are descriptive, with no causal ablation. So the surface-cue mechanism is not settled.",
+   "rubric": [
+    "Answers not settled (or partially supported).",
+    "Reason: the subspace-restriction experiments show which PCs hurt transfer, but the 'surface cue' characterisation is descriptive only, with no causal validation."
+   ],
+   "batch": 4,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q155",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "The judge prompt in Appendix B shows each PC's most and least activating Roleplaying examples but not their honest/deceptive labels. What kind of PC could this lead the judge to over-rate, and why?",
+   "answer": "The judge could over-rate a PC whose two poles differ in wording that looks like a deny-versus-admit or hedging contrast but that does not actually separate honest from deceptive responses. For example, both poles might consist mostly of deceptive responses, which is likely because 172 of the 231 non-ambiguous Roleplaying examples are deceptive. The judge never sees labels, so it can only infer deception relevance from the text, not check that the PC tracks the labels.",
+   "rubric": [
+    "Identifies a PC whose poles look like a deception-relevant contrast but do not track the honest/deceptive labels (e.g., both poles mostly deceptive).",
+    "Reason: the judge sees no labels, so its score rests only on how the text reads, not on measured label separation.",
+    "Optionally notes that the source is skewed toward deceptive examples (172 vs 59 after removing ambiguous ones), so many extremes may share a class."
+   ],
+   "batch": 5,
+   "orig_id": "q155"
+  },
+  {
+   "id": "q156",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Consider a target domain where the deceptive part of each response is a single sentence inside a long, otherwise ordinary assistant reply. Would the paper's pipeline be expected to detect it as well as on the paper's targets, and why?",
+   "answer": "The paper gives no assurance that it would. Activations are averaged over all assistant tokens, so a short deceptive span contributes only a small share of the response vector. Its projection onto any PC, including the transferable ones, would therefore shift only slightly. The pipeline was tested only on the four datasets with this pooling.",
+   "rubric": [
+    "Concludes that performance is not assured or likely degrades.",
+    "Reason: mean-pooling over all assistant tokens dilutes a short deceptive segment, so projections onto the PCs shift little.",
+    "Notes that the paper only tested its four datasets with this pooling."
+   ],
+   "batch": 5,
+   "orig_id": "q156"
+  },
+  {
+   "id": "q157",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Interp-selection scores each PC on its own, but greedy adds whichever PC most improves AUROC given the PCs already chosen. Why might interp-selection miss PCs that matter for transfer, using the paper's evidence on standalone PC properties?",
+   "answer": "Some PCs may help transfer only in combination with others, because greedy evaluates each candidate conditional on the current subset. The paper shows that standalone properties do not determine transfer contribution. Target-separability rankings overlap greedy sets by less than a fifth (Jaccard 0.182/0.077/0.167), and probes on those PCs can even fall below random on Sandbagging. A per-PC judgment can therefore miss PCs whose value appears only jointly.",
+   "rubric": [
+    "Concludes that interp-selection can miss PCs useful only jointly with others.",
+    "Reason: greedy picks PCs conditionally on the current subset, and the paper shows standalone PC properties (target separability) poorly match greedy sets (low Jaccard, target-PCA failure)."
+   ],
+   "batch": 5,
+   "orig_id": "q157"
+  },
+  {
+   "id": "q158",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Would the target-PCA probe's good Insider Trading Report result be expected to hold on fresh Report examples that were not used to build its PC ranking, and why?",
+   "answer": "Not necessarily. The ranking comes from a probe trained on Report labels, and the paper describes no held-out split for this ranking. Like greedy, it is a label-informed selection whose AUROC may be optimistic. It is not a label-free OOD estimate like interp-selection's.",
+   "rubric": [
+    "Concludes that the result may not hold, or may be optimistic.",
+    "Reason: the PC ranking uses target labels (a probe trained on target data), with no held-out split described, so it is label-informed like greedy rather than a clean OOD estimate."
+   ],
+   "batch": 5,
+   "orig_id": "q158"
+  },
+  {
+   "id": "q159",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the finding that only 1 of the top 5 source-PCA PCs received the maximum OOD score not, by itself, show that the judge scores source-heavy PCs lower than a typical PC?",
+   "answer": "19 of the 100 PCs received the maximum score in both runs, so a random set of 5 PCs would be expected to contain about one max-scored PC. One out of five (20%) is roughly the chance rate. The more direct evidence that the judge marks source-heavy PCs down is Table 4, where PC7, PC8, PC11 and PC12 get scores of 3\u20134 with surface-cue explanations.",
+   "rubric": [
+    "States that 1 of 5 is roughly what chance would give.",
+    "Reason: 19 of 100 PCs got the max score (about 19%), so the expected count in 5 PCs is about 1."
+   ],
+   "batch": 5,
+   "orig_id": "q159"
+  },
+  {
+   "id": "q160",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does Section 4.1 train its target-trained probe in the source top-100 PC basis rather than in a PCA basis computed on the target data?",
+   "answer": "Every selection method in the paper picks PCs from the source top-100 basis. The relevant question is therefore whether that particular subspace contains enough information to separate the target classes. A target-trained probe in that basis reaching 0.936/0.950/0.869 shows that it does, so source-probe failures reflect a poorly chosen direction rather than a missing subspace. A probe in a target-derived basis would not test the subspace the methods actually use.",
+   "rubric": [
+    "Explains that the test checks whether the specific source subspace used by all selection methods contains the target signal.",
+    "Reason: success there (0.936/0.950/0.869) shows the failure lies in the direction the source probe learns, not in the basis, which a target-derived basis could not show."
+   ],
+   "batch": 5,
+   "orig_id": "q160"
+  },
+  {
+   "id": "q161",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Using the judge's scores, give a reason why the interp-selected probe on Insider Trading Report (0.881) falls short of the greedy oracle (0.929).",
+   "answer": "The judge's selection differs from greedy's in both directions. PC9, which is in Report's greedy set (and Sandbagging's), received only 3 and was excluded. Meanwhile, PC4, a top source-probe PC that appears in no greedy set, received 6 and was included. Interp-selection thus drops some transferable PCs and admits some that greedy never needed.",
+   "rubric": [
+    "Points to a specific mismatch: a Report greedy PC (PC9) scored 3 and was excluded, and/or a non-greedy, source-heavy PC (PC4) scored 6 and was included.",
+    "Reason: interp-selection's subset therefore misses some transferable directions and includes non-transferring ones, unlike the label-guided greedy set."
+   ],
+   "batch": 5,
+   "orig_id": "q161"
+  },
+  {
+   "id": "q162",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p_thresh",
+   "question": "If greedy's stopping threshold were lowered from 0.001 to 0.0001 AUROC, would this change which PC greedy adds first for a given target?",
+   "answer": "No. The first step adds whichever single PC most improves target AUROC, which does not depend on the threshold. The threshold only decides when to stop adding PCs.",
+   "rubric": [
+    "Answers no.",
+    "Reason: the first pick is the single best PC; the threshold only governs stopping."
+   ],
+   "batch": 5,
+   "orig_id": "q162"
+  },
+  {
+   "id": "q163",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p_thresh",
+   "question": "If greedy's stopping threshold were lowered from 0.001 to 0.0001 AUROC, could the selected subsets become larger than 13 / 7 / 14 PCs?",
+   "answer": "Yes. Candidates that improve AUROC by between 0.0001 and 0.001 would no longer trigger a stop. Greedy could therefore keep adding PCs past the current sizes.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: small gains that previously ended the search (between 0.0001 and 0.001) would now be accepted, so more PCs could be added."
+   ],
+   "batch": 5,
+   "orig_id": "q163"
+  },
+  {
+   "id": "q164",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": "b5-p_newtarget",
+   "question": "If a fourth deception target dataset were added to the evaluation, would the 19 interp-selected PCs have to change?",
+   "answer": "No. Interp-selection uses only the judge's reading of Roleplaying extremes and never looks at any target. The same 19 PCs would be used for the new target.",
+   "rubric": [
+    "Answers no.",
+    "Reason: selection depends only on source (Roleplaying) examples and the judge, not on target data."
+   ],
+   "batch": 5,
+   "orig_id": "q164"
+  },
+  {
+   "id": "q165",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": "b5-p_newtarget",
+   "question": "If a fourth deception target dataset were added to the evaluation, would greedy selection have to be re-run to obtain a PC subset for it?",
+   "answer": "Yes. Greedy selects PCs by their AUROC on labeled target examples, so each new target needs its own run with labels. The existing greedy sets are also strongly target-specific; for example, Report's and Confirm's share no PCs.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: greedy is guided by target-label AUROC and the existing sets differ across targets, so a new target needs its own labeled run."
+   ],
+   "batch": 5,
+   "orig_id": "q165"
+  },
+  {
+   "id": "q166",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p_baserate",
+   "question": "Suppose the judge had scored PC62 and PC57 at 3 instead of 6, with about 19 of 100 PCs still getting the maximum score. Would the multi-target greedy PCs then still receive the maximum score clearly more often than chance?",
+   "answer": "No. Only PC86 would remain, so 1 of the 5 multi-target PCs would be max-scored (20%). That is essentially the base rate of about 19 of 100 PCs.",
+   "rubric": [
+    "Answers no.",
+    "Reason: 1 of 5 (20%) is about equal to the overall max-score rate of about 19%."
+   ],
+   "batch": 5,
+   "orig_id": "q166"
+  },
+  {
+   "id": "q167",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p_baserate",
+   "question": "Suppose the judge had additionally scored PC9 at 6, with about 19 of 100 PCs still getting the maximum score. Would the multi-target greedy PCs then receive the maximum score clearly more often than chance?",
+   "answer": "Yes. 4 of the 5 multi-target PCs (PC62, PC57, PC86, PC9) would be max-scored, or 80%. That is far above the base rate of about 19%.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: 4 of 5 (80%) far exceeds the roughly 19% overall rate of max scores."
+   ],
+   "batch": 5,
+   "orig_id": "q167"
+  },
+  {
+   "id": "q168",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team can only afford a 10-PC probe and wants the 10 most promising PCs from the paper's interp-selection. Can the paper's judge scores tell them which 10 to keep?",
+   "answer": "No. All 19 interp-selected PCs received the same score, the observed maximum of 6, in both runs, so the scores give no ordering among them. The team would need some additional criterion, which the paper does not provide or test.",
+   "rubric": [
+    "Answers no.",
+    "Reason: all 19 PCs are tied at the maximum score (6) in both runs, so there is no ranking within the set."
+   ],
+   "batch": 5,
+   "orig_id": "q168"
+  },
+  {
+   "id": "q169",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team proposes replacing the judge's 1\u201310 OOD score with a simple yes/no answer on whether a PC is a general deception strategy. Would this discard information that the paper's selection rule actually uses?",
+   "answer": "Largely no. The paper's rule only checks whether a PC reached the observed maximum score (6) in both runs; gradations below that are never used. The selection rule therefore depends only on where the yes/no cutoff falls, which should correspond to the paper's top score level rather than a lower one.",
+   "rubric": [
+    "Concludes that little or no information used by the rule is lost.",
+    "Reason: selection only uses whether a PC hit the observed maximum in both runs; lower score gradations are ignored.",
+    "Condition: holds if the yes cutoff matches the paper's top score level rather than admitting lower-scored PCs."
+   ],
+   "batch": 5,
+   "orig_id": "q169"
+  },
+  {
+   "id": "q170",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team reuses the paper's judge prompt but deletes the instruction to give low scores to surface cues, lexical habits and task-specific phrasing. What would the paper's evidence predict about which PCs get selected, and about transfer?",
+   "answer": "Selection would likely get worse. The judge described PC7 and PC8 as deny/deflect-versus-admit contrasts but scored them 3\u20134 only because they rely on surface cues like an explicit 'No'/'Yes'. Without that instruction they could score as high as PC4 and enter the subspace. These are among the PCs the source probe weights most heavily, and a probe built on such PCs transfers no better than the baseline.",
+   "rubric": [
+    "Predicts that more source-heavy surface-cue PCs (e.g., PC7, PC8) would be selected and transfer would suffer.",
+    "Reason: these PCs were marked down specifically for surface reliance despite describing deny/admit contrasts, and source-probe-heavy PCs transfer only about as well as the baseline."
+   ],
+   "batch": 5,
+   "orig_id": "q170"
+  },
+  {
+   "id": "q171",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7",
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If a causal ablation of PC62, PC57 and PC86 during inference had shown no effect on the model's deny/deflect or hedging behavior, which claim would lose support and which reported results would still stand?",
+   "answer": "The interpretive claim that these PCs encode general deny/deflect or hedging strategies would lose support. The AUROC results do not depend on the PCs' causal role, so they would still stand. These include the existence of a small transferable subspace and interp-selection's gains over baseline.",
+   "rubric": [
+    "Identifies the interpretive claim about what the transferable PCs encode (c6) as weakened.",
+    "States that the transfer/AUROC results (greedy subspace existence, interp-selection gains) are unaffected because they do not rely on a causal role."
+   ],
+   "batch": 5,
+   "orig_id": "q171"
+  },
+  {
+   "id": "q172",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the judge prompt had also included descriptions of the three target datasets, which property of interp-selection, as the paper presents it, would be compromised?",
+   "answer": "Its status as a method that uses no target data would be compromised. Its AUROCs could then no longer be read as clean out-of-distribution estimates, because target information would enter the PC choice. Without labels it would be less target-informed than greedy, but no longer fully target-blind.",
+   "rubric": [
+    "Identifies the claim that interp-selection uses no target data and gives genuine OOD estimates.",
+    "Reason: target information would influence which PCs are selected, making selection partly target-guided."
+   ],
+   "batch": 5,
+   "orig_id": "q172"
+  },
+  {
+   "id": "q173",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "The target-PCA ranking uses coefficients from a probe trained on Sandbagging data in the source-PC basis. If the Section 4.1 target-trained 100-PC probe had been near chance on Sandbagging, would the target-PCA probe's below-random transfer still count as evidence against the hypothesis that transferable PCs are the target-separating ones?",
+   "answer": "No. If the target-trained probe could not separate Sandbagging classes, its coefficients would be close to noise, and ranking by them would not identify target-separating PCs at all. The actual 0.869 shows that those coefficients reflect real target separability. Only because of that is the below-random transfer meaningful evidence against the hypothesis.",
+   "rubric": [
+    "Answers no.",
+    "Reason: the ranking is only meaningful if the target-trained probe genuinely separates the classes, which the reported 0.869 establishes."
+   ],
+   "batch": 5,
+   "orig_id": "q173"
+  },
+  {
+   "id": "q174",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its probes detect deception as it actually occurred, independently of how GPT-4o judged each response? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Every honest/deceptive label in all four datasets was assigned by GPT-4o, and ambiguous cases were dropped. The reported AUROCs therefore measure agreement with GPT-4o's judgments, and no independent ground truth is used.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: all labels come from GPT-4o, so the AUROCs measure agreement with its labels rather than verified deception."
+   ],
+   "batch": 5,
+   "orig_id": "q174"
+  },
+  {
+   "id": "q175",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that PC subspace selection improves out-of-distribution transfer for probes of behaviors other than deception (e.g., refusal or harmful intent)? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All source and target datasets are deception datasets, so the paper tests no other behavior. Its broad framing that OOD robustness is 'largely determined by subspace selection' is evidenced only for deception probes.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: only deception datasets (Roleplaying and three deception targets) are evaluated."
+   ],
+   "batch": 5,
+   "orig_id": "q175"
+  },
+  {
+   "id": "q176",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that selecting a subspace in the source-PCA basis transfers better than selecting a subset of the model's raw activation dimensions? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper motivates the PC basis by not assuming that latent dimensions are privileged, but it never runs a selection over raw dimensions. Its only raw-activation comparison is the full-representation baseline, which uses all dimensions at once.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: there is no raw-dimension subset-selection baseline; the only raw-activation probe uses all dimensions."
+   ],
+   "batch": 5,
+   "orig_id": "q176"
+  },
+  {
+   "id": "q177",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the target-trained 100-PC probe's AUROCs (0.936 / 0.950 / 0.869) are the best a linear probe could achieve on these targets? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. That probe is restricted to the top-100 source PCs; its purpose is only to show that this subspace holds enough information. The paper reports no target-trained probe on the full representation or on other subspaces, so a higher achievable ceiling is not ruled out.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the probe is confined to the top-100 source-PC subspace, and no target-trained probe on the full representation is reported."
+   ],
+   "batch": 5,
+   "orig_id": "q177"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q12",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": "b4-p1",
+   "question": "Does the full-data greedy set for Sandbagging (Appendix D) contain any PC from the source-probe-weight list?",
+   "answer": "Yes. PC41 is on the source-probe-weight list (14th) and also in the Sandbagging greedy set.",
+   "rubric": [
+    "Answers yes.",
+    "Names PC41 as the shared PC."
+   ],
+   "batch": 4,
+   "orig_id": "q12",
+   "reject": "near-duplicate of q54"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-p4",
+   "question": "Does the Sandbagging top-14 target-separability ranking include any of the five PCs that appear in more than one target's greedy set?",
+   "answer": "Yes. It includes PC86 and PC62, both multi-target greedy PCs that the judge gave the maximum score. Even so, the target-PCA probe built on this ranking transfers below random on Sandbagging.",
+   "rubric": [
+    "Answers yes.",
+    "Names PC86 and/or PC62."
+   ],
+   "batch": 4,
+   "orig_id": "q18",
+   "reject": "near-duplicate of q99"
+  },
+  {
+   "id": "q130",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": "b4-p1",
+   "question": "Does the full-data greedy set for Sandbagging contain any of the source probe's five most heavily weighted PCs (PC7, PC8, PC11, PC12, PC4)?",
+   "answer": "No. None of PC7, PC8, PC11, PC12 or PC4 appears in the Sandbagging greedy set. Its only overlap with the source list is the low-ranked PC41.",
+   "rubric": [
+    "Answers no.",
+    "Notes that the only overlap with the source list is a low-ranked PC (PC41), not one of the top five."
+   ],
+   "batch": 4,
+   "orig_id": "q13",
+   "reject": "twin dropped"
+  },
+  {
+   "id": "q135",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b4-p4",
+   "question": "Does the Insider Trading Report top-13 target-separability ranking include any of the five PCs that appear in more than one target's greedy set?",
+   "answer": "No. None of PC62, PC57, PC9, PC81 or PC86 is in Report's top-13. Even so, the target-PCA probe does well on Report.",
+   "rubric": [
+    "Answers no.",
+    "Shows that none of the five multi-target PCs (PC62, PC57, PC9, PC81, PC86) is in the list."
+   ],
+   "batch": 4,
+   "orig_id": "q19",
+   "reject": "twin dropped"
+  }
+ ],
+ "types": {
+  "failure": 27,
+  "why": 30,
+  "counterfactual": 36,
+  "transfer": 26,
+  "connect": 27,
+  "scope": 29
+ }
+}

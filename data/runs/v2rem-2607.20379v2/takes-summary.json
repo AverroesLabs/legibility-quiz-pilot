@@ -1,0 +1,122 @@
+{
+ "paper": "2607.20379v2-rem",
+ "kept": 39,
+ "samples": 3,
+ "rows": 936,
+ "failed": 0,
+ "unanswered": 0,
+ "truncated": 2,
+ "quote_not_found": 15,
+ "points_awarded": 640,
+ "readers": {
+  "openai/gpt-5.6-sol": {
+   "none": {
+    "mean": 0.4658,
+    "ci95": [
+     0.3803,
+     0.547
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 0.7407,
+    "minus_orig": -0.292,
+    "minus_orig_ci95": [
+     -0.3875,
+     -0.198
+    ],
+    "position": 0.0
+   },
+   "orig": {
+    "mean": 0.7578,
+    "ci95": [
+     0.6895,
+     0.8262
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 0.4095,
+    "position": 1.0
+   }
+  },
+  "google/gemma-4-31b-it": {
+   "none": {
+    "mean": 0.1325,
+    "ci95": [
+     0.0897,
+     0.1752
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 1.0,
+    "minus_orig": -0.3447,
+    "minus_orig_ci95": [
+     -0.4373,
+     -0.2493
+    ],
+    "position": 0.0
+   },
+   "orig": {
+    "mean": 0.4772,
+    "ci95": [
+     0.3889,
+     0.5641
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 0.7073,
+    "position": 1.0
+   }
+  },
+  "mistralai/ministral-8b-2512": {
+   "none": {
+    "mean": 0.2336,
+    "ci95": [
+     0.1624,
+     0.3034
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 0.9808,
+    "minus_orig": -0.161,
+    "minus_orig_ci95": [
+     -0.2436,
+     -0.0783
+    ],
+    "position": 0.0
+   },
+   "orig": {
+    "mean": 0.3946,
+    "ci95": [
+     0.3148,
+     0.4701
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 0.7344,
+    "position": 1.0
+   }
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+   "none": {
+    "mean": 0.1068,
+    "ci95": [
+     0.0556,
+     0.1624
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 1.0,
+    "minus_orig": -0.0228,
+    "minus_orig_ci95": [
+     -0.0698,
+     0.0271
+    ],
+    "position": 0.0
+   },
+   "orig": {
+    "mean": 0.1296,
+    "ci95": [
+     0.0783,
+     0.1852
+    ],
+    "questions": 39,
+    "right_conclusion_wrong_reason": 1.0,
+    "position": 1.0
+   }
+  }
+ },
+ "information_check": {}
+}

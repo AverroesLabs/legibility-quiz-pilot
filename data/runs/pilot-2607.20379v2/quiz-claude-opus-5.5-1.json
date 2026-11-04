@@ -1,0 +1,573 @@
+{
+ "claims": [
+  {
+   "id": "c1",
+   "text": "The reconstruction test does not penalize individual false claims. On the released Qwen-2.5-7B layer-20 NLA, explanations reconstruct at a normalized score of 0.84, yet only about 2% of salient specific claims are grounded under validated minimal-pair flips (a sensitivity-limited lower bound). Transform controls show that gist, not specific wording, carries the score.",
+   "sections": [
+    "s1",
+    "s2",
+    "s3",
+    "s10",
+    "s14"
+   ],
+   "depends_on": []
+  },
+  {
+   "id": "c2",
+   "text": "Under exact synthetic ground truth, standard co-trained verbalizer/reconstructor pairs develop co-adapted private codes in 5/5 runs: wording that is grounded but false (grounded-minus-true gaps of 0.30\u20130.80), sometimes even on unread slots. The comparison of grounding and truth detects the codes, and the swap to an independent evaluator shows they are private to the pair.",
+   "sections": [
+    "s2",
+    "s3",
+    "s13"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "The natural fixes fail for identified reasons. Rewarding the verbalizer for grounding only restructures sentences. Pulling activations toward their reconstruction collapses decodable content, so even fresh probes fail. Frozen probes go stale under drift, but the information survives and a label-free affine map restores them; rotation alone recovers only about half.",
+   "sections": [
+    "s3",
+    "s4",
+    "s17",
+    "s18"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "RECAP trains the target model itself, adding linear heads that predict external targets to the LM loss (Eq. 3 vs. Eq. 1). In the sandbox, designated content becomes 100% decodable by independent probes at +0.001 nats, fresh NLAs state it truly and grounded under both evaluators, and no codes appear. The heads decode nothing on unread slots.",
+   "sections": [
+    "s5",
+    "s13",
+    "s18",
+    "s20"
+   ],
+   "depends_on": [
+    "c2",
+    "c3"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "On Pythia-160M, RECAP makes designated content probe-decodable (AUC 0.95\u20131.00 vs. a 0.77\u20130.80 control), provided targets cannot be minimized without genuine discrimination (balanced loss). The cost grows with target count. Decodability exceeds verbalizability: fresh verbalizer truth is 0.44\u20130.46 vs. near zero, below probe precision. Decodability erodes without the heads, so it is a running cost.",
+   "sections": [
+    "s5",
+    "s12",
+    "s18",
+    "s19",
+    "s20"
+   ],
+   "depends_on": [
+    "c4"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "A probe-based monitor verifies claims against internals. In the sandbox, RECAP raises coverage of designated pre-tap content from 37% to 100%, with post-tap claims correctly abstained. At scale the probe separates true from false claims (AUC 0.965 vs. 0.823) and survives a score-gaming adversary that suppresses about 87% of the lie penalty (0.952 vs. 0.508). The protection is confined to designated content.",
+   "sections": [
+    "s6",
+    "s11",
+    "s15"
+   ],
+   "depends_on": [
+    "c4",
+    "c5"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s2",
+    "s10"
+   ],
+   "question": "The paper's released-NLA audit generated its minimal-pair edits with one judge and discarded another. If the discarded judge's edits had been used without per-edit validity filtering, in which direction would the reported grounded fraction move, and why?",
+   "answer": "The grounded fraction would be inflated. The closed-model judge produced valid edits only about 68% of the time, and its invalid edits were oversized: they rewrote surrounding material, and that extra damage inflated apparent grounding roughly sevenfold.",
+   "rubric": [
+    "States that the grounded fraction would be overstated (inflated).",
+    "Explains that the discarded judge's edits were often invalid because they changed more than the target claim.",
+    "Notes that oversized edits inflate the reconstruction drop (roughly sevenfold per the paper)."
+   ]
+  },
+  {
+   "id": "q2",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s3",
+    "s14"
+   ],
+   "question": "Using the paper's grounded fraction for the base released NLA at its middle flip threshold, roughly how many of the audited specific claims were grounded? Why does the paper treat that count as a floor rather than an estimate?",
+   "answer": "About 0.021 \u00d7 1,517 \u2248 32 claims. This is a floor because the flip test has low sensitivity: a control that appends and re-ranks recovers a topic known to be encoded at only 28%, so true grounding is likely undercounted.",
+   "rubric": [
+    "Gives roughly 30\u201333 claims (2.1% of 1,517).",
+    "Explains that it is a lower bound because the reconstruction-based flip test has low sensitivity or undercounts known-encoded content."
+   ]
+  },
+  {
+   "id": "q3",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s14",
+    "s3"
+   ],
+   "question": "Suppose the paper's transform control on the released NLA had shown the opposite profile: the score survives masking content words but collapses under paraphrase. What would that profile have indicated about what carries the score, according to the paper's reasoning?",
+   "answer": "It would indicate a surface-form code: reconstruction depending on particular wording rather than meaning. The paper says a surface-form code would show exactly this opposite pattern, whereas its actual profile (paraphrase kept, content-word masking destroyed) is the signature of meaning-level (gist) decoding.",
+   "rubric": [
+    "Concludes that the score would be carried by surface wording, i.e., a code rather than gist.",
+    "Contrasts this with the paper's actual profile, which indicates meaning-level or gist decoding."
+   ]
+  },
+  {
+   "id": "q4",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s2",
+    "s3"
+   ],
+   "question": "A reader summarizes the paper's released-NLA audit as \"98% of the verbalizer's specific claims are false.\" Why is this summary not supported by how the paper defines what its audit measures?",
+   "answer": "The audit measures grounding, defined as how sensitive the reconstruction is to flipping a claim. It does not measure truth, and the paper treats grounding and truth as separate axes. An ungrounded claim may still be true. The ~2% figure is also a sensitivity-limited lower bound on grounding.",
+   "rubric": [
+    "States that the summary conflates ungrounded with false.",
+    "Explains that grounding is defined as the reconstruction drop under a flip, which is distinct from truth (they are crossed into four cases).",
+    "Optionally notes that the ~2% figure is itself a lower bound."
+   ]
+  },
+  {
+   "id": "q5",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "In the paper's swap to an independent evaluator, suppose grounding of true claims had dropped as much as grounding on code-carrying slots. Which conclusion about the codes could the paper then no longer draw, and why?",
+   "answer": "The paper could no longer conclude that the codes reflect co-adaptation private to the pair. A uniform drop would be explained by the independent evaluator simply being weaker. The paper's argument relies on true-claim grounding surviving while code grounding collapses.",
+   "rubric": [
+    "Identifies that the co-adaptation (private-code) interpretation would be undermined.",
+    "Explains that a uniform drop is consistent with a merely weaker evaluator, whereas the paper's evidence is the selective survival of true-claim grounding."
+   ]
+  },
+  {
+   "id": "q6",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s13"
+   ],
+   "question": "The paper reports that in the marketplace scenario one private code occupies an unread slot. Using the scenario design, why does a code on such a slot show that the pair is using the sentence as a communication channel rather than describing the activation?",
+   "answer": "Unread slots (payment and outcome in the marketplace) only appear after the tap, so their values are provably absent from the activation. If the reconstruction nonetheless depends on wording about such a slot, that dependence cannot come from describing activation content. The wording works purely as a convention between the verbalizer and reconstructor.",
+   "rubric": [
+    "Notes that unread slots are mentioned only after the tap, so the activation cannot contain them.",
+    "Concludes that grounded wording there cannot reflect activation content, so it is a channel or convention between the pair."
+   ]
+  },
+  {
+   "id": "q7",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s2",
+    "s3"
+   ],
+   "question": "In a new sandbox run, a slot's stated value is grounded 0.85 of the time but true only 0.20 of the time under the co-trained reconstructor. Under the independent evaluator its grounding falls to 0.12, while the true claims elsewhere keep their grounding. How would the paper classify this slot's wording, and on what basis?",
+   "answer": "It is a co-adapted private code. The wording is grounded but false, giving a large grounded-minus-true gap, which is the detector the paper uses. Its grounding collapses under the independent evaluator while true-claim grounding survives, which marks the convention as specific to the co-trained pair.",
+   "rubric": [
+    "Classifies it as a co-adapted private code.",
+    "Cites the grounded-but-false gap as the detection criterion.",
+    "Cites the collapse under the independent evaluator (with true-claim grounding surviving) as showing the code is private to the pair."
+   ]
+  },
+  {
+   "id": "q8",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s13"
+   ],
+   "question": "Using the paper's distinction between a readout gap and a storage gap, which gap explains a standard toy verbalizer stating the wrong ending in the story scenario? Explain why.",
+   "answer": "It is a storage gap. In the story scenario the ending is only mentioned after the tap, so the content is absent from the activation. A readout gap would require the content to be present but not conveyed.",
+   "rubric": [
+    "Answers storage gap.",
+    "Explains that the ending appears only after the tap, so the activation does not contain it (whereas a readout gap requires the content to be present)."
+   ]
+  },
+  {
+   "id": "q9",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s17"
+   ],
+   "question": "Under both of the paper's target-side failure modes (representation collapse and representation drift), an existing probe stops reading slot content. What test does the paper use to tell the two apart, and what outcome marks collapse?",
+   "answer": "The test is whether fresh, retrained probes (or a label-free affine realignment) can recover the content. Under drift the information is intact, and realignment restores native performance in 9/9 cases. Under collapse, freshly retrained probes also fail, so the information itself is gone and no realignment exists.",
+   "rubric": [
+    "Identifies refitting fresh probes or attempting realignment as the distinguishing test.",
+    "States that under collapse fresh probes also fail (the information is gone), whereas under drift the information is recoverable."
+   ]
+  },
+  {
+   "id": "q10",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s4",
+    "s17"
+   ],
+   "question": "A monitoring team facing the paper's probe drift decides to recalibrate stale probes using only orthogonal (rotation) maps. Based on the paper's decomposition of the realignment map, how much of the lost performance should they expect to recover, and what would full recovery require?",
+   "answer": "They should expect to recover only about half the drift. Full recovery needs a non-orthogonal change of rank roughly 16\u201364; low-rank maps (rank 1\u20134) recover almost nothing.",
+   "rubric": [
+    "States that rotation recovers about half.",
+    "States that full recovery needs a non-orthogonal change of rank roughly 16\u201364."
+   ]
+  },
+  {
+   "id": "q11",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "Someone argues that the paper's GRPO training against a clause-level grounding reward succeeded, because the reward went up. Why does the paper reject this?",
+   "answer": "The independent claim-level audit stayed null at every threshold, with intervals straddling zero. Text statistics attribute the reward gain to sentence restructuring (merging and packaging the units the policy controls), which changes what the metric counts rather than grounding more claims.",
+   "rubric": [
+    "States that the independent claim-level audit showed no grounding gain.",
+    "Explains that the proxy rose through restructuring of sentences or units rather than through more grounded claims."
+   ]
+  },
+  {
+   "id": "q12",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "According to the paper's mechanism for representation collapse, why does pulling a hidden state toward its own reconstruction remove content even though perplexity is unchanged?",
+   "answer": "The reconstruction is a lossy projection of the state. Increasing similarity to it suppresses variation outside the subspace the reconstruction captures, which deletes content that is not recovered by that projection. Language modeling can remain unaffected while this decodable slot content is lost.",
+   "rubric": [
+    "Identifies the reconstruction as a lossy projection.",
+    "Explains that aligning the state with it removes variation (content) outside that subspace."
+   ]
+  },
+  {
+   "id": "q13",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s13"
+   ],
+   "question": "Suppose RECAP heads in the paper's story scenario were designated on the ending slot. Based on the paper's sandbox results, what decodability should an independent probe find for that slot, and why?",
+   "answer": "Essentially none (chance level). The ending never precedes the tap, so the activation holds no information about it, and the paper reports that RECAP heads decode nothing on unread slots in any run. RECAP can only keep decodable content that the activation actually holds.",
+   "rubric": [
+    "Predicts no or chance-level decodability.",
+    "Explains that the ending appears only after the tap, so it is absent from the activation, and that heads recover only content the activation holds."
+   ]
+  },
+  {
+   "id": "q14",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s8"
+   ],
+   "question": "A proposed variant keeps the target model's weights frozen and attaches the paper's linear heads to the training loss of the verbalizer instead. Why would this not count as RECAP under the paper's comparison of its two objectives?",
+   "answer": "RECAP's defining feature is that the target model's parameters \u03b8 are trained (Eq. 3). The reader objective (Eq. 1) never touches \u03b8. A frozen-model variant only changes the reader, so it cannot change what the representation contains. The paper notes that RECAP must be co-trained in and cannot be retrofitted onto a frozen model.",
+   "rubric": [
+    "States that the variant is a reader-side objective, not RECAP.",
+    "Explains that RECAP's thesis is training the target model's own parameters so the representation itself keeps designated content (Eq. 3 vs. Eq. 1)."
+   ]
+  },
+  {
+   "id": "q15",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s19"
+   ],
+   "question": "The paper reports every decodability number from independently fitted probes and never from the RECAP heads themselves. Which result at scale shows why reading the heads would be misleading?",
+   "answer": "The naive presence head with 512 targets minimized its training loss while nothing was decodable by a fresh probe. With rare targets it scored well by always predicting \"absent\", a shortcut only an independent probe exposed. Co-trained heads can therefore look successful without genuine decodability.",
+   "rubric": [
+    "Cites the naive K=512 head that achieved low loss while fresh probes decoded nothing.",
+    "Explains that co-trained heads can report success via a shortcut (always predicting absent) that only an independent probe reveals."
+   ]
+  },
+  {
+   "id": "q16",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s13"
+   ],
+   "question": "In the paper's sandbox comparison, fresh NLAs trained on RECAP and standard target models stay near-perfectly truthful only on RECAP models. If the two NLAs had instead received different training procedures, what could the paper no longer conclude, and why?",
+   "answer": "It could no longer attribute the truthfulness difference to target-model decodability. The paper isolates that effect by giving both NLAs identical training, including cold-start SFT on gold descriptions. Differing procedures would confound the comparison.",
+   "rubric": [
+    "States that the difference could not be attributed to the target model's decodability.",
+    "Explains that identical NLA training is what isolates the target-model effect."
+   ]
+  },
+  {
+   "id": "q17",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s20"
+   ],
+   "question": "Why did the naive presence loss fail at the paper's largest target count, and how does the paper's class-balanced variant enforce its stated design rule for targets?",
+   "answer": "With 512 rare targets, always predicting \"absent\" minimizes the naive BCE without any discrimination. The balanced loss up-weights positives by the inverse window base rate, so the loss can no longer be minimized without genuinely discriminating present from absent. This restored fresh-probe AUC to 0.97\u20130.99.",
+   "rubric": [
+    "Explains that rare positives let a constant 'absent' prediction minimize the naive loss.",
+    "Explains that class balancing (up-weighting positives) makes the loss unminimizable without genuine discrimination, matching the design rule."
+   ]
+  },
+  {
+   "id": "q18",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s5"
+   ],
+   "question": "A practitioner wants to designate 512 content words rather than 64 on the paper's Pythia-160M setup, using balanced heads. Using the paper's reported held-out taxes, roughly how many times larger a language-modeling cost should they expect, and what decodability do both configurations give?",
+   "answer": "The tax would be about 14\u201320 times larger: +0.14\u20130.20 nats versus +0.010 nats. Both balanced configurations give fresh-probe AUC of 0.97\u20130.99, so the extra targets cost language-modeling loss rather than decodability.",
+   "rubric": [
+    "Gives a ratio of roughly 14\u201320\u00d7 (or the raw +0.14\u20130.20 vs. +0.010 nats).",
+    "Notes that both configurations reach about 0.97\u20130.99 probe AUC."
+   ]
+  },
+  {
+   "id": "q19",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s19"
+   ],
+   "question": "On what evidence does the paper conclude that the fresh verbalizer's shortfall at scale is a property of generation rather than of storage?",
+   "answer": "At the verbalizer's own recall, a fresh probe on the same tap reaches about 0.80 precision, versus the verbalizer's 0.44\u20130.63. The redesigned reconstructor makes the content linearly decodable at its decode point (0.79\u20130.81, against 0.03 for the control), yet its generated precision stays 0.56\u20130.63. The information is present but is not serialized into text.",
+   "rubric": [
+    "Cites probe precision (~0.80) exceeding verbalizer precision at matched recall.",
+    "Cites the redesigned reconstructor's decode-point decodability alongside unchanged generated precision.",
+    "Concludes that the content is stored but lost in generation."
+   ]
+  },
+  {
+   "id": "q20",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s12"
+   ],
+   "question": "A lab trains a RECAP Pythia-160M model and then runs 2,000 steps of ordinary fine-tuning with the heads removed. What would a freshly fitted probe find, and what remedy does the paper's evidence support?",
+   "answer": "Most of the decodability surplus would be gone within about 250 steps and close to control level by 2,000 steps. This holds even on same-distribution data, so removing the heads is the cause. The remedy is to keep the heads on, either continuously (+0.010 nats) or intermittently, every tenth step, which retains most decodability.",
+   "rubric": [
+    "States that decodability largely erodes toward the control level (most of it within a few hundred steps).",
+    "Recommends maintaining head supervision, continuously or intermittently (about every tenth step)."
+   ]
+  },
+  {
+   "id": "q21",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s11"
+   ],
+   "question": "On the standard (control) sandbox target model, the paper's discrepancy detector has perfect precision but catches very few of the false pre-tap claims. What limits its recall, and why does RECAP remove that limit?",
+   "answer": "Recall is limited by target-model decodability. About 63% of pre-tap claims fall in slots too faded for a confident (>0.9) probe readout, so the detector abstains on them. RECAP makes designated pre-tap content fully decodable, so abstention falls to zero and coverage rises from 37% to 100%.",
+   "rubric": [
+    "Identifies low decodability causing abstention (confidence below threshold) as the bottleneck, not detector quality.",
+    "Explains that RECAP's full decodability eliminates abstention on designated pre-tap content."
+   ]
+  },
+  {
+   "id": "q22",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s11",
+    "s3"
+   ],
+   "question": "Why does the paper's probe monitor abstain on post-tap claims even on RECAP target models, and which of the paper's tools is meant to handle those claims instead?",
+   "answer": "Post-tap content is provably absent from the activation, so reading the activation cannot adjudicate those claims. Abstention is therefore the correct response. Such confabulations are left to the comparison of grounding and truth, and the two tools partition the audit.",
+   "rubric": [
+    "Explains that post-tap content is absent from the activation, so a probe cannot judge it.",
+    "Names the comparison of grounding and truth as the tool that handles these claims."
+   ]
+  },
+  {
+   "id": "q23",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s15"
+   ],
+   "question": "One might argue that any activation probe should resist the paper's text-editing adversary, since the adversary cannot touch the activation. Why does the paper's result at the score-optimal rung refute this argument?",
+   "answer": "The control probe also reads the activation, which the adversary cannot edit, yet it falls to chance (AUC \u22480.51) at the score-optimal rung. The RECAP probe stays at 0.95. Reading a signal that predates the report is necessary but not sufficient; the content must also be decodable, which RECAP supplies.",
+   "rubric": [
+    "Notes that the control probe reads the untouched activation yet collapses to chance.",
+    "Concludes that decodable content (supplied by RECAP), not merely an activation-based readout, is required."
+   ]
+  },
+  {
+   "id": "q24",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s6",
+    "s15"
+   ],
+   "question": "An adversary lies about a word whose frequency rank is 100 on the paper's RECAP Pythia-160M model. Would the RECAP presence monitor give better protection than the control here, according to the paper?",
+   "answer": "No. Words ranked 64\u2013128 were never designated, and on that held-out band the RECAP monitor has no advantage over the control (AUC around 0.66 vs. 0.70). The protection is scoped to designated content.",
+   "rubric": [
+    "Answers no advantage.",
+    "Explains that the word lies outside the designated top-64 vocabulary, and that the held-out band showed no RECAP advantage."
+   ]
+  },
+  {
+   "id": "q25",
+   "claim": "c6",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s5",
+    "s6",
+    "s15"
+   ],
+   "question": "Combining the paper's argument for why codes cannot form under RECAP with its lie-ladder setup, why can the score-gaming adversary nearly erase the reconstruction score's lie penalty but not the RECAP probe's signal?",
+   "answer": "The reconstruction score is computed from the editable explanation text, so choosing the score-maximizing lie suppresses about 87% of the penalty. The RECAP probe reads the activation directly, with no intervening text, and checks it against external ground truth. Text edits therefore cannot change what it reads, so the protection is structural for score manipulation.",
+   "rubric": [
+    "States that the reconstruction score depends on the editable text, which the adversary controls.",
+    "States that the probe reads the activation directly against external truth, with no text the adversary can edit."
+   ]
+  },
+  {
+   "id": "q26",
+   "claim": "c5",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s12",
+    "s17"
+   ],
+   "question": "The paper shows that a label-free affine map fixes stale probes after continued training. Why would the same realignment not repair the decodability loss seen after head-free fine-tuning of a RECAP model?",
+   "answer": "In the head-free fine-tuning experiment, probes are refit fresh at every snapshot and still lose access, so the linear decodability itself disappears. Realignment only corrects how a probe reads a representation whose information persists, as in drift. Here the information is no longer linearly present, so there is nothing to realign to.",
+   "rubric": [
+    "Notes that fresh probes refit at each snapshot also fail after head-free fine-tuning.",
+    "Contrasts this with drift, where the information persists and only the reader is stale, so realignment cannot restore content that is gone."
+   ]
+  },
+  {
+   "id": "q27",
+   "claim": "c4",
+   "kind": "integration",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s5",
+    "s8"
+   ],
+   "question": "Could RECAP be applied to fix the gist-based failure the paper found in the released Qwen-2.5-7B NLA as released? Use the paper's diagnosis of that failure and RECAP's requirements.",
+   "answer": "Not as released. The Qwen failure reflects specifics genuinely missing from the activation (storage), which only changing the target model could address. RECAP must be co-trained into the target model and cannot be retrofitted onto a frozen one, so it would require further training of Qwen itself, with well-designed targets.",
+   "rubric": [
+    "Concludes that it cannot fix the frozen released model as is.",
+    "Cites the diagnosis that the specifics are absent from the activation (a storage problem).",
+    "Cites that RECAP requires co-training the target model and cannot be retrofitted."
+   ]
+  },
+  {
+   "id": "q28",
+   "claim": "c2",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s2",
+    "s3",
+    "s13"
+   ],
+   "question": "Using the paper's definition of the evaluator gap, what does the gap's size on RECAP sandbox runs, compared with standard runs, indicate? How does that agree with the paper's cross-scenario emergence ledger?",
+   "answer": "The gap is about 0.003 on RECAP runs versus 0.17\u20130.38 on standard runs. Since the gap is the co-trained score minus the independent score, RECAP runs' passing scores do not rely on pair-specific conventions. This matches the ledger, where codes appear in 0/5 RECAP runs but 5/5 standard runs.",
+   "rubric": [
+    "States that the near-zero RECAP gap means the score does not depend on co-adapted conventions, unlike the large standard-run gap.",
+    "Links this to the emergence ledger showing no codes in RECAP runs versus codes in all standard runs."
+   ]
+  }
+ ],
+ "paper": "2607.20379v2",
+ "writer": "anthropic/claude-opus-5.5",
+ "seed": 1,
+ "prompt_version": "p2",
+ "paper_sha256": "e72828e723a668f2456c5051916e3ffea0ddc82c28aff4df79919601ba0f540d",
+ "problems": []
+}

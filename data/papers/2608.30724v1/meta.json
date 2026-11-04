@@ -1,0 +1,30 @@
+{
+  "abstract": "LLM agents are increasingly used to run autonomous ML experiments, iterating on target metrics with little human oversight. Prior work has documented reward hacking in these environments, bringing into question the validity of produced research and the broader safety case for AI R&D. Existing benchmarks do not measure exploits that live in the data or the modeling task itself. We introduce BAITBENCH, a suite of three synthetic tabular ML tasks that each contain a shortcut that allows agents to inflate the public test score but fail on a hidden test set. Since the shortcut is optional and using it breaks no stated rule, BAITBENCH measures how often models exploit the shortcut to achieve inflated scores. Across seven frontier agents scored by our two-stage judge pipeline, 57.1% of runs exhibit reward hacking, with five of seven above 50%. Agents cheat even under a second condition where they are prompted not to -the mean cheating rate remains above 50%. We release BAITBENCH, along with the judge implementation, and an annotated dataset of transcripts containing reward hacks as a testbed for evaluating reward-hacking mitigations head-to-head.",
+  "arxiv_id": "2608.30724",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Pradyumna Shyama Prasad",
+    "Meiri Anto",
+    "Leon Eshuijs",
+    "Julian Moncarz",
+    "Kaustubh Kislay",
+    "Juan J. Vazquez"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 5,
+  "hidden_style_hits": 0,
+  "html_sha256": "0132b2c44d78f9ab68caa5a0a7797b63b15350e95d7050fdde731d75311f7708",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.LG",
+  "published": "2026-08-31T12:59:33Z",
+  "rank": "0cb0d288d8ced9ae15e5662333614daaf4d347efa38c81471048b3b5aab89e66",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2608.30724v1",
+  "stratum": "C",
+  "text_sha256": "23b27bcc3460507b6422faa8d65afcae47bb03eaa9b709fe8a0128b5f20d49ec",
+  "title": "BAITBENCH: Measuring Agent Reward Hacking with Optional Shortcuts Planted in ML Tasks",
+  "version": 1,
+  "words": 9930
+}

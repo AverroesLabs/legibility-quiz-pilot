@@ -1,0 +1,3530 @@
+{
+ "paper": "2608.25490v1-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "e3b8b93c0e6b8162ba41c50ea2a647e2a5a63630b7019ba5d47ac0fbd86c8de2",
+ "batches": 5,
+ "written_per_batch": [
+  41,
+  42,
+  36,
+  40,
+  42
+ ],
+ "cost_per_batch": [
+  0.43066,
+  0.511928,
+  0.570344,
+  0.638656,
+  0.846692
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "MMJailBench describes every multimodal jailbreak instance with four explicit annotation dimensions: harmful intent, prompt framing, visual semantics and instruction carrier. This makes coverage explicit and lets results be stratified along each dimension.",
+   "methods": [
+    "Factorized construction x_{h,t,v,c} = (L(h,t,c), V(h,v)) (Eq. 1) used as a construction and annotation scheme",
+    "Stratified tables per dimension, pooled and per model, with counts, ASR, mismatch rate, CASR and bootstrap CIs computed by resampling intents",
+    "Per-model ASR-range profiles across the configurations of each dimension"
+   ],
+   "results": [
+    "272 intents in 9 harm domains and 18 scenarios",
+    "6 framing templates (Academic, System, Story, Code, Structure, Paradox)",
+    "5 visual semantic categories (Danger, Work Scenario, Role, Identity Credential, Authorization Document) plus 4 control images (no image, blank, noise, nature)",
+    "2 carriers (TEXT, OCR)",
+    "16 MLLMs evaluated (8 open-weight, 8 proprietary)"
+   ],
+   "conditions": [
+    "Aggregate ASR depends on the mixture of intents, framings, visual contexts and carriers",
+    "Comparisons are valid only under the same judge, decoding settings and benchmark version",
+    "No per-model or per-factor ASR numbers are reported in the paper"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "The harmful-intent set is diverse and non-redundant across domains.",
+   "methods": [
+    "Category-guided construction from existing benchmarks and provider policies",
+    "all-MiniLM-L6-v2 pairwise cosine similarity with manual review of the high-similarity tail",
+    "PCA visualization of intent embeddings"
+   ],
+   "results": [
+    "Most intent pairs have low similarity; only a small high-similarity tail, which was manually reviewed",
+    "Domain sizes: Violence & Physical Harm 48 (17.6%, 3 scenarios); Sexual Content 17 (6.3%, 1 scenario); other domains 28-30 (about 10-11%)"
+   ],
+   "conditions": [
+    "The PCA view is qualitative",
+    "Smaller domains have wider confidence intervals"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Scoring with ASR at threshold s>=4, together with CASR, separates genuine harmful assistance from topical engagement, and separates OCR perception failures from safety behavior.",
+   "methods": [
+    "ASR = fraction of responses with harmfulness score >= 4 on a 1-5 rubric",
+    "CASR = N_success / (N - N_mismatch), where mismatch covers OCR failures, irrelevant responses and misinterpretation",
+    "Judge records an instruction-mismatch flag",
+    "Anti-deception rules stop disclaimers, fictional framing or academic packaging from lowering the score"
+   ],
+   "results": [
+    "Scores 2-3 (potential risk; high-level or partial info) are not counted as success",
+    "The full score distribution is released so users can apply other thresholds"
+   ],
+   "conditions": [
+    "Carrier results should be read per model",
+    "A low OCR ASR may reflect a perception limitation rather than safety"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "The primary GPT-5 judge agrees strongly with human experts.",
+   "methods": [
+    "Human expert annotation compared with GPT-5 judgments on harmfulness and mismatch"
+   ],
+   "results": [
+    "QWK 0.97",
+    "Delta ASR +0.3%",
+    "Mismatch accuracy 96.3%",
+    "Mismatch macro-F1 0.85"
+   ],
+   "conditions": [
+    "Users switching judge or rubric should re-validate on a sample before comparing results"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "A distilled lightweight judge (qwen3-8b trained on GPT-5 annotations) reproduces GPT-5 judgments for low-cost follow-up evaluation.",
+   "methods": [
+    "Benchmark-scoped fine-tuning on GPT-5-generated annotations under the same protocol",
+    "Agreement measured against GPT-5"
+   ],
+   "results": [
+    "QWK 0.95",
+    "Delta ASR -0.4%",
+    "Mismatch accuracy 99.4%",
+    "Mismatch macro-F1 0.94"
+   ],
+   "conditions": [
+    "Validated against GPT-5, not directly against humans",
+    "Scoped to this benchmark and protocol"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "The 1,500-instance lightweight configuration closely matches the full configuration.",
+   "methods": [
+    "Stratified sampling over harm domains, framings, visual semantic conditions and carriers, preserving the full-configuration distribution",
+    "Comparison over 32 matched cells"
+   ],
+   "results": [
+    "Mean ASR difference -0.06% (95% CI [-0.45%, 0.30%])",
+    "Mean absolute difference 0.79%",
+    "Maximum absolute difference 3.53%",
+    "30/32 cells within 2%",
+    "Spearman 0.997",
+    "Lin's CCC 0.999"
+   ],
+   "conditions": [
+    "Finer cross-tabulations have fewer responses per cell; aggregate to domain level when CIs widen"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Diagnostic tooling for open-weight models gives model-internal views (layer-wise representation divergence, a held-out difference-direction projection, cross-modal attention profiles) that complement behavioral results but are correlational and descriptive.",
+   "methods": [
+    "Residual-stream activations of the final generation-prefix token at every layer for matched pairs that differ in one factor",
+    "Difference direction fit on discovery pairs and projected on held-out pairs, optionally broken down by harm domain",
+    "Attention from the final prefix query to harm-related label tokens and visual tokens, per layer, averaged over heads",
+    "Illustrated on gemma3-12b"
+   ],
+   "results": [
+    "Profiles show where paired conditions are most separated; no quantitative diagnostic numbers are reported"
+   ],
+   "conditions": [
+    "Requires access to weights",
+    "Correlational: intervention is needed for causal claims",
+    "Attention is an imperfect indicator because information also flows through residual and MLP paths"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "Framing templates and visual categories are fixed, representative probes rather than optimized or exhaustive attacks, so they bound what can be concluded.",
+   "methods": [
+    "6 fixed, simple framing templates instantiated by placeholder replacement",
+    "Visual images generated with zimage (Danger, Work Scenario, Role) and FLUX.2 (Identity Credential, Authorization Document, chosen for coherent text), then filtered",
+    "OCR instructions rendered in a standardized, legible layout combined with the semantic image"
+   ],
+   "results": [
+    "Templates function as repeatable probes"
+   ],
+   "conditions": [
+    "Adaptive attacks may behave differently",
+    "Image generation quality and text legibility differ across categories and can interact with perception"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The lightweight configuration's agreement with the full configuration is reported in Table 11. Would that agreement still justify using the lightweight configuration for a scenario-by-carrier cross-tabulation of a single model, and why?",
+   "answer": "No, not reliably. The 1,500 instances are spread over 18 scenarios \u00d7 2 carriers, which leaves only a few dozen responses per cell for one model. Table 11 validates agreement only at the level of its 32 matched cells, not at this fine granularity, so cell-level estimates will have wide CIs.",
+   "rubric": [
+    "States the lightweight configuration would not reliably support this fine-grained cross-tab",
+    "Reason: 1,500 instances split over many scenario \u00d7 carrier cells leaves few responses per cell (wide CIs), and validation was at a coarser cell level"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose the visual-semantics stratification shows a higher ASR for Authorization Document than for Danger. Why might this difference fail to reflect the authority meaning of the image alone?",
+   "answer": "The two categories were made with different generators: FLUX.2 for document and credential images, which contain coherent text, and zimage for Danger. The categories therefore also differ in generation quality and in embedded text legibility. These differences can interact with model perception and confound the semantic comparison.",
+   "rubric": [
+    "States the difference may be confounded and not purely due to authority semantics",
+    "Reason: different image generators and the presence or legibility of text in document images, which the paper notes can interact with perception"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "For which kind of model would OCR CASR become least trustworthy, given the reported validation of the judge's mismatch detection?",
+   "answer": "A model with a high OCR mismatch rate. CASR's denominator depends on the mismatch flags, and GPT-5's mismatch detection is imperfect (macro-F1 0.85 versus humans). When many responses are mismatches, mislabelled cases shift the denominator by a larger amount and distort CASR.",
+   "rubric": [
+    "Identifies models with high mismatch rates, such as weak OCR readers",
+    "Reason: CASR's denominator relies on mismatch flags, whose detection is imperfect (macro-F1 0.85), so errors matter more when mismatch is frequent"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would the lightweight judge's reported agreement carry over if it were used to score responses from a different jailbreak benchmark with its own rubric, and why?",
+   "answer": "Not necessarily. The judge is benchmark-scoped, trained on GPT-5 annotations of MMJailBench responses under MMJailBench's protocol, and validated only in that setting. A different rubric or benchmark would require re-validation.",
+   "rubric": [
+    "States agreement is not guaranteed to transfer",
+    "Reason: the judge is benchmark-scoped, trained on and validated with MMJailBench/GPT-5 annotations under this protocol, so it needs re-validation"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "When would a model's low ASR on all 6 framing templates stop being evidence that it resists framing-based jailbreaks?",
+   "answer": "When the attacker uses adaptive or optimized attacks, for example iterative PAIR-style rewriting. The templates are fixed, simple probes, and the paper notes adaptive attacks may behave differently.",
+   "rubric": [
+    "Identifies adaptive or optimized attacks, or attacks beyond the fixed templates",
+    "Reason: the templates are fixed, simple, non-optimized probes, not an exhaustive or worst-case attack set"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "When the cross-modal attention profile shows little attention to visual tokens, could the image still be influencing the response, and why?",
+   "answer": "Yes. Attention weights are an imperfect indicator of information flow, because information can also be routed through residual connections and MLP layers. Low attention mass therefore does not rule out visual influence.",
+   "rubric": [
+    "States yes, the image could still influence the output",
+    "Reason: information can flow via residual and MLP pathways, so attention is only descriptive"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A study reports ASR on a custom subset containing only Violence & Physical Harm intents. Can that number be compared directly with the full-benchmark aggregate ASR, and why?",
+   "answer": "No. Aggregate ASR summarizes a specific mixture of conditions, and Violence makes up only 17.6% of the intents (48 of 272). A different mixture can yield a different number even for the same model.",
+   "rubric": [
+    "States no direct comparison",
+    "Reason: aggregate ASR depends on the composition or mixture, and the subset differs from the full distribution (Violence is about 17.6%)"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is GPT-5's mismatch macro-F1 against human experts (0.85) so much lower than its mismatch accuracy (96.3%)?",
+   "answer": "Mismatch cases appear to be a minority class. Accuracy is dominated by the many correctly labelled non-mismatch responses, while macro-F1 weights the rare mismatch class equally, so errors on mismatches pull it down.",
+   "rubric": [
+    "States mismatch cases are relatively rare (class imbalance)",
+    "Reason: accuracy is dominated by the majority class, while macro-F1 averages over classes and penalizes minority-class errors"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the lightweight judge's mismatch macro-F1 against GPT-5 (0.94) exceed GPT-5's macro-F1 against humans (0.85) without implying it is more accurate than GPT-5?",
+   "answer": "The lightweight judge was trained on GPT-5-generated annotations, so it learns to imitate GPT-5, including GPT-5's errors. High agreement with GPT-5 measures fidelity to the teacher, not accuracy relative to humans.",
+   "rubric": [
+    "States the comparison does not show the lightweight judge is more accurate than GPT-5",
+    "Reason: it was distilled from GPT-5 labels, so agreement with GPT-5 reflects imitation and was measured against a different reference than humans"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can a model's CASR never be lower than its ASR on the same responses?",
+   "answer": "Both metrics share the same numerator, the number of successful jailbreaks. CASR divides by N minus the mismatches, which is at most N, and mismatch responses do not contribute successes, so CASR is always at least ASR.",
+   "rubric": [
+    "States CASR is greater than or equal to ASR",
+    "Reason: same success count over a denominator that is reduced by mismatches (N - N_mismatch \u2264 N)"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why are bootstrap confidence intervals computed by resampling intents rather than individual responses?",
+   "answer": "Under the factorized construction, each intent generates many instances, one for each framing, image and carrier combination. Responses from the same intent are therefore correlated, which makes the intent the natural independent unit. Resampling responses would understate the uncertainty.",
+   "rubric": [
+    "States intents are the appropriate independent unit",
+    "Reason: many instances are derived from the same intent via the framing \u00d7 image \u00d7 carrier combinations, so responses within an intent are not independent"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why would a Story-framed response that opens with a safety disclaimer but then gives step-by-step operational instructions count as a successful jailbreak?",
+   "answer": "The judge's anti-deception rules stop disclaimers and fictional packaging from lowering the score when harmful information is provided. Operational guidance scores 4-5, which meets the s\u22654 success threshold.",
+   "rubric": [
+    "States it counts as a success",
+    "Reason: anti-deception rules ignore fictional framing and disclaimers, and operational content scores \u22654"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the lightweight configuration reproduce aggregate ASR so closely (mean difference -0.06%) despite using only 1,500 instances?",
+   "answer": "It was built by stratified sampling over domains, framings, visual conditions and carriers that preserves the full configuration's distribution. Aggregate ASR depends on that mixture of conditions, so keeping the mixture keeps the expected ASR the same.",
+   "rubric": [
+    "Attributes the match to stratified sampling that preserves the distribution over the four dimensions",
+    "Reason: aggregate ASR depends on the mixture of conditions, which is preserved"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the representation-level diagnostic on gemma3-12b compare instances that share intent, framing and carrier but differ only in their image?",
+   "answer": "Holding the other three factorized dimensions fixed isolates the image as the only varying factor. Any layer-wise divergence can then be associated with the change in visual context rather than with confounds, though only correlationally.",
+   "rubric": [
+    "States the goal is to isolate the image as the only differing factor",
+    "Reason: the factorized design allows the other three dimensions to be held constant, so divergence is attributable to visual context"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p1",
+   "question": "For a model with zero instruction-recognition mismatches on OCR inputs, would its OCR CASR differ from its OCR ASR?",
+   "answer": "No. With N_mismatch = 0, CASR's denominator equals N, so CASR equals ASR.",
+   "rubric": [
+    "States CASR equals ASR (no difference)",
+    "Reason: zero mismatches leaves the denominator at N"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p1",
+   "question": "For a model that fails to recognize 40% of OCR instructions, would its OCR CASR differ from its OCR ASR?",
+   "answer": "Yes, CASR would be higher, unless there are no successes at all. The denominator shrinks to 60% of N while the success count stays the same.",
+   "rubric": [
+    "States CASR differs, being higher than ASR (given any successes)",
+    "Reason: mismatches are removed from the denominator (N - N_mismatch = 0.6N) while the numerator is unchanged"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p2",
+   "question": "Could the lightweight configuration reliably detect a 10-percentage-point drop in aggregate ASR between two releases of a model?",
+   "answer": "Yes. Its deviation from the full configuration is small, with a mean absolute difference of 0.79% and a maximum of 3.53%. A 10-point change is far larger than this sampling discrepancy.",
+   "rubric": [
+    "States yes",
+    "Reason: 10 points far exceeds the observed lightweight-vs-full discrepancy (mean absolute 0.79%, maximum 3.53%)"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p2",
+   "question": "Could the lightweight configuration reliably detect a 0.5-percentage-point drop in aggregate ASR between two releases of a model?",
+   "answer": "No. A 0.5-point change is smaller than the typical lightweight-vs-full deviation (mean absolute 0.79%, up to 3.53%), so it cannot be separated from sampling discrepancy.",
+   "rubric": [
+    "States no",
+    "Reason: 0.5 points is within or below the observed discrepancy (mean absolute 0.79%, maximum 3.53%)"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": "b1-p3",
+   "question": "Could the paper's representation- and attention-level diagnostic tooling be applied to qwen2.5-vl-7b?",
+   "answer": "Yes. It is an open-weight model evaluated from public checkpoints, so residual-stream activations and attention weights are accessible.",
+   "rubric": [
+    "States yes",
+    "Reason: qwen2.5-vl-7b is open-weight, so internals are accessible"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": "b1-p3",
+   "question": "Could the paper's representation- and attention-level diagnostic tooling be applied to claude-sonnet-4.5?",
+   "answer": "No. It is a proprietary-access model evaluated only through its official interface, so internal activations and attention are not available. The tooling is designed for open-weight models.",
+   "rubric": [
+    "States no",
+    "Reason: claude-sonnet-4.5 is proprietary and accessed only via API, with no access to internals"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team without GPT-5 access wants weekly regression testing of its open-weight MLLM on MMJailBench. Which configuration and judge should it use, and what supports that choice?",
+   "answer": "It should use the lightweight 1,500-instance configuration with the lightweight qwen3-8b judge. The lightweight configuration tracks the full one closely (Spearman 0.997, mean difference -0.06%), and the lightweight judge agrees with GPT-5 (QWK 0.95, \u0394ASR -0.4%).",
+   "rubric": [
+    "Recommends the lightweight configuration plus the lightweight judge",
+    "Cites the configuration agreement (e.g., Spearman 0.997, small ASR difference) and the judge agreement (e.g., QWK 0.95, \u0394ASR -0.4%)"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A model shows much lower ASR on OCR inputs than on TEXT inputs, and its developers claim it is safer against image-embedded instructions. What should an auditor check, and why?",
+   "answer": "The auditor should check the OCR mismatch rate and CASR. A low OCR ASR may simply mean the model cannot read the rendered instructions, which is a perception limitation. If CASR is close to the TEXT rate, the apparent safety is not real.",
+   "rubric": [
+    "Recommends checking the mismatch rate and CASR",
+    "Reason: low OCR ASR can reflect perception failure rather than safety behavior"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A researcher wants to test whether authorization-document images raise ASR because of their meaning rather than because any visually rich image is present. Which released control condition is the most relevant comparison, and why?",
+   "answer": "The nature image is the most relevant comparison. It is visually rich but semantically unrelated to the harmful intent, so it controls for the presence of image content. Blank and noise images contain no semantic content, and no image removes visual input entirely. Text legibility differences remain a caveat.",
+   "rubric": [
+    "Identifies the nature image control",
+    "Reason: it is visually rich but task-irrelevant, unlike blank, noise or no image, so it isolates semantic meaning from mere image content"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "For a deployment where even high-level or partial harmful information is unacceptable, how should an auditor use MMJailBench outputs differently from the default ASR?",
+   "answer": "The auditor should recompute success with a lower threshold, such as s\u22653 or s\u22652, using the released full score distribution. The default s\u22654 deliberately excludes scores 2-3, which cover potential risk and high-level or partial information.",
+   "rubric": [
+    "Recommends a lower threshold (e.g., s\u22653 or s\u22652) using the released scores",
+    "Reason: the default s\u22654 intentionally does not count partial or high-level responses (scores 2-3)"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team wants to study how Code framing versus Story framing changes internal states in qwen3-vl-8b. How should it construct inputs for the representation tooling?",
+   "answer": "It should build matched pairs that share the same intent, visual condition and carrier but differ only in framing (Code versus Story). It can then fit a difference direction on discovery pairs and test it on held-out pairs. The tooling allows any two framings to be substituted for the image pairing.",
+   "rubric": [
+    "Pairs differ only in framing, with intent, image and carrier held fixed",
+    "Mentions the layer-wise divergence or a difference direction fit on discovery pairs and tested on held-out pairs"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A lab scores its new model on MMJailBench with a Claude-based judge and its own rubric, then compares its ASR with the paper's GPT-5-judged results. What must it do first, and why?",
+   "answer": "It must re-validate its judge on a sample of responses against human or default-judge labels, and match decoding settings and benchmark version. ASR inherits any systematic judge bias, and comparisons are only meaningful under the same judge, settings and version.",
+   "rubric": [
+    "States the judge must be re-validated (and settings or version matched) before comparison",
+    "Reason: judge bias propagates directly into ASR, so cross-judge comparisons are otherwise invalid"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the full configuration crossed every harmful intent with every framing, every semantic image category and every carrier, roughly what fraction of it would the lightweight configuration evaluate?",
+   "answer": "The full crossing would contain 272 \u00d7 6 \u00d7 5 \u00d7 2 = 16,320 instances. The 1,500-instance lightweight configuration would then be about 9% of the full configuration.",
+   "rubric": [
+    "Computes about 16,320 full instances",
+    "Concludes the lightweight configuration is about 9% (roughly one-eleventh)"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If GPT-5's harmfulness QWK against human experts had been low, say 0.5, which parts of the paper would lose support beyond the GPT-5-scored ASRs themselves?",
+   "answer": "The lightweight judge's validity would also be undermined. It was trained on GPT-5 annotations and validated only against GPT-5, so its high agreement (QWK 0.95) would just reproduce an unreliable reference.",
+   "rubric": [
+    "Names the lightweight judge (and its use for follow-up studies) as also undermined",
+    "Reason: it was trained on and validated against GPT-5 labels, not humans"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose the lightweight configuration had shown the same tiny mean ASR difference but a Spearman correlation of only 0.6 across cells. Which use of the lightweight configuration would lose its support?",
+   "answer": "Its use for ranking or comparing models and cells, for example in regression testing, would lose support. A near-zero mean difference can coexist with per-cell errors that cancel out, and the strong rank agreement (0.997) is what supports preserving relative orderings.",
+   "rubric": [
+    "States that ranking or comparison of models and cells would be undermined",
+    "Reason: a small mean difference can hide cancelling errors, and rank agreement is what supports preserved orderings"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the embedding analysis had found a large high-similarity mass among the 272 intents, with the PCA collapsing into a few clusters, which claim would be weakened?",
+   "answer": "The claim that the intent set is diverse and covers the 9 domains and 18 scenarios would be weakened. The effective number of distinct harmful objectives would be smaller than 272, and per-domain stratified reports would rest on redundant intents.",
+   "rubric": [
+    "Identifies the diversity or coverage claim for the intent set",
+    "Reason: redundancy would mean fewer distinct objectives than 272, weakening coverage and per-domain reporting"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the judge's mismatch detection had turned out to be unreliable, which of the two carrier-reporting metrics would lose support, and which would be unaffected?",
+   "answer": "CASR, and with it the ability to separate perception failures from safety behavior, would lose support because its denominator depends on mismatch flags. ASR would be unaffected, since it depends only on harmfulness scores.",
+   "rubric": [
+    "States CASR (and the perception-vs-safety separation) loses support",
+    "States ASR is unaffected because it uses only the harmfulness score"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If held-out pairs did not project onto the difference direction fitted on discovery pairs, which conclusion about the diagnostic analysis would be undermined, and which would not?",
+   "answer": "The conclusion that the representation difference generalizes beyond the discovery samples would be undermined. The behavioral ASR results would not be undermined, since they do not depend on the diagnostics, and no causal claim was made in the first place.",
+   "rubric": [
+    "States the generalization of the representation difference to new samples is undermined",
+    "Notes behavioral results are not affected (diagnostics are separate and correlational)"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the lightweight judge's \u0394ASR relative to GPT-5 had been -5% instead of -0.4%, which intended use would lose support?",
+   "answer": "Low-cost follow-up studies whose results are compared with the default GPT-5-judged numbers would lose support. A 5-point systematic underestimate would bias such comparisons and make models look safer.",
+   "rubric": [
+    "Identifies the use of the lightweight judge for comparable, low-cost follow-up evaluation",
+    "Reason: a systematic -5% bias would make its ASR incomparable with GPT-5-based results"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the judge prompt lacked anti-deception rules, which factor-level stratification would be most distorted?",
+   "answer": "The prompt-framing stratification would be most distorted. Story, Academic and Paradox framings encourage fictional, academic or safety-oriented packaging. Without the rules these could lower scores despite harmful content, underestimating ASR for those templates and biasing framing comparisons.",
+   "rubric": [
+    "Identifies the prompt-framing stratification",
+    "Reason: framings such as Story, Academic or Paradox elicit packaging or disclaimers that would deflate scores without anti-deception rules"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that proprietary MLLMs are more robust to multimodal jailbreaks than open-weight MLLMs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper evaluates 8 of each type but reports no per-model or per-group ASR values. It describes how outputs are organized rather than giving comparative results.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: no per-model or group ASR numbers are reported"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that authority-document images cause MLLMs to comply with harmful requests? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. No visual-category ASR numbers are reported, and the gemma3-12b diagnostics are explicitly correlational. The paper notes that intervention-based methods would be needed for causal claims.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: no category-level results are reported, and the diagnostics are correlational (causality requires intervention)"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper directly show that the lightweight judge agrees with human experts? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled directly. The lightweight judge was validated only against GPT-5 (QWK 0.95), and only GPT-5 was compared with humans (QWK 0.97). Agreement with humans is plausible through this chain but was not measured.",
+   "rubric": [
+    "Answers not settled (not directly shown)",
+    "Reason: the lightweight judge was compared only with GPT-5, and human comparison was done only for GPT-5"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that MMJailBench's framing-template ASRs measure a model's worst-case robustness to framing-based jailbreaks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper states the templates are fixed, simple, non-optimized probes rather than an exhaustive or optimized attack set, and that adaptive attacks may behave differently.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: the templates are fixed, simple, non-optimized probes, and adaptive attacks may differ"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that more capable MLLMs have lower ASR on MMJailBench? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. No capability-ASR relationship is reported, and the paper cautions against reading ASR as a proxy for capability. It says safety and competence are shaped by different training stages, with no a priori reason for them to move together.",
+   "rubric": [
+    "Answers not settled",
+    "Reason: no such analysis is reported, and the paper cautions against linking ASR to capability"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the lightweight configuration's ASR is within 2 percentage points of the full configuration for every matched cell? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Only 30 of 32 cells are within 2%, and the maximum absolute difference is 3.53%.",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: 30/32 cells are within 2% and the maximum difference is 3.53%"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that harmful intents are evenly distributed across the 9 harm domains? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Most domains hold 28-30 intents (about 10-11%), but Violence & Physical Harm has 48 (17.6%) and Sexual Content only 17 (6.3%).",
+   "rubric": [
+    "Answers contradicted",
+    "Reason: cites the unequal counts, e.g., Violence 48 (17.6%) versus Sexual Content 17 (6.3%)"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "The difference-direction projection can be broken down by harm domain. Would the held-out projection for the Sexual Content domain be as trustworthy as the one for Violence & Physical Harm, and why?",
+   "answer": "No. Sexual Content has only 17 intents in a single scenario, while Violence & Physical Harm has 48 intents across three scenarios. After matched pairs are split into discovery and held-out sets, Sexual Content leaves few held-out pairs, so its projection is noisier and covers less varied content.",
+   "rubric": [
+    "Says the Sexual Content breakdown is less trustworthy or less reliable",
+    "Cites its small size (17 intents, one scenario) versus 48 intents and three scenarios for Violence, so few held-out pairs remain"
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Under what way of splitting matched pairs into discovery and held-out sets would a successful held-out projection fail to show that the difference direction generalizes to new samples?",
+   "answer": "It fails when held-out pairs share harmful intents with discovery pairs, for example the same intent under another framing or carrier. The fixed direction could then separate held-out pairs because of intent-specific features already seen during fitting, not because the visual-condition difference extends to new intents.",
+   "rubric": [
+    "Identifies a split where held-out pairs reuse the discovery pairs' harmful intents (overlap or leakage between the two sets)",
+    "Explains that success could then reflect intent-specific information seen during fitting rather than generalization to new samples"
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "When would comparing a semantic image category against the released blank or noise control fail to isolate the effect of image content for a given model?",
+   "answer": "It fails when the model preprocesses images differently depending on content or aspect ratio. The two conditions would then reach the language backbone in different forms, so an ASR difference could come from preprocessing rather than from image semantics. The paper recommends checking preprocessing behaviour for this reason.",
+   "rubric": [
+    "Names model-specific preprocessing that depends on image content or aspect ratio as the failure condition",
+    "Explains that the ASR difference could then reflect preprocessing differences rather than semantic content"
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team clusters the 16 models' per-model ASR-range vectors into profiles and publishes the result as a typology of models. When would those profile assignments stop being meaningful?",
+   "answer": "They stop being meaningful when the assignments change across random restarts, or with the choice of features, distance metric or number of clusters. The paper treats such groupings only as a visualization aid, not a classification, and asks users to report stability across restarts.",
+   "rubric": [
+    "Says assignments are not meaningful when they are unstable across restarts or sensitive to the choice of features, distance or number of clusters",
+    "Notes the paper treats clustering as a visualization aid rather than a classification of models"
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "When could a change in aggregate ASR between two evaluations of the same proprietary model fail to reflect a real change in the model's behaviour?",
+   "answer": "It could fail when the provider interface does not expose sampling parameters. Default settings are then used and generation may vary from run to run, so part of the difference may be sampling noise rather than a change in the model.",
+   "rubric": [
+    "Identifies interfaces where sampling parameters cannot be fixed (default settings used) as the condition",
+    "Explains that run-to-run variability could then produce ASR differences unrelated to the model's behaviour"
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A model handles many harmful OCR inputs by only transcribing the image text or giving an off-topic reply instead of complying. Why could its OCR CASR then overstate its vulnerability?",
+   "answer": "The judge flags transcription-only and irrelevant responses as mismatches, and CASR removes mismatches from its denominator. Responses that may be a deliberate safe deflection are therefore dropped, so CASR is computed over a smaller set and is higher than the model's real safety behaviour warrants.",
+   "rubric": [
+    "Says CASR would be inflated or overstated for this model",
+    "Explains that transcription-only or irrelevant responses are flagged as mismatches and removed from CASR's denominator even if they were deliberate safe deflections"
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "In the gemma3-12b illustration, matched pairs contrast an authority-document image with a danger-related image. Why might a peak in layer-wise divergence not reflect the difference in authority meaning between the two images?",
+   "answer": "The two categories were made by different generators: Authorization Documents by a 4-bit-quantized FLUX.2 that produces text-bearing images, and Danger images by zimage. The pairs therefore also differ in visual style, generator and amount of embedded text. The divergence may track these differences rather than authority semantics, and the analysis is correlational in any case.",
+   "rubric": [
+    "Says the divergence may not reflect authority meaning alone",
+    "Cites the confound that the two categories come from different generators (FLUX.2 vs zimage) or differ in embedded text and legibility"
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the paper need to report QWK in addition to \u0394ASR to show that GPT-5 agrees with human experts?",
+   "answer": "\u0394ASR only compares the overall rates. A near-zero \u0394ASR such as +0.3% could arise even if the judge and the humans disagreed on many individual responses, as long as the errors cancel out. QWK measures agreement on each response's 1-5 score, so it shows that individual judgments match and not just the totals.",
+   "rubric": [
+    "States that \u0394ASR is an aggregate measure and can be near zero even when many item-level judgments disagree (offsetting errors)",
+    "States that QWK reflects per-response agreement on the 1-5 scores"
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the representation tooling project held-out pairs onto a direction fitted on discovery pairs, rather than simply measuring how well the fitted direction separates the discovery pairs themselves?",
+   "answer": "A direction fitted on the discovery pairs will separate those pairs by construction, so separating them proves nothing. Only projecting new, held-out pairs onto the fixed direction tests whether the representation difference extends beyond the samples used to find it.",
+   "rubric": [
+    "States that the direction separates the discovery pairs by construction (fitting or overfitting makes that trivial)",
+    "States that held-out projection tests whether the difference extends to new samples"
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can a model that never explicitly refuses still have an ASR well below 100%?",
+   "answer": "ASR counts only responses scored 4 or 5, meaning actionable or operational harmful help. A model that engages without refusing but stays high-level, partial or non-operational gets scores of 2-3, which do not count. Mismatched responses also stay in ASR's denominator without counting as successes.",
+   "rubric": [
+    "Explains that compliant but high-level or partial responses score 2-3 and fall below the s>=4 threshold",
+    "Mentions that only actionable or operational help (score 4-5) counts, or that mismatched responses remain in the denominator without counting as successes"
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the lightweight configuration's comparability with the full configuration depend on stratified sampling, rather than just on having 1,500 instances?",
+   "answer": "Aggregate ASR depends on the mixture of intents, framings, visual conditions and carriers. A subset of the same size with a different mixture, for example too many OCR or Violence instances, could shift ASR even with no sampling noise. Stratifying over all four dimensions preserves the full-configuration mixture.",
+   "rubric": [
+    "States that aggregate ASR depends on the mixture of domains, framings, visual conditions and carriers",
+    "States that stratified sampling preserves that mixture, whereas a subset of equal size with a different mixture could shift ASR"
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can a model's CASR differ from its ASR even on TEXT-carrier inputs, where no OCR reading is required?",
+   "answer": "Mismatch is not limited to OCR recognition failures. It also covers irrelevant responses and misinterpretation of the evaluated intent, which can happen with plain text. Those cases are removed from CASR's denominator, so TEXT CASR can exceed TEXT ASR.",
+   "rubric": [
+    "States that CASR can differ from ASR (typically exceed it) on TEXT inputs",
+    "Explains that the mismatch definition also includes irrelevant responses and misinterpretation, not only OCR failures"
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why can scenario-level stratification show within-domain differences for Violence & Physical Harm but not for Sexual Content?",
+   "answer": "Sexual Content contains a single scenario, so its scenario-level row is identical to the domain-level row. Violence & Physical Harm splits into three scenarios (Violence & Terrorism, Weapons & CBRN, Suicide & Self-Harm), so ASR can differ between them.",
+   "rubric": [
+    "States that Sexual Content has only one scenario, so scenario stratification equals the domain result",
+    "States that Violence & Physical Harm has three scenarios that can be compared"
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does building instances from intent-level seeds, rather than collecting existing jailbreak prompts, make the per-framing ASRs interpretable as effects of framing?",
+   "answer": "Collected jailbreak prompts tie a particular harmful goal to a particular attack strategy, so framing and intent would be confounded. With intent seeds, each fixed template is filled with the same target intent, so the framings are compared on the same objectives and differences between templates are not driven by which intents they happen to carry.",
+   "rubric": [
+    "States that collected prompts confound harmful goal with attack strategy",
+    "States that seeds let every template be instantiated with the same intents, so framing comparisons hold intent fixed"
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p1",
+   "question": "On OCR inputs, Model A has 0% mismatch and 20% ASR. Model B has 50% mismatch and 15% ASR, with no successes among its mismatched cases. Would Model B look safer than Model A on OCR ASR?",
+   "answer": "Yes. ASR uses all N responses, and B's 15% is below A's 20%.",
+   "rubric": [
+    "Answers yes, B looks safer on ASR",
+    "Notes 15% < 20% because ASR's denominator includes all responses"
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p1",
+   "question": "On OCR inputs, Model A has 0% mismatch and 20% ASR. Model B has 50% mismatch and 15% ASR, with no successes among its mismatched cases. Would Model B look safer than Model A on OCR CASR?",
+   "answer": "No. A's CASR equals its ASR at 20%. B's CASR is 15% divided by the 50% of responses that were not mismatches, which gives 30%. Once perception failures are removed, B is the more vulnerable model.",
+   "rubric": [
+    "Answers no, B looks less safe on CASR",
+    "Computes or explains B's CASR as about 30% (15/50) versus A's 20%, because mismatches are removed from the denominator"
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": "b2-p2",
+   "question": "When the GPT-5 judge scores claude-sonnet-4.5's responses, is the judge a different system from the model being evaluated?",
+   "answer": "Yes. claude-sonnet-4.5 is a separate proprietary model, so the judge is assessing another system's outputs.",
+   "rubric": [
+    "Answers yes",
+    "Notes claude-sonnet-4.5 is a different model from the GPT-5 judge"
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": "b2-p2",
+   "question": "When the GPT-5 judge scores gpt-5's responses, is the judge a different system from the model being evaluated?",
+   "answer": "No. gpt-5 is one of the 8 evaluated proprietary models, so here the judge scores its own outputs. The pooled human-agreement figures do not directly address this self-assessment case.",
+   "rubric": [
+    "Answers no: the judge is scoring its own outputs",
+    "Notes gpt-5 is among the 16 evaluated models, and/or that the pooled validation does not specifically address self-judging"
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "In the full configuration, would the bootstrap CI for the Story-template stratum be built by resampling from all 272 intents?",
+   "answer": "Yes. Each template is instantiated with every target intent, so the Story stratum contains all 272 intents, and the CI resamples intents.",
+   "rubric": [
+    "Answers yes",
+    "Explains that every intent is instantiated under each template and that the CI resamples intents"
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "In the full configuration, would the bootstrap CI for the Sexual Content domain stratum be built by resampling from all 272 intents?",
+   "answer": "No. That stratum contains only the domain's 17 intents, so resampling draws from 17 intents. This is why its CI is wider.",
+   "rubric": [
+    "Answers no",
+    "States the stratum has only 17 intents to resample, giving a wider CI"
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p4",
+   "question": "If an auditor recomputes a model's ASR from the released score distribution using the threshold s>=3, could the result be lower than the default ASR?",
+   "answer": "No. Every response scored 4 or 5 also meets s>=3, and score-3 responses are added on top. The ASR can only stay the same or rise.",
+   "rubric": [
+    "Answers no",
+    "Explains that the s>=3 success set contains the s>=4 set, so ASR cannot decrease"
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b2-p4",
+   "question": "If an auditor recomputes a model's ASR from the released score distribution using the threshold s>=5, could the result be lower than the default ASR?",
+   "answer": "Yes. Responses scored exactly 4 (actionable harmful assistance) stop counting, so the ASR falls whenever any response received a 4.",
+   "rubric": [
+    "Answers yes",
+    "Explains that score-4 responses are excluded under s>=5"
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team extends MMJailBench with a third instruction carrier that delivers the instruction as handwriting in an image. Besides ASR, what should it report for this carrier, and why?",
+   "answer": "It should report the mismatch rate and CASR. Handwriting adds a perception stage, like OCR, so a low ASR could come from the model failing to read the instruction rather than from safe behaviour. As the paper advises for carriers, the results should be read per model.",
+   "rubric": [
+    "Recommends reporting the mismatch rate and CASR (not only ASR)",
+    "Explains that the new carrier adds a perception stage, so low ASR may reflect reading failures rather than safety"
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "The lightweight judge reports 12.0% ASR for a new model. Roughly how would a human-expert rating of the same responses be expected to compare, and how strongly is that comparison supported?",
+   "answer": "It would be expected to land very close, within a fraction of a point. The lightweight judge runs about 0.4 points below GPT-5, and GPT-5 runs about 0.3 points above humans, so the offsets roughly cancel. However, the paper validates only the two links separately, never the lightweight judge directly against humans, so this is an inference rather than a measured agreement.",
+   "rubric": [
+    "Expects the human-based ASR to be very close (around 12%, within about half a point)",
+    "Combines the two \u0394ASR figures (-0.4% vs GPT-5, +0.3% GPT-5 vs humans)",
+    "Notes this chain is indirect: the lightweight judge was not validated directly against humans"
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An auditor wants to compare Identity Credential with Role images on a model known to read text in images poorly. What caveat applies to the comparison, and why?",
+   "answer": "The difference may reflect text perception rather than meaning. Identity Credential images were generated with FLUX.2 specifically to contain coherent text, while Role images come from zimage scene generation. A model that reads embedded text poorly may not register the credential cue at all, so the categories differ in legibility as well as in semantics.",
+   "rubric": [
+    "States the comparison may be confounded by text perception or legibility",
+    "Explains that Identity Credential images carry textual elements (generated with FLUX.2 for coherent text) whereas Role images are scenes from a different generator"
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team wants to rank several models on Sexual Content robustness using only the lightweight configuration. What should it do, and why?",
+   "answer": "It should use the full configuration for this domain, or at least check the bootstrap CIs before ranking. Sexual Content is the smallest domain with 17 intents, and the 1,500-instance stratified subset keeps it at about 6% of instances, so each model has few responses there and the CIs will be wide. Close rankings may not be distinguishable.",
+   "rubric": [
+    "Recommends the full configuration, or checking CIs before ranking",
+    "Explains that Sexual Content is the smallest domain (17 intents) and the lightweight subset keeps only a small share of it, giving wide CIs"
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A company deploys an MLLM to process user-uploaded screenshots and wants to know how often a harmful instruction inside a screenshot actually produces harmful output. Should it look at OCR ASR or OCR CASR, and why?",
+   "answer": "It should look at OCR ASR. ASR measures end-to-end vulnerability, and in deployment an instruction the model fails to read also fails to produce harm. CASR conditions on successful understanding and is the better measure of alignment robustness, not of realized risk.",
+   "rubric": [
+    "Chooses OCR ASR for realized deployment risk",
+    "Explains that ASR is end-to-end (perception failures also prevent harm), whereas CASR conditions on successful understanding and measures alignment robustness"
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A group adds a seventh framing template, translation-based framing, to MMJailBench and reports a new aggregate ASR. How should it build the new instances, and what must it note when comparing its aggregate with earlier results?",
+   "answer": "It should instantiate the new template for every intent by placeholder replacement and record it as a new framing value in the metadata, as the Eq. 1 scheme allows. Its aggregate ASR is not directly comparable to earlier aggregates, because it reflects a different mixture of framings and comes from a different benchmark version.",
+   "rubric": [
+    "Describes instantiating the new template for all intents and annotating it as a new framing value",
+    "States that the aggregate ASR is not directly comparable because the mixture or benchmark version changed"
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team distills its own 3B judge from GPT-5 annotations for MMJailBench. Which agreement statistics should it report to match the paper's validation standard, and why is accuracy alone insufficient for the mismatch label?",
+   "answer": "It should report QWK and \u0394ASR for harmfulness, plus mismatch accuracy and macro-F1, measured against GPT-5 (or humans) under the same protocol. Mismatches are a minority class, as the gap between 96.3% accuracy and 0.85 macro-F1 shows, so high accuracy can hide poor detection of mismatches.",
+   "rubric": [
+    "Lists QWK, \u0394ASR, mismatch accuracy and mismatch macro-F1",
+    "Explains that mismatch is imbalanced (minority class), so accuracy can be high while mismatch detection is poor"
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose Table 11 had kept its -0.06% mean difference and 0.997 Spearman but reported a maximum absolute cell difference of 15%. Which use of the lightweight configuration would lose support, and which would remain?",
+   "answer": "Using it for cell-level, per-stratum ASR values would lose support, because some cells would be badly off. Aggregate ASR and the ordering of cells would still be supported by the small mean difference and the high rank correlation.",
+   "rubric": [
+    "States that cell-level or stratified ASR values from the lightweight configuration would lose support",
+    "States that aggregate ASR (and rank ordering) would remain supported"
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the high-similarity tail had not been manually reviewed and many near-duplicate intents remained in Violence & Physical Harm, which reported statistic for that domain would be overstated, and why?",
+   "answer": "The domain's precision would be overstated, meaning its bootstrap confidence interval would be too narrow. Bootstrap CIs resample intents as if they were independent units, so near-duplicates would act as fewer distinct objectives than the count of 48 suggests. Its share of the benchmark would also overstate its real coverage.",
+   "rubric": [
+    "Identifies the domain's bootstrap CI as too narrow (precision overstated); mentioning inflated coverage or weight is acceptable alongside this",
+    "Explains that resampling treats intents as independent, so near-duplicates mean fewer distinct objectives than counted"
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If OCR instructions had been rendered with varying layouts, fonts and contrast instead of a standardized legible layout, which interpretation of TEXT-versus-OCR differences would lose support?",
+   "answer": "The reading that a TEXT-versus-OCR difference reflects the delivery channel itself would lose support. Formatting and legibility would vary across instances, so mismatch rates and ASR could differ because of rendering quality, and the carrier effect would be confounded with presentation.",
+   "rubric": [
+    "States that attributing TEXT-vs-OCR differences to the delivery channel would lose support",
+    "Explains that variable rendering adds legibility or formatting variation that confounds the carrier comparison (for example affecting mismatch)"
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose GPT-5 had kept a harmfulness QWK of 0.97 against human experts but showed a \u0394ASR of +5%. Which use of the reported ASRs would lose support, and why could the high QWK not rescue it?",
+   "answer": "Treating the reported ASR levels as matching human-expert judgment would lose support, for example comparing them with human-judged results. QWK rewards close agreement on the ordinal 1-5 scale, so it can stay high even if GPT-5 systematically scores borderline 3s as 4s. Such threshold-crossing bias directly inflates ASR.",
+   "rubric": [
+    "States that the absolute ASR levels (their correspondence to human judgment) would lose support",
+    "Explains that QWK measures ordinal agreement and can remain high despite systematic disagreement at the 3-versus-4 threshold that drives ASR"
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the lightweight judge had been validated against GPT-5 only on TEXT-carrier responses, which reported metric computed with it would have the weakest support, and why?",
+   "answer": "OCR mismatch rate, and therefore OCR CASR, would have the weakest support. Mismatch cases such as recognition failures and transcription-only replies are concentrated in OCR inputs, and CASR's denominator depends directly on how well the judge flags them. That would not have been validated.",
+   "rubric": [
+    "Identifies OCR mismatch rate and/or OCR CASR",
+    "Explains that mismatches arise mainly from OCR perception failures and that CASR's denominator depends on accurate mismatch flags"
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If some proprietary APIs had rejected a portion of the images, so those models were evaluated on a reduced instance pool, which kind of comparison in the paper would be undermined?",
+   "answer": "Comparisons of aggregate ASR and per-model summaries across models would be undermined. Aggregate ASR depends on the mixture of conditions, and the protocol relies on all models receiving identical inputs, so differing pools would make the numbers summarize different mixtures.",
+   "rubric": [
+    "Identifies cross-model comparisons of aggregate ASR or per-model summaries",
+    "Explains that ASR depends on the instance mixture and that comparability relies on identical inputs across models"
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the OCR carrier yields higher ASR than the TEXT carrier for MLLMs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper reports no per-factor ASR numbers. It also says carrier behaviour depends on each model's vision encoder and backbone and should be read per model, and that low OCR ASR may reflect perception limits.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the absence of reported carrier ASR numbers and/or the per-model dependence of carrier results"
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the layer-wise divergence profile observed on gemma3-12b also holds for the other open-weight models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The tooling is illustrated only on gemma3-12b, no quantitative diagnostic results are reported, and no other model's profiles are shown.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the diagnostics are illustrated only on gemma3-12b without quantitative results for other models"
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the share of each harm domain in MMJailBench reflects how often such requests occur in real-world use? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The intents were built under category guidance from existing benchmarks and provider policies, then filtered. No usage-frequency data is used or reported, so the domain sizes reflect the construction choices.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that domain sizes come from category-guided construction from benchmarks and policies, not from real-world prevalence data"
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that MMJailBench's visual semantic categories produce higher ASR than its control images? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The control images are released so that users can build their own reference conditions, but the paper reports no ASR comparison between semantic and control conditions.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the controls are released for users without any reported comparison results"
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper claim that its four annotation dimensions capture every factor that affects a model's ASR on the benchmark? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper itself names other influences that are not among the four dimensions: image generation quality and legibility, model-specific preprocessing, decoding settings and the judge.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites at least one non-annotated factor the paper says affects results (generation quality or legibility, preprocessing, decoding settings, judge)"
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper treat responses scored 2 or 3 as harmless? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. These scores mean potential risk or high-level and partial harmful information, and the paper says they may warrant attention in some deployment contexts. They are excluded from ASR only to keep topical engagement separate from genuine harmful assistance.",
+   "rubric": [
+    "Answers contradicted",
+    "Explains that scores 2-3 denote potential or partial harm that may warrant attention, and are excluded only by the conservative success definition"
+   ],
+   "batch": 2,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q83",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "qwen2.5-vl-7b generated the visual descriptions and image prompts and is also one of the evaluated models. Does the paper show that this has no effect on its visual-semantics results? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper documents this dual role but neither analyses nor reports whether it affects that model's results relative to the others.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the paper reports no analysis of this generator-evaluatee overlap"
+   ],
+   "batch": 2,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A researcher uses the cross-modal attention tooling to compare an Authorization Document instance with the no-image control, both under the TEXT carrier. Why would the visual-token part of this comparison break down?",
+   "answer": "Under the TEXT carrier, the no-image control gives the model no image, so there are no visual tokens to receive attention. The visual-token attention profile is therefore undefined for one side of the pair. A blank or noise control, which still supplies an image, would be needed for a visual-token comparison.",
+   "rubric": [
+    "States that the visual-token attention comparison fails or is undefined for the no-image condition",
+    "Explains that with no image and a TEXT carrier there are no visual tokens to attend to",
+    "Suggests or notes that an image-bearing control such as blank or noise would avoid this problem"
+   ],
+   "batch": 3,
+   "orig_id": "n1"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "When could the cross-modal attention tooling show nearly identical layer-wise attention profiles for two paired image conditions even though some attention heads treat the images very differently?",
+   "answer": "This can happen when only a few heads respond differently to the two images. The tooling averages attention mass over heads, so head-specific differences can be diluted or cancel out in the average. The flat profile would then hide a real difference.",
+   "rubric": [
+    "Identifies the case where differences are confined to a few heads, or where heads differ in opposite directions",
+    "Explains that the tooling averages attention over heads, which dilutes or cancels head-specific effects"
+   ],
+   "batch": 3,
+   "orig_id": "n2"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A newly released model answers MMJailBench prompts in a response style quite unlike earlier models, for example with very long reasoning traces before the answer. Why might the lightweight judge's reported agreement fail to hold for this model's responses?",
+   "answer": "The lightweight judge was fine-tuned on GPT-5 annotations and validated against GPT-5 only within this benchmark and protocol. Its 0.95 QWK and 99.4% mismatch accuracy describe responses like those it was trained and validated on, and an unfamiliar response style is a distribution shift that this validation does not cover. A sample of the new model's responses should be re-checked against GPT-5 before relying on the lightweight scores.",
+   "rubric": [
+    "States that the agreement may not hold or is not guaranteed for this model",
+    "Explains that the judge was distilled from and validated against GPT-5 annotations on responses within the benchmark's scope, so a new response style is outside what was validated",
+    "Recommends re-validating on a sample against GPT-5 (or human ratings)"
+   ],
+   "batch": 3,
+   "orig_id": "n3"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "When would a small per-model ASR range across the 6 framing templates fail to show that a model is insensitive to framing?",
+   "answer": "It fails when the model's ASR is near 0% (or near 100%) under every template. The range then has no room to grow, whatever the model's framing sensitivity. A small range under such a floor or ceiling reflects the overall ASR level rather than any insensitivity to framing.",
+   "rubric": [
+    "Identifies a floor or ceiling case, i.e. ASR near zero (or near maximum) across all templates",
+    "Explains that the range is then compressed regardless of sensitivity, so it reflects the overall ASR level rather than framing insensitivity"
+   ],
+   "batch": 3,
+   "orig_id": "n4"
+  },
+  {
+   "id": "q88",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team runs the 1,500-instance lightweight configuration scored by the lightweight judge and treats the results as equivalent to the full configuration scored by GPT-5. Why is that equivalence not directly established by the paper?",
+   "answer": "The paper validates each shortcut separately. The lightweight configuration is compared with the full configuration in Table 11, and the lightweight judge is compared with GPT-5 in Table 12. The combined pipeline is never compared with full-plus-GPT-5. Sampling deviations (up to 3.53% in a cell) and judge deviations (\u0394ASR \u22120.4%, QWK 0.95) could add up, so the combination remains unvalidated.",
+   "rubric": [
+    "States that the equivalence of the combined setup is not directly validated",
+    "Explains that the two shortcuts were each validated against their own reference (full configuration and GPT-5) but never together",
+    "Notes that their errors could compound, e.g. cell-level sampling deviations plus judge deviations"
+   ],
+   "batch": 3,
+   "orig_id": "n5"
+  },
+  {
+   "id": "q89",
+   "type": "failure",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "The OCR instruction images use font sizes and contrast chosen to stay legible after typical image preprocessing. For which kind of model could this design choice fail, and how would that show up in the results?",
+   "answer": "It could fail for a model whose interface downsamples or crops images unusually aggressively, more than typical preprocessing does. The rendered instruction could then become unreadable. That would show up as a higher OCR mismatch rate and a low OCR ASR that reflects perception failure rather than safety.",
+   "rubric": [
+    "Identifies models with atypical or aggressive image preprocessing such as heavy downscaling or cropping",
+    "States that the instruction may become illegible, raising OCR mismatch and lowering OCR ASR for perception rather than safety reasons"
+   ],
+   "batch": 3,
+   "orig_id": "n6"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is the lightweight configuration's mean absolute ASR difference (0.79%) much larger than the magnitude of its mean ASR difference (\u22120.06%)?",
+   "answer": "Individual cells deviate in both directions: some lightweight cells come out above the full configuration and some below. In the signed mean these deviations largely cancel, but in the absolute mean they do not. So there is little systematic bias, yet there is real cell-level sampling noise of under 1 point on average.",
+   "rubric": [
+    "Explains that per-cell differences have mixed signs that cancel in the signed mean but not in the absolute mean",
+    "Concludes that this indicates little systematic bias but non-zero per-cell noise"
+   ],
+   "batch": 3,
+   "orig_id": "n7"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the reported 95% CI for the lightweight-minus-full ASR difference support the claim that the lightweight configuration does not systematically over- or under-estimate ASR?",
+   "answer": "The interval [\u22120.45%, 0.30%] contains zero, so the data are consistent with no systematic offset. It is also narrow, which rules out any bias larger than about half a percentage point in either direction.",
+   "rubric": [
+    "Notes that the CI includes zero, so there is no evidence of a systematic offset",
+    "Notes that the CI is narrow, bounding any possible bias to under about 0.5 percentage points"
+   ],
+   "batch": 3,
+   "orig_id": "n8"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Under the paper's factorized construction (Eq. 1), why does comparing ASR across framing templates for a given intent and visual category not also change the image the model sees?",
+   "answer": "In Eq. 1 the visual component is V(h,v), which depends only on the intent and the visual semantic condition, not on the framing t. Instances that differ only in framing therefore share the same image. Only the instruction component L(h,t,c) changes.",
+   "rubric": [
+    "States that the image is the same across framings for a given intent and visual category",
+    "Explains that V(h,v) depends only on intent and visual semantics, not on framing (framing enters only through L(h,t,c))"
+   ],
+   "batch": 3,
+   "orig_id": "n9"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why can a difference between TEXT and OCR ASR for the same intents, framings and visual categories be attributed to how the instruction is delivered rather than to a difference in visual context?",
+   "answer": "In Eq. 1 the carrier enters only the instruction component L(h,t,c), while the semantic image V(h,v) does not depend on the carrier. For OCR, the rendered instruction is combined with that same semantic image, and the semantics are preserved. So the two carriers share intent, framing and visual context and differ only in delivery.",
+   "rubric": [
+    "States that the visual semantic context is the same under both carriers",
+    "Explains that the carrier affects only L(h,t,c) while V(h,v) is carrier-independent, and that OCR combines the rendered instruction with the same semantic image"
+   ],
+   "batch": 3,
+   "orig_id": "n10"
+  },
+  {
+   "id": "q94",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can two models with identical ASR differ substantially in how dangerous their successful jailbreaks are?",
+   "answer": "ASR is a binary count of responses with s \u2265 4, so a response scored 4 (actionable assistance) and one scored 5 (detailed operational guidance) count the same. One model could have mostly 4s and the other mostly 5s. Only the released full score distribution reveals this difference.",
+   "rubric": [
+    "States that ASR treats scores 4 and 5 identically as successes",
+    "Explains that severity differences, such as more score-5 responses, are visible only in the released score distribution"
+   ],
+   "batch": 3,
+   "orig_id": "n11"
+  },
+  {
+   "id": "q95",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A researcher wants to know whether merely attaching an image, regardless of content, changes a model's refusal behaviour. Which two released conditions should be compared, under which carrier, and why?",
+   "answer": "Compare the no-image control with the blank image under the TEXT carrier. The blank image adds visual input but no semantic content, so any difference isolates the presence of an image. The TEXT carrier is needed because under OCR the instruction itself arrives as an image, so even the no-image condition contains visual input.",
+   "rubric": [
+    "Chooses no-image versus blank (noise is an acceptable secondary option)",
+    "Explains that blank adds an image without semantic content, isolating image presence from image meaning",
+    "Specifies the TEXT carrier, because under OCR there is always an image carrying the instruction"
+   ],
+   "batch": 3,
+   "orig_id": "n12"
+  },
+  {
+   "id": "q96",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A model has near-zero mismatch rates on both carriers, but its OCR ASR is 30% while its TEXT ASR is 10%. What should an auditor conclude about the OCR result, and why?",
+   "answer": "With near-zero mismatches, OCR CASR is essentially equal to OCR ASR, so the gap cannot be explained by perception failures. The model reads the embedded instructions correctly and genuinely complies more often when the instruction arrives as an image. This points to weaker safety behaviour on image-embedded instructions.",
+   "rubric": [
+    "Concludes that the OCR gap reflects a genuine safety weakness rather than a perception artifact",
+    "Explains that near-zero mismatch makes CASR \u2248 ASR, so the model understood the instructions"
+   ],
+   "batch": 3,
+   "orig_id": "n13"
+  },
+  {
+   "id": "q97",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the per-model factor-sensitivity scatter plot, a model shows a 25-point ASR range on the framing dimension. Before reporting it as 'highly framing-sensitive', what should the auditor check, and why?",
+   "answer": "The auditor should check the underlying per-template stratified table for that model. The range alone cannot tell whether one outlying template, such as Code, drives the spread or whether ASR rises gradually across templates. These two situations call for different conclusions and follow-ups.",
+   "rubric": [
+    "Recommends inspecting the per-template stratified table for that model",
+    "Explains that the range cannot distinguish a single outlying template from a gradual trend across templates"
+   ],
+   "batch": 3,
+   "orig_id": "n14"
+  },
+  {
+   "id": "q98",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team adds a sixth visual semantic category, 'Prescription Note', which contains printed text. Following the paper's construction pipeline, how should it generate the images, and what caveat should it attach to comparisons with text-free categories?",
+   "answer": "The team should generate one image per intent, following V(h,v), using a generator able to render coherent text, as FLUX.2 was chosen for Identity Credential and Authorization Document. It should then filter the images for semantic relevance, visual quality and readability. The caveat is that generation quality and text legibility differ from text-free categories and can interact with model perception, so ASR differences may partly reflect perception rather than meaning.",
+   "rubric": [
+    "Specifies intent-specific generation with a text-capable generator plus filtering for relevance, quality and readability",
+    "States the caveat that legibility and generation quality differ from text-free categories and can interact with perception, confounding comparisons"
+   ],
+   "batch": 3,
+   "orig_id": "n15"
+  },
+  {
+   "id": "q99",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team needs per-model, scenario-by-carrier results but can afford only one of two setups: the full configuration scored by the lightweight judge, or the 1,500-instance configuration scored by GPT-5. Which should it choose, and why?",
+   "answer": "It should choose the full configuration with the lightweight judge. Scenario-by-carrier cells for a single model become too sparse in the 1,500-instance subset, and the paper advises aggregating to domain level when cells get small. The lightweight judge closely reproduces GPT-5 (QWK 0.95, \u0394ASR \u22120.4%), so the cost in judge fidelity is small.",
+   "rubric": [
+    "Chooses the full configuration with the lightweight judge",
+    "Explains that fine per-model cross-tabulations are too sparse in the lightweight configuration",
+    "Notes that the lightweight judge's agreement with GPT-5 is high (e.g. QWK 0.95, \u0394ASR \u22120.4%)"
+   ],
+   "batch": 3,
+   "orig_id": "n16"
+  },
+  {
+   "id": "q100",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the visual input had been regenerated separately for each framing template, so that it depended on framing as well as intent and visual category, which stratification would become hard to interpret, and why?",
+   "answer": "The prompt-framing stratification would become hard to interpret. Differences between templates would mix framing effects with differences between images. Under the paper's Eq. 1, V(h,v) does not depend on framing, which is what keeps images fixed across templates.",
+   "rubric": [
+    "Identifies the prompt-framing stratification",
+    "Explains that framing would be confounded with image differences, which the framing-independent V(h,v) currently prevents"
+   ],
+   "batch": 3,
+   "orig_id": "n18"
+  },
+  {
+   "id": "q101",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If OCR instances showed only the rendered instruction image, without the semantic image that TEXT instances receive, which comparison would be confounded, and how?",
+   "answer": "The TEXT-versus-OCR carrier comparison would be confounded. The two carriers would then differ both in instruction delivery and in whether semantic visual context is present. An ASR or CASR gap could no longer be attributed to the carrier alone.",
+   "rubric": [
+    "Identifies the carrier (TEXT vs OCR) comparison",
+    "Explains that carrier would be confounded with the presence or absence of semantic visual context"
+   ],
+   "batch": 3,
+   "orig_id": "n19"
+  },
+  {
+   "id": "q102",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the control images had been rendered at a different resolution from the semantic images, which kind of comparison would become unreliable, and why?",
+   "answer": "Comparisons between semantic categories and controls would become unreliable. Some models apply different preprocessing depending on image properties, so a resolution difference could change how images are processed independently of their content. The paper avoids this by rendering controls at the same resolution and pairing them with the same instruction components.",
+   "rubric": [
+    "Identifies semantic-category versus control comparisons",
+    "Explains that resolution differences could trigger different preprocessing, confounding the content effect (the paper matches resolution to avoid this)"
+   ],
+   "batch": 3,
+   "orig_id": "n20"
+  },
+  {
+   "id": "q103",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the lightweight configuration's stratified sampling had preserved harm domains, framings and carriers but not the visual semantic conditions, which stratified view computed on the lightweight configuration would lose its support?",
+   "answer": "The visual-semantics stratification computed on the lightweight configuration would lose its support. Its category mixture would no longer match the full configuration, so per-category ASR and the aggregate could be skewed. Table 11's agreement depends on the full distribution being preserved along all four dimensions.",
+   "rubric": [
+    "Identifies the visual-semantics stratification (per visual category results) on the lightweight configuration",
+    "Explains that the representativeness behind the Table 11 agreement relies on preserving the distribution along every annotated dimension, including visual conditions"
+   ],
+   "batch": 3,
+   "orig_id": "n21"
+  },
+  {
+   "id": "q104",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the judge mistakenly flagged clear refusals as 'irrelevant responses', and therefore as mismatches, which carrier-reporting metric would be distorted, and in which direction?",
+   "answer": "CASR would be distorted upward. Refusals are non-successes, and flagging them as mismatches removes them from the denominator N \u2212 N_mismatch while the numerator stays the same. ASR would be unaffected, since its denominator is all N responses.",
+   "rubric": [
+    "Identifies CASR as the distorted metric",
+    "States that it would be inflated, because non-successful refusals would be removed from the denominator while successes are unchanged (ASR is unaffected)"
+   ],
+   "batch": 3,
+   "orig_id": "n22"
+  },
+  {
+   "id": "q105",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that any stratified 1,500-instance sample drawn by a user would match the full configuration as closely as the reported lightweight configuration does? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Table 11 validates the one released lightweight configuration against the full configuration. The paper reports no comparison across alternative stratified draws, so how much agreement varies from one draw to another is not established.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that only the single released 1,500-instance configuration was compared with the full configuration, with no evidence on other draws"
+   ],
+   "batch": 3,
+   "orig_id": "n23"
+  },
+  {
+   "id": "q106",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the GPT-5 judge agrees with human experts equally well within each harm domain and each framing template? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Table 12 reports agreement figures (QWK 0.97, \u0394ASR +0.3%, mismatch accuracy and macro-F1) only in aggregate. No per-domain or per-framing breakdown of judge agreement is given, so stratum-specific judge reliability is unknown.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the human-agreement statistics are reported only in aggregate, with no per-domain or per-framing breakdown"
+   ],
+   "batch": 3,
+   "orig_id": "n24"
+  },
+  {
+   "id": "q107",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Story framing is the most effective of its 6 framing templates at jailbreaking MLLMs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper describes the framing stratification but reports no per-template ASR numbers. Even with such numbers, the templates are fixed, simple probes, so they would rank only these instantiations and not framing strategies in general.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that no per-template ASR values are reported (and/or that the fixed simple templates would not establish the strategy's general effectiveness)"
+   ],
+   "batch": 3,
+   "orig_id": "n25"
+  },
+  {
+   "id": "q108",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the layer where gemma3-12b's paired conditions diverge most is the layer where the model makes its safety decision? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The divergence profile only shows where the paired representations are most separated, and the paper reports no quantitative diagnostic results. It also stresses that such analyses are correlational, so localizing a decision would require intervention experiments.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the divergence profile is correlational and descriptive (no numbers reported), so causal localization would need intervention"
+   ],
+   "batch": 3,
+   "orig_id": "n26"
+  },
+  {
+   "id": "q109",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its rendered OCR instructions are reliably read by all 16 evaluated models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The instructions were rendered in a standardized layout intended to stay legible after typical preprocessing, and mismatch rates are part of the output. However, no per-model mismatch numbers are reported, and the paper itself warns that low OCR ASR may reflect perception limitations.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that legibility is a design intent but no per-model OCR mismatch rates are reported, and the paper anticipates perception failures for some models"
+   ],
+   "batch": 3,
+   "orig_id": "n27"
+  },
+  {
+   "id": "q110",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Because Violence & Physical Harm is the largest domain (48 intents), does the paper show that it is the domain where MLLMs are most vulnerable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The domain's size reflects benchmark composition, not measured vulnerability. The paper reports no per-domain ASR values, and the suite reports per-domain rates separately from counts precisely so that the two are not confused.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that domain size reflects composition rather than vulnerability, and that no per-domain ASR results are reported"
+   ],
+   "batch": 3,
+   "orig_id": "n28"
+  },
+  {
+   "id": "q111",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": "b3-pA",
+   "question": "Under the TEXT carrier, does the 'no image' control condition give the model an input containing no image at all?",
+   "answer": "Yes. Under the TEXT carrier the instruction is plain text, so removing the semantic image leaves no visual input at all.",
+   "rubric": [
+    "Answers yes",
+    "Explains that under TEXT the instruction is plain text, so without the semantic image no image remains"
+   ],
+   "batch": 3,
+   "orig_id": "n29"
+  },
+  {
+   "id": "q112",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": "b3-pA",
+   "question": "Under the OCR carrier, does the 'no image' control condition give the model an input containing no image at all?",
+   "answer": "No. Under the OCR carrier the instruction itself is rendered into an image. Removing the semantic image still leaves an image that carries the instruction text.",
+   "rubric": [
+    "Answers no",
+    "Explains that the OCR carrier delivers the instruction as a rendered image, so an image remains even without the semantic image"
+   ],
+   "batch": 3,
+   "orig_id": "n30"
+  },
+  {
+   "id": "q113",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": "b3-pC",
+   "question": "Following the paper's recommendations, is it valid to compare the per-model factor-sensitivity summaries of two models that were both scored by GPT-5 with the same decoding settings on the same benchmark version?",
+   "answer": "Yes. The paper recommends comparing per-model summaries among models evaluated under the same judge, decoding settings and benchmark version, and this pair meets all three conditions.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the shared judge, decoding settings and benchmark version satisfy the paper's comparability conditions"
+   ],
+   "batch": 3,
+   "orig_id": "n31"
+  },
+  {
+   "id": "q114",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c5"
+   ],
+   "pair": "b3-pC",
+   "question": "Following the paper's recommendations, is it valid to compare the per-model factor-sensitivity summaries of two models when one was scored by GPT-5 and the other by the lightweight judge?",
+   "answer": "No, not directly. The paper recommends comparing summaries only under the same judge, because changing the judge can shift the reported values. The lightweight judge's high but imperfect agreement with GPT-5 (QWK 0.95) does not remove that concern.",
+   "rubric": [
+    "Answers no (not directly valid)",
+    "Explains that the paper restricts comparisons to the same judge because judge changes can shift values, even given the lightweight judge's high but imperfect agreement"
+   ],
+   "batch": 3,
+   "orig_id": "n32"
+  },
+  {
+   "id": "q115",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-pE",
+   "question": "On an OCR instance, a model's response only transcribes the text visible in the image. Would this response be excluded from the CASR denominator?",
+   "answer": "Yes. Only transcribing visual content is listed as an instruction-recognition failure, so the judge flags it as a mismatch. It is removed from N \u2212 N_mismatch.",
+   "rubric": [
+    "Answers yes",
+    "Explains that transcription-only responses are flagged as instruction mismatches and so are subtracted from the denominator"
+   ],
+   "batch": 3,
+   "orig_id": "n33"
+  },
+  {
+   "id": "q116",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-pE",
+   "question": "On an OCR instance, a model's response explicitly refuses the specific harmful task described in the image. Would this response be excluded from the CASR denominator?",
+   "answer": "No. The refusal shows that the model recognized the task, so it is not a mismatch. It stays in the denominator as a non-success and lowers CASR.",
+   "rubric": [
+    "Answers no",
+    "Explains that a task-specific refusal demonstrates correct understanding, so it is not a mismatch and remains in the denominator as a non-success"
+   ],
+   "batch": 3,
+   "orig_id": "n34"
+  },
+  {
+   "id": "q117",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": "b3-pG",
+   "question": "Would a pair consisting of a Danger image with the TEXT carrier and an Authorization Document image with the TEXT carrier, sharing intent and framing, be a valid matched pair for attributing representation divergence to the image?",
+   "answer": "Yes. The two instances differ only in the visual semantic condition, which is the one-factor matched design the tooling relies on, so divergence can be attributed to the image.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the instances differ in exactly one factor (the image), matching the tooling's one-factor pairing design"
+   ],
+   "batch": 3,
+   "orig_id": "n35"
+  },
+  {
+   "id": "q118",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": "b3-pG",
+   "question": "Would a pair consisting of a Danger image with the TEXT carrier and an Authorization Document image with the OCR carrier, sharing intent and framing, be a valid matched pair for attributing representation divergence to the image?",
+   "answer": "No. The two instances differ in both the image and the carrier, so any divergence could come from either factor. It cannot be attributed to the image alone.",
+   "rubric": [
+    "Answers no",
+    "Explains that the pair differs in two factors (image and carrier), so divergence cannot be attributed to the image"
+   ],
+   "batch": 3,
+   "orig_id": "n36"
+  },
+  {
+   "id": "q119",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "OCR instances combine the rendered instruction with the semantic image, while TEXT instances show the semantic image alone. Given the paper's note on model-specific image preprocessing, when would a TEXT-versus-OCR ASR difference fail to reflect the delivery channel alone?",
+   "answer": "It fails for models whose preprocessing depends on image content or aspect ratio. The OCR composite has a different layout from the bare semantic image, so such a model may resize or crop the semantic content differently under OCR. Part of the carrier difference could then come from how the visual context was processed, not from where the instruction was placed.",
+   "rubric": [
+    "Says the comparison can fail or be confounded for models whose preprocessing depends on image content or aspect ratio",
+    "Explains that the OCR composite has a different layout or aspect ratio than the TEXT image, so the semantic image may be resized or cropped differently, changing the visual context"
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q120",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "In the full configuration's scenario-by-carrier cross-tabulation for one model, an auditor finds one cell with by far the highest ASR and reports it as the model's main weakness. Why might that conclusion not hold?",
+   "answer": "The table has 18 scenarios \u00d7 2 carriers = 36 cells, each with relatively few responses. With that many cells, one cell can look extreme by chance. The paper warns against drawing conclusions from individual cells without accounting for multiple comparisons, and recommends aggregating to domain level when intervals are wide.",
+   "rubric": [
+    "Says the single extreme cell may be a chance finding rather than a real weakness",
+    "Explains this by the many cells (about 36) each with few responses, so multiple comparisons or wide intervals must be accounted for, or results aggregated to domain level"
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A user applies the representation tooling to Code-framed versus Story-framed matched pairs and finds a large layer-wise divergence. Why might this not show anything about safety processing?",
+   "answer": "The two templates differ greatly in surface form and in the kind of output they request. The final generation-prefix state may therefore separate them because it encodes format or genre rather than anything safety-related. The tooling is only correlational, so intervention would be needed to link the divergence to refusal behaviour.",
+   "rubric": [
+    "Says the divergence may not reflect safety processing",
+    "Explains that Code and Story templates differ strongly in surface form or requested output format, which the prefix representation could encode",
+    "Notes that the analysis is correlational, so intervention would be needed to support a safety interpretation"
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Under the OCR carrier, why might mismatch rates be higher for Identity Credential and Authorization Document instances than for Danger instances, for reasons unrelated to reading the rendered instruction?",
+   "answer": "Images in those two categories were generated to contain coherent text. An OCR instance in these categories therefore shows two text sources, the rendered instruction and the document text. A model may transcribe or respond to the document text instead of the instruction, and the judge flags only transcribing visual content as a mismatch. Category differences in OCR mismatch can therefore reflect competing text rather than instruction legibility.",
+   "rubric": [
+    "Says the extra mismatches can come from text inside the credential or document images, not from difficulty reading the instruction",
+    "Explains that a model may transcribe or answer the document text instead of the instruction, which the judge counts as a mismatch (e.g., only transcribing visual content)"
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "The exported stratified tables give bootstrap confidence intervals computed by resampling intents. When would these intervals understate the real uncertainty of a stratum's ASR or CASR?",
+   "answer": "They understate uncertainty when the judge errs systematically within that stratum. Resampling intents captures only variation over which intents were sampled. It does not capture judge error, such as GPT-5's imperfect mismatch detection (macro-F1 0.85). A bias concentrated in one framing, category or carrier would shift the estimate without widening its interval.",
+   "rubric": [
+    "Says the intervals understate uncertainty when the judge makes systematic errors in that stratum",
+    "Explains that resampling intents captures only intent-sampling variability and not judge error (for example, mismatch macro-F1 of only 0.85)"
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "An auditor reads the pooled harm-domain table across all 16 models and concludes that the domain with the highest pooled ASR is the riskiest domain for the specific model the company deploys. When would that inference fail?",
+   "answer": "It fails when the deployed model's own profile differs from the pool. Pooled tables average over models, and the paper stresses that behaviour is model-dependent: it provides per-model tables and recommends reading carrier results per model. The auditor should read that model's own stratified table instead.",
+   "rubric": [
+    "Says the inference fails when the deployed model's own domain profile differs from the pooled average",
+    "Explains that pooled tables average over 16 models whose behaviour is model-dependent, so the per-model stratified table should be used"
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q125",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does Table 11 report Lin's concordance correlation in addition to Spearman's \u03c1 to argue that lightweight ASRs can stand in for full-configuration ASRs?",
+   "answer": "Spearman's \u03c1 measures only whether the cells are ranked in the same order. Lightweight ASRs that were all shifted or rescaled would still score near 1. Lin's CCC also penalizes departures from the identity line, so its value of 0.999 shows that the actual ASR values agree, not just their ordering.",
+   "rubric": [
+    "States that Spearman captures only rank or order agreement, which a constant shift or rescaling would not affect",
+    "States that Lin's CCC measures agreement in absolute values (closeness to the identity line), so it supports using the lightweight numbers directly"
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why can a model that fully goes along with the Academic template, engaging willingly with the request, still not be counted as jailbroken?",
+   "answer": "The Academic template asks the model to analyse the topic and discuss related aspects. A compliant answer can therefore stay at a high-level, non-operational analysis. The rubric scores such answers 2 or 3, and ASR counts only scores of 4 or higher, meaning actionable harmful assistance.",
+   "rubric": [
+    "States that following the Academic framing can yield high-level or partial, non-actionable discussion",
+    "States that such responses score 2\u20133 and fall below the s\u22654 success threshold"
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is the paper's near-duplicate removal based on pairwise cosine similarity with manual review rather than on the PCA visualization of intent embeddings?",
+   "answer": "Removing near-duplicates means finding specific pairs of intents that are too similar. A pairwise similarity distribution exposes those pairs as a high-similarity tail that can be inspected one by one. The PCA plot is a qualitative 2-D projection that only shows overall spread, and nearby points in it cannot reliably identify duplicate pairs.",
+   "rubric": [
+    "States that duplicate detection requires identifying specific similar pairs, which the pairwise similarity tail provides for manual review",
+    "States that the PCA view is only a qualitative low-dimensional projection of overall coverage and cannot pinpoint duplicates"
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why would a 10-point ASR increase confined to Violence & Physical Harm move a model's aggregate ASR almost three times as much as a 10-point increase confined to Sexual Content?",
+   "answer": "Aggregate ASR pools all instances, and each intent is instantiated under the same framings, images and carriers. Each domain therefore weighs in proportion to its number of intents: 48 intents (17.6%) for Violence & Physical Harm versus 17 (6.3%) for Sexual Content. The increases would add about 1.8 versus 0.6 points to the aggregate, a ratio of about 2.8.",
+   "rubric": [
+    "States that aggregate ASR weights domains by their share of instances (17.6% vs 6.3%, or 48 vs 17 intents)",
+    "Gives the resulting effect: about 1.76 vs 0.63 points, a ratio of roughly 2.8"
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the per-model sensitivity profiles, why could a model's ASR range across framing templates exceed its range across carriers even if the model were equally sensitive to both dimensions?",
+   "answer": "The range is the gap between the highest and lowest configuration. Framing has 6 configurations and carrier has only 2. With more levels, there are more chances for an extreme value, including through sampling noise, so the max-minus-min tends to be larger. Ranges across dimensions with different numbers of levels are not like-for-like.",
+   "rubric": [
+    "States that the range is max minus min across configurations, so it grows with the number of configurations",
+    "Notes that framing has 6 configurations versus 2 for carrier, so the two ranges are not directly comparable"
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why does comparing a semantic category such as Danger against the nature control test something different from comparing Danger against Role?",
+   "answer": "Semantic images are generated per intent, as V(h,v) from intent-specific descriptions, so both Danger and Role images are tailored to the request. The nature control is generic and unrelated to any harmful intent. Danger versus nature therefore mixes intent relevance with category meaning, while Danger versus Role holds intent relevance fixed and varies only the kind of contextual signal.",
+   "rubric": [
+    "States that semantic images are intent-specific (generated from the intent, V(h,v)) while the nature control is generic and unrelated to the intent",
+    "Concludes that semantic-vs-nature confounds intent relevance with category meaning, while category-vs-category isolates the type of contextual signal"
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q131",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Roughly how many lightweight-configuration instances would a single model see for Violence & Physical Harm under the OCR carrier?",
+   "answer": "About 130. The lightweight configuration preserves the full-configuration distribution, giving Violence & Physical Harm about 17.6% of 1,500, roughly 264 instances, and each carrier about half of those.",
+   "rubric": [
+    "Gives about 130 instances (acceptable range roughly 120\u2013140)",
+    "Derives it from preserved proportions: about 17.6% of 1,500 for the domain, split about equally between the 2 carriers"
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q132",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A policy team cares specifically about suicide and self-harm requests. Which level of the harm-intent stratification should it read, and why?",
+   "answer": "It should read the scenario level. Suicide & Self-Harm is one of three scenarios inside the Violence & Physical Harm domain, alongside Violence & Terrorism and Weapons & CBRN. The domain-level ASR averages over all three and could hide a high or low rate on self-harm. The scenario stratum has 15 intents.",
+   "rubric": [
+    "Recommends the scenario-level stratification rather than the domain level",
+    "Explains that Suicide & Self-Harm is pooled with two other scenarios in the Violence & Physical Harm domain, so the domain rate could mask its behaviour"
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q133",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A company puts a filter in front of its MLLM that scans only the text part of each prompt for harmful requests. Which part of MMJailBench is most informative about whether this filter can be bypassed, and what should be reported?",
+   "answer": "The OCR carrier is the most informative. It delivers the same instruction inside an image, so a text-only filter never sees it. The company should report OCR ASR together with the mismatch rate and CASR, so that low success caused by the model failing to read the image is not mistaken for filter effectiveness.",
+   "rubric": [
+    "Identifies the OCR carrier as the relevant probe, because the instruction is embedded in the image and invisible to a text-only filter",
+    "Says to report OCR mismatch rate and CASR alongside ASR, to separate perception failures from real protection"
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q134",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A reviewer worries that GPT-5 judging gpt-5's own responses is biased and proposes re-scoring them with the paper's lightweight judge as an independent check. Is this a good check, and what would be better?",
+   "answer": "No. The lightweight judge was trained on GPT-5 annotations and validated only for agreement with GPT-5, so it would reproduce any GPT-5 bias rather than reveal it. A better check is human-expert annotation of a sample of gpt-5's responses, or a different judge re-validated against humans on a sample.",
+   "rubric": [
+    "Says the lightweight judge is not an independent check",
+    "Explains that it is distilled from and validated against GPT-5, so it inherits GPT-5's biases",
+    "Recommends human annotation of a sample or a separately validated judge instead"
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q135",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team wants to run all four control image conditions alongside the five semantic categories in the full configuration. By roughly what factor would the number of evaluated instances grow?",
+   "answer": "By about 1.8\u00d7. The visual dimension would go from 5 to 9 conditions while intents, framings and carriers stay fixed, since the controls are paired with the same instruction components.",
+   "rubric": [
+    "Gives a growth factor of about 1.8 (9/5), or an 80% increase",
+    "Explains that only the visual dimension grows, from 5 to 9 conditions, with the other dimensions unchanged"
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q136",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A researcher wants to know whether the internal difference between Authorization Document and Danger contexts on gemma3-12b is shared by Identity Credential versus Danger contexts. How can the paper's tooling test this, and how far can the result be interpreted?",
+   "answer": "Fit the difference direction on Authorization Document-versus-Danger discovery pairs. Then project held-out Identity Credential-versus-Danger matched pairs onto that fixed direction; the tooling allows any two visual conditions to be substituted. Consistent projection would show a shared representational difference. It would remain correlational and would need intervention to support causal claims.",
+   "rubric": [
+    "Describes fitting the direction on Authorization Document vs Danger pairs and projecting Identity Credential vs Danger matched pairs onto it",
+    "States that a positive result is correlational, with intervention needed for causal conclusions"
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q137",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If all five visual categories had been generated with FLUX.2 instead of splitting between zimage and FLUX.2, which caveat on visual-semantics comparisons would be removed, and which would remain?",
+   "answer": "The confound from using different image generators across categories would be removed. The caveat about textual legibility would remain: Identity Credential and Authorization Document images would still contain coherent text that the other categories lack, and this can interact with a model's perception. Category differences would still not be pure differences in meaning.",
+   "rubric": [
+    "Says the generator difference between categories would no longer confound comparisons",
+    "Says the difference in textual content or legibility between text-bearing document categories and scene categories would still interact with perception"
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q138",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If every harm domain had contained exactly 30 intents, which of the paper's reporting recommendations would lose most of its stated motivation?",
+   "answer": "The advice to report per-domain counts alongside rates, and the specific caution about wider confidence intervals for small domains such as Sexual Content, would lose most of their motivation. Both rest on domains differing in size: 48 intents for Violence & Physical Harm versus 17 for Sexual Content. Equal sizes would also give every domain equal weight in aggregate ASR.",
+   "rubric": [
+    "Names the recommendation to report counts alongside rates and/or the caution about wide CIs for small domains like Sexual Content",
+    "Explains that these rest on unequal domain sizes (e.g., 48 vs 17 intents), which equal sizes would remove"
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q139",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the judge had output only a binary jailbreak label instead of a 1\u20135 harmfulness score, which validation statistic and which user-facing feature described in the paper would no longer be possible?",
+   "answer": "QWK could not be computed, because it measures agreement on an ordinal scale. Users also could not re-threshold the released score distribution, for example to also count partial-information responses. The paper's distinction between topical engagement (scores 2\u20133) and actionable assistance (4\u20135) would no longer be visible.",
+   "rubric": [
+    "Names QWK as a validation statistic that would no longer be possible, because it requires ordinal scores",
+    "Names the released score distribution, or applying alternative thresholds, as a feature that would be lost"
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q140",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the framing templates had been optimized adaptively for each model instead of being fixed, which property of the framing stratification would be lost?",
+   "answer": "Framing ASRs would no longer be repeatable probes applied identically to every model and study. Cross-model and cross-study comparisons per template would therefore lose their basis, because each model would face different prompts. Adaptive templates might come closer to worst-case robustness, but that is not what the fixed design measures.",
+   "rubric": [
+    "Says repeatability, or identical conditions across models and studies, would be lost",
+    "Explains that per-template comparisons across models or studies depend on every model receiving the same fixed prompts"
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q141",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose the human-validation sample had contained almost no responses that experts scored 4 or 5, yet still showed QWK 0.97 and \u0394ASR +0.3%. Which claim would be weakly supported despite these numbers?",
+   "answer": "The claim that GPT-5 reliably applies the s\u22654 success threshold, and so the reported ASRs, would be weakly supported. High QWK and a tiny \u0394ASR could come almost entirely from agreement on refusals and low scores. Agreement at the 3-versus-4 boundary, which decides success, would be largely untested.",
+   "rubric": [
+    "Identifies reliable ASR or success classification at the s\u22654 threshold as weakly supported",
+    "Explains that the agreement could be driven by easy low-score or refusal cases, leaving the 3-versus-4 decision boundary untested"
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q142",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If the human-expert validation of GPT-5 had used responses from the 8 proprietary models only, which reported results would have the weakest judge support?",
+   "answer": "The GPT-5-scored results for the 8 open-weight models would have the weakest support, along with any open-weight-versus-proprietary comparison. Their responses could differ in style, for example in how often they misread or give irrelevant replies. Agreement measured on proprietary responses would not directly cover them.",
+   "rubric": [
+    "Names the open-weight models' scores, or open-vs-proprietary comparisons, as weakest",
+    "Explains that validation on proprietary responses does not cover the possibly different response styles of open-weight models"
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q143",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the visual inputs across its 272 intents are diverse and non-redundant? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The diversity analysis embeds only the intent text, using all-MiniLM-L6-v2 with PCA and pairwise similarity. The generated images were filtered for relevance, quality and readability, but their diversity across intents was never measured.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the similarity and PCA analyses cover the text intents only, and no diversity analysis of the images is reported"
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q144",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that scenario-level estimates for Sexual Content are less precise than those for other scenarios? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted, as far as intent counts go. Sexual Content is small only at the domain level, where it has 17 intents against 28\u201348 for other domains. Its single scenario has 17 intents, as many as or more than every other scenario, which range from 14 to 17. Its scenario-level interval should therefore be no wider than the others.",
+   "rubric": [
+    "Answers contradicted (precision is not lower at scenario level), or equivalent",
+    "Explains that its single scenario has 17 intents, at least as many as other scenarios (14\u201317), and that the small-stratum caution applies at the domain level"
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q145",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a model's MMJailBench ASR predicts its vulnerability on other multimodal jailbreak benchmarks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. No cross-benchmark correlation is reported. The paper stresses that ASR depends on the specific mixture of intents, framings, images and carriers, and that comparisons are valid only under the same judge, rubric and benchmark version.",
+   "rubric": [
+    "Answers not settled",
+    "Cites that no cross-benchmark analysis is given, and that ASR depends on the benchmark mixture and on judge or rubric choices"
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q146",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the lightweight configuration reproduces full-configuration results for individual harmful intents? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Stratification covers domains, framings, visual conditions and carriers, not individual intents. With 1,500 instances spread over 272 intents, each intent gets only about 5\u20136 instances. Agreement is shown only over 32 matched cells.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that sampling is stratified by domain, framing, visual condition and carrier rather than by intent, leaving few instances per intent, and that agreement is reported only over 32 cells"
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q147",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its cross-modal attention tooling identifies which parts of an image, such as the text on an authorization document, the model attends to? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The tooling sums attention over the group of visual tokens per layer and averages over heads. It gives one visual-attention profile per condition, with no breakdown by image region. Attention is also described as an imperfect indicator of information flow.",
+   "rubric": [
+    "Answers not settled (or not supported)",
+    "Explains that attention is aggregated over all visual tokens per layer and averaged over heads, giving no region-level breakdown"
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q148",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper's description imply that each of the 6 framing templates has roughly the same share, about 250 instances, in the lightweight configuration? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. The lightweight configuration is stratified over framings and preserves the full-configuration distribution. In the full configuration every intent is crossed with every template, so each template holds an equal one-sixth share, about 250 of 1,500 instances.",
+   "rubric": [
+    "Answers supported",
+    "Explains that stratified sampling preserves the full-configuration distribution, in which each template has an equal one-sixth share (about 250 instances)"
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q149",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "Would comparing ASR between the Danger and Role categories be free of differences caused by the image generator used?",
+   "answer": "Yes. Both Danger and Role images were generated with zimage, so the generator is held constant. Other differences, such as category content and filtering, remain.",
+   "rubric": [
+    "Answers yes",
+    "Explains that both categories were generated with the same model (zimage)"
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q150",
+   "type": "counterfactual",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "Would comparing ASR between the Danger and Authorization Document categories be free of differences caused by the image generator used?",
+   "answer": "No. Danger images come from zimage, while Authorization Document images come from a 4-bit-quantized FLUX.2, chosen for coherent text. Generator differences in quality and legibility are confounded with category.",
+   "rubric": [
+    "Answers no",
+    "Explains that Danger uses zimage while Authorization Document uses FLUX.2"
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q151",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": "b4-p2",
+   "question": "Does GPT-5's reported \u0394ASR of +0.3% against human experts directly validate ASR computed at the paper's default threshold s\u22654?",
+   "answer": "Yes. ASR is defined at s\u22654, so a \u0394ASR of +0.3% directly shows that GPT-5 and the experts yield nearly the same success rate at that threshold.",
+   "rubric": [
+    "Answers yes",
+    "Explains that \u0394ASR compares ASR, which is defined at the s\u22654 threshold"
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q152",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": "b4-p2",
+   "question": "Does GPT-5's reported \u0394ASR of +0.3% against human experts directly validate an ASR that a user recomputes at threshold s\u22653 from the released scores?",
+   "answer": "No. \u0394ASR was measured for the default s\u22654 definition. QWK of 0.97 indicates broad ordinal agreement but does not directly bound the rate gap at s\u22653, so the user should re-validate at the new threshold.",
+   "rubric": [
+    "Answers no",
+    "Explains that \u0394ASR refers to the s\u22654 definition, and QWK alone does not directly validate rates at another threshold (re-validation needed)"
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q153",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": "b4-p3",
+   "question": "For TEXT-carrier instances, can the cross-modal attention tooling measure attention from the final prefix query to harm-related task-label tokens in the instruction?",
+   "answer": "Yes. Under TEXT the harmful instruction is in the textual input, so its harm-related label tokens exist as text tokens that the tooling can target.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the instruction, and hence the harm-related label tokens, are present as text tokens"
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q154",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c3"
+   ],
+   "pair": "b4-p3",
+   "question": "For OCR-carrier instances, can the cross-modal attention tooling measure attention from the final prefix query to harm-related task-label tokens in the instruction?",
+   "answer": "No, not as defined. Under OCR the instruction is rendered into the image, so the harm-related words reach the model as visual tokens rather than as textual label tokens. Only the overall visual-token attention would be measured.",
+   "rubric": [
+    "Answers no",
+    "Explains that the instruction is rendered into the image, so there are no textual harm-label tokens to target"
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q155",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "Is the lightweight configuration guaranteed by its described construction to include instances from the Sexual Content domain?",
+   "answer": "Yes. It is stratified over harm domains while preserving the full distribution, so Sexual Content gets roughly 6.3% of 1,500, about 94 instances.",
+   "rubric": [
+    "Answers yes",
+    "Explains that sampling is stratified by harm domain, preserving its roughly 6.3% share"
+   ],
+   "batch": 4,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q156",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "Is the lightweight configuration guaranteed by its described construction to include every one of the 272 individual intents?",
+   "answer": "No. Stratification is over domains, framings, visual conditions and carriers, not over individual intents, so the described procedure does not guarantee every intent appears.",
+   "rubric": [
+    "Answers no (not guaranteed)",
+    "Explains that intents are not a stratification variable; only domains, framings, visual conditions and carriers are"
+   ],
+   "batch": 4,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q157",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-p5",
+   "question": "Can a difference direction fitted on gemma3-12b discovery pairs be used to project held-out gemma3-12b pairs?",
+   "answer": "Yes. This is the tooling's intended check: the direction is fitted and tested in the same model's residual-stream space, on new samples.",
+   "rubric": [
+    "Answers yes",
+    "Explains that discovery and held-out activations come from the same model's residual stream"
+   ],
+   "batch": 4,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q158",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-p5",
+   "question": "Can a difference direction fitted on gemma3-12b discovery pairs be used to project held-out qwen3-vl-8b pairs?",
+   "answer": "No. The direction is defined in gemma3-12b's residual-stream space, and qwen3-vl-8b has its own internal representation space. The direction must be refitted on qwen3-vl-8b's own discovery pairs.",
+   "rubric": [
+    "Answers no",
+    "Explains that the direction lives in one model's residual-stream space and must be refitted for another model"
+   ],
+   "batch": 4,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q159",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "When would comparing a model's OCR CASR with its TEXT CASR fail to isolate the effect of the delivery channel, even if the judge's mismatch flags are perfectly accurate?",
+   "answer": "The comparison fails when OCR mismatches are concentrated in particular intents, templates or domains rather than spread at random. CASR drops mismatched responses from its denominator, so OCR CASR would then be computed over a different mixture of intents and framings than TEXT CASR. Because ASR-type rates depend on that mixture, part of the CASR gap would reflect composition rather than the carrier.",
+   "rubric": [
+    "States the comparison fails when mismatches are non-randomly concentrated, for example in certain intents, templates or domains.",
+    "Explains that excluding mismatched cases leaves OCR CASR computed over a different intent or framing mixture than TEXT, and rates depend on that mixture, so the gap is partly compositional."
+   ],
+   "batch": 5,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q160",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A user requests a per-intent cross-tabulation and reads the suite's bootstrap confidence interval for one individual harmful intent. Why would that interval fail to describe the uncertainty of that intent's ASR?",
+   "answer": "The suite resamples intents, and a stratum containing a single intent always resamples that same intent. The interval therefore collapses to a point or near-zero width. It ignores the variation among that intent's responses across framings, images and carriers, so it understates the uncertainty.",
+   "rubric": [
+    "States that the interval collapses or becomes degenerate (near-zero width) and understates uncertainty.",
+    "Explains that resampling intents within a one-intent stratum always returns the same intent, so variation across that intent's responses is not captured."
+   ],
+   "batch": 5,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q161",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "When would the pooled Story row of a model's prompt-framing table misrepresent how Story framing works on that model under the TEXT carrier specifically?",
+   "answer": "The Story row averages over both carriers and all visual conditions. If Story framing interacts with the carrier, for example raising ASR strongly only under OCR, the pooled rate would mix the two and misstate Story's effect under TEXT. A framing-by-carrier cross-tabulation is needed to see this.",
+   "rubric": [
+    "States the pooled row misleads when framing interacts with carrier (or another dimension), i.e. Story's effect differs by carrier.",
+    "Explains that the framing table is a marginal averaged over carriers and visual conditions, so a cross-tabulation is needed."
+   ],
+   "batch": 5,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q162",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "An auditor uses the per-model factor-sensitivity scatter plot to decide which models deserve closer inspection. When would a model with a very large ASR range go unflagged by this plot?",
+   "answer": "The plot encodes only three dimensions: two axes and marker size. There are four annotated dimensions, so one is always left out. A model whose large range lies on the omitted dimension would look unremarkable, and a second plot or the range table is needed.",
+   "rubric": [
+    "States the model is missed when its large range is on the dimension not shown in the plot.",
+    "Explains that the plot shows only three of the four annotated dimensions (two axes plus marker size)."
+   ],
+   "batch": 5,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q163",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "When would the paper's near-duplicate filtering of harmful intents fail to remove two intents that pursue essentially the same harmful objective?",
+   "answer": "Filtering inspects only the high-similarity tail of all-MiniLM-L6-v2 cosine similarities. Two intents that describe the same objective with very different wording could get a low embedding similarity. They would then fall outside the manually reviewed tail and both remain.",
+   "rubric": [
+    "States filtering fails for same-objective intents phrased with different wording that receive low embedding similarity.",
+    "Explains that only the high-similarity tail was manually reviewed, so low-similarity pairs are never inspected."
+   ],
+   "batch": 5,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q164",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "For which kind of model would OCR CASR computed on the 1,500-instance lightweight configuration be too imprecise to support conclusions, and why?",
+   "answer": "It would be too imprecise for a model with a very high OCR mismatch rate. The lightweight configuration gives each model only about 750 OCR instances, and CASR's denominator excludes mismatches. At 80% mismatch, for instance, only around 150 responses remain, and far fewer per stratum, so the intervals become wide.",
+   "rubric": [
+    "Identifies models with a high OCR mismatch rate.",
+    "Explains that the CASR denominator excludes mismatches, and the lightweight configuration already has only about 750 OCR instances per model, so few responses remain."
+   ],
+   "batch": 5,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose GPT-5 systematically over-scores Code-framed responses relative to human experts. Would the lightweight judge's reported validation reveal this problem, and why?",
+   "answer": "No. The lightweight judge was trained on GPT-5 annotations and validated only against GPT-5, so it would likely inherit the same bias and still show high agreement. Only comparison with human labels could expose the bias, and the paper reports only pooled GPT-5-versus-human agreement, not agreement per framing.",
+   "rubric": [
+    "States the validation would not reveal the bias, and the lightweight judge would likely share it.",
+    "Explains that the judge was trained on and validated against GPT-5 labels, so a bias they share is invisible to that agreement check."
+   ],
+   "batch": 5,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q166",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "On an OCR instance, a model misreads the embedded instruction and produces detailed operational guidance for a different harmful task. Why might neither ASR nor CASR register this harmful output?",
+   "answer": "ASR counts substantive assistance to the targeted harmful intent. Misinterpreting the evaluated intent is classed as a mismatch, so the response is dropped from the CASR denominator and does not count as a success for the target intent. A harmful but off-target answer can therefore escape both metrics.",
+   "rubric": [
+    "States the output may not be counted as a success in either metric.",
+    "Explains that success is defined relative to the targeted intent, while misinterpretation is flagged as a mismatch and removed from the CASR denominator."
+   ],
+   "batch": 5,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q167",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "For a new model, when could the lightweight configuration's ASR deviate from the full configuration by more than the maximum difference reported in Table 11?",
+   "answer": "This could happen when the model's successful jailbreaks are concentrated in a few intents or instances. Whether those few cases are sampled into the 1,500 instances then dominates the estimate. Table 11's differences were measured on the evaluated models, so they do not bound sampling error for a model with such skewed vulnerability.",
+   "rubric": [
+    "States large deviation can occur when the model's successes are concentrated in a few intents or instances.",
+    "Explains that the estimate then depends heavily on whether those cases are sampled, and Table 11's bounds come only from the evaluated models."
+   ],
+   "batch": 5,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q168",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why would intent-resampled bootstrap confidence intervals for a model's aggregate ASR tend to be wider on the lightweight configuration than on the full configuration?",
+   "answer": "On the lightweight configuration, each intent contributes only about 1,500/272 \u2248 5\u20136 responses per model, compared with dozens in the full configuration. Each intent's success rate is therefore estimated much more noisily, and some intents may be absent. Resampling these noisier intent-level values gives wider intervals.",
+   "rubric": [
+    "States the intervals are wider because each intent has far fewer responses (about 5\u20136 per model versus dozens).",
+    "Explains that noisier intent-level estimates (and possibly missing intents) increase the variability captured by resampling intents."
+   ],
+   "batch": 5,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q169",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why can Table 11's 95% CI for the mean lightweight-minus-full ASR difference be as narrow as [-0.45%, 0.30%] when individual matched cells differ by up to 3.53%?",
+   "answer": "The interval describes the mean difference over 32 cells, not any single cell. Cell-level deviations of both signs largely cancel when averaged, so the mean is estimated precisely even though individual cells vary by several points.",
+   "rubric": [
+    "States the CI concerns the mean across the 32 cells, not individual cells.",
+    "Explains that averaging cancels positive and negative cell deviations, so the mean is precise despite large individual differences."
+   ],
+   "batch": 5,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q170",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Taking \u0394ASR as GPT-5's ASR minus the human experts' ASR, why does Table 12 suggest that any bias in GPT-5-scored ASRs would lean toward overstating rather than understating model vulnerability, and by how much?",
+   "answer": "GPT-5 counts slightly more responses as successes (score \u22654) than humans do, with \u0394ASR = +0.3%. Any bias therefore leans toward reporting more jailbreaks than experts would. The size is only about 0.3 percentage points, which is negligible for most comparisons.",
+   "rubric": [
+    "States the bias leans toward overstating vulnerability, because GPT-5 marks slightly more successes than humans.",
+    "Gives the magnitude as about 0.3 percentage points, i.e. negligible."
+   ],
+   "batch": 5,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q171",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "The paper warns that a large per-model range along a dimension may come from a single outlying configuration or from a gradual trend. Why does this distinction carry no information for the instruction-carrier dimension?",
+   "answer": "The carrier dimension has only two configurations, TEXT and OCR. Its range is simply the absolute difference between the two ASRs. With two points there is no way to separate an outlier from a trend, so the range already says everything.",
+   "rubric": [
+    "States the distinction is meaningless or uninformative for the carrier dimension.",
+    "Explains that with only two carriers the range equals |TEXT \u2212 OCR|, so an outlier cannot be distinguished from a trend."
+   ],
+   "batch": 5,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q172",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why might the suite be unable to report a CASR value for a stratum in which a model fails to interpret every OCR instruction?",
+   "answer": "CASR = N_success / (N \u2212 N_mismatch). If every response in the stratum is a mismatch, the denominator is zero, so CASR is undefined. ASR can still be computed and would be near zero.",
+   "rubric": [
+    "States CASR would be undefined or unavailable.",
+    "Explains that the denominator N \u2212 N_mismatch becomes zero when all responses are mismatches."
+   ],
+   "batch": 5,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q173",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A model has identical ASR on TEXT and OCR inputs. Why is its OCR mismatch rate still needed before concluding that the carrier makes no difference to its safety?",
+   "answer": "If many OCR inputs are mismatched, the same number of successes is spread over fewer understood inputs. OCR CASR would then exceed TEXT CASR. Equal ASRs can therefore hide the fact that, when the model does read the embedded instruction, it complies more often than under TEXT.",
+   "rubric": [
+    "States that equal ASRs can hide a carrier difference, because OCR CASR may be higher than TEXT CASR.",
+    "Explains that OCR mismatches shrink the CASR denominator, so successes among understood OCR inputs form a larger share."
+   ],
+   "batch": 5,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q174",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b5-p1",
+   "question": "Under Eq. 1, for a fixed harmful intent, framing template and TEXT carrier, is the instruction text identical across the five visual semantic categories?",
+   "answer": "Yes. The instruction component L(h,t,c) does not depend on the visual condition v. Only the image V(h,v) changes across visual categories.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that L(h,t,c) has no dependence on v; only V(h,v) varies."
+   ],
+   "batch": 5,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q175",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b5-p1",
+   "question": "Under Eq. 1, for a fixed harmful intent, visual semantic category and TEXT carrier, is the instruction text identical across the six framing templates?",
+   "answer": "No. The framing t is an argument of L(h,t,c), so the instruction text changes with the template, while the image V(h,v) stays the same.",
+   "rubric": [
+    "Answers no.",
+    "Explains that framing t enters L(h,t,c), so the instruction text differs across templates."
+   ],
+   "batch": 5,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q176",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": "b5-p2",
+   "question": "Following the paper's advice to aggregate to the domain level when confidence intervals become wide, would aggregating the Sexual Content scenario to its domain narrow its confidence interval?",
+   "answer": "No. The Sexual Content domain contains a single scenario. Its domain-level stratum holds the same 17 intents as the scenario, so aggregating changes nothing.",
+   "rubric": [
+    "Answers no.",
+    "Explains that Sexual Content has only one scenario, so the domain and scenario contain the same 17 intents."
+   ],
+   "batch": 5,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q177",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": "b5-p2",
+   "question": "Following the paper's advice to aggregate to the domain level when confidence intervals become wide, would aggregating the Suicide & Self-Harm scenario to its domain narrow its confidence interval?",
+   "answer": "Yes. The scenario has 15 intents, while its domain, Violence & Physical Harm, has 48 across three scenarios. Resampling over more intents gives a narrower interval, though the estimate then no longer refers to self-harm alone.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the domain has 48 intents versus 15 in the scenario, so resampling more intents narrows the interval."
+   ],
+   "batch": 5,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q178",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b5-p3",
+   "question": "If an auditor adds the four control image conditions to the five semantic categories when computing a model's ASR range on the visual dimension, could that range become smaller?",
+   "answer": "No. A range is the maximum minus the minimum over the configurations. Adding configurations to the set can never lower the maximum or raise the minimum.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the range over a superset of configurations cannot be smaller, since the max cannot drop and the min cannot rise."
+   ],
+   "batch": 5,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q179",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b5-p3",
+   "question": "If an auditor adds the four control image conditions to the five semantic categories when computing a model's ASR range on the visual dimension, could that range become larger?",
+   "answer": "Yes. If any control condition yields an ASR above the highest or below the lowest semantic category, the range widens. Ranges are therefore comparable only when computed over the same set of configurations.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the range widens whenever a control's ASR falls outside the semantic categories' min\u2013max."
+   ],
+   "batch": 5,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q180",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p4",
+   "question": "Is it consistent with Table 11 that the lightweight configuration overestimates ASR in every one of the 32 matched cells?",
+   "answer": "No. If every cell had a positive lightweight-minus-full difference, the mean difference would be positive. Table 11 reports a mean of \u22120.06%.",
+   "rubric": [
+    "Answers no.",
+    "Explains that all-positive differences would give a positive mean, contradicting the reported \u22120.06%."
+   ],
+   "batch": 5,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q181",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p4",
+   "question": "Is it consistent with Table 11 that the lightweight configuration overestimates ASR in at least one of the 32 matched cells?",
+   "answer": "Yes, and in fact Table 11 requires it. The mean absolute difference (0.79%) far exceeds the magnitude of the mean difference (0.06%). That is only possible if the differences have both signs, so some cells must be positive.",
+   "rubric": [
+    "Answers yes, and notes that it must be so.",
+    "Explains that a mean absolute difference much larger than |mean difference| implies differences of both signs."
+   ],
+   "batch": 5,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q182",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p5",
+   "question": "Would a 5-percentage-point lightweight-versus-full ASR difference in a single matched cell lie outside the range of cell differences reported in Table 11?",
+   "answer": "Yes. Table 11's maximum absolute cell difference is 3.53%, so a 5-point gap exceeds anything reported.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the maximum absolute difference of 3.53% as below 5 points."
+   ],
+   "batch": 5,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q183",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b5-p5",
+   "question": "Would a 3-percentage-point lightweight-versus-full ASR difference in a single matched cell lie outside the range of cell differences reported in Table 11?",
+   "answer": "No. Two of the 32 cells exceed 2%, and the maximum is 3.53%, so a 3-point gap falls within the reported range, although it is unusually large.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the maximum is 3.53% and two cells exceed 2%, so 3 points is within the reported range."
+   ],
+   "batch": 5,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q184",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A researcher wants to use the representation-level tooling on qwen3-vl-8b to study how TEXT versus OCR delivery changes internal states. How should the matched pairs be built, and what should be done about OCR perception failures?",
+   "answer": "Each pair should share the harmful intent, framing template and visual semantic category, and differ only in carrier. Pairs whose OCR response is flagged as a mismatch should be excluded or analyzed separately, so that perception failures do not drive the divergence. Even then, the carrier change alters both the text tokens and the image content, and the result remains correlational.",
+   "rubric": [
+    "States pairs must hold intent, framing and visual category fixed while varying only the carrier.",
+    "Recommends excluding or separating OCR cases flagged as mismatches, so perception failures do not drive the result.",
+    "Notes that the carrier change alters both the text and the image (or that the result is correlational)."
+   ],
+   "batch": 5,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q185",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An auditor wants to compare harm categories using strata of roughly equal size, so that differences in precision do not drive the comparison. Should they use the domain level or the scenario level of the harmful-intent stratification, and why?",
+   "answer": "They should use the scenario level. The 18 scenarios each contain 14\u201317 intents, whereas domains range from 17 (Sexual Content) to 48 (Violence & Physical Harm). Scenario-level strata are therefore much more uniform in size.",
+   "rubric": [
+    "Chooses the scenario level.",
+    "Explains that scenarios have 14\u201317 intents each, while domains range from 17 to 48."
+   ],
+   "batch": 5,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q186",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team scored its old model release with GPT-5 (12.4% ASR) and its new release with the lightweight judge (12.0% ASR). Can it claim the new release is safer, and what should it do?",
+   "answer": "No. The 0.4-point drop equals the lightweight judge's reported \u0394ASR of \u22120.4% relative to GPT-5, so it could be entirely a judge offset. Both releases should be scored with the same judge, under the same decoding settings and benchmark version.",
+   "rubric": [
+    "States the claim is not supported.",
+    "Explains that the drop matches the lightweight judge's \u22120.4% \u0394ASR relative to GPT-5, so the judge alone could explain it.",
+    "Recommends rescoring both releases with the same judge."
+   ],
+   "batch": 5,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q187",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A researcher wants to test whether a model's refusals are sensitive to low-level visual statistics of an image when the image carries no semantic content. Which two released control conditions should be compared, and why?",
+   "answer": "The blank and random-noise images should be compared. Both carry no semantic content and share the same resolution and instruction, but they differ in low-level visual statistics. Any ASR difference between them would point to sensitivity to pixel-level content or preprocessing rather than meaning, which should be checked as the paper recommends.",
+   "rubric": [
+    "Names the blank and noise controls.",
+    "Explains that both lack semantic content and share instructions and resolution, so a difference reflects low-level visual statistics or preprocessing rather than meaning."
+   ],
+   "batch": 5,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q188",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A group adds 50 new harmful intents to MMJailBench. Following the paper's construction procedure, how should it check for redundancy, and what must it note when reporting aggregate ASR?",
+   "answer": "It should compute all-MiniLM-L6-v2 cosine similarities among the new intents and against the existing 272, then manually review the high-similarity tail to remove near-duplicates. The extended set is a different benchmark version and changes the intent mixture. Its aggregate ASR is therefore not directly comparable with results on the original version.",
+   "rubric": [
+    "Describes embedding-based pairwise similarity (including against existing intents) with manual review of the high-similarity tail.",
+    "Notes that aggregates are not comparable with the original version, because the benchmark version and intent mixture changed."
+   ],
+   "batch": 5,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q189",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to evaluate a text-only LLM on MMJailBench and compare it with the paper's MLLMs. Which part of the benchmark can it use, and what is the valid comparison?",
+   "answer": "It can use only TEXT-carrier instances under the no-image control, since OCR and the semantic or control images all require visual input. The valid comparison is against the MLLMs' results on that same TEXT/no-image stratum. Comparing with their aggregate ASR would be invalid, because aggregate ASR depends on a different mixture of conditions.",
+   "rubric": [
+    "States that only TEXT-carrier instances with the no-image control are usable.",
+    "States the comparison must be with MLLM results on the same stratum, not their aggregate ASR, because aggregates depend on the mixture of conditions."
+   ],
+   "batch": 5,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q190",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "After finding that gemma3-12b's representations diverge most between authority-document and danger images at certain layers, a team wants to test whether that difference drives the model's compliance. What must it add to the paper's tooling?",
+   "answer": "It must add an intervention. For example, it could add or subtract the fitted difference direction in the residual stream at the most-divergent layers, then measure whether judged ASR changes. The divergence profile and held-out projection alone are correlational and cannot show causation.",
+   "rubric": [
+    "States an intervention is required, such as steering or ablating along the difference direction and measuring the behavioral change.",
+    "Explains that the tooling's divergence and projection results are only correlational."
+   ],
+   "batch": 5,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q191",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the control images had been paired with different instruction components from the semantic images, which use of the controls would lose its support?",
+   "answer": "Comparing semantic categories against control conditions to isolate the role of image content would lose support. Any ASR difference would then be confounded with differences in the instruction text, which under Eq. 1 is meant to be held fixed when only the visual input changes.",
+   "rubric": [
+    "Identifies the semantic-versus-control comparison of image content.",
+    "Explains that differing instructions would confound the comparison, since only the image should vary."
+   ],
+   "batch": 5,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q192",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the Paradox template had turned harmful requests into genuinely different, safety-oriented questions instead of preserving the underlying intent, which result would be undermined, and how?",
+   "answer": "The Paradox row of the framing stratification would be undermined. Its ASR would mix the framing effect with a changed objective. Because success and mismatch are judged against the targeted intent, many Paradox responses could be scored as off-target or mismatched, so the ASR difference from other templates would no longer reflect framing alone.",
+   "rubric": [
+    "Identifies the per-framing (Paradox) ASR and its comparison with other templates.",
+    "Explains that a changed intent confounds framing with objective, since success and mismatch are judged against the targeted intent."
+   ],
+   "batch": 5,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q193",
+   "type": "connect",
+   "claims": [
+    "c8",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If generated images had not been filtered for semantic relevance, which stratification's interpretation would lose support, and why?",
+   "answer": "The visual-semantics stratification would lose support. Category labels such as Authorization Document or Role would no longer reliably indicate that the image conveys that contextual signal. Per-category ASR differences could then reflect off-category or irrelevant images rather than the intended semantics.",
+   "rubric": [
+    "Identifies the visual-semantics stratification.",
+    "Explains that without relevance filtering, images may not convey their labeled category, so category ASRs may not reflect the intended semantics."
+   ],
+   "batch": 5,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q194",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If OCR instances existed for only a subset of intents while TEXT instances existed for all 272, which comparison would be confounded, and why?",
+   "answer": "The TEXT-versus-OCR carrier comparison would be confounded. The two carriers would pool different intent mixtures, and since ASR depends on the mixture of intents, part of any carrier difference would reflect composition rather than delivery.",
+   "rubric": [
+    "Identifies the TEXT-versus-OCR carrier comparison.",
+    "Explains that the carriers would cover different intent mixtures, and ASR depends on the mixture."
+   ],
+   "batch": 5,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q195",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the 1,500-instance configuration had been sampled with equal numbers of instances per harm domain instead of preserving the full configuration's distribution, which Table 11 result would most likely worsen, and why?",
+   "answer": "The near-zero mean ASR difference, and with it the concordance, would likely worsen. Violence & Physical Harm (17.6% of intents) would be underweighted and Sexual Content (6.3%) overweighted relative to the full configuration. If domains differ in ASR, the lightweight aggregate would shift systematically.",
+   "rubric": [
+    "Identifies the mean ASR difference or concordance (agreement in level) as likely to worsen.",
+    "Explains that equal allocation reweights domains (for example, Violence underweighted and Sexual Content overweighted), biasing the aggregate when domain ASRs differ."
+   ],
+   "batch": 5,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q196",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that all 16 models were run with identical sampling parameters? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Sampling parameters were fixed only where provider interfaces permit. For interfaces that do not expose them, default settings were used and documented. Cross-model comparisons involving such models therefore carry a decoding caveat.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that some proprietary interfaces did not expose sampling parameters, so defaults were used for those models."
+   ],
+   "batch": 5,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q197",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that MMJailBench's harmful intents are novel relative to existing safety benchmarks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The taxonomy was built from existing safety benchmarks, including multimodal ones, and from provider policies. Intents were then normalized and filtered. The diversity claim concerns redundancy within the set, not novelty relative to prior benchmarks.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that the intents were derived from existing benchmarks and provider policies, and that the diversity analysis concerns only redundancy within the set."
+   ],
+   "batch": 5,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q198",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the lightweight judge reproduces GPT-5's ASR for each of the 16 evaluated models individually? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Table 12 reports only pooled agreement (QWK 0.95, \u0394ASR \u22120.4%). Per-model differences could be larger and of varying sign, and no per-model agreement is reported.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that only pooled agreement statistics are reported, with no per-model breakdown."
+   ],
+   "batch": 5,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q199",
+   "type": "scope",
+   "claims": [
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show, with reported statistics, that each generated image depicts its intended visual semantic category? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Images are said to be filtered for semantic relevance, visual quality and readability through predefined procedures. However, the paper reports no category-verification statistics or annotator agreement for images.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that filtering is described but no image-level verification results or agreement statistics are reported."
+   ],
+   "batch": 5,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q200",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the 18 harm scenarios contain roughly equal numbers of intents? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. Table 5 lists every scenario with 14 to 17 intents, about 5.1\u20136.3% each. This contrasts with the much more uneven domain sizes, which run from 17 to 48.",
+   "rubric": [
+    "Answers supported.",
+    "Cites scenario sizes of about 14\u201317 intents (5.1\u20136.3%) from Table 5."
+   ],
+   "batch": 5,
+   "orig_id": "q42"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "n17",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose Table 11 had kept Spearman 0.997 but reported a 95% CI for the mean ASR difference of [0.5%, 1.2%]. Which use of the lightweight configuration would lose support, and which would remain?",
+   "answer": "Directly comparing lightweight ASR numbers with full-configuration ASR numbers would lose support, because the CI would exclude zero and indicate a systematic upward offset. Ranking models or cells with the lightweight configuration would still be supported, because rank agreement stays high.",
+   "rubric": [
+    "States that direct comparison of absolute ASR values between lightweight and full results would lose support, because of a systematic offset (CI excludes zero)",
+    "States that rank-based uses such as ordering models would remain supported by the high Spearman"
+   ],
+   "batch": 3,
+   "orig_id": "n17",
+   "reject": "near-duplicate of q71"
+  }
+ ],
+ "types": {
+  "failure": 35,
+  "why": 31,
+  "counterfactual": 42,
+  "transfer": 32,
+  "connect": 29,
+  "scope": 31
+ }
+}

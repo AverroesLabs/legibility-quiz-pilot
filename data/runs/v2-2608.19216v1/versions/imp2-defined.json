@@ -1,0 +1,44 @@
+{
+ "terms": [
+  "Sovereignty: technical and contractual access sufficient to independently verify or intervene on an AI system without the vendor's ongoing discretionary cooperation; this is distinct from territorial sovereignty (3.1).",
+  "Sovereignty and control are orthogonal: sovereignty is an access condition, control is a protocol (3.1).",
+  "Four-layer typology (3.1): data, model, infrastructure and interaction sovereignty. Interaction sovereignty covers prompts, outputs, tool calls, logs, traces and pre-execution intervention points.",
+  "Bounded sovereignty: partial access across the four layers (Abstract, 8).",
+  "Control tax: the operational and financial cost of integrating control into AI pipelines, following Terekhov et al. 2025 (3.1).",
+  "Two-layer control problem (1.2): Layer 1 is protocol effectiveness given access; Layer 2 is access feasibility.",
+  "Sovereignty discount cost: the extra expenditure, delay, residual risk or usefulness loss needed to approximate a protocol whose required access is missing. Realised control tax = instrumented-control cost + sovereignty discount cost, and the discount is not always finite (3.3).",
+  "Sovereignty-discount proxy: the minimum cost to reach a target failure rate under bounded access, minus the minimum cost under full instrumentation. A strict variant also requires \u226575% task success (4.3).",
+  "Experimental access factors (4.2): I/O logs, tool-call logs, gateway, trace access, model-version control, vendor support and tool scope, combined into 20 fractional-factorial access profiles.",
+  "Diagnosis success is evidence-based: a failure counts as diagnosable only if the evidence available under the access profile is enough to reconstruct it (4.3).",
+  "Catastrophic-action classes C1\u2013C4 (4.1, 6.1): incorrect hold or release, systematic mis-triage, sensitive-data exposure, and settlement-critical action.",
+  "Synthetic agents: honest, careless and stealthy access-aware (4.2)."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  true,
+  true,
+  false,
+  false,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ]
+}

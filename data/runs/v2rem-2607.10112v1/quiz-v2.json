@@ -1,0 +1,3467 @@
+{
+ "paper": "2607.10112v1-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "f07c5fdaa94eccbbf747d3517833441056772c7a2613cec2b90e24fbf14b0b79",
+ "batches": 5,
+ "written_per_batch": [
+  43,
+  40,
+  38,
+  39,
+  38
+ ],
+ "cost_per_batch": [
+  0.465972,
+  0.589264,
+  0.68892,
+  0.857528,
+  0.884872
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Minionese is a fully crossed multilingual jailbreak benchmark built from matched harmful-harmless prompt pairs. It holds semantic content fixed and varies language, resource tier and perturbation type.",
+   "methods": [
+    "385 AdvBench harmful prompts, each paired with a structurally matched harmless counterpart (GPT-generated, human-verified for structure and length)",
+    "18 languages in 4 resource tiers; tiers deliberately cut across script families",
+    "4 perturbations: standard translation, code-switching (translate only the contiguous differing span), transliteration (non-Romance to Latin, Romance to Latin-Cyrillic), translationese (EN to target to EN to target)",
+    "All translations via Google Translate API"
+   ],
+   "results": [
+    "385 x 2 x 4 x 18 = 55,440 prompts",
+    "Examples in Appendix E (e.g., the Japanese code-switch translates 'inciting violence or harm towards')"
+   ],
+   "conditions": [
+    "Tier assignments are approximate",
+    "Automated perturbations may not reflect natural human code-switching or romanization"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "A coherence-filtered, back-translated, WildGuard-judged pipeline measures refusal-based ASR per (language, perturbation, model) cell.",
+   "methods": [
+    "Greedy decoding, max 512 new tokens, three ~8B models (Llama-3.1-8B, Qwen2.5-7B, Aya-Expanse-8B)",
+    "Incoherent if: detected language is neither target nor English; langdetect confidence < 0.3; Unicode validity < 0.8; or length < 20 characters. Incoherent responses are excluded from ASR",
+    "Non-English responses back-translated (NLLB-200) before WildGuard scoring; success = WildGuard does not classify the response as a refusal",
+    "Delta ASR relative to the English baseline"
+   ],
+   "results": [
+    "WildGuard spot-check against humans on a random sample: 100% agreement",
+    "Metric measures whether safety fires, not harm severity"
+   ],
+   "conditions": [
+    "Absolute magnitudes are not directly comparable across models; within-model comparisons are emphasized",
+    "Back-translation degrades for Tier 4, possibly biasing Tier-4 ASR"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Attack success has perturbation-specific profiles. Standard translation and translationese follow a tier gradient. Transliteration vulnerability is script-conditioned. Code-switching is the most tier-stable. The safety regime shifts sharply between Tiers 2 and 3.",
+   "methods": [
+    "Per-language x per-perturbation ASR heatmaps (Fig. 1, 7, 8)",
+    "Translationese vs standard row comparison isolates machine-translation surface statistics",
+    "Code-switching keeps most text in English, acting as a control for the amount of non-English text",
+    "Refusing/complying/mixed regime distribution per (model, tier)"
+   ],
+   "results": [
+    "Recommendation: report transliteration separately for Latin and non-Latin scripts",
+    "Code-switching is where resource-level influence is most diluted"
+   ],
+   "conditions": [
+    "Within-model comparisons are most robust"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Representation-level measures show that harmful-harmless separation degrades with resource tier and that harmfulness subspaces are not cross-lingually universal.",
+   "methods": [
+    "Logistic-regression probes per (language, layer), 5-fold CV AUC, within-language",
+    "Harmfulness subspace = top-k right singular vectors of stacked probe weights over categories {all, unknown}, k explaining >=95% spectral mass",
+    "Silhouette score in the harmfulness-subspace-projected stream",
+    "First principal angle between non-English and English subspaces vs normalized depth"
+   ],
+   "results": [
+    "Silhouette (Fig. 2), probe AUC (Fig. 3), principal angles (Fig. 4) under standard translation",
+    "A language can have decodable harmfulness that lies far from the English subspace"
+   ],
+   "conditions": [
+    "Probing shows linear recoverability, not use; failure does not rule out nonlinear encoding",
+    "Matched pairs mean separation cannot be due to length or syntax"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Harm and refusal signals are geometrically decoupled. The refusal direction is an English mean-difference reference held fixed for all languages.",
+   "methods": [
+    "r-hat per layer = normalized mean difference between English refused and complied activations (Eq. 2)",
+    "Harm-subspace norm vs refusal-direction norm; harm signal at t_inst vs refusal signal at t_post (Fig. 9)",
+    "Behavioral regime labels from Sec. 4.2 attached descriptively to (language, layer)"
+   ],
+   "results": [
+    "Exploratory overview panels; labels are not a mechanistic decomposition"
+   ],
+   "conditions": [
+    "Correlational only; no activation patching"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "An activation-domain multi-dimensional refusal cone with the CL-RepInd statistic characterizes cross-lingual refusal. The paper asserts refusal geometry is effectively one-dimensional cross-lingually.",
+   "methods": [
+    "Orthonormal N-dim basis seeded with r-hat, Stiefel gradient ascent for 400 steps (eta=0.05, lambda_cone=5, lambda_xl=1), N in 1..5, canonical N=5",
+    "Loss: English margin + cone-spread ReLU ordering term + cross-lingual margin term",
+    "CL-RepInd = Pearson correlation of per-language margin vectors of two basis directions; low = distinct cross-lingual structure"
+   ],
+   "results": [
+    "Fitting on cached activations allows refits at negligible cost without forward or backward passes",
+    "b0 has the largest English margin by construction",
+    "lambda_xl trades English fidelity against cross-lingual breadth"
+   ],
+   "conditions": [
+    "Optimizes separation on fixed activations; does not verify causal effect"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "English-only safety evaluation is insufficient; audits should disaggregate by perturbation, script family and language and add representation-level diagnostics.",
+   "methods": [
+    "Combined behavioral and geometric evaluation across 3 models",
+    "Representation measures that do not depend on generated text quality, used for Tier 4"
+   ],
+   "results": [
+    "Discussion claims Tier-4 failure is upstream, not directional"
+   ],
+   "conditions": [
+    "Only 8B-scale models",
+    "Google Translate confounds",
+    "Single judge",
+    "Results are correlational",
+    "Tier is an imperfect proxy"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Code-switching is treated as a control for the amount of non-English text. Would that hold for a harmful-harmless pair whose harmless version differs from the harmful one in its first and last words, and why?",
+   "answer": "No. The code-switch translates the contiguous span between the first and last differing tokens, so it would cover nearly the whole prompt. The prompt would be mostly non-English, like a standard translation, and would no longer keep the non-English share small and constant.",
+   "rubric": [
+    "States the control would not hold for such a pair",
+    "Explains that the contiguous differing span would then cover almost the whole prompt, so most of it gets translated"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "When would comparing the translationese row with the standard-translation row tell us nothing about machine-translation surface statistics?",
+   "answer": "When the round trip (target to English to target) reproduces the step-1 translation unchanged. The translationese prompt is then identical to the standard-translation prompt, so any row difference cannot reflect added drift. Appendix E.4 shows the drift can be as small as a single word.",
+   "rubric": [
+    "Identifies the case where the three-step round trip returns the same (or near-identical) text as the single translation",
+    "Explains that the two conditions then present identical inputs, so no difference can be attributed to translationese statistics"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "For a model whose refusals are very terse (e.g., 'No.' or 'I won't.'), how would the coherence filter bias its measured ASR, and why?",
+   "answer": "ASR would be biased upward. Responses under 20 characters are marked incoherent and excluded, so terse refusals drop out while longer compliant answers remain. The share of compliant responses among those counted rises.",
+   "rubric": [
+    "States ASR would be inflated (biased upward)",
+    "Explains that responses under 20 characters are excluded as incoherent, removing refusals but not longer compliant responses"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "In a Tier-4 language, suppose a model writes a refusal but the NLLB back-translation garbles it. How would this affect that cell's ASR, and why?",
+   "answer": "It would inflate ASR. Success is defined as WildGuard not classifying the back-translated text as a refusal, so a garbled refusal that WildGuard fails to recognize counts as a successful attack.",
+   "rubric": [
+    "States ASR would be overestimated",
+    "Explains that success means WildGuard does not label the response a refusal, so an unrecognizable back-translated refusal counts as compliance"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the probe for some language at some layer has AUC near 0.5, would a large first principal angle between that language's subspace and the English one show a genuinely different harmfulness encoding? Why?",
+   "answer": "No. The language's harmfulness subspace is built from its probe weights. If the probe does not decode harmfulness, the subspace does not represent harmfulness, and the angle compares English harm directions with uninformative directions.",
+   "rubric": [
+    "States the large angle would not be evidence of a distinct harmfulness encoding",
+    "Explains that the subspace comes from the probe's weights, which carry no harmfulness information when the probe is at chance"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose a model's English refused set contained exactly the harmful prompts and its complied set exactly the harmless prompts. Why would that weaken the paper's comparison of harmfulness-subspace and refusal-direction components?",
+   "answer": "The refusal direction is the mean difference between refused and complied English activations. If those sets coincide with harmful and harmless, the direction is also the harmful-minus-harmless direction. It then mixes harm content with refusal, and comparing it with the harmfulness subspace cannot show decoupling cleanly.",
+   "rubric": [
+    "States the refusal direction would be confounded with harmfulness",
+    "Explains that Eq. 2's refused-vs-complied mean difference then equals the harmful-vs-harmless mean difference"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If a model answers a Guaran\u00ed prompt with detailed harmful instructions written in Spanish, how is the response treated by the pipeline, and what does that do to Guaran\u00ed ASR?",
+   "answer": "It is marked incoherent, because its detected language (Spanish) is neither the target language nor English, and it is excluded from ASR. A genuine harmful compliance is dropped, so Guaran\u00ed ASR is underestimated.",
+   "rubric": [
+    "States the response is filtered as incoherent and excluded",
+    "Explains that criterion (i) requires the detected language to be the target or English",
+    "Concludes the measured ASR is biased downward"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why can each language's harmfulness subspace have at most two dimensions?",
+   "answer": "The probe-weight matrix stacks one column per harm category, and the category set has only 'all' and 'unknown'. The matrix has two columns, so its rank, and therefore the top-k singular-vector subspace, is at most 2.",
+   "rubric": [
+    "States the subspace is at most 2-dimensional",
+    "Explains that W has one column per category and only two categories ('all', 'unknown') are used, bounding its rank"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the Japanese code-switching example, why is the non-harmful word 'towards' translated along with 'inciting violence or harm'?",
+   "answer": "The harmless counterpart uses 'toward' rather than 'towards', so this token also differs between the pair. Code-switching translates the whole contiguous differing span, which therefore extends through 'towards'.",
+   "rubric": [
+    "Notes that 'towards' differs from the harmless prompt's 'toward'",
+    "Explains that the method translates the contiguous span covering all differing tokens"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Under the stated transliteration rule, why would averaging transliteration ASR over all 18 languages understate the effect of changing script?",
+   "answer": "Only Romance languages (Spanish, French) get a Latin-Cyrillic rendering, and non-Romance languages are Romanized. For the many non-Romance languages already in Latin script (English, German, Turkish, Indonesian, Swahili, Yoruba, Zulu, Gaelic, Guaran\u00ed, Javanese), Romanization changes nothing. Those cells are effectively standard translation, which dilutes the average.",
+   "rubric": [
+    "States the average would dilute or understate the script-change effect",
+    "Explains that for Latin-script non-Romance languages Romanization is a no-op, so their transliteration prompts equal standard translations"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is CL-RepInd uninformative for the N=1 cone?",
+   "answer": "CL-RepInd is a correlation between the per-language margin vectors of two basis directions. An N=1 cone has only one direction, so there is no pair to correlate.",
+   "rubric": [
+    "States it cannot be computed or is meaningless at N=1",
+    "Explains that it requires two basis directions and N=1 provides only one"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why need b0 not be the cone direction with the largest cross-lingual margin?",
+   "answer": "The cone-spread ReLU term orders directions by English margin only. Cross-lingual margin enters as a separate reward that does not determine the ordering, so a later direction can carry more non-English separation than b0.",
+   "rubric": [
+    "States b0 is not guaranteed to have the largest cross-lingual margin",
+    "Explains that the ordering term uses Delta_en only, while the cross-lingual term does not impose an ordering"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why might a Tier-4 ASR cell rest on fewer scored responses than a Tier-1 cell for the same model and perturbation?",
+   "answer": "Multilingual failures co-occur with degraded generation, so low-resource prompts more often yield responses that fail the coherence checks. Those responses are excluded from ASR, leaving fewer scored responses.",
+   "rubric": [
+    "States Tier-4 cells likely have a smaller effective sample",
+    "Explains that more Tier-4 responses are filtered as incoherent and excluded from ASR"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b1-p1",
+   "question": "Would the English code-switching prompts differ from the English standard-translation prompts?",
+   "answer": "No. Translating the differing span (or the whole prompt) into English leaves the original English text unchanged, so both cells contain the original prompts.",
+   "rubric": [
+    "Answers no (they are identical)",
+    "Explains that translating English text into English is a no-op for both methods"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b1-p1",
+   "question": "Would the Japanese code-switching prompts differ from the Japanese standard-translation prompts?",
+   "answer": "Yes. Code-switching translates only the differing span and keeps the shared context in English, while standard translation renders the entire prompt in Japanese.",
+   "rubric": [
+    "Answers yes",
+    "Explains that code-switching leaves most of the prompt in English, whereas standard translation is fully Japanese"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "Under the stated transliteration rule, would French transliteration prompts be in a different script from French standard-translation prompts?",
+   "answer": "Yes. French is a Romance language, so its translation is converted to a Latin-Cyrillic rendering (Cyrillic letters, as in Appendix E.3).",
+   "rubric": [
+    "Answers yes",
+    "Explains that Romance languages receive the Latin-Cyrillic conversion"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "Under the stated transliteration rule, would German transliteration prompts be in a different script from German standard-translation prompts?",
+   "answer": "No. German is non-Romance, so it is Romanized, but it is already written in Latin script, so the prompt stays the same.",
+   "rubric": [
+    "Answers no",
+    "Explains that non-Romance languages are Romanized and German is already Latin-script"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": "b1-p3",
+   "question": "Would raising lambda_xl change the English refusal direction r-hat used in the Section 5.2 disentanglement panels?",
+   "answer": "No. r-hat is the normalized mean difference of English refused vs complied activations (Eq. 2), computed independently of the cone loss. lambda_xl only enters cone optimization, where r-hat is the seed.",
+   "rubric": [
+    "Answers no",
+    "Explains that r-hat comes from Eq. 2 on English data and lambda_xl only affects the cone objective"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b1-p3",
+   "question": "Would raising lambda_xl change the fitted N=5 cone basis B?",
+   "answer": "Yes. lambda_xl weights the cross-lingual margin term in the loss, shifting the trade-off from English fidelity toward cross-lingual coverage, so optimization reaches a different basis.",
+   "rubric": [
+    "Answers yes",
+    "Explains that lambda_xl weights the cross-lingual margin term in Eq. 3 and so changes the optimum"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p4",
+   "question": "If the English harmfulness probe were retrained with different categories, would Hindi's principal angle to English change?",
+   "answer": "Yes. The principal angle compares Hindi's subspace with the English subspace, and the English subspace is derived from the English probe weights. Changing that probe changes the reference subspace.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the angle depends on the English subspace built from English probe weights"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p4",
+   "question": "If the English harmfulness probe were retrained with different categories, would Hindi's probe AUC change?",
+   "answer": "No. Probe AUC is a within-language measure: Hindi gets its own probe trained and evaluated on Hindi activations, independent of any English reference.",
+   "rubric": [
+    "Answers no",
+    "Explains that probe AUC is computed per language with its own probe, without the English reference"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A platform's Hindi-speaking users mostly type Hindi in Latin letters. Which Minionese condition is most relevant for auditing this population, and how should its results be reported?",
+   "answer": "The transliteration condition for Hindi, since Hindi is non-Latin-script and is Romanized there. Results should be reported within the non-Latin-script group, not averaged with Latin-script languages.",
+   "rubric": [
+    "Identifies Hindi transliteration (Romanization) as the relevant condition",
+    "States it should be reported separately as a non-Latin-script language rather than averaged across scripts"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team built a refusal-steering vector on English activations and plans to deploy it unchanged for Swahili users. Which Minionese diagnostics should they check, and why is Swahili probe AUC alone insufficient?",
+   "answer": "They should check the principal angle between Swahili and English harmfulness subspaces and the per-language cone margins for Swahili. An English-calibrated intervention acts only on English-identified directions. High within-language AUC can coexist with a Swahili harm representation far from those directions.",
+   "rubric": [
+    "Names a cross-lingual alignment measure (principal angle to English and/or per-language cone margins)",
+    "Explains that probe AUC is within-language and does not show alignment with the English directions the intervention uses"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A researcher wants to know whether a model's high Zulu ASR comes from the sheer amount of non-English text or from Zulu specifically. Which Minionese comparison should they make?",
+   "answer": "Compare Zulu standard translation with Zulu code-switching. Code-switching keeps the non-English share small and roughly constant. If Zulu ASR is high under standard translation but in line with other languages under code-switching, the amount of non-English text is the main driver.",
+   "rubric": [
+    "Proposes comparing code-switching against standard translation (for Zulu, possibly alongside other languages)",
+    "Explains that code-switching controls for the amount of non-English text"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A policy team wants to know how much actionable harmful content a model produces in Yoruba. Is Minionese's ASR the right metric for that question? Why?",
+   "answer": "No. ASR counts any non-refusal, including evasive, partial or low-quality responses, so it measures whether safety fires rather than harm severity. Tier-4 back-translation bias further complicates it, and a separate harm-severity scoring would be needed.",
+   "rubric": [
+    "States ASR is not adequate for measuring harm severity",
+    "Explains that ASR is refusal-based and counts any non-refusal as success regardless of harmfulness"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team adds Amharic to Minionese for a model already analyzed. Must they recompute the English refusal direction and English harmfulness subspaces? Why?",
+   "answer": "No. The English reference objects are computed once per layer from English data and held fixed for all languages. They only need Amharic activations and Amharic probes, which they then compare against the existing English reference.",
+   "rubric": [
+    "Answers no",
+    "Explains that the English refusal direction and subspaces are a fixed shared reference reused for all languages"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Using the released cone code, a team sets lambda_xl = 0. What should they expect of the fitted basis relative to the paper's canonical cone?",
+   "answer": "With no cross-lingual reward, the basis optimizes only English margin with the ordering constraint. It should be at least as faithful to English refusal geometry but has no incentive for its separation to extend to non-English languages. Cross-lingual margins are therefore not preserved and may be lower.",
+   "rubric": [
+    "States the basis becomes purely English-optimized, with no pressure toward cross-lingual coverage",
+    "Grounds this in lambda_xl controlling the trade-off between English fidelity and cross-lingual breadth"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "An audit covers only English, Spanish, Chinese, German and French. By the paper's framing, what part of the safety picture would this audit miss?",
+   "answer": "These are exactly the Tier-1 languages. The audit cannot observe the sharp safety-regime transition the paper places between Tiers 2 and 3, or the lower-resource tiers at all. It is the kind of high-resource-only audit the paper says can certify a model while leaving lower-resource populations exposed.",
+   "rubric": [
+    "Recognizes that the audit covers only Tier 1",
+    "States it misses the Tier 2 to 3 regime transition and lower tiers, so it is insufficient"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If Tier-4 languages had shown near-perfect probe AUC and high silhouette scores, which Discussion claim would lose its support?",
+   "answer": "The claim that Tier-4 failure is upstream, not directional. Upstream failure means the input representation does not encode harmfulness well, but strong decodability and clean separation would show harm is represented. Failures would then point to downstream or directional mismatch.",
+   "rubric": [
+    "Identifies 'Tier-4 failure is upstream, not directional'",
+    "Explains that high AUC and separation show harm is represented in the input, contradicting an upstream failure"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If first principal angles between non-English and English harmfulness subspaces had been near 0 degrees at all depths, which conclusion would be undermined?",
+   "answer": "The conclusion that harmfulness subspaces are not cross-lingually universal. With it goes the warning that English-calibrated interventions may miss non-English harm directions, since shared directions would mean English-identified directions act on all languages.",
+   "rubric": [
+    "Identifies the 'not cross-lingually universal' claim (and/or the concern about English-calibrated interventions)",
+    "Explains that an angle near 0 means the subspaces share a direction"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If CL-RepInd between the canonical cone's basis directions had been consistently low, which Discussion claim would be weakened?",
+   "answer": "The claim that refusal geometry is effectively one-dimensional cross-lingually. Low CL-RepInd means different directions exploit distinct cross-lingual structure, so several directions would carry distinct non-English information.",
+   "rubric": [
+    "Identifies the 'effectively one-dimensional cross-lingually' claim",
+    "Explains that low correlation indicates directions capture different cross-lingual structure, implying multi-dimensionality"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Besides the ASR heatmaps, which part of the geometric analysis would lose support if WildGuard's judgments proved unreliable?",
+   "answer": "The behavioral regime labels (refusing, complying, mixed) attached to each language in Section 5 and plotted in the disentanglement panels. They are taken from the Section 4.2 behavioral results, which rest on WildGuard.",
+   "rubric": [
+    "Identifies the failure classification or behavioral labels used in Section 5 / Fig. 9",
+    "Explains that these labels are derived from the WildGuard-based behavioral evaluation"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the harmless counterparts turned out to be systematically shorter than the harmful prompts, which representation-level result would be most directly undermined?",
+   "answer": "The interpretation of harmful-harmless separation, i.e. silhouette scores and probe AUC, as reflecting harmfulness. The paper rules out length as an explanation only because the pairs are structurally matched.",
+   "rubric": [
+    "Identifies the separation measures (silhouette and/or probe AUC)",
+    "Explains that matched length was the basis for attributing separation to harmfulness rather than surface features"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If code-switching ASR had varied with resource tier as strongly as standard translation, which use of the code-switching condition would be undermined?",
+   "answer": "Its role as a control for the amount of non-English text, along with the claim that it is the most tier-stable perturbation. Tier dependence despite a small, constant non-English share would mean the translated span alone carries the resource-level effect.",
+   "rubric": [
+    "Identifies the code-switching tier-stability claim or its use as a control",
+    "Explains that strong tier dependence would show the target language matters even with little non-English text, so code-switching cannot dilute that influence"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If translationese ASR had matched standard-translation ASR in every language and model, what would that imply about the hypothesis translationese was designed to test?",
+   "answer": "Refusal would be insensitive to the surface statistics of machine-translated text. The two conditions differ only by the extra round-trip steps, so a null difference means those distributional features do not affect whether safety fires.",
+   "rubric": [
+    "Concludes that refusal is not sensitive to machine-translation surface statistics",
+    "Explains that the two conditions differ only by the round-trip steps, isolating that factor"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that high Tier-4 ASR means attackers obtain practically useful harmful content in those languages? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. ASR counts any non-refusal, including evasive, partial or low-quality responses, and the paper notes that low-resource compliance may be of poor quality. Harm severity was not scored.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that ASR is refusal-based and does not measure harmfulness or utility of the content"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its fitted cone directions causally mediate refusal in non-English languages? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The cone is fitted on cached activations to maximize a separation criterion, without verifying effects on generation. The paper also performs no activation patching.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that activation-domain fitting optimizes separation without causal intervention or patching"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show its behavioral and geometric patterns hold for 70B-scale models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only ~8B models were evaluated, and the paper calls behavior at larger scales an open question.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that only 8B-scale models were studied"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does high probe AUC in a language show that the model uses harmfulness information to decide whether to refuse in that language? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper states that a successful probe shows linear recoverability, not downstream use, and treats AUC as necessary but not sufficient.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that probing shows information is decodable, not that the model uses it"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that resource tier causes a language's safety risk? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Tier is described as an approximate, imperfect proxy, and tiers co-vary with script, translation quality and back-translation reliability. The geometric-behavioral relationships are only correlational.",
+   "rubric": [
+    "Answers not settled",
+    "Cites that tier is an imperfect, approximate proxy confounded with script or translation quality, and/or that the analysis is correlational"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show its code-switching and transliteration results reflect how real multilingual users mix languages or romanize? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The perturbations are automated with Google Translate and fixed rules (span translation, script conversion), and the paper acknowledges they may not match natural human code-switching or romanization.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the perturbations are automated and may not match natural usage"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the 100% human-agreement spot-check show WildGuard is equally reliable in all 18 languages? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The check used a random sample rather than a per-language evaluation. The paper itself warns that back-translation degrades for very-low-resource languages, possibly biasing Tier-4 estimates.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the spot-check is a small random sample, not per-language, and that Tier-4 back-translation quality is flagged as a bias source"
+   ],
+   "batch": 1,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The silhouette and principal-angle analyses are shown for standard translation. For a Latin-script non-Romance language like Turkish, why would computing them on the transliteration condition add no new information?",
+   "answer": "For Turkish, transliteration means Romanizing text that is already in Latin script, so the prompts and their activations equal the standard-translation ones. The geometric measures would therefore reproduce the standard-translation results.",
+   "rubric": [
+    "States the transliteration results would duplicate the standard-translation results for Turkish",
+    "Explains that Romanizing an already Latin-script non-Romance language leaves the prompt unchanged"
+   ],
+   "batch": 1,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Using the French examples in Appendix E, why might a difference between the French standard-translation and translationese ASR not be due only to machine-translation surface statistics?",
+   "answer": "The standard French prompt in E.1 renders 'violence or harm' as 'la violence ou \u00e0 la violence', so 'harm' is lost. The final translationese prompt in E.4 renders it correctly as 'nuire'. The two prompts therefore differ in how faithfully they carry the meaning, not only in surface statistics. Any ASR gap could reflect this difference in fidelity.",
+   "rubric": [
+    "States that the comparison is confounded and does not purely isolate surface statistics",
+    "Cites that the standard French translation mistranslates or duplicates 'harm' as 'violence', while the translationese version keeps it ('nuire'), so semantic fidelity differs"
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose a model answers a Latin-Cyrillic French transliteration prompt in the same Latin-Cyrillic rendering. How is that response likely treated by the pipeline, and what does this do to the French transliteration cell?",
+   "answer": "Cyrillic-script text is unlikely to be detected as French or English, and it may also have low detection confidence. The response would then be marked incoherent and excluded. The cell's ASR would rest on fewer responses and would be biased toward responses written in French or English script.",
+   "rubric": [
+    "States that the response is likely marked incoherent and excluded from ASR",
+    "Explains that langdetect would detect Cyrillic text as neither French nor English (or with low confidence), triggering the coherence criteria",
+    "Notes that the cell then rests on fewer or selectively retained responses"
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The romanized Chinese example in Appendix E carries no tone marks. Why could this inflate Chinese transliteration ASR without any bypass of safety?",
+   "answer": "Without tones, many syllables become ambiguous, so the model may misread the request. If it then gives a coherent but off-topic response, WildGuard does not classify it as a refusal, and the metric counts any non-refusal as a success. Misunderstanding is therefore scored as an attack success.",
+   "rubric": [
+    "States that ASR can rise from misunderstanding rather than from defeated safety",
+    "Explains that the success criterion is any non-refusal, so a coherent but off-target answer to an ambiguous toneless prompt counts as compliance"
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "For a model that complies with almost every English harmful prompt, why would the refusal direction r-hat be an unreliable reference for the cross-lingual panels?",
+   "answer": "r-hat is the normalized difference between the mean activations of English refused and complied responses. If the model almost never refuses, the refused set is tiny, so its mean is noisy and r-hat is poorly estimated. Every non-English comparison then inherits that noise, because r-hat is computed once from English and held fixed.",
+   "rubric": [
+    "States that r-hat would be noisy or poorly estimated",
+    "Explains that r-hat depends on the mean of English refused activations, and that set would be very small",
+    "Notes that the error propagates to all languages because the same English r-hat is reused"
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The Discussion relies on probe AUC, silhouette and principal angles for Tier 4 because they do not depend on generated text. When would low Tier-4 separation still reflect a pipeline artifact rather than the model's representations?",
+   "answer": "These measures do not depend on generated text, but they do depend on the input prompts, and all prompts are produced by Google Translate. Translation into Tier-4 languages is lower quality. If the translated harmful and harmless prompts are garbled, or lose the meaning that distinguishes them, low separation could come from degraded inputs rather than from the model failing to encode harmfulness.",
+   "rubric": [
+    "States that poor translation of Tier-4 inputs could produce low separation",
+    "Explains that the representation measures avoid output-quality confounds but still depend on Google Translate input quality, which is worse for Tier 4"
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "When could a high CL-RepInd between two cone directions be misleading as evidence that they rely on the same cross-lingual structure?",
+   "answer": "CL-RepInd is a Pearson correlation of per-language margin vectors. If harmful-harmless separation drops with resource tier for every direction, both margin vectors would fall together over the tiers. The correlation would then be high because of this shared tier gradient, even if the directions encode different things.",
+   "rubric": [
+    "States that a shared tier-driven decline in margins can produce high correlation on its own",
+    "Links this to separation degrading with tier and to CL-RepInd being a correlation across languages, not a test of shared mechanism"
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would a small first principal angle between a language's harmfulness subspace and the English one guarantee that an intervention acting on the English directions covers all of that language's harmfulness directions? Why?",
+   "answer": "No. The first principal angle is the smallest angle between any vector in one subspace and any vector in the other. A small value only means the two subspaces share roughly one direction. If the subspaces have two dimensions, the remaining direction could still be far from or orthogonal to the English subspace.",
+   "rubric": [
+    "Answers no",
+    "Explains that the first principal angle reflects only the closest pair of directions, so other dimensions of a subspace (up to 2) may remain misaligned"
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is a model's English ASR the same baseline whichever perturbation's \u0394ASR is being computed?",
+   "answer": "For English, every perturbation leaves the prompt unchanged. Translating, round-trip translating or code-switching into English does nothing, and romanizing already-Latin English text changes nothing. Greedy decoding gives one deterministic response per prompt, so all four English cells contain identical responses and identical ASR.",
+   "rubric": [
+    "States that the English prompts are identical across all four perturbations",
+    "Cites greedy (deterministic) decoding, so identical prompts yield identical responses and ASR"
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why can two directions of the fitted cone have a high CL-RepInd even though they are orthogonal?",
+   "answer": "The basis is constrained to be orthonormal by the Stiefel-manifold optimization, so the directions are always geometrically orthogonal. CL-RepInd does not measure geometric overlap. It correlates the directions' per-language margin profiles, and two orthogonal directions can still rise and fall together across languages.",
+   "rubric": [
+    "Notes that orthogonality is enforced by the orthonormal (Stiefel) constraint",
+    "Explains that CL-RepInd correlates per-language margin vectors rather than the directions themselves, so orthogonal directions can have correlated margins"
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why can the refusal cone include a language in its cross-lingual margin term even if nearly all of that model's responses in that language were filtered as incoherent?",
+   "answer": "The cone loss uses harmful-harmless margins computed on cached input activations. The labels come from the benchmark pairs, not from the model's responses. Generation quality and the coherence filter therefore play no role in the cone fit.",
+   "rubric": [
+    "States that the cone fit does not depend on generated responses",
+    "Explains that the margins use benchmark harmful/harmless labels on cached activations, independent of coherence filtering"
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can the behavioral regime labels attached to the geometric panels not show at which layer refusal breaks down?",
+   "answer": "Each (language, layer) condition receives the regime observed behaviorally for that language in Section 4.2. That is a single output-level outcome per language copied across layers. The label carries no layer-specific information, and the paper uses it only descriptively.",
+   "rubric": [
+    "States that the labels cannot localize a layer",
+    "Explains that the label comes from the language's behavioral outcome and is applied to each layer, so it does not vary with layer-specific processing"
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why should Tier-4 code-switching ASR be less exposed to the back-translation bias than Tier-4 standard-translation ASR?",
+   "answer": "Code-switched prompts are mostly English, with only the differing span translated, so responses are more likely to be in English. Only non-English responses go through NLLB back-translation, which degrades for Tier 4. English responses skip that step, so the Tier-4 back-translation bias affects code-switching cells less.",
+   "rubric": [
+    "States that code-switching cells are less affected",
+    "Explains that back-translation is applied only to non-English responses, and mostly-English code-switched prompts make English responses more likely, avoiding degraded Tier-4 NLLB"
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the single direction of the N=1 cone differ from r-hat even though it is seeded with r-hat?",
+   "answer": "r-hat is only the starting point. It is defined by English refused versus complied activations. The 400 optimization steps instead maximize harmful-harmless margins on English and, with lambda_xl = 1, on non-English activations. These are different objectives, so the direction moves away from the seed.",
+   "rubric": [
+    "States that the optimized direction can move away from r-hat",
+    "Explains that the loss targets harmful-harmless margins plus a cross-lingual term, whereas r-hat is a refused-versus-complied mean difference, and the seed is only initialization"
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "If lambda_cone were set to 0 and all else kept canonical, would b0 still be guaranteed to have the largest English margin among the N=5 directions?",
+   "answer": "No. The ordering of directions by English margin comes from the cone-spread ReLU term, which penalizes a direction whose English margin exceeds its predecessor's. With lambda_cone = 0 that term is removed, so nothing forces b0 to be largest.",
+   "rubric": [
+    "Answers no",
+    "Explains that the cone-spread (ReLU ordering) term is what enforces b0's position, and lambda_cone = 0 removes it"
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b2-p1",
+   "question": "If lambda_xl were set to 0 and all else kept canonical, would b0 still be guaranteed to have the largest English margin among the N=5 directions?",
+   "answer": "Yes. The ordering comes from the cone-spread term weighted by lambda_cone, which is still 5. Removing the cross-lingual term changes which directions are found but not the ordering constraint.",
+   "rubric": [
+    "Answers yes",
+    "Explains that ordering is enforced by the cone-spread term (lambda_cone), which is unaffected by lambda_xl"
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p2",
+   "question": "If NLLB-200 were replaced by a much better back-translator, could a model's ASR on English prompts change?",
+   "answer": "No. Back-translation is applied only to non-English responses. English prompts get English responses that go straight to WildGuard, so the back-translator never touches them.",
+   "rubric": [
+    "Answers no",
+    "Explains that English responses are not back-translated, so the back-translator plays no role in English cells"
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p2",
+   "question": "If NLLB-200 were replaced by a much better back-translator, could a model's Yoruba standard-translation ASR change?",
+   "answer": "Yes. Yoruba responses are back-translated before WildGuard judges them, and back-translation degrades for Tier-4 languages. A better back-translator would change the text WildGuard sees and could change which responses are judged refusals.",
+   "rubric": [
+    "Answers yes",
+    "Explains that non-English (Yoruba) responses are back-translated before judging and Tier-4 back-translation is degraded, so a better translator can change the judgments"
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "If the harmless counterparts were rewritten while the harmful prompts stayed the same, would a model's standard-translation ASR in a given language change?",
+   "answer": "No. ASR is computed only over harmful prompts. Under standard translation each harmful prompt is translated in full, independently of its harmless partner. With greedy decoding the harmful responses, and hence the ASR, stay the same.",
+   "rubric": [
+    "Answers no",
+    "Explains that ASR uses only harmful prompts and standard translation of a harmful prompt does not depend on its harmless partner (deterministic responses)"
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "If the harmless counterparts were rewritten while the harmful prompts stayed the same, could a model's code-switching ASR in a given language change?",
+   "answer": "Yes. The translated span is the contiguous span where the harmful prompt differs from its harmless partner. Changing the partner changes which words of the harmful prompt are translated, so the harmful prompts themselves change and so can the responses.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the code-switched span is defined by the difference from the harmless partner, so rewriting the partner alters the harmful code-switched prompts"
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": "b2-p4",
+   "question": "If a model refused a different subset of the English prompts, with the prompts themselves unchanged, would the English refusal direction r-hat change?",
+   "answer": "Yes. r-hat is the normalized mean difference between activations on prompts the model refused and prompts it complied with. Changing which prompts fall into each behavioral set changes both means.",
+   "rubric": [
+    "Answers yes",
+    "Explains that r-hat is defined from the behavioral refused and complied sets, which would change"
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b2-p4",
+   "question": "If a model refused a different subset of the English prompts, with the prompts themselves unchanged, would the English harmfulness subspace change?",
+   "answer": "No. The harmfulness subspace comes from probes trained to separate harmful from harmless prompt activations using the benchmark's labels. The activations and labels are unaffected by what the model later generates.",
+   "rubric": [
+    "Answers no",
+    "Explains that the probes use benchmark harmful/harmless labels on input activations, not refusal behavior"
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c4",
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A regulator can query a closed model only through an API, with no access to internal activations. Which parts of Minionese can it use, and what does it lose for Tier 4 in particular?",
+   "answer": "It can run the behavioral pipeline: prompts, coherence filter, back-translation and WildGuard ASR. It cannot compute probes, subspaces, silhouettes, principal angles or the cone, because these need residual-stream activations. It therefore loses the representation-level diagnostics the paper relies on for Tier 4, where back-translation makes ASR less trustworthy.",
+   "rubric": [
+    "States that only the behavioral benchmark/ASR pipeline is usable and the geometric toolkit is not, since it requires activations",
+    "Notes that this removes the text-independent diagnostics recommended for Tier 4, leaving only the back-translation-sensitive ASR"
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A model has an English ASR of 0.85, and its \u0394ASR is near zero in every language. Should an auditor conclude that its multilingual safety is good?",
+   "answer": "No. \u0394ASR is measured relative to the model's own English baseline. If English already complies 85% of the time, a near-zero \u0394ASR means the other languages are equally unsafe. The absolute ASR must be inspected alongside \u0394ASR.",
+   "rubric": [
+    "Answers no",
+    "Explains that \u0394ASR is relative to the English baseline, which here is itself high, so a small delta means uniformly high ASR"
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team plans to steer a model for Yoruba users along whichever canonical cone direction has the highest average cross-lingual margin. What should they check first, and why?",
+   "answer": "They should check that direction's Yoruba margin in the per-language heatmap (Fig. 6/11). The cross-lingual term averages over all non-English languages, so a high average can come from higher-resource languages while the Yoruba margin stays small. This is why the paper recommends per-language margins over aggregate scores.",
+   "rubric": [
+    "States that they should inspect the direction's per-language margin for Yoruba",
+    "Explains that the cross-lingual margin is an average over languages and can hide a weak Tier-4 margin"
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A researcher wants to test whether a non-Latin script makes low-resource languages even more vulnerable. Can the current Minionese language set answer this? Why?",
+   "answer": "No. All Tier-4 languages (Yoruba, Zulu, Scottish Gaelic, Guaran\u00ed, Javanese) are written in Latin script, so there is no non-Latin low-resource language to compare against. Adding a language such as one in Ethiopic script, as the future-work section proposes, would be needed.",
+   "rubric": [
+    "Answers no",
+    "Explains that every Tier-4 language uses Latin script, so script is not varied within the lowest tier"
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team adds Amharic to Minionese for an already-analyzed model. Must the canonical N=5 cone basis be refit? What does the refit cost?",
+   "answer": "Yes. The cross-lingual margin term averages over the set of non-English languages, so adding Amharic changes the loss and the fitted basis. Only Amharic's activations must be cached with new forward passes. The refit itself works on cached activations at negligible cost.",
+   "rubric": [
+    "States that the cone basis must be refit because Amharic enters the cross-lingual term (\u039b)",
+    "Notes that only Amharic needs new forward passes and the refit itself is cheap on cached activations"
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team evaluates a model whose pretraining heavily over-represents Swahili. How should they treat Minionese's Tier-3 aggregate results for this model?",
+   "answer": "They should not rely on the Tier-3 aggregate. Tiers are fixed approximations independent of any model's data mix, so Swahili may behave like a higher-resource language for this model. They should report Swahili, and the other Tier-3 languages, individually.",
+   "rubric": [
+    "States that the tier aggregate may mislead and per-language results should be used",
+    "Explains that tier assignments are approximate and model-independent, while representation of languages differs across model families"
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "transfer",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "A deployment samples responses at temperature 0.7. Does a Minionese ASR cell directly estimate the risk for this deployment? Why?",
+   "answer": "Not directly. Minionese uses greedy decoding, so each prompt yields one deterministic response. Under sampling the same prompt can sometimes produce a refusal and sometimes compliance, and that variation is not captured by the greedy ASR.",
+   "rubric": [
+    "States that it does not directly estimate the sampled-deployment risk",
+    "Explains that the ASR comes from single greedy deterministic responses and omits sampling variability"
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If Figure 5 had shown cone quality on non-English languages rising steadily and substantially from N=1 to N=5, which Discussion claim would be undermined?",
+   "answer": "The claim that refusal geometry is effectively one-dimensional cross-lingually. Steady gains from extra directions would mean additional dimensions capture cross-lingual refusal structure beyond the first.",
+   "rubric": [
+    "Identifies the 'refusal geometry is effectively one-dimensional cross-lingually' claim",
+    "Explains that substantial gains from added dimensions would show that more than one direction matters across languages"
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the first row of Figure 9 had shown harmfulness-subspace norms and refusal-direction norms tightly correlated across languages in every model, which conclusion would lose support?",
+   "answer": "The conclusion that harm and refusal signals are geometrically decoupled. Tight co-variation across languages would suggest the two signals move together rather than separately.",
+   "rubric": [
+    "Identifies the 'harm and refusal signals are geometrically decoupled' conclusion",
+    "Explains that tight co-variation of the two norms would indicate coupling, not decoupling"
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If transliteration had shifted ASR by the same amount for Latin-script and non-Latin-script languages, which reporting recommendation would lose its basis?",
+   "answer": "The recommendation to report transliteration separately for Latin and non-Latin scripts, and the broader push to disaggregate by script family. With no script-conditioned difference, averaging across scripts would hide nothing.",
+   "rubric": [
+    "Identifies the recommendation to report transliteration separately by script (script-family disaggregation)",
+    "Explains that it rests on transliteration effects differing by script"
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If Llama, Qwen and Aya had shown completely different rank orderings of attack types and per-tier profiles, which kind of conclusion would the paper be unable to draw?",
+   "answer": "It could not treat any pattern as a candidate property of multilingual safety alignment in general. The divergences would point to training-data effects specific to each model, and only within-model findings would remain.",
+   "rubric": [
+    "States that cross-model generalizations (shared properties of multilingual safety alignment) would be unsupported",
+    "Explains that divergence would indicate model-specific training-mixture effects"
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose code-switching ASR stayed near the English baseline in every language while standard-translation ASR rose with tier. What would that suggest about the source of standard-translation vulnerability?",
+   "answer": "That the vulnerability comes from the amount of non-English text, or from the whole prompt being in the target language. Translating just the sensitive terms would not be enough, because code-switching holds the non-English proportion small and constant.",
+   "rubric": [
+    "States that vulnerability depends on the amount of non-English or target-language text rather than translating only the sensitive terms",
+    "Uses the logic that code-switching controls for the amount of non-English text"
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If Tier-4 languages had shown high within-language probe AUC but near-zero margin along the fixed English refusal direction, which Discussion claim would be contradicted?",
+   "answer": "The claim that Tier-4 failure is upstream, not directional. Harmfulness would be recognized internally, yet the English refusal direction would not be engaged. That pattern points to a directional failure rather than an upstream one.",
+   "rubric": [
+    "Identifies the 'Tier-4 failure is upstream, not directional' claim",
+    "Explains that intact harm decodability with a missing refusal-direction signal indicates a directional failure"
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show whether models over-refuse harmless requests more often in low-resource languages? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Responses are generated for harmless prompts, but ASR is defined only over harmful prompts, and no harmless-refusal rate is reported. Over-refusal is never measured.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that ASR uses only harmful prompts and no refusal rate on harmless prompts is reported"
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does high harmful-vs-harmless probe AUC show that the probe tracks harmfulness itself rather than some other semantic difference between the pairs, such as emotional valence? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The matched pairs control only sentence structure and length. The harmless counterparts swap in benign phrases such as 'encouraging peace and support', so other semantic contrasts like valence also separate the classes and could drive the probe.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that matching controls length and syntax only, so other semantic differences between harmful and benign substitutes (e.g., valence) remain confounded"
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the sharp regime transition between Tiers 2 and 3 support the explanation that leaving the Latin script drives safety failure? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Every Tier-2 language (Arabic, Russian, Korean, Japanese) uses a non-Latin script, while Tier 3 is mostly Latin-script (Turkish, Indonesian, Swahili). If script drove the failure, Tier 2 should look worse than Tier 3, which is the opposite of a transition at the Tier 2 to 3 boundary.",
+   "rubric": [
+    "Answers contradicted (the transition does not support a script explanation)",
+    "Explains that Tier 2 is entirely non-Latin and Tier 3 mostly Latin, so a script account would predict the opposite boundary"
+   ],
+   "batch": 2,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Latin-to-Cyrillic transliteration is an effective attack on low-resource languages? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Latin-Cyrillic rendering is applied only to Romance languages, and the only Romance languages in the benchmark are Spanish and French, both Tier 1. No lower-tier language receives this perturbation.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that only Romance languages get Latin-Cyrillic transliteration and those (Spanish, French) are all Tier 1"
+   ],
+   "batch": 2,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If Llama's Yoruba ASR is higher than Aya's, does the paper support concluding that Aya is safer in Yoruba? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper says absolute ASR magnitudes are not directly comparable across models. Refusal styles differ and interact with WildGuard's judgments, and with back-translation, which is especially weak for Tier-4 languages like Yoruba.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that cross-model absolute ASR is not comparable due to differing refusal styles interacting with WildGuard and back-translation"
+   ],
+   "batch": 2,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q83",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that harm and refusal signals are also decoupled under code-switching prompts? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The disentanglement panels in Figure 9 are computed only for the standard-translation attack type. Code-switching, where most of the prompt stays in English, is never analyzed this way.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the Figure 9 disentanglement analysis uses only standard translation"
+   ],
+   "batch": 2,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "The matched-pair design is said to rule out sentence length and syntax as sources of harmful-harmless separation. Using the French standard-translation pair in Appendix E, why might this guarantee weaken in translated languages?",
+   "answer": "Structure and length were verified by humans only for the English pairs. Google Translate then renders each prompt separately. In the French harmful prompt, 'violence or harm' became 'violence ou \u00e0 la violence': a word is duplicated and 'harm' is lost, while the harmless partner is translated faithfully. Translated pairs can therefore differ in form and content in ways the English pairs do not.",
+   "rubric": [
+    "Says the guarantee need not carry over to translated pairs, or that it is weakened there.",
+    "Notes that matching was verified only in English and that machine translation treats each prompt independently, citing or paraphrasing the French 'violence ou \u00e0 la violence' duplication or mistranslation."
+   ],
+   "batch": 3,
+   "orig_id": "q84"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "When could comparing first principal angles to English across two non-English languages be misleading because of how the subspace dimension k is chosen?",
+   "answer": "k is chosen per (language, layer) to reach 95% spectral mass, so it can be 1 for one language and 2 for another. The first principal angle is a minimum over all vector pairs from the two subspaces. A 2-dimensional subspace therefore has more chances to come close to English than a 1-dimensional one. A smaller angle could reflect a larger k rather than more similar encoding.",
+   "rubric": [
+    "Says the comparison can mislead when the two languages' subspaces have different k (e.g., one 1-D and one 2-D).",
+    "Explains that the first principal angle is the minimum angle over vectors in both subspaces, so a higher-dimensional subspace mechanically tends to give an equal or smaller angle."
+   ],
+   "batch": 3,
+   "orig_id": "q85"
+  },
+  {
+   "id": "q86",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Generation is capped at 512 new tokens. How could this cap bias ASR for a model that tends to write long content before stating a refusal?",
+   "answer": "If the response is cut off before the refusal appears, WildGuard sees text with no refusal. Success is defined as 'not classified as a refusal', so the response counts as an attack success. This inflates ASR for such a model.",
+   "rubric": [
+    "Says ASR would be inflated, i.e., refusals get counted as successes.",
+    "Explains that truncation can remove the refusal and that success means WildGuard does not detect a refusal."
+   ],
+   "batch": 3,
+   "orig_id": "q86"
+  },
+  {
+   "id": "q87",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c2"
+   ],
+   "pair": null,
+   "question": "How many values enter each CL-RepInd correlation, and why does that let one problematic language, such as a Tier-4 language with poor translations, swing the statistic?",
+   "answer": "CL-RepInd is a Pearson correlation over per-language margins for the non-English set \u039b, which has 17 languages (18 minus English). With only 17 points, a single outlying margin can largely determine the correlation. Such an outlier could come from a language whose prompts were poorly translated.",
+   "rubric": [
+    "Identifies about 17 data points, one per non-English language.",
+    "Explains that Pearson correlation over so few points is sensitive to a single outlier language, so CL-RepInd can reflect one language rather than broad structure."
+   ],
+   "batch": 3,
+   "orig_id": "q87"
+  },
+  {
+   "id": "q88",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "\u0394ASR is described as change from the model's 'strongest safety regime', English. When would this description fail, and what would \u0394ASR show?",
+   "answer": "It fails when some (language, perturbation) cell has lower ASR than English. That could happen because the model refuses more in that condition, or because many non-refusals were excluded as incoherent. \u0394ASR would then be negative, showing that English is not the model's safest condition.",
+   "rubric": [
+    "Says it fails when a non-English condition has lower ASR than English, giving a negative \u0394ASR.",
+    "Gives a mechanism from the paper, e.g., more refusals in that condition or coherence-filter exclusion of non-refusals."
+   ],
+   "batch": 3,
+   "orig_id": "q88"
+  },
+  {
+   "id": "q89",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "When would a large cross-lingual margin along a fitted refusal-cone direction fail to show that refusal geometry, as opposed to harmfulness information, carries over to that language?",
+   "answer": "The cone loss maximizes harmful-versus-harmless margins, not refused-versus-complied margins. Only the seed r-hat comes from behavioral labels. Once optimization, especially the cross-lingual term, moves a direction away from r-hat, it can align with harmfulness structure. A large margin then shows harmfulness separation, which the paper argues is decoupled from refusal.",
+   "rubric": [
+    "Says the margin need not indicate refusal transfer, because the direction may capture harmfulness rather than refusal.",
+    "Explains that the margins in Eq. 3 use harmful/harmless labels, and only the seed r-hat uses refused/complied labels; drift from the seed occurs during optimization (e.g., driven by lambda_xl)."
+   ],
+   "batch": 3,
+   "orig_id": "q89"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why would a Tier-1 aggregate \u0394ASR understate how much the other Tier-1 languages differ from English?",
+   "answer": "English is itself a Tier-1 language, and its \u0394ASR relative to the English baseline is zero by definition. Averaging over Tier 1 therefore includes a guaranteed zero. This pulls the tier aggregate toward zero relative to Spanish, Chinese, German and French.",
+   "rubric": [
+    "States that English belongs to Tier 1 and has \u0394ASR of zero by definition.",
+    "Concludes that including it dilutes or shrinks the Tier-1 average toward zero."
+   ],
+   "batch": 3,
+   "orig_id": "q90"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why would silhouette scores computed in the harmfulness-subspace-projected stream tend to show cleaner harmful-harmless separation than silhouette computed in the full residual stream?",
+   "answer": "The subspace is spanned by singular vectors of logistic-regression probe weights. Those weights are trained precisely to separate harmful from harmless activations. Projecting onto it keeps the separating directions and discards the many directions where the classes overlap.",
+   "rubric": [
+    "Says projected silhouette should be higher or cleaner than in the full stream.",
+    "Explains that the subspace is built from probe weights optimized to separate the two classes, so projection removes non-discriminative directions."
+   ],
+   "batch": 3,
+   "orig_id": "q91"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does Minionese contain fewer distinct model inputs than its count of 385 \u00d7 2 \u00d7 4 \u00d7 18 = 55,440 prompts suggests?",
+   "answer": "For English, none of the four perturbations changes the original text. Translating into English, round-tripping to English, code-switching a span into English, and romanizing already-Latin text all leave it unchanged. Also, for Latin-script non-Romance languages such as German, Turkish or Swahili, romanization leaves the translation unchanged, so their transliteration prompts duplicate the standard translations.",
+   "rubric": [
+    "States that many of the counted prompts are duplicates.",
+    "Gives at least one valid source: the English conditions are all identical to the original, or transliteration of Latin-script non-Romance languages equals their standard translation."
+   ],
+   "batch": 3,
+   "orig_id": "q92"
+  },
+  {
+   "id": "q93",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Taken literally, why can the harmfulness subspace not be spanned by the right singular vectors of the stacked probe-weight matrix W?",
+   "answer": "W is d \u00d7 |C| with |C| = 2. Its right singular vectors therefore live in a 2-dimensional category space, not in the d-dimensional activation space. A subspace that can be compared with English by principal angles and used for projecting activations must be spanned by d-dimensional vectors, i.e., the left singular vectors or column space of W.",
+   "rubric": [
+    "Notes that the right singular vectors of a d \u00d7 2 matrix are 2-dimensional (category space), not activation-space vectors.",
+    "Concludes that the intended subspace must be the column space or left singular vectors (d-dimensional) for projection and principal angles to make sense."
+   ],
+   "batch": 3,
+   "orig_id": "q93"
+  },
+  {
+   "id": "q94",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why would a code-switched harmful-harmless pair give a tighter contrast for representation-level comparison than the same pair under standard translation?",
+   "answer": "In code-switching, all shared context outside the differing span is left verbatim in English. The two prompts are therefore token-identical except for the translated span. Under standard translation, each prompt is machine-translated whole, so the shared context can be rendered differently or wrongly in each, as with the French 'violence ou \u00e0 la violence'.",
+   "rubric": [
+    "Says the code-switched pair differs only in the translated span, with identical English context.",
+    "Contrasts this with full translation, where independent machine translation can introduce extra differences between the two prompts."
+   ],
+   "batch": 3,
+   "orig_id": "q94"
+  },
+  {
+   "id": "q95",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does the Latin-Cyrillic French transliteration example repeat '\u0432\u0438\u043e\u043b\u0435\u043d\u0446\u0435' twice, and what does this imply about what the transliteration condition tests?",
+   "answer": "Transliteration converts the already-translated prompt. The French standard translation had already mistranslated 'violence or harm' as 'violence ou \u00e0 la violence', and that error carries over. Transliteration results therefore carry Google Translate errors along with the script change. This is the confound the limitations single out for transliteration.",
+   "rubric": [
+    "Explains that transliteration is applied to the standard translation, so the translation error carries over.",
+    "Concludes that transliteration ASR mixes the script-change effect with translation errors (a Google Translate confound)."
+   ],
+   "batch": 3,
+   "orig_id": "q95"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": "b3-p1",
+   "question": "If the benchmark prompts were translated with a different machine-translation system instead of Google Translate, would a model's English refusal direction r-hat change?",
+   "answer": "No. r-hat is computed from activations on English prompts, which are not translated, and from the model's refused/complied behavior on them. English responses are not back-translated, so swapping the translator touches none of these inputs.",
+   "rubric": [
+    "Answers no.",
+    "Explains that r-hat uses only untranslated English prompts and English behavior."
+   ],
+   "batch": 3,
+   "orig_id": "q96"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": "b3-p1",
+   "question": "If the benchmark prompts were translated with a different machine-translation system instead of Google Translate, could a model's Hindi probe AUC change?",
+   "answer": "Yes. The Hindi prompts themselves would change. That changes the residual activations the within-language Hindi probe is trained and evaluated on.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that Hindi inputs come from the translator, so the activations the probe uses would change."
+   ],
+   "batch": 3,
+   "orig_id": "q97"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b3-p2",
+   "question": "If responses were generated with temperature sampling instead of greedy decoding, could a language's silhouette scores change?",
+   "answer": "No. Silhouette is computed from residual activations at the last post-instruction token of the input, using harmful/harmless labels. Both are fixed before any response is generated.",
+   "rubric": [
+    "Answers no.",
+    "Explains that silhouette uses input activations at the post-instruction token and harmful/harmless labels, not generated text."
+   ],
+   "batch": 3,
+   "orig_id": "q98"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b3-p2",
+   "question": "If responses were generated with temperature sampling instead of greedy decoding, could a language's ASR change?",
+   "answer": "Yes. ASR depends on the generated responses, both through the coherence filter and through WildGuard's refusal judgment. Sampling would produce different responses than the single deterministic greedy one.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that ASR is computed from generated responses, which change under sampling."
+   ],
+   "batch": 3,
+   "orig_id": "q99"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p3",
+   "question": "If Swahili were reassigned from Tier 3 to Tier 4, would Swahili's own cells in a model's ASR heatmap change?",
+   "answer": "No. Tiers are external labels defined independently of the benchmark. Swahili's prompts, responses and judgments are unaffected by which group it is assigned to.",
+   "rubric": [
+    "Answers no.",
+    "Explains that tier is only a grouping label and does not affect per-language prompts or scoring."
+   ],
+   "batch": 3,
+   "orig_id": "q100"
+  },
+  {
+   "id": "q101",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p3",
+   "question": "If Swahili were reassigned from Tier 3 to Tier 4, would the Tier-4 aggregate ASR change?",
+   "answer": "Yes, in general. Swahili's cells would now enter the Tier-4 average. Unless its ASR happened to equal the existing Tier-4 mean, the aggregate would shift.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that tier aggregates average over member languages, so adding Swahili changes the Tier-4 mean."
+   ],
+   "batch": 3,
+   "orig_id": "q101"
+  },
+  {
+   "id": "q102",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b3-p4",
+   "question": "If incoherent responses were counted as refusals instead of being excluded, would ASR change in a Tier-4 cell where many responses fail the coherence filter?",
+   "answer": "Yes, it would drop. The excluded responses would enter the denominator but not the count of compliant responses. The cell's ASR would therefore fall.",
+   "rubric": [
+    "Answers yes, with ASR decreasing.",
+    "Explains that incoherent responses would be added to the denominator as non-successes."
+   ],
+   "batch": 3,
+   "orig_id": "q102"
+  },
+  {
+   "id": "q103",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b3-p4",
+   "question": "If incoherent responses were counted as refusals instead of being excluded, would ASR change in a cell where every response passes the coherence filter?",
+   "answer": "No. With no incoherent responses, nothing is reclassified. The numerator and denominator stay the same.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the rule change only affects responses flagged incoherent, and there are none."
+   ],
+   "batch": 3,
+   "orig_id": "q103"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A model answers every Zulu prompt in English. How much does the paper's Tier-4 back-translation caveat apply to this model's Zulu ASR?",
+   "answer": "Largely not. Only non-English responses are back-translated by NLLB-200, so English responses are judged by WildGuard directly. They also pass the language check, which accepts English. Other Tier-4 issues, such as the quality of the prompt translation into Zulu, still remain.",
+   "rubric": [
+    "Says the back-translation bias largely does not apply to these responses.",
+    "Explains that back-translation is applied only to non-English responses, and English passes the coherence language check.",
+    "Notes that other confounds, such as prompt translation quality, remain."
+   ],
+   "batch": 3,
+   "orig_id": "q104"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "An auditor who already tests Tier-1 languages can add just one more language and wants to catch the paper's sharpest change in safety regime. From which tier should it come, and why?",
+   "answer": "It should come from Tier 3 (or lower). The paper places the sharp regime transition between Tiers 2 and 3. A Tier-2 language could still fall on the higher-resource side of that boundary and miss the shift.",
+   "rubric": [
+    "Recommends a Tier-3 (or Tier-4) language rather than Tier 2.",
+    "Justifies this by the sharp regime transition lying between Tiers 2 and 3."
+   ],
+   "batch": 3,
+   "orig_id": "q105"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team has a model's weights but no budget to generate responses in Scottish Gaelic. Which of the paper's geometric diagnostics can they compute for Gaelic, and what behavioral data do they still need?",
+   "answer": "Probe AUC, harmfulness subspaces, silhouette and principal angles to English all need only input activations and harmful/harmless labels. They can be computed without any Gaelic generation. The refusal direction r-hat, and hence the cone seed and the Figure 9 refusal components, needs English refused/complied labels, which requires English responses, but no Gaelic ones.",
+   "rubric": [
+    "Says probe AUC, silhouette and principal angles (harmfulness-subspace measures) can be computed for Gaelic without generation.",
+    "Notes that r-hat and anything built on it (the cone seed, refusal-direction components) need English behavioral labels from English responses only."
+   ],
+   "batch": 3,
+   "orig_id": "q106"
+  },
+  {
+   "id": "q107",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team extends Minionese to Italian using the paper's stated rules. What will the transliteration condition do to Italian prompts, and in which group should its results be reported?",
+   "answer": "Italian is a Romance language, so the translated prompts are converted to a Latin-Cyrillic rendering. Italian's native script is Latin, so its transliteration results belong with the Latin-script languages, reported separately from non-Latin-script ones.",
+   "rubric": [
+    "States that Italian prompts get a Latin-Cyrillic rendering (because it is a Romance language).",
+    "Says results should be reported in the Latin-script group, separate from non-Latin-script languages."
+   ],
+   "batch": 3,
+   "orig_id": "q107"
+  },
+  {
+   "id": "q108",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c7",
+    "c5"
+   ],
+   "pair": null,
+   "question": "For a new model, Tier-4 languages show high ASR but also high probe AUC and high silhouette. Does the Discussion's Tier-4 explanation apply to this model, and where should the analysis look instead?",
+   "answer": "No. The 'upstream' explanation says Tier-4 failure comes from weak harmful-harmless separation in the input representation, but here harmfulness is well separated. The analysis should turn to the refusal side: the component along the English refusal direction, the per-language cone margins, and pipeline artifacts such as back-translation bias.",
+   "rubric": [
+    "Says the upstream explanation does not apply because separation is high.",
+    "Points to refusal-side or downstream diagnostics (refusal-direction components or cone margins) and/or pipeline artifacts as the next things to check."
+   ],
+   "batch": 3,
+   "orig_id": "q108"
+  },
+  {
+   "id": "q109",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team can run only one Minionese perturbation on a new model and wants the one most likely to reveal resource-dependent risk. Which should they choose, and why not code-switching?",
+   "answer": "They should choose standard translation (translationese also works), since it follows the tier gradient. Code-switching is the most tier-stable condition. It keeps most text in English, which dilutes the influence of the target language's resource level and would hide tier differences.",
+   "rubric": [
+    "Recommends standard translation (or translationese).",
+    "Explains that it follows the tier gradient, while code-switching is the most tier-stable because most of the prompt stays in English."
+   ],
+   "batch": 3,
+   "orig_id": "q109"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If every model's refusing/complying/mixed distribution had changed gradually and evenly from Tier 1 to Tier 4, which claim would lose its support, and which descriptive labels elsewhere in the paper would inherit the change?",
+   "answer": "The claim that the safety regime shifts sharply between Tiers 2 and 3 would lose support. That claim rests on these per-(model, tier) regime distributions. The same behavioral regime labels are attached to (language, layer) points in the geometric panels (Figure 9, row 3), so those labels would also no longer show a Tier-2/3 break.",
+   "rubric": [
+    "Identifies the sharp Tier-2/3 regime-transition claim.",
+    "Notes that it rests on the per-tier refusing/complying/mixed distributions, and that the same behavioral labels feed the Figure 9 regime-label panels."
+   ],
+   "batch": 3,
+   "orig_id": "q110"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the English refusal direction r-hat turned out to be unreliable, would the fitted refusal cone necessarily be corrupted as well? Why?",
+   "answer": "Not necessarily. r-hat enters the cone only as the seed. The loss itself maximizes harmful-harmless margins computed from activations and labels, so optimization can move the basis away from a poor seed. The Figure 9 refusal-direction panels, by contrast, use r-hat directly and would be directly affected.",
+   "rubric": [
+    "Says the cone is not necessarily corrupted.",
+    "Explains that r-hat only seeds the cone while the objective depends on harmful/harmless margins, unlike the Figure 9 panels, which use r-hat directly."
+   ],
+   "batch": 3,
+   "orig_id": "q111"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If Aya-Expanse, which was built for broad multilingual coverage, had shown the same tier gradient as English-centric Llama, how would that bear on attributing the gradient to a model's multilingual training emphasis?",
+   "answer": "It would weaken that attribution. By the paper's cross-model logic, patterns shared across differently trained models are candidates for general properties of multilingual safety alignment. Divergences are what point to training data. With only three 8B models, this would still be suggestive, not conclusive.",
+   "rubric": [
+    "Says it would weaken attributing the gradient to multilingual training emphasis, and make it a candidate shared property instead.",
+    "Cites the paper's logic that shared patterns suggest general alignment properties while divergences point to training data."
+   ],
+   "batch": 3,
+   "orig_id": "q112"
+  },
+  {
+   "id": "q113",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If NLLB-200 back-translation were shown to be unbiased for Tier-4 languages, would the Discussion's reason for relying on representation-level measures in Tier 4 disappear? Why?",
+   "answer": "No, only partly. The Discussion lists three factors that affect Tier-4 ASR independently of safety: lower prompt translation quality, unreliable back-translation, and variable model competence. Removing the back-translation bias leaves the other two. Measures that do not depend on generated text would still be needed.",
+   "rubric": [
+    "Says the rationale would not disappear (only partly weakened).",
+    "Notes that prompt translation quality and model competence remain as Tier-4 confounds of ASR."
+   ],
+   "batch": 3,
+   "orig_id": "q113"
+  },
+  {
+   "id": "q114",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Section 5.2 heads its probe results 'subthreshold activation as the dominant failure mode'. If Tier-4 probe AUC were near chance at every layer, which failure description would fit Tier 4 better, and what caveat applies?",
+   "answer": "The Discussion's 'upstream' description would fit better: harmfulness is not linearly represented, rather than being represented but too weakly to trigger refusal. The caveat is that probe failure does not rule out nonlinear encoding of harmfulness.",
+   "rubric": [
+    "Says the upstream (not-represented) description fits Tier 4 rather than subthreshold activation.",
+    "Gives the caveat that near-chance linear probes do not exclude nonlinear encodings."
+   ],
+   "batch": 3,
+   "orig_id": "q114"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does reporting \u0394ASR relative to each model's English baseline make cross-model comparisons of non-English vulnerability reliable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. \u0394ASR removes each model's English level, but the non-English cells depend on back-translation, whose quality interacts differently with each model's outputs. They also depend on how each model's refusal style interacts with WildGuard. The paper still recommends within-model comparisons and does not validate \u0394ASR across models.",
+   "rubric": [
+    "Answers not settled (or not supported).",
+    "Explains that back-translation and refusal-style/WildGuard interactions vary by model and language and are not removed by subtracting the English baseline."
+   ],
+   "batch": 3,
+   "orig_id": "q115"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that differences between individual heatmap cells, such as two neighboring languages, are statistically reliable? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Greedy decoding gives one response per prompt, and each cell rests on at most 385 harmful prompts, fewer after coherence filtering. The paper reports no confidence intervals or significance tests.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes the single deterministic response per prompt, at most 385 (filtered) prompts per cell, and the absence of reported uncertainty estimates or tests."
+   ],
+   "batch": 3,
+   "orig_id": "q116"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If a language's activations have a small component along the English refusal direction, does the paper show that the model lacks a refusal representation for that language? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The refusal direction is fixed from English data, so a small component only shows weak alignment with that English direction. The language could encode refusal along other directions. The analysis is also correlational, with no patching.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that r-hat is a fixed English reference, so refusal could be encoded along different directions in that language (and the analysis is correlational)."
+   ],
+   "batch": 3,
+   "orig_id": "q117"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that naturally occurring translationese, such as text produced by human translators, weakens model safety? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The translationese condition is produced only by three automatic Google Translate steps. So it tests the surface statistics of machine round-trip translation, not human translation.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that translationese is generated purely by automated machine round-trip translation, not by human translators."
+   ],
+   "batch": 3,
+   "orig_id": "q118"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Tier-4 inputs carry no harmfulness information in the model's representations? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The evidence is linear probes, silhouette scores in a probe-derived subspace, and principal angles. The paper notes that probe failure does not rule out nonlinear encodings, and it limits itself to linear methods.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the measures are linear and that the paper states linear probe failure does not exclude nonlinear encoding."
+   ],
+   "batch": 3,
+   "orig_id": "q119"
+  },
+  {
+   "id": "q120",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does code-switching being the most tier-stable perturbation show that it is the weakest attack? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Tier stability describes how little code-switching ASR varies across tiers, not how high it is. A uniformly high or a uniformly low ASR would both be tier-stable.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that stability concerns variation across tiers, not the absolute ASR level."
+   ],
+   "batch": 3,
+   "orig_id": "q120"
+  },
+  {
+   "id": "q121",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper support predicting a language's safety risk from its tier alone, for a language not in the benchmark? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported. The paper says tier is an imperfect proxy for safety risk. Tier assignments are approximate, languages within a tier can be represented very differently in a given model's training data, and transliteration vulnerability depends on script rather than tier.",
+   "rubric": [
+    "Answers not supported (or contradicted).",
+    "Cites that tier is an approximate and imperfect proxy, with within-tier variation across models and/or script-conditioned effects."
+   ],
+   "batch": 3,
+   "orig_id": "q121"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Equation 1 divides by the number of harmful prompts in the cell. Suppose that denominator is taken literally while incoherent responses are dropped from the count of successes. In which direction would heavy coherence filtering move a cell's ASR, and why?",
+   "answer": "It would push ASR downward. An incoherent response can never count as a success but would still sit in the denominator, so it behaves exactly like a refusal. Exclusion is neutral only if the denominator is restricted to coherent responses.",
+   "rubric": [
+    "Asserts that ASR would be biased downward (deflated) by heavy filtering under the literal reading.",
+    "Explains that filtered responses stay in the denominator without being able to count as successes, so they act like refusals.",
+    "Notes that the bias disappears only if the denominator counts coherent responses alone."
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Code-switched prompts are mostly English with a short translated span. Suppose a model mirrors this style and answers in a mix of English and the target language. How could the coherence filter mishandle such answers?",
+   "answer": "Mixed-language text can split language identification, giving confidence below 0.3 or detecting a third language. A coherent reply could then be marked incoherent and dropped. This would shrink and bias the code-switching cells for reasons unrelated to output quality.",
+   "rubric": [
+    "Asserts that coherent mixed-language replies may be wrongly flagged as incoherent and excluded.",
+    "Explains this via langdetect confidence below 0.3 or a misdetected language caused by mixing two languages.",
+    "States that code-switching cells would then rest on fewer or skewed responses (a selection bias)."
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose a language's harmfulness probe direction were exactly the negative of the English one. What first principal angle would Figure 4 report, and why would that be misleading for an English-calibrated intervention?",
+   "answer": "It would report 0\u00b0, because subspaces and principal angles ignore the sign of a direction. Yet the two languages' harmful sides would lie in opposite senses along that axis. An intervention applied along the English direction with the English sign would act backwards for that language.",
+   "rubric": [
+    "Asserts that the angle would be 0\u00b0 (subspaces look perfectly aligned).",
+    "Explains that principal angles between subspaces are sign-invariant, so a flipped orientation is invisible.",
+    "Notes that an English-calibrated intervention would push in the wrong sense for that language."
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Row 2 of Figure 9 compares a harm signal at t_inst with a refusal signal at t_post. Why could a mismatch between these two signals fail to show that harm and refusal are represented separately?",
+   "answer": "The two signals are read at different token positions. A difference between them could reflect how representations change across positions rather than two distinct encodings. The analysis is also correlational, with no patching to separate the two.",
+   "rubric": [
+    "Asserts that the mismatch does not by itself establish separate representations.",
+    "Explains that the signals come from different token positions, so position is a confound.",
+    "Optionally notes that the panels are correlational, with no activation patching."
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q126",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "The cross-lingual term in Eq. 3 averages a direction's harmful-harmless margin over the non-English languages. When would a direction with a respectable average cross-lingual margin still be a poor reference for some of those languages?",
+   "answer": "This happens when the margin is large in some languages but near zero or even negative (reversed) in others. Positive and negative margins partly cancel in the average, so the loss term cannot reveal the problem. Only per-language margins, as in Figure 6, would show it.",
+   "rubric": [
+    "Asserts that the average can hide languages with near-zero or reversed (negative) margins.",
+    "Explains that the term is a mean, so large margins elsewhere offset or cancel weak or negative ones.",
+    "Points to per-language margins (Figure 6) as the needed check."
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q127",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Figure 4 plots principal angles per tier. Given the benchmark's script composition, when would the Tier-3 curve misrepresent its member languages?",
+   "answer": "Tier 3 contains one Devanagari language (Hindi) and three Latin-script languages (Turkish, Indonesian, Swahili). If script affects alignment with English, Hindi's angles would differ from the others. The averaged curve would then blend a script effect with resource level and describe none of the languages well.",
+   "rubric": [
+    "Asserts that the Tier-3 average can misrepresent individual languages when Hindi behaves differently from the rest.",
+    "Explains that Hindi is the only non-Latin-script language in Tier 3, so the average mixes script with resource level."
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why might the gap between translationese and standard-translation ASR grow with tier even if models were equally sensitive to machine-translation surface statistics in every language?",
+   "answer": "Translationese adds two more machine-translation steps, and how much a round trip drifts depends on translation quality. Quality is lower for low-resource languages. Low-tier translationese prompts would therefore differ more from their standard versions, through larger semantic drift or errors, and not only in surface statistics. The French example drifts only slightly.",
+   "rubric": [
+    "Asserts that the gap could grow with tier for reasons other than sensitivity to surface statistics.",
+    "Explains that round-trip drift scales with translation quality, which is worse for lower tiers, so low-tier translationese prompts change more."
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does it matter that resource tiers were defined from training-data availability rather than from the benchmark's own results?",
+   "answer": "Tiers defined by observed ASR would make any tier gradient circular. Because tiers are fixed externally, a gradient along them is a genuine empirical pattern. The grouping is also the same for every model, so per-tier aggregates can be compared across models.",
+   "rubric": [
+    "Asserts that external definition avoids circularity: a gradient is a finding rather than an artifact of how tiers were drawn.",
+    "Explains that ASR-defined tiers would guarantee a gradient, while a fixed external grouping also gives a common axis across models."
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "In the Japanese code-switching example in Appendix E, what suggests the differing span was translated piece by piece rather than as a Japanese phrase, and why does this matter for the condition's realism?",
+   "answer": "The translated items are separated by spaces and appear in standalone forms. Examples are \u6247\u52d5\u3059\u308b, \u307e\u305f\u306f and \u305d\u3057\u3066 for 'and', with no particles joining them into a grammatical phrase, which fits translating each alphabetic token on its own. The result is word salad inside an English frame, not natural code-switching, which illustrates the caveat that automated perturbations may not reflect human code-switching.",
+   "rubric": [
+    "Identifies evidence of token-by-token translation, such as space-separated words, dictionary or standalone forms, or no joining particles.",
+    "Concludes that the code-switched prompts are unnatural, linking this to the caveat that they may not reflect real human code-switching."
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q131",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why are within-model comparisons across languages less affected by the problems that make cross-model ASR magnitudes incomparable, and which problem still remains?",
+   "answer": "Refusal style belongs to the model and stays roughly constant across its languages. Its interaction with WildGuard therefore largely cancels in within-model comparisons. Back-translation quality, however, varies by language, so even within-model comparisons stay exposed to it, especially for Tier 4.",
+   "rubric": [
+    "Explains that the model's refusal style (and its interaction with WildGuard) is held fixed within a model, so it largely cancels.",
+    "States that language-dependent back-translation quality, worst for Tier 4, still affects within-model comparisons."
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q132",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "For a given model, why should each Tier-4 language's transliteration ASR equal its standard-translation ASR?",
+   "answer": "All Tier-4 languages are non-Romance and written in Latin script, so romanizing them leaves the translated prompt unchanged. With greedy decoding, identical prompts give identical responses, so the scores are the same. This assumes the translation step returns the same text both times and romanization is a true no-op.",
+   "rubric": [
+    "Asserts that the two ASRs should be identical.",
+    "Explains that romanizing an already Latin-script, non-Romance language is a no-op, and greedy decoding makes identical inputs give identical outputs.",
+    "Notes the condition: same translation output and no changes made by the romanizer (e.g., to diacritics)."
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q133",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can the sharp safety-regime change between Tiers 2 and 3 under standard translation not be explained by how much of each prompt is non-English?",
+   "answer": "Standard translation translates the whole prompt in every language, so prompts are entirely non-English in both tiers. Since that amount does not change across the boundary, the shift must come from factors specific to each language, such as resource level or translation quality.",
+   "rubric": [
+    "Asserts that the amount of non-English text cannot explain the shift.",
+    "Explains that standard translation is fully non-English in all tiers, so this amount is constant across the Tier 2/3 boundary."
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q134",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A researcher wants to estimate the effect of script while holding resource tier fixed, using only Minionese's languages. Which tiers allow such a comparison and which do not?",
+   "answer": "Tier 1 allows it (Chinese against the Latin-script languages), and so does Tier 3 (Hindi against Turkish, Indonesian and Swahili). Tier 2 is entirely non-Latin and Tier 4 entirely Latin, so they offer no within-tier script contrast. Each usable contrast also rests on a single non-Latin language.",
+   "rubric": [
+    "Identifies Tiers 1 and 3 as allowing within-tier script comparisons (Chinese and Hindi against Latin-script languages).",
+    "States that Tiers 2 (all non-Latin) and 4 (all Latin) do not.",
+    "Optionally notes that each contrast depends on only one non-Latin language."
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q135",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "An audit summarizes each language by averaging its ASR over the four Minionese perturbations. Why are German's and Hindi's averages not built from comparable conditions?",
+   "answer": "German is a non-Romance language in Latin script, so its transliteration prompts are the same as its standard translations, and standard translation effectively counts twice. Hindi's transliteration really changes the script. The two averages therefore combine different sets of conditions, which is one reason to report each perturbation separately.",
+   "rubric": [
+    "Explains that German transliteration is a no-op, duplicating standard translation, while Hindi transliteration changes script.",
+    "Concludes that the averages weight conditions differently and are not comparable, favoring disaggregated reporting."
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q136",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "For some language and layer, probe AUC is near 1 but the silhouette score in the harmfulness subspace is near 0. How should a team interpret this?",
+   "answer": "Harmfulness information is present and linearly decodable, because a separating hyperplane exists. However, the two classes form diffuse, overlapping clouds rather than compact clusters. The two measures do not contradict each other: they describe decodability and cluster shape respectively.",
+   "rubric": [
+    "States that harmfulness is linearly decodable (information present, a separating hyperplane exists).",
+    "States that the classes are diffuse or non-compact per silhouette, and that this is consistent with high AUC rather than contradictory."
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q137",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c4",
+    "c5",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team has new harmful prompts in several languages but no harmless counterparts. Which Minionese tools can they still run, and which can they not?",
+   "answer": "The ASR pipeline still works, because ASR uses only harmful prompts. The refusal direction r-hat can still be computed if the model refuses some English prompts and complies with others. Probes, harmfulness subspaces, silhouette, principal angles and cone margins all need a harmful-harmless contrast, so they cannot be run. The code-switching perturbation also needs the differing span between pair members, so it cannot be built either.",
+   "rubric": [
+    "States that ASR and the refusal-based r-hat remain possible, given both refused and complied English responses.",
+    "States that probes, subspaces, silhouette, principal angles and cone margins are unavailable because they need harmful-harmless pairs.",
+    "Notes that code-switching cannot be constructed without a counterpart defining the differing span."
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q138",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants to know whether violence-related and fraud-related harm occupy different directions in a language. Can the paper's harmfulness subspaces answer this as constructed?",
+   "answer": "No. Each subspace is built from probes for only two categories, 'all' and 'unknown', so it has at most two dimensions and none is tied to a specific harm type. The team would need to train a probe for each harm category.",
+   "rubric": [
+    "Asserts that the subspaces as constructed cannot answer it.",
+    "Explains that they come from only the 'all' and 'unknown' probes (at most two dimensions, not category-specific), so per-category probes are needed."
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q139",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team wants a cone direction that works specifically for Tier-4 languages. Can they get one with the released cone code by changing only lambda_xl?",
+   "answer": "No. The cross-lingual term averages margins over all non-English languages equally, so raising lambda_xl increases breadth across all of them rather than for Tier 4. To target Tier 4 they would need to restrict or reweight the language set in that term.",
+   "rubric": [
+    "Asserts that changing lambda_xl alone will not target Tier 4.",
+    "Explains that lambda_xl weights a uniform average over all non-English languages, so the language set in the cross-lingual term must be restricted or reweighted."
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q140",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "The Discussion asserts refusal geometry is effectively one-dimensional cross-lingually, with CL-RepInd as the tool for testing this. What feature of Eq. 3 makes high CL-RepInd values unsurprising, and so a weak test of the claim?",
+   "answer": "No term in Eq. 3 rewards directions for separating different languages. Each direction is pushed toward a high average cross-lingual margin, so all of them tend to load on the same easily separated languages. Orthonormality constrains the directions in activation space, not their per-language margin profiles. High correlations are therefore what the objective tends to produce.",
+   "rubric": [
+    "States that the objective contains no pressure toward distinct cross-lingual profiles, since all directions are rewarded for the same average margin.",
+    "Explains that orthonormality does not prevent correlated margin profiles, so high CL-RepInd is expected and weakly supports one-dimensionality."
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q141",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose Tier-4 languages had shown high silhouette and probe AUC but first principal angles near 90\u00b0 to English. Would the Discussion's description of Tier-4 failure as 'upstream, not directional' fit?",
+   "answer": "No. Harmfulness would then be well encoded but in directions orthogonal to the English ones. That is a directional mismatch, the very alternative the Discussion rules out. An upstream account requires weak separation itself.",
+   "rubric": [
+    "Asserts that the 'upstream, not directional' description would not fit (it would be contradicted).",
+    "Explains that strong separation in subspaces orthogonal to English indicates a directional failure rather than weak upstream encoding."
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q142",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If lambda_xl had been tuned separately for each model, which comparison involving the cone figures (Figures 5\u20136 and 10\u201311) would lose validity?",
+   "answer": "The comparison of cone margins, quality curves and CL-RepInd across Llama, Qwen and Aya would lose validity. Differences between models could then reflect a different trade-off between English fidelity and cross-lingual breadth, not differences in model geometry. This is why the paper fixes the weighting.",
+   "rubric": [
+    "Identifies cross-model comparison of the fitted cones as compromised.",
+    "Explains that lambda_xl sets the English-versus-cross-lingual trade-off, so per-model tuning confounds model differences with weighting choices."
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q143",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the Tier-4 back-translation bias were severe, which rows of Figure 9 would inherit it, and which would not?",
+   "answer": "Row 3, the per-language behavioral labels, would inherit it, because those labels come from back-translated, WildGuard-judged Tier-4 responses. Rows 1, 2 and 4 use activations and an English-derived refusal direction. They do not depend on Tier-4 generations or their back-translation.",
+   "rubric": [
+    "Identifies the behavioral label row (row 3) as inheriting the bias.",
+    "States that the activation-based rows (1, 2, 4) are unaffected because they use activations and the English r-hat, not Tier-4 back-translated text."
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q144",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the English harmfulness probe failed (AUC near chance) at a given layer, which values in Figure 4 would become uninterpretable, and why?",
+   "answer": "Every non-English language's principal angle at that layer would become uninterpretable. Each angle is measured against the English subspace, which would then be built from probe weights that capture no harmfulness. A shared reference affects all comparisons at once.",
+   "rubric": [
+    "Asserts that all languages' angles at that layer become uninterpretable.",
+    "Explains that every angle uses the English subspace as a common reference, so a meaningless English subspace invalidates them all."
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q145",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the finding that harmfulness subspaces are not cross-lingually universal contradict the prior result of Wang et al. that English refusal directions transfer across languages? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled: the finding does not contradict the prior result. The paper measures probe-derived harmfulness subspaces, not refusal directions, and it reports that harm and refusal signals are decoupled. It also does not test whether refusal directions transfer causally.",
+   "rubric": [
+    "Answers not settled (or states that there is no contradiction).",
+    "Explains that harmfulness subspaces and refusal directions are different objects (decoupled), and refusal transfer is not causally tested."
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q146",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does plotting principal angles against normalized depth show that the same normalized depth corresponds to the same processing stage in Llama, Qwen and Aya? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Normalization is a convenience that puts models with different layer counts on a shared axis. The paper gives no evidence that equal fractions of depth perform the same computation.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that normalization only aligns axes across different layer counts and is not evidence of functional correspondence."
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q147",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show whether romanizing Hindi prompts changes harmful-harmless separation in the model's representations? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All geometric figures (silhouette, probe AUC, principal angles, Figure 9) use the standard-translation condition. Transliteration is analyzed only behaviorally.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the representation-level analyses are reported only for standard translation."
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q148",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that every harmless counterpart is actually harmless? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Human reviewers checked that sentence structure and length were preserved, but the paper does not report checking harmlessness. That property rests on GPT's benign substitutions.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that human verification covered structure and length only, not harmlessness."
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the 100% WildGuard\u2013human agreement show that the coherence filter correctly separates usable from unusable responses? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The spot-check validates WildGuard's refusal judgments on scored responses. It says nothing about whether responses the filter excluded, or kept, were correctly classified.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the spot-check targets the judge's refusal labels, not the coherence filter's decisions."
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q150",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the decline of within-language probe AUC with tier (Figure 3) show that a probe trained on English activations would fail on Tier-4 activations? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Each probe is trained and tested within its own language, so Figure 3 measures decodability, not whether an English probe transfers. No cross-lingual probe test is reported.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the probes are within-language, so cross-lingual probe transfer is not measured."
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q151",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p1",
+   "question": "If the coherence filter's minimum length were raised from 20 to 200 characters, could a model's Hindi standard-translation ASR change?",
+   "answer": "Yes. More responses would be flagged incoherent and excluded, which changes the set of responses that ASR is computed over.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the filter decides which responses enter the ASR computation, so a stricter length threshold changes that set."
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q152",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": "b4-p1",
+   "question": "If the coherence filter's minimum length were raised from 20 to 200 characters, could a model's Hindi probe AUC change?",
+   "answer": "No. Probes are trained on prompt activations at the last post-instruction token, which involve no generated responses, so the filter never touches them.",
+   "rubric": [
+    "Answers no.",
+    "Explains that probe AUC uses prompt activations, not generated responses, so it is independent of response filtering."
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q153",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p2",
+   "question": "If both the 'all' and the 'unknown' probe weight vectors for a language and layer were multiplied by 10, would that language's harmfulness subspace or its dimension k change?",
+   "answer": "No. Uniform scaling multiplies all singular values by the same factor and leaves the singular directions unchanged, so the spectral-mass fractions, k and the subspace stay the same.",
+   "rubric": [
+    "Answers no.",
+    "Explains that uniform scaling leaves singular directions and relative spectral mass unchanged, so k and the subspace stay the same."
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q154",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p2",
+   "question": "If only the 'unknown' probe's weight vector for a language and layer were multiplied by 10, could that language's harmfulness subspace or its dimension k change?",
+   "answer": "Yes. Scaling one column changes the relative singular values and the top singular direction. The share of spectral mass can therefore cross the 95% threshold, changing k, or the retained direction can shift toward the scaled column.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that non-uniform scaling alters the relative spectral mass and singular directions, which can change k or the subspace."
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q155",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "If one cone direction's margin were doubled in every non-English language, would its CL-RepInd with another direction change?",
+   "answer": "No. CL-RepInd is a Pearson correlation, which is unchanged when one vector is multiplied by a positive constant.",
+   "rubric": [
+    "Answers no.",
+    "Explains that Pearson correlation is invariant to uniform positive scaling of one vector."
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q156",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "If one cone direction's margin were doubled only in the Tier-4 languages, could its CL-RepInd with another direction change?",
+   "answer": "Yes. Changing only some entries alters the shape of the per-language margin vector, not just its scale, so the Pearson correlation can change.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that changing a subset of languages alters the vector's pattern, which Pearson correlation is sensitive to."
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q157",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p4",
+   "question": "Suppose harmful activations in a language became more spread out within their class, while every point stayed on the correct side of a hyperplane that perfectly separates the classes. Would the silhouette score change?",
+   "answer": "Yes, it would fall. Silhouette depends on how compact each cluster is relative to the distance between clusters, so greater within-class spread lowers it.",
+   "rubric": [
+    "Answers yes (silhouette decreases).",
+    "Explains that silhouette is sensitive to cluster compactness and spread."
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q158",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p4",
+   "question": "Suppose harmful activations in a language became more spread out within their class, while every point stayed on the correct side of a hyperplane that perfectly separates the classes. Would probe AUC change?",
+   "answer": "No. A linear probe can still separate the classes perfectly, so its AUC stays at its maximum. Probe accuracy needs only a separating hyperplane, not compact clusters.",
+   "rubric": [
+    "Answers no.",
+    "Explains that linear separability is preserved, and the probe needs only a separating hyperplane, not tight clusters."
+   ],
+   "batch": 4,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q159",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p5",
+   "question": "Would changing lambda_cone alter the fitted N=1 refusal cone?",
+   "answer": "No. The cone-spread term orders pairs of basis directions by English margin, and a single direction has nothing to be ordered against. The term is inactive, so its weight has no effect.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the cone-spread term compares successive directions and is vacuous with only one direction."
+   ],
+   "batch": 4,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q160",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p5",
+   "question": "Would changing lambda_cone alter the fitted N=5 refusal cone?",
+   "answer": "Yes, it could. With five directions, the cone-spread term penalizes ordering violations among them, so its weight changes the optimization and can change the fitted basis.",
+   "rubric": [
+    "Answers yes (it can change).",
+    "Explains that with several directions the ordering penalty is active, so its weight shapes the solution."
+   ],
+   "batch": 4,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q161",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose a model answers a Tier-4 harmful prompt by translating the prompt into English instead of carrying out or refusing the request. How does the pipeline score this response, and what does that do to the cell's ASR?",
+   "answer": "The response is in English, longer than 20 characters and valid Unicode, so it passes the coherence filter. WildGuard does not see a refusal, so the response counts as an attack success. Such behavior inflates ASR without any harmful content being produced, because the filter checks form, not whether the response is relevant to the request.",
+   "rubric": [
+    "States the response is counted as an attack success (compliant) and so raises or inflates ASR.",
+    "Explains that it passes every coherence check (English is accepted, long enough, valid Unicode) and that WildGuard only checks for refusal, not for relevance or harmful content."
+   ],
+   "batch": 5,
+   "orig_id": "q161"
+  },
+  {
+   "id": "q162",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Appendix E renders the same harmful request in about 26 Chinese characters versus about 79 English characters. How could the coherence filter's 20-character minimum bias Chinese ASR relative to English ASR, and why?",
+   "answer": "A short Chinese refusal can carry the same content as an English refusal in far fewer characters, so it is more likely to fall below 20 characters and be excluded. Removing disproportionately many short refusals leaves a scored set skewed toward compliant responses, which inflates Chinese ASR relative to English. This assumes ASR is computed over the responses that remain after filtering.",
+   "rubric": [
+    "States that Chinese refusals are excluded more often, biasing Chinese ASR upward relative to English.",
+    "Explains that Chinese packs the same content into fewer characters, so terse refusals fall under the fixed 20-character threshold more often.",
+    "Notes the condition that ASR is computed over the filtered (remaining) responses."
+   ],
+   "batch": 5,
+   "orig_id": "q162"
+  },
+  {
+   "id": "q163",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "The paper says translationese introduces semantic drift. How could this drift raise translationese ASR without any weakening of the model's safety behavior?",
+   "answer": "Repeated round-trip translation can soften or lose the harmful part of a request, as when 'harm' is dropped. The prompt may then no longer be harmful, and the model's non-refusal of a benign request still counts as an attack success. The higher ASR would then reflect changed prompt content, not a bypass of safety.",
+   "rubric": [
+    "States that ASR can rise because drifted prompts may no longer be (as) harmful, so compliance is appropriate rather than a jailbreak.",
+    "Explains that the refusal-based metric counts any non-refusal on a prompt from the harmful set as a success, regardless of whether the drifted prompt is still harmful."
+   ],
+   "batch": 5,
+   "orig_id": "q163"
+  },
+  {
+   "id": "q164",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "When would CL-RepInd between a cone direction and another direction be undefined or meaningless, even if both directions were well fitted?",
+   "answer": "CL-RepInd is a Pearson correlation across per-language margin vectors. If one direction's margin is nearly the same in every non-English language, its margin vector has almost no variance. The correlation is then undefined, or it is driven by tiny noise fluctuations, so it says nothing about shared cross-lingual structure.",
+   "rubric": [
+    "Identifies the case where a direction's per-language margins are (nearly) constant across languages.",
+    "Explains that Pearson correlation needs variance, so near-zero variance makes it undefined or dominated by noise."
+   ],
+   "batch": 5,
+   "orig_id": "q164"
+  },
+  {
+   "id": "q165",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose Google Translate returned some words of a code-switching span unchanged, in English, for certain languages. How would that undermine reading code-switching's tier stability as robustness?",
+   "answer": "Code-switching translates only the short differing span. If that span stays in English, the code-switched prompt is identical or nearly identical to the English prompt, so its ASR will sit near the English baseline. Apparent tier stability would then reflect failed translation, not safety that holds across languages. This is most likely where translation into the language is weakest.",
+   "rubric": [
+    "States that the code-switched prompts would collapse toward the English prompt, so ASR stays near the English baseline and tier stability becomes an artifact.",
+    "Explains that only the differing span is translated, so leaving it untranslated leaves essentially no non-English content."
+   ],
+   "batch": 5,
+   "orig_id": "q165"
+  },
+  {
+   "id": "q166",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "The paper says b0 has the largest English margin 'by construction'. Under the canonical settings (lambda_cone=5, lambda_xl=1), when could this fail, and why?",
+   "answer": "The ordering is enforced only by a soft ReLU penalty weighted by lambda_cone. That penalty is added to the English-margin and cross-lingual-margin terms. If letting a later direction exceed b0's English margin buys enough English or cross-lingual margin to outweigh the penalty, the optimizer can accept the violation. A run limited to 400 steps also need not fully converge.",
+   "rubric": [
+    "States that b0 is not strictly guaranteed to have the largest English margin; ordering can be violated.",
+    "Explains that the ordering is a finite, weighted ReLU penalty traded off against the margin terms (including the cross-lingual term), not a hard constraint."
+   ],
+   "batch": 5,
+   "orig_id": "q166"
+  },
+  {
+   "id": "q167",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why is comparing two perturbations within one language and one model, such as Hindi standard translation versus Hindi translationese, more controlled than comparing two languages within one model? What caveat remains?",
+   "answer": "Within one language and model, the refusal style, the target language of responses, and the NLLB back-translation path into English are all held fixed, so mainly the prompt varies. Across languages, back-translation quality and filter behavior differ. A caveat remains: some perturbations can change the language or script the model replies in, such as English replies to code-switched prompts or romanized replies to transliterated ones. That changes the judging path.",
+   "rubric": [
+    "States that the within-language comparison holds the judging pipeline (back-translation language and quality, refusal style) fixed so only the prompt changes.",
+    "Notes the caveat that perturbations can shift the response language or script, altering the coherence or back-translation path."
+   ],
+   "batch": 5,
+   "orig_id": "q167"
+  },
+  {
+   "id": "q168",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can a nonzero \u0394ASR for Spanish, a Tier-1 language, not be attributed entirely to the model behaving differently in Spanish?",
+   "answer": "The English baseline responses are scored by WildGuard directly. Spanish responses are first back-translated by NLLB-200 and checked against Spanish language detection. The \u0394ASR therefore mixes any change in the model's behavior with a change in the measurement pipeline.",
+   "rubric": [
+    "States that the \u0394ASR partly reflects measurement differences, not only model behavior.",
+    "Explains that non-English responses pass through back-translation (and language-specific coherence checks) while the English baseline does not."
+   ],
+   "batch": 5,
+   "orig_id": "q168"
+  },
+  {
+   "id": "q169",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "The paper argues transliteration reflects a realistic input distribution. Why does that argument apply to the romanized Chinese condition but not to the Latin-Cyrillic French condition?",
+   "answer": "The realism argument rests on romanized text being common in informal online writing, which covers non-Latin languages rendered in Latin script, such as Chinese. French written phonetically in Cyrillic letters is described only as the 'analogous operation in the opposite direction', not as an established user practice. The French condition is therefore a purely adversarial stress test.",
+   "rubric": [
+    "States that the realism argument fits romanized Chinese but not Latin-Cyrillic French.",
+    "Explains that realism rests on romanization being common informally, whereas Latin-Cyrillic rendering of Romance languages is only justified as an analogous adversarial operation."
+   ],
+   "batch": 5,
+   "orig_id": "q169"
+  },
+  {
+   "id": "q170",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why can the code-switching condition not be built, as specified, for a harmful prompt that has no harmless counterpart?",
+   "answer": "Code-switching translates the contiguous span in which the harmful prompt differs from its harmless partner. Without a partner, no differing span is defined, so there is nothing that identifies which words to translate.",
+   "rubric": [
+    "States that code-switching cannot be constructed as specified without the harmless counterpart.",
+    "Explains that the translated span is defined as the contiguous difference between the harmful and harmless prompts."
+   ],
+   "batch": 5,
+   "orig_id": "q170"
+  },
+  {
+   "id": "q171",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The paper notes that translation quality into Tier-4 languages is lower. Why should Tier-4 code-switching prompts be less exposed to this problem than Tier-4 standard-translation prompts, and what risk remains?",
+   "answer": "In code-switching only the short differing span is machine-translated, so translation errors can affect only a few words, while the shared context stays in correct English. Standard translation exposes the entire prompt to errors. The remaining risk is that those few words carry the harmful content, so a mistranslation there can still change what is being asked.",
+   "rubric": [
+    "States that code-switching prompts are less affected because only the short differing span is translated and the rest stays in English.",
+    "Notes the residual risk that the translated span is exactly the harmful content, so errors there can still alter the request."
+   ],
+   "batch": 5,
+   "orig_id": "q171"
+  },
+  {
+   "id": "q172",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does high within-language harmful-harmless separation (high probe AUC and silhouette) not by itself predict a low ASR in that language, by the paper's own findings?",
+   "answer": "Probe AUC shows that harmfulness is linearly recoverable, not that the model uses it. The harmfulness subspace can lie far from English. The paper also finds harm and refusal signals geometrically decoupled. Harm can therefore be well represented without the refusal behavior firing.",
+   "rubric": [
+    "States that high separation does not guarantee refusal or low ASR.",
+    "Gives the reason: decodable is not the same as used, and/or harm and refusal signals are decoupled, and/or the subspace can lie far from the English one."
+   ],
+   "batch": 5,
+   "orig_id": "q172"
+  },
+  {
+   "id": "q173",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the Discussion's claim that Tier-4 failure is 'upstream, not directional' is correct, should a team prioritize strengthening steering along the English refusal direction, or improving how Tier-4 inputs separate harmful from harmless? Why?",
+   "answer": "They should prioritize improving Tier-4 harmful-harmless separation in the representations, for example through better Tier-4 data. 'Upstream' means the harm signal is weak before refusal machinery could act. Steering along the refusal direction works downstream and does not fix a missing harm distinction. The diagnosis is correlational, so this is a hypothesis to test, not a guarantee.",
+   "rubric": [
+    "Chooses improving Tier-4 harm representation or separation over strengthening English refusal-direction steering.",
+    "Explains that 'upstream' locates the failure in weak harm separation before refusal, so a downstream refusal intervention would not address it."
+   ],
+   "batch": 5,
+   "orig_id": "q173"
+  },
+  {
+   "id": "q174",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team rerunning Minionese wants to cut generation cost without changing any reported ASR. Can they skip generating responses to harmless prompts? What might they still need?",
+   "answer": "Yes for ASR: Eq. 1 sums only over harmful prompts, so harmless responses never enter any ASR cell, and the geometric measures use prompt activations, not responses. They may still need English harmless responses if the complied set used to compute the refusal direction r-hat includes them. They would also lose any check of over-refusal.",
+   "rubric": [
+    "States that skipping harmless generation leaves all ASR values unchanged because ASR uses only harmful prompts.",
+    "Notes that English responses (possibly including harmless ones) may still be needed to build the refused and complied sets for r-hat."
+   ],
+   "batch": 5,
+   "orig_id": "q174"
+  },
+  {
+   "id": "q175",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to estimate vulnerability to homoglyph substitution, a future-work attack type, using Minionese's existing Latin-Cyrillic French and Spanish results. Is this a valid proxy? Why?",
+   "answer": "No. Latin-Cyrillic transliteration is a phonetic rendering that keeps pronunciation but produces visibly different text, such as '\u0420\u044d\u0434\u0438\u0433\u0435\u0437' for 'R\u00e9digez'. Homoglyph substitution keeps visual appearance instead. Those results also cover only the two Romance languages.",
+   "rubric": [
+    "States it is not a valid proxy.",
+    "Explains that transliteration preserves pronunciation, not appearance, yielding visibly different strings, unlike lookalike homoglyphs (optionally noting it covers only Spanish and French)."
+   ],
+   "batch": 5,
+   "orig_id": "q175"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "An auditor suspects a model's safety keys on harmful words written in their native script. Which Minionese comparison tests this, and over which languages?",
+   "answer": "Compare transliteration ASR with standard-translation ASR, which keeps phonetic content while changing script. Only the non-Latin-script languages (Chinese, Arabic, Russian, Korean, Japanese, Hindi) qualify, because romanization actually removes their native orthography. For non-Romance Latin-script languages the transliteration prompt is unchanged, and the Romance languages switch into Cyrillic rather than out of their native script.",
+   "rubric": [
+    "Identifies the transliteration-versus-standard-translation comparison.",
+    "Restricts it to the non-Latin-script languages, because only there does romanization remove the native script."
+   ],
+   "batch": 5,
+   "orig_id": "q176"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team adds a fifth perturbation, phonetic perturbation, while keeping Minionese fully crossed. How many new prompts must they create, and what is the new benchmark size?",
+   "answer": "Full crossing applies the new perturbation to all 385 pairs (770 prompts) in all 18 languages. That gives 385 \u00d7 2 \u00d7 18 = 13,860 new prompts and a total of 385 \u00d7 2 \u00d7 5 \u00d7 18 = 69,300.",
+   "rubric": [
+    "Gives 13,860 new prompts and a total of 69,300.",
+    "Explains that full crossing requires applying it to every harmful and harmless prompt in every language."
+   ],
+   "batch": 5,
+   "orig_id": "q177"
+  },
+  {
+   "id": "q178",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team builds a version of Minionese whose Tier-4 prompts are written by human translators. Which of the paper's stated caveats does this remove, and which remain for Tier-4 ASR?",
+   "answer": "It removes the Google Translate confound on the prompts: variable translation quality and systematic errors in the inputs. It does not fix scoring. NLLB-200 back-translation of Tier-4 responses still degrades, WildGuard remains the single judge, tier remains an imperfect proxy, and the models are still 8B-scale.",
+   "rubric": [
+    "States that the Google Translate prompt-translation confound is removed or reduced.",
+    "States that the back-translation (NLLB) bias for Tier-4 responses remains, optionally with the single-judge and tier-proxy caveats."
+   ],
+   "batch": 5,
+   "orig_id": "q178"
+  },
+  {
+   "id": "q179",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Besides Figure 3 itself and the principal angles, which figure would lose its basis if the within-language probes for Tier-4 languages turned out to be unreliable, and why?",
+   "answer": "Figure 2's silhouette scores would lose their basis. They are computed in the harmfulness-subspace-projected stream, and that subspace is built from the language's probe weights. If those probes are noise, the projection is arbitrary, so low silhouette could reflect a bad subspace rather than overlapping representations.",
+   "rubric": [
+    "Identifies the silhouette scores (Figure 2).",
+    "Explains that silhouette is computed in the subspace derived from the probe weights, so unreliable probes make the projection uninformative."
+   ],
+   "batch": 5,
+   "orig_id": "q179"
+  },
+  {
+   "id": "q180",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the refusal direction were recomputed separately for each language from that language's refused and complied responses, which property claimed in the Section 5.2 Synthesis would be lost, and what new confound would enter?",
+   "answer": "The claim that the views can be compared directly across languages without re-deriving reference objects would be lost, because each language would have its own reference. The per-language refused and complied labels would also come from back-translated WildGuard judgments, which would bring the Tier-4 back-translation bias into the geometry.",
+   "rubric": [
+    "States that direct cross-language comparability against a shared English reference would be lost.",
+    "Notes that per-language behavioral labels would bring the back-translation and judge biases (especially for Tier 4) into the refusal reference."
+   ],
+   "batch": 5,
+   "orig_id": "q180"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Suppose Tier-4 ASR had been as low as English while Tier-4 probe AUC stayed near chance and silhouette near zero. What would that imply for explaining Tier-4 jailbreaks by weak harmful-harmless separation?",
+   "answer": "It would undercut that explanation. The model would refuse appropriately despite no linear harm separation, so weak separation could not be what lets jailbreaks through. The 'upstream' account would lose its behavioral counterpart. The refusals could still come from nonlinear encoding, which probes cannot rule out.",
+   "rubric": [
+    "States that it would weaken or undercut the weak-separation ('upstream') explanation of Tier-4 jailbreaks.",
+    "Explains that refusal would occur without linear separation, so low separation would not be sufficient to cause failure (nonlinear encoding remains possible)."
+   ],
+   "batch": 5,
+   "orig_id": "q181"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Suppose Tier-1 non-English languages showed first principal angles near 90\u00b0 to English while their ASR stayed near the English baseline. Would that undermine the paper's warning about interventions calibrated on English? Why?",
+   "answer": "No. The warning concerns interventions that act only on English-identified directions, not the model's native behavior. A model can refuse well in a language whose harmfulness subspace is far from English, and an English-calibrated intervention would still miss those directions. With harm and refusal reported as decoupled, native refusal and subspace alignment are separate questions.",
+   "rubric": [
+    "States the warning would not be undermined.",
+    "Explains that the warning is about interventions acting on English directions, which is a separate question from native refusal behavior or ASR."
+   ],
+   "batch": 5,
+   "orig_id": "q182"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If romanizing non-Latin-script prompts had left ASR unchanged in every model, which stated purpose of the transliteration condition would find no support, and which Section 4.2.1 finding would fall?",
+   "answer": "There would be no evidence for refusal mechanisms that operate on script or token identity rather than meaning, which the condition was designed to stress-test. The finding that transliteration vulnerability is script-conditioned would also fall, at least on the non-Latin side.",
+   "rubric": [
+    "Identifies the purpose of detecting script- or token-identity-dependent safety mechanisms as unsupported.",
+    "Identifies the 'transliteration vulnerability is script-conditioned' finding as losing support."
+   ],
+   "batch": 5,
+   "orig_id": "q183"
+  },
+  {
+   "id": "q184",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose Figure 9 row 2 showed a strong Tier-4 harm signal at the instruction token t_inst, while Tier-4 separation in the harmfulness subspace at the post-instruction position t* was weak. How would that refine the Discussion's 'upstream' account of Tier-4 failure?",
+   "answer": "Harm would be recognized at the instruction token but not carried to the position where the other measures are read. The failure would then lie in propagating the harm signal rather than in encoding harm at all. 'Upstream' would mean upstream of refusal but downstream of recognition. Because the evidence is correlational, this would still be descriptive.",
+   "rubric": [
+    "States that the failure would be in carrying the harm signal from t_inst to t*, not in failing to encode harm.",
+    "Notes that 'upstream' would need qualifying (downstream of recognition, upstream of refusal) and that the evidence is correlational."
+   ],
+   "batch": 5,
+   "orig_id": "q184"
+  },
+  {
+   "id": "q185",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "The Synthesis says all four geometric views share a common English reference. Is that accurate for probe AUC? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper states that probe AUC is within-language: each language gets its own probe, independently of any English reference. Only the principal angles and the disentanglement panels are defined against English.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites that probes are trained within each language independently of English, so only angles and refusal-direction panels use the English reference."
+   ],
+   "batch": 5,
+   "orig_id": "q185"
+  },
+  {
+   "id": "q186",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does Minionese measure a model's vulnerability to low-resource-language fine-tuning attacks of the kind described by Upadhayay and Behzadan or Poppi et al.? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled; the benchmark does not test this. All Minionese perturbations are prompt-level and by design need no gradient access, weights or optimization. Fine-tuning attacks appear only in related work.",
+   "rubric": [
+    "Answers not settled (or not measured or out of scope).",
+    "Explains that Minionese contains only prompt-level perturbations requiring no weight access, so fine-tuning attacks are not evaluated."
+   ],
+   "batch": 5,
+   "orig_id": "q186"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If Aya and Llama diverge on some tier profile, does the paper support attributing the divergence to their pretraining data mixtures? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The models differ in alignment procedures as well as pretraining mixtures. Their refusal styles also interact with WildGuard and back-translation. With only three models and correlational results, the cause cannot be isolated.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that alignment procedures and refusal-style or judge interactions also differ between models, so data cannot be isolated as the cause."
+   ],
+   "batch": 5,
+   "orig_id": "q187"
+  },
+  {
+   "id": "q188",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper support the view that the sharp Tier 2\u2013to\u2013Tier 3 safety-regime transition appears just as strongly under code-switching? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported; the paper's own findings point against it. Code-switching is the most tier-stable perturbation, the one where resource-level influence is most diluted by the shared English context. A sharp tier-driven shift should therefore be weakest there. The paper does not report the regime view broken out by perturbation.",
+   "rubric": [
+    "Says the claim is not supported (contradicted or not settled both acceptable, if it notes evidence points against it).",
+    "Explains that code-switching is the most tier-stable condition, with resource effects diluted by English context."
+   ],
+   "batch": 5,
+   "orig_id": "q188"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its cheap, access-free perturbations are as effective as optimized attacks such as the greedy-gradient suffix attack on AdvBench? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper applies only its four perturbations to plain AdvBench prompts. It runs no gradient-based or optimized attack for comparison and cites such attacks only as related work.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that no optimized or gradient-based attack is evaluated for comparison."
+   ],
+   "batch": 5,
+   "orig_id": "q189"
+  },
+  {
+   "id": "q190",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its geometric measures predict which individual prompts in a language will be jailbroken? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The geometric measures are aggregated per language and layer over all pairs. Behavioral labels are attached per language only descriptively, and no per-prompt link between geometry and outcome is reported. The relationship is stated to be correlational.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the measures and behavioral labels are aggregate per language (and layer), with no per-prompt analysis, and are only correlational."
+   ],
+   "batch": 5,
+   "orig_id": "q190"
+  },
+  {
+   "id": "q191",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p_k",
+   "question": "If every harmful prompt fell into the HarmBench 'unknown' category, would each language's harmfulness subspace necessarily have dimension k = 1?",
+   "answer": "Yes. The 'unknown' probe would be trained on exactly the same harmful-versus-harmless data as the 'all' probe, so the two weight columns would coincide. The stacked matrix would then have rank one, giving k = 1.",
+   "rubric": [
+    "Answers yes, k = 1.",
+    "Explains that the 'all' and 'unknown' probes would be trained on identical data, giving identical weights and a rank-one stack."
+   ],
+   "batch": 5,
+   "orig_id": "q191"
+  },
+  {
+   "id": "q192",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b5-p_k",
+   "question": "If only half of the harmful prompts fell into the HarmBench 'unknown' category, would each language's harmfulness subspace necessarily have dimension k = 1?",
+   "answer": "No. The 'unknown' probe would then be trained on a different subset than the 'all' probe, so its weights would generally point in a different direction. The stack could have two significant singular values, giving k = 2.",
+   "rubric": [
+    "Answers no (k could be 2).",
+    "Explains that the two probes are trained on different data, so their weight vectors generally differ."
+   ],
+   "batch": 5,
+   "orig_id": "q192"
+  },
+  {
+   "id": "q193",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b5-p_cyr",
+   "question": "If Spanish were removed from Minionese, would the benchmark still contain any Latin-Cyrillic transliteration prompts?",
+   "answer": "Yes. French is also a Romance language, and Romance languages are the ones transliterated into a Latin-Cyrillic rendering, so French transliteration prompts would remain.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that French, a Romance language, still receives the Latin-Cyrillic rendering."
+   ],
+   "batch": 5,
+   "orig_id": "q193"
+  },
+  {
+   "id": "q194",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b5-p_cyr",
+   "question": "If both Spanish and French were removed from Minionese, would the benchmark still contain any Latin-Cyrillic transliteration prompts?",
+   "answer": "No. Spanish and French are the only Romance languages among the 18, and only Romance languages get the Latin-Cyrillic rendering. All remaining languages would be romanized into Latin script.",
+   "rubric": [
+    "Answers no.",
+    "Explains that Spanish and French are the only Romance languages, and all others are romanized."
+   ],
+   "batch": 5,
+   "orig_id": "q194"
+  },
+  {
+   "id": "q195",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": "b5-p_tstar",
+   "question": "If activations were read at the instruction token t_inst instead of the last post-instruction token t*, could a model's Hindi probe AUC change?",
+   "answer": "Yes. Probe AUC is computed from residual-stream activations at the chosen position, and a different token position gives different activation vectors, so the linear separability of harmful from harmless prompts can differ.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that the probe is trained on activations at the chosen token position, which would be different vectors."
+   ],
+   "batch": 5,
+   "orig_id": "q195"
+  },
+  {
+   "id": "q196",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": "b5-p_tstar",
+   "question": "If activations were read at the instruction token t_inst instead of the last post-instruction token t*, could a model's Hindi standard-translation ASR change?",
+   "answer": "No. ASR depends only on the model's greedy generations, coherence filtering and WildGuard judgments. Which token's activations an analyst reads does not alter the generation.",
+   "rubric": [
+    "Answers no.",
+    "Explains that ASR comes from generated responses, which do not depend on which activation position is read for analysis."
+   ],
+   "batch": 5,
+   "orig_id": "q196"
+  },
+  {
+   "id": "q197",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p_delta",
+   "question": "Suppose a model's English ASR rose while every Hindi prompt and Hindi response stayed exactly the same. Would its Hindi standard-translation \u0394ASR change?",
+   "answer": "Yes. \u0394ASR is measured relative to the English baseline, so raising English ASR changes the difference, shrinking it, even though nothing about Hindi changed.",
+   "rubric": [
+    "Answers yes (it would decrease).",
+    "Explains that \u0394ASR subtracts the English baseline, which changed."
+   ],
+   "batch": 5,
+   "orig_id": "q197"
+  },
+  {
+   "id": "q198",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p_delta",
+   "question": "Suppose a model's English ASR rose while every Hindi prompt and Hindi response stayed exactly the same. Would its Hindi standard-translation ASR change?",
+   "answer": "No. Hindi ASR is computed only from that cell's harmful prompts and their judged responses, which are unchanged. It does not reference English.",
+   "rubric": [
+    "Answers no.",
+    "Explains that ASR for a cell depends only on that cell's responses, not on the English baseline."
+   ],
+   "batch": 5,
+   "orig_id": "q198"
+  }
+ ],
+ "rejected": [],
+ "types": {
+  "failure": 33,
+  "why": 30,
+  "counterfactual": 42,
+  "transfer": 32,
+  "connect": 29,
+  "scope": 32
+ }
+}

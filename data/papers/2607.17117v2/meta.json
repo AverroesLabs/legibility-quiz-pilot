@@ -1,0 +1,27 @@
+{
+  "abstract": "Sparse autoencoders (SAEs) decompose language model activations into sparse features, yet these models traditionally encode each token independently, failing to expose information that persists across a sequence. We first show that temporal persistence can naturally emerge in standard SAE features: after a feature activates, the hidden state remains aligned with its direction, and past activations help reconstruct later hidden states. How long this lasts varies widely across features. We therefore introduce Persistent Sparse Autoencoders (Persistent SAEs), an extension of standard SAEs that learns a persistence coefficient for each feature, allowing the model to learn feature-specific timescales from reconstruction alone. Our experiments show that Persistent SAEs retain competitive reconstruction quality while learning a spectrum of timescales: short-timescale (fast) features stay locally interpretable, whereas long-timescale (slow) features accumulate information that identifies the current context. Moreover, we show in a prompt-injection monitoring case study that slow features preserve injection-related signals and remain causally effective over long contexts. These results suggest that Persistent SAEs offer new opportunities for interpreting and monitoring language models via persistent sparse features.",
+  "arxiv_id": "2607.17117",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Haoyan Luo",
+    "Mateo Espinosa Zarlenga",
+    "Mateja Jamnik"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 8,
+  "hidden_style_hits": 0,
+  "html_sha256": "412665c5abcd2a4e8fa3fbb2b6fdbd90e61ec5adaf27375a5d62a156e7acf4d1",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.LG",
+  "published": "2026-07-19T08:07:32Z",
+  "rank": "02f14f6453f89c3e3f1e6ec57a34a0038932ba2d179badeaae79a89f70bf94a2",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2607.17117v2",
+  "stratum": "A",
+  "text_sha256": "267396751886093d8d6f4b20903893400ac0447223373de59677b187c7544369",
+  "title": "Persistent Sparse Autoencoders: Learning Feature-Specific Timescales in Language Model Representations",
+  "version": 2,
+  "words": 9024
+}

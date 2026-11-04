@@ -1,0 +1,791 @@
+{
+ "paper": "2607.28685v1",
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p8",
+ "glossary": [
+  {
+   "term": "R-Judge",
+   "abbrev": "QX7",
+   "defined_in": "s1"
+  },
+  {
+   "term": "InjecAgent",
+   "abbrev": "ZM3",
+   "defined_in": "s2"
+  },
+  {
+   "term": "AgentHarm",
+   "abbrev": "KD9",
+   "defined_in": "s1"
+  },
+  {
+   "term": "AgentDojo",
+   "abbrev": "V4W",
+   "defined_in": "s2"
+  },
+  {
+   "term": "MMLU",
+   "abbrev": "H8P",
+   "defined_in": "s3"
+  },
+  {
+   "term": "GPQA-Diamond",
+   "abbrev": "R2F",
+   "defined_in": "s3"
+  },
+  {
+   "term": "XSTest",
+   "abbrev": "C9L",
+   "defined_in": "s2"
+  },
+  {
+   "term": "StrongREJECT",
+   "abbrev": "T6Q",
+   "defined_in": "s4"
+  },
+  {
+   "term": "F1",
+   "abbrev": "W3D",
+   "defined_in": "s1"
+  },
+  {
+   "term": "specificity",
+   "abbrev": "G8X",
+   "defined_in": "s1"
+  },
+  {
+   "term": "balanced accuracy",
+   "abbrev": "J4N",
+   "defined_in": "s3"
+  },
+  {
+   "term": "capability composite",
+   "abbrev": "M7V",
+   "defined_in": "s3"
+  },
+  {
+   "term": "misalignment safety",
+   "abbrev": "P2Z",
+   "defined_in": "s3"
+  },
+  {
+   "term": "jailbreak safety",
+   "abbrev": "L9R",
+   "defined_in": "s3"
+  },
+  {
+   "term": "Observation 1",
+   "abbrev": "E5K",
+   "defined_in": "s4"
+  },
+  {
+   "term": "partial Spearman correlation",
+   "abbrev": "U4G",
+   "defined_in": "s3"
+  },
+  {
+   "term": "leave-one-organization-out",
+   "abbrev": "D7T",
+   "defined_in": "s4"
+  },
+  {
+   "term": "harmonized anchors",
+   "abbrev": "K5Q",
+   "defined_in": "s4"
+  },
+  {
+   "term": "three-template jailbreak",
+   "abbrev": "R8W",
+   "defined_in": "s4"
+  }
+ ],
+ "glossary_call": "724b4ce79c8c3684a83d5e1cef6e5c4d6f85866c2463be32b7df1d49d16f93af",
+ "chars": {
+  "orig": 60837,
+  "obf": 56385,
+  "comp": 24220,
+  "compobf": 24259
+ },
+ "sections": {
+  "obf": {
+   "s0": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "3bc7b0ce01e8587a17bb7b5c5c9faefc31cd436625068b6a9a06fd0000993740",
+      "finish": "stop",
+      "cost": 0.0575718,
+      "reasoning_effort": null,
+      "chars": 1881,
+      "ratio": 0.989,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s1": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "469f21d6dcbb4e7986bde8a6ffdffcf7115c5bb408a24db792581f9b6333bb47",
+      "finish": "stop",
+      "cost": 0.1132488,
+      "reasoning_effort": null,
+      "chars": 3302,
+      "ratio": 1.023,
+      "missing": [
+       "1"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "2b2037508e6f5e643261516ca32712106549b89e1e1d071ad4c5adce9bbdca68",
+      "finish": "stop",
+      "cost": 0.1953438,
+      "reasoning_effort": null,
+      "chars": 3246,
+      "ratio": 1.005,
+      "missing": [
+       "1"
+      ]
+     }
+    ],
+    "used_try": 0
+   },
+   "s2": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "c78ed3bb3ea9d2a66fb945f93ce09c626f3518d2ddf005563b02f01d9852bf06",
+      "finish": "stop",
+      "cost": 0.2525508,
+      "reasoning_effort": null,
+      "chars": 3397,
+      "ratio": 1.084,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s3": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "4c0e654d5e8e8b14cae6bb58bb0ca2d72e58a898431c43367f1f5034be980a0a",
+      "finish": "stop",
+      "cost": 0.2761188,
+      "reasoning_effort": null,
+      "chars": 6352,
+      "ratio": 1.006,
+      "missing": [
+       "3.1",
+       "3.2",
+       "3.3"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "2fd7c08504825b0458720787b787b07414fae0dcaecec9314a905e835f4cb5c8",
+      "finish": "stop",
+      "cost": 0.2076798,
+      "reasoning_effort": null,
+      "chars": 6062,
+      "ratio": 0.96,
+      "missing": []
+     }
+    ],
+    "used_try": 1
+   },
+   "s4": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "03aaa39b57d92cf6fc19f807db32fde56b448d1d8a15acf01cbd42da9ed437a3",
+      "finish": "stop",
+      "cost": 0.3510498,
+      "reasoning_effort": null,
+      "chars": 14279,
+      "ratio": 0.919,
+      "missing": [
+       "4.2",
+       "4.3",
+       "4.4"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "7b07cea0b0e62cf4cf9d2b9c5573e72e61402fb52b6f50ef5389641966a809e1",
+      "finish": "length",
+      "cost": 0.4944108,
+      "reasoning_effort": null,
+      "chars": 3137,
+      "ratio": 0.202,
+      "missing": [
+       "3",
+       "6",
+       "7",
+       "8",
+       "11",
+       "17",
+       "18",
+       "19",
+       "20",
+       "22",
+       "25",
+       "70",
+       "72",
+       "85",
+       "0.5",
+       "0.6",
+       "2.5",
+       "3.1",
+       "3.3",
+       "4.2",
+       "4.3",
+       "4.4",
+       "0.01",
+       "0.02",
+       "0.03",
+       "0.04",
+       "0.05",
+       "0.07",
+       "0.08",
+       "0.09",
+       "0.11",
+       "0.13",
+       "0.19",
+       "0.21",
+       "0.23",
+       "0.24",
+       "0.28",
+       "0.31",
+       "0.32",
+       "0.33",
+       "0.35",
+       "0.39",
+       "0.41",
+       "0.42",
+       "0.46",
+       "0.47",
+       "0.49",
+       "0.50",
+       "0.51",
+       "0.52",
+       "0.58",
+       "0.59",
+       "0.60",
+       "0.61",
+       "0.62",
+       "0.64",
+       "0.71",
+       "0.72",
+       "0.73",
+       "0.74",
+       "0.75",
+       "0.76",
+       "0.77",
+       "0.79",
+       "0.80",
+       "0.81",
+       "0.85",
+       "0.86",
+       "0.87",
+       "0.88",
+       "0.89",
+       "0.90",
+       "0.92",
+       "0.94",
+       "0.95",
+       "1.00",
+       "1.48",
+       "2024",
+       "28.0",
+       "30.4",
+       "33.2",
+       "33.3",
+       "40.2",
+       "40.8",
+       "42.0",
+       "44.0",
+       "46.7",
+       "46.9",
+       "48.7",
+       "49.1",
+       "50.0",
+       "50.3",
+       "53.6",
+       "59.1",
+       "65.0",
+       "66.3",
+       "68.3",
+       "77.2",
+       "0.005",
+       "0.027",
+       "0.051",
+       "0.068",
+       "0.082",
+       "0.527"
+      ]
+     }
+    ],
+    "used_try": 0
+   },
+   "s5": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "7c507d7c1e58738827706849d505a7eb1b945a5160391768bf85210467953289",
+      "finish": "stop",
+      "cost": 0.0758916,
+      "reasoning_effort": null,
+      "chars": 1078,
+      "ratio": 0.979,
+      "missing": [
+       "1"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "b56de7e570d9840c266fa03a14ed6f9ea0675559a0727d6578aee012904dd730",
+      "finish": "stop",
+      "cost": 0.0488328,
+      "reasoning_effort": null,
+      "chars": 1132,
+      "ratio": 1.028,
+      "missing": [
+       "1"
+      ]
+     }
+    ],
+    "used_try": 0
+   },
+   "s6": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "d4fb7dc8d94c8c9f0e3ddb009ba4b1bca84fad491930784194c6a9ca828c5465",
+      "finish": "stop",
+      "cost": 0.1168056,
+      "reasoning_effort": null,
+      "chars": 2908,
+      "ratio": 0.938,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s7": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "7d790725393ecc5a0329aa5b2c17e6a6e27a0d34913457b540db13a404cea985",
+      "finish": "stop",
+      "cost": 0.0294456,
+      "reasoning_effort": null,
+      "chars": 631,
+      "ratio": 0.909,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s8": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "81d3361507d2a9c7578d3851e664f416f4cee35338cd379e535aa61d034b5f0a",
+      "finish": "length",
+      "cost": 0.5026416,
+      "reasoning_effort": null,
+      "chars": 2171,
+      "ratio": 0.085,
+      "missing": [
+       "1",
+       "5",
+       "6",
+       "8",
+       "9",
+       "13",
+       "15",
+       "17",
+       "18",
+       "21",
+       "22",
+       "27",
+       "28",
+       "30",
+       "32",
+       "33",
+       "40",
+       "41",
+       "42",
+       "44",
+       "45",
+       "46",
+       "50",
+       "60",
+       "70",
+       "72",
+       "80",
+       "83",
+       "0.4",
+       "0.8",
+       "1.0",
+       "1.6",
+       "1.8",
+       "150",
+       "164",
+       "198",
+       "2.2",
+       "2.3",
+       "2.5",
+       "200",
+       "262",
+       "3.0",
+       "3.3",
+       "3.6",
+       "3.7",
+       "300",
+       "356",
+       "4.0",
+       "4.3",
+       "4.5",
+       "5.0",
+       "500",
+       "570",
+       "571",
+       "6.2",
+       "8.7",
+       "0.01",
+       "0.02",
+       "0.03",
+       "0.05",
+       "0.06",
+       "0.07",
+       "0.09",
+       "0.11",
+       "0.12",
+       "0.14",
+       "0.15",
+       "0.16",
+       "0.17",
+       "0.19",
+       "0.20",
+       "0.21",
+       "0.22",
+       "0.23",
+       "0.24",
+       "0.25",
+       "0.26",
+       "0.27",
+       "0.29",
+       "0.30",
+       "0.32",
+       "0.33",
+       "0.34",
+       "0.35",
+       "0.37",
+       "0.38",
+       "0.39",
+       "0.40",
+       "0.43",
+       "0.46",
+       "0.47",
+       "0.52",
+       "0.53",
+       "0.54",
+       "0.57",
+       "0.61",
+       "0.64",
+       "0.67",
+       "0.71",
+       "0.75",
+       "0.76",
+       "0.78",
+       "0.79",
+       "0.80",
+       "0.85",
+       "0.86",
+       "0.87",
+       "0.88",
+       "0.92",
+       "0.94",
+       "0.99",
+       "1.71",
+       "14.9",
+       "18.2",
+       "2.18",
+       "2000",
+       "2026",
+       "26.0",
+       "28.5",
+       "40.8",
+       "48.7",
+       "0.002",
+       "0.004",
+       "0.006",
+       "0.018",
+       "0.035",
+       "0.043",
+       "0.045",
+       "0.047",
+       "0.048",
+       "0.052",
+       "0.067",
+       "0.068",
+       "0.508",
+       "0.674",
+       "0.825"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "4ec415f12dd77d5ab8e0ab229f5dbd05a8bb3c51533f8a640c939cfeba4730a1",
+      "finish": "stop",
+      "cost": 0.4730598,
+      "reasoning_effort": null,
+      "chars": 22478,
+      "ratio": 0.883,
+      "missing": [
+       "4.4"
+      ]
+     }
+    ],
+    "used_try": 1
+   }
+  },
+  "comp": {
+   "budgets": {
+    "s0": 832,
+    "s1": 1300,
+    "s2": 1262,
+    "s3": 2532,
+    "s4": 6222,
+    "s5": 448,
+    "s6": 1258,
+    "s7": 285,
+    "s8": 10196
+   },
+   "tries": [
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "6f779f402ef79f337bffb1964b5df4eb450dd9c9326171476fc32b3b5a3a69ea",
+     "finish": "stop",
+     "cost": 0.411828,
+     "reasoning_effort": null,
+     "chars": 24220,
+     "ratio": 0.398,
+     "missing": [],
+     "same_sections": true,
+     "over_budget": {
+      "s3": 3158
+     }
+    }
+   ],
+   "used_try": 0
+  },
+  "compobf": {
+   "s0": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "eafdfa6d0774a57c63e4e7b8583bb84c19168cddb64d403951e1d515145be5e4",
+      "finish": "stop",
+      "cost": 0.0716088,
+      "reasoning_effort": null,
+      "chars": 723,
+      "ratio": 1.039,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s1": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "5902ccdc349ad2d5c64c926c00e367161a28ac4e93497757c4e55c73e45b9bd7",
+      "finish": "stop",
+      "cost": 0.0405948,
+      "reasoning_effort": null,
+      "chars": 1430,
+      "ratio": 1.145,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s2": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "2dce2a83eabacb85d9a0f7c3c20ffb537abedfe66a4fa96e72a840842019a662",
+      "finish": "stop",
+      "cost": 0.0847038,
+      "reasoning_effort": null,
+      "chars": 1090,
+      "ratio": 0.998,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s3": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "c8bf6b5bc2255a5ed405058339f9d8a108c91c57a8ca6202b92c7bfc82c8e861",
+      "finish": "stop",
+      "cost": 0.1141668,
+      "reasoning_effort": null,
+      "chars": 3285,
+      "ratio": 1.045,
+      "missing": [
+       "3.1",
+       "3.2",
+       "3.3"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "40c1af206a2fdae59c346169255a170e9331d5003626b8a3c195b64ce3a823d1",
+      "finish": "stop",
+      "cost": 0.157623,
+      "reasoning_effort": null,
+      "chars": 3253,
+      "ratio": 1.035,
+      "missing": []
+     }
+    ],
+    "used_try": 1
+   },
+   "s4": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "9ba722db5efa7302d04dc92a6d2d12b912b4ffd6c146531b6932e891d58bad44",
+      "finish": "stop",
+      "cost": 0.2705178,
+      "reasoning_effort": null,
+      "chars": 7288,
+      "ratio": 1.052,
+      "missing": [
+       "4.2",
+       "4.3",
+       "4.4"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "616a119fb9e3126c0ccb2a9978974fcdc5c03a4bef543f3943f600523341cfee",
+      "finish": "stop",
+      "cost": 0.4149768,
+      "reasoning_effort": null,
+      "chars": 6877,
+      "ratio": 0.993,
+      "missing": []
+     }
+    ],
+    "used_try": 1
+   },
+   "s5": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "b855c7f779b1171b74919be5eb96457386595a8865b096dfa6c95b9559af4d75",
+      "finish": "stop",
+      "cost": 0.0221256,
+      "reasoning_effort": null,
+      "chars": 473,
+      "ratio": 1.145,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s6": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "b3b9efd71d99ff0b7acecc399fb95b17477b44d987687d9ed5406adb06cefdcc",
+      "finish": "stop",
+      "cost": 0.0919806,
+      "reasoning_effort": null,
+      "chars": 1248,
+      "ratio": 0.977,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s7": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "8a50f9a35d49a98a138779fa2f8ea348a22797239be666d4f44eb41bf77f02d2",
+      "finish": "stop",
+      "cost": 0.0113376,
+      "reasoning_effort": null,
+      "chars": 183,
+      "ratio": 1.144,
+      "missing": []
+     }
+    ],
+    "used_try": 0
+   },
+   "s8": {
+    "tries": [
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "32be5e95c7629143861bd88e958d2cb701cce9129879c964a878ea79e9d1f8ee",
+      "finish": "stop",
+      "cost": 0.2205918,
+      "reasoning_effort": null,
+      "chars": 8635,
+      "ratio": 0.968,
+      "missing": [
+       "4.4"
+      ]
+     },
+     {
+      "model": "moonshotai/kimi-k3",
+      "call": "0c33987906fdad0f48b0e3626d05a8b383a4cb3bf827789f9f72a0b007cb51f7",
+      "finish": "stop",
+      "cost": 0.3009522,
+      "reasoning_effort": null,
+      "chars": 9394,
+      "ratio": 1.053,
+      "missing": [
+       "9",
+       "262"
+      ]
+     }
+    ],
+    "used_try": 0
+   }
+  }
+ },
+ "missing": {
+  "obf": {
+   "vs_original": [
+    "4.2",
+    "4.4"
+   ],
+   "vs_source": [
+    "4.2",
+    "4.4"
+   ]
+  },
+  "comp": {
+   "vs_original": [],
+   "vs_source": []
+  },
+  "compobf": {
+   "vs_original": [],
+   "vs_source": []
+  }
+ },
+ "seconds": {
+  "total": 0
+ }
+}

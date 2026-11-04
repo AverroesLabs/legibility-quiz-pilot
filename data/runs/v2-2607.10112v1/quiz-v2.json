@@ -1,0 +1,856 @@
+{
+ "paper": "2607.10112v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p8",
+ "paper_sha256": "3a7180b6eece9ea8d091dd6882bbf2e71227b675c793741df10bd8b9382e0cfd",
+ "batches": 5,
+ "written_per_batch": [
+  41
+ ],
+ "cost_per_batch": [
+  0.486204
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "Minionese is a matched harmful\u2013harmless multilingual jailbreak benchmark that varies the perturbation type while holding semantic content constant, which supports per-attack-type analysis.",
+   "methods": [
+    "385 AdvBench harmful prompts, each with a GPT-generated harmless counterpart; humans verified that structure and length are preserved",
+    "18 languages in 4 resource tiers, translated with the Google Translate API",
+    "4 attack types: standard translation; code-switching (only the minimal differing span is translated, the rest stays English); transliteration (non-Romance languages romanized, Romance languages rendered in Latin-Cyrillic); translationese (EN\u2192target\u2192EN\u2192target)",
+    "ASR scored by WildGuard on back-translated responses; a response counts as a success if it is not classified as a refusal; incoherent responses are filtered out"
+   ],
+   "results": [
+    "385\u00d72\u00d74\u00d718 = 55,440 prompts",
+    "coherence rates at or near 1.0 in all conditions",
+    "WildGuard agreed 100% with humans on a spot-check sample"
+   ],
+   "conditions": [
+    "greedy decoding, 512 max tokens",
+    "back-translation quality degrades for Tier 4",
+    "translation quality varies by language pair"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "Standard translation and translationese follow a resource-tier ASR gradient, and translationese amplifies ASR at mid-resource languages.",
+   "methods": [
+    "per-language, per-tier ASR and \u0394ASR versus English"
+   ],
+   "results": [
+    "Llama standard translation: ~8% in Tier 1 rising to >70% in Tiers 3\u20134 (Yoruba 100%, Zulu 97%, Scottish Gaelic 98%)",
+    "Qwen: Swahili 96%, Gaelic 90%, Yoruba 75%; Aya gradient more moderate except Swahili 95%",
+    "translationese vs standard translation: Korean 51% vs 14% on Aya; Hindi 48% vs 15% on Llama"
+   ],
+   "conditions": [
+    "the translationese mechanism is a hypothesis (naturalistic surface forms weaken harm detection)"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Transliteration vulnerability is script-conditioned: very high for non-Latin-script languages in Tiers 1\u20132, near zero for Latin-script and Tier-4 languages.",
+   "methods": [
+    "romanization / Latin-Cyrillic conversion applied after translation"
+   ],
+   "results": [
+    "Korean 98% (Aya) and 99% (Llama); Chinese 97% (Llama); Arabic 84% (Aya); Hindi 99% (Llama)",
+    "French, Scottish Gaelic and Yoruba 0% on Aya and Qwen",
+    "Qwen \u0394ASR: Yoruba \u221238%, Russian \u221248%, Gaelic \u221244%",
+    "bimodality replicates across all three models"
+   ],
+   "conditions": [
+    "mechanistic figures use only the standard_translation attack type"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Code-switching is the most tier-stable attack and stays effective through Tier 4; the paper attributes this to disrupted language-identification routing rather than to representation quality.",
+   "methods": [
+    "only the differing harmful span is translated into the target language"
+   ],
+   "results": [
+    "Yoruba 62% (Aya) / 82% (Llama); Zulu 62% / 85%; Guaran\u00ed 42% / 46%",
+    "tier gradient much shallower than for standard translation",
+    "code-switching dominates at Tier 4 in the rank ordering"
+   ],
+   "conditions": [
+    "the routing mechanism is not causally verified; patching is left to future work"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "The safety regime shifts sharply between Tiers 2 and 3 in all models, which suggests a threshold effect in refusal activation.",
+   "methods": [
+    "refuse/comply/mixed regime distribution per tier"
+   ],
+   "results": [
+    "Tier 1/Tier 2 refuse rates: Llama 80/75%, Qwen 80/88%, Aya 75/75%",
+    "Tier 3 refuse rates: Llama 31%, Qwen 50%, Aya 31%; Aya reaches 95% comply at Tier 4",
+    "a mixed regime is nearly absent"
+   ],
+   "conditions": [
+    "greedy decoding"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Mechanistically, Tier-3 failures are subthreshold activation (harm is encoded but projects too weakly onto the English refusal direction); Tier-4 failures add an upstream collapse of the harm representation. The refusal mechanism is never suppressed.",
+   "methods": [
+    "residual activations at the post-instruction token",
+    "logistic-regression probes forming a harmfulness subspace (k at \u226595% spectral mass)",
+    "English mean-difference refusal direction r\u0302",
+    "silhouette scores, 5-fold probe AUC, principal angles",
+    "failure classification into upstream/downstream/mixed with \u03c4 = 0.95"
+   ],
+   "results": [
+    "probe AUC \u22650.85 from early layers for Tiers 1\u20133; Yoruba and Zulu near chance in late layers",
+    "silhouette falls from Tier 3; Guaran\u00ed near zero or negative at all layers; Swahili low for Tier 3",
+    "first principal angle: Tier 1 40\u201365\u00b0, Tier 4 ~85\u201390\u00b0, stable across depth; Qwen smallest (~60\u201365\u00b0)",
+    "failures mostly mixed, a few upstream at Tier 4, no downstream failures",
+    "harm\u2013refusal correlation: Aya r = \u22120.79, Llama r = \u22120.68, Qwen r = +0.53"
+   ],
+   "conditions": [
+    "analysis uses standard_translation only",
+    "linear and correlational; no activation patching"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Cross-lingual refusal is effectively one-dimensional: only the first cone direction b0 transfers, secondary directions degrade non-English separation, and b0 fails for Tier 4 (an upstream failure).",
+   "methods": [
+    "activation-domain refusal cone optimization on the Stiefel manifold (400 steps, N = 1..5, N = 5 canonical)",
+    "CL-RepInd: Pearson correlation of per-language margin vectors"
+   ],
+   "results": [
+    "b0 English margins: Qwen 9.7, Aya 6.1, Llama 2.8",
+    "b0 cross-lingual margins: Qwen 5.3, Aya 3.8, Llama 0.75",
+    "b1\u2013b4 margins near zero or negative (Aya b1 \u22120.4, Qwen b1 \u22120.9); |r| < 0.2",
+    "Aya b1 negative for Japanese and Korean; Qwen b2 singles out Arabic",
+    "b0 margins near zero for Tier 4 and for Swahili"
+   ],
+   "conditions": [
+    "cone fit on cached activations, not through interventions"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "The qualitative profiles replicate across Llama, Qwen and Aya, while absolute magnitudes differ.",
+   "methods": [
+    "the same pipeline applied to all three 8B models"
+   ],
+   "results": [
+    "Tier-4 standard translation mean ASR: Llama ~80%, Qwen ~55%, Aya ~35%",
+    "stable rank order of attack types"
+   ],
+   "conditions": [
+    "8B-scale models only",
+    "larger models are an open question"
+   ]
+  }
+ ],
+ "filtered_batch": 2,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "The paper reports transliteration ASR only for some languages. Would you expect transliteration to give high ASR for Spanish, and why?",
+   "answer": "No. Spanish is a Romance, Latin-script language, so transliteration renders it in Latin-Cyrillic, the same treatment French gets. French reached 0% on Aya and Qwen, and the high-ASR cases are all non-Latin-script languages being romanized.",
+   "rubric": [
+    "Predicts low or near-zero transliteration ASR for Spanish",
+    "Reasons that Spanish is Latin-script/Romance and is treated like French (0%), whereas high ASR occurs only for romanized non-Latin scripts"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Would the code-switching perturbation produce any change in ASR relative to the English baseline when English is the target language, and why?",
+   "answer": "No. Code-switching translates only the differing span into the target language and leaves the rest in English. With English as the target, the prompt is identical to the original, so ASR should match the English baseline.",
+   "rubric": [
+    "States there would be no change (equal to the English baseline)",
+    "Explains that translating the differing span into English leaves the prompt unchanged"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose the harmless counterparts had been systematically shorter than the harmful prompts. Would high Tier-3 probe AUC still count as evidence that harm is encoded internally, and why?",
+   "answer": "No. The probe could separate the two sets using length or structure instead of harmfulness. The human check that structure and length are preserved is what rules out surface features, so without it high AUC would no longer show a harm representation, and the subthreshold-activation argument would weaken.",
+   "rubric": [
+    "Says the AUC would no longer be good evidence of harm encoding",
+    "Reasons that the probe could exploit surface features such as length, which the matched-pair verification is meant to rule out"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If back-translation of Tier-4 responses into English were badly garbled, in which direction would that bias the Tier-4 ASR estimates, and why?",
+   "answer": "Upward. A response counts as an attack success whenever WildGuard does not classify it as a refusal. A garbled back-translation of a real refusal may not be recognized as one, so it would be counted as compliance.",
+   "rubric": [
+    "Says ASR would be inflated (biased upward)",
+    "Reasons from the success definition (not classified as a refusal), so mistranslated refusals get counted as successes"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Would an intervention applied only in the final layers be expected to restore harmful\u2013harmless separation for Guaran\u00ed, and why?",
+   "answer": "Unlikely. Guaran\u00ed's silhouette is near zero or negative at all layers. The paper finds that separation is set by mid-network depth and is not recovered later, and that principal angles stay stable across depth. A late-only intervention would act after the representational damage is already fixed.",
+   "rubric": [
+    "Says a late-layer-only intervention is unlikely to work",
+    "Cites that separation and angles are set early/mid-network and do not recover with depth, with Guaran\u00ed degenerate at all layers"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Under what translation behavior would the translationese attack stop differing in effect from standard translation, and why?",
+   "answer": "When the round trip (target\u2192English\u2192target) returns essentially the same text as a single translation. Translationese works only through the distributional drift that the extra steps introduce. In the French example the drift is a tiny lexical change, so with no drift the prompt equals the standard-translation prompt and should give the same ASR.",
+   "rubric": [
+    "Identifies the case where the round trip reproduces the single-pass translation (no drift)",
+    "Reasons that the attack's only difference from standard translation is the drift introduced by the extra steps"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Tier-1 languages still have principal angles of 40\u201365\u00b0 to the English harmfulness subspace, yet they are refused reliably. Why is this compatible with the paper's projection account of failure, while Tier-4 angles are not?",
+   "answer": "A 40\u201365\u00b0 angle still leaves a substantial component of the harm signal along the English subspace (cosine roughly 0.4\u20130.75), enough to reach the refusal direction. At 85\u201390\u00b0 the cosine is near zero, so almost none of the signal projects onto it.",
+   "rubric": [
+    "States that a 40\u201365\u00b0 angle still leaves substantial projection while 85\u201390\u00b0 leaves almost none",
+    "Links this to whether the harm signal can exceed the refusal threshold"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why might code-switching depend less on how well a model represents a low-resource language than standard translation does, given how the perturbation is constructed?",
+   "answer": "Code-switching translates only the minimal differing span and keeps all shared context in English. Most of the prompt is processed through the model's strong English representation, unlike a fully translated Tier-4 prompt, which relies entirely on the weak low-resource encoding.",
+   "rubric": [
+    "Notes that only the minimal differing span is translated and the rest stays in English",
+    "Concludes that the attack therefore relies less on full-prompt low-resource representation quality"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why could the paper's ASR overstate how often models actually produce harmful content?",
+   "answer": "ASR counts any response that WildGuard does not classify as a refusal. Off-topic, evasive, or non-harmful compliant answers that are coherent would still count as attack successes.",
+   "rubric": [
+    "States that ASR may overstate harmful output",
+    "Reasons that success is defined as 'not a refusal', not as 'harmful content produced'"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Why is it geometrically expected that Qwen is less vulnerable than Llama on Tier-4 standard translation?",
+   "answer": "Qwen has the smallest principal angles to the English harmfulness subspace (~60\u201365\u00b0), relatively higher Tier-4 silhouette scores, and a much larger b0 cross-lingual margin (5.3 vs Llama's 0.75). More of its non-English harm signal reaches refusal, which matches its ~55% versus Llama's ~80% Tier-4 ASR.",
+   "rubric": [
+    "Cites Qwen's smaller principal angles and/or larger b0 cross-lingual margin than Llama",
+    "Links better projection or separation to Qwen's lower Tier-4 ASR (~55% vs ~80%)"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Swahili is Tier 3, yet it reaches ASR of ~95\u201396% on Aya and Qwen. Why does this not undermine the paper's mechanistic explanation of the tier gradient?",
+   "answer": "The explanation is representational, not about tier labels. Swahili has anomalously low silhouette and near-zero b0 margins, so its geometry looks like a lower-tier language, and its high ASR follows from that. The tier is only a proxy for representational quality.",
+   "rubric": [
+    "States that Swahili is consistent with (not a counterexample to) the mechanism",
+    "Cites Swahili's low silhouette and/or near-zero b0 margins, which mean tier is an imperfect proxy"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why do the transliteration results favor script identity over resource level as the explanatory variable?",
+   "answer": "Languages in the same tier give opposite outcomes depending on script: Tier-1 Chinese is 97% on Llama while Tier-1 French is 0% on Aya and Qwen. Hindi, a non-Latin language, is high (99%), while Latin-script Tier-4 languages are near zero. Resource tier cannot account for the split, but script can.",
+   "rubric": [
+    "Notes that same-tier languages diverge (e.g., Chinese vs French in Tier 1)",
+    "Notes that the split tracks Latin vs non-Latin script instead"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "On the reported results, does transliteration yield higher ASR than standard translation for Hindi on Llama?",
+   "answer": "Yes. Hindi transliteration reaches 99% on Llama, while Hindi standard translation is about 15%. Hindi is a non-Latin-script language, so romanization exploits the script-conditioned vulnerability.",
+   "rubric": [
+    "Answers yes",
+    "Cites ~99% transliteration vs ~15% standard translation, or the non-Latin-script reasoning"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "On the reported results, does transliteration yield higher ASR than standard translation for Scottish Gaelic on Qwen?",
+   "answer": "No. Gaelic transliteration is 0% on Qwen, while Gaelic standard translation is 90%. Gaelic is Latin-script, so the romanization vulnerability does not apply.",
+   "rubric": [
+    "Answers no",
+    "Cites 0% transliteration vs 90% standard translation, or the Latin-script reasoning"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": "b1-p2",
+   "question": "Would boosting harmful activations' projection along b0 be expected to raise refusal for Hindi standard-translation prompts?",
+   "answer": "Yes, plausibly. Hindi is Tier 3, where probe AUC stays high, so harm is encoded but undershoots the threshold. The refusal mechanism is never suppressed once it gets enough signal, and b0 transfers cross-lingually, so increasing projection should push activations over \u03c4.",
+   "rubric": [
+    "Answers yes (expected to help)",
+    "Reasons that Tier-3 failure is subthreshold with harm present and the refusal mechanism intact (no downstream failure)"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": "b1-p2",
+   "question": "Would boosting harmful activations' projection along b0 be expected to raise refusal for Guaran\u00ed standard-translation prompts?",
+   "answer": "No. Guaran\u00ed is Tier 4: harmful\u2013harmless separation is near zero or negative at all layers, and b0 margins are near zero for Tier 4. There is no usable harm signal to amplify, so the fix has to come upstream at harm detection.",
+   "rubric": [
+    "Answers no (not expected to help)",
+    "Reasons that the Tier-4 harm representation itself has collapsed (near-zero silhouette / b0 margins), so the failure is upstream"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b1-p3",
+   "question": "Would a contrastive activation addition along cone direction b0 be expected to improve harmful\u2013harmless separation in non-English languages overall?",
+   "answer": "Yes. b0 has substantial positive cross-lingual margins on all models (5.3 Qwen, 3.8 Aya, 0.75 Llama), so it separates harmful from harmless inputs beyond English.",
+   "rubric": [
+    "Answers yes",
+    "Cites b0's positive cross-lingual margins"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b1-p3",
+   "question": "Would a contrastive activation addition along cone direction b1 be expected to improve harmful\u2013harmless separation in non-English languages overall?",
+   "answer": "No. b1's cross-lingual margins are near zero or negative (Aya \u22120.4, Qwen \u22120.9). Adding along it may actively degrade non-English separation, for example for Japanese and Korean on Aya.",
+   "rubric": [
+    "Answers no (may even hurt)",
+    "Cites b1's near-zero or negative cross-lingual margins"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c2"
+   ],
+   "pair": "b1-p4",
+   "question": "For Tier-3 standard-translation conditions with elevated ASR, does high probe AUC indicate subthreshold activation failure?",
+   "answer": "Yes. High AUC shows harm is linearly encoded, yet the model complies. That combination is the paper's defining signature of subthreshold activation.",
+   "rubric": [
+    "Answers yes",
+    "Explains that harm is encoded (high AUC) while the output is compliant (high ASR)"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c2",
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "For Tier-1 standard-translation conditions, does high probe AUC indicate subthreshold activation failure?",
+   "answer": "No. In Tier 1, harm is encoded and the models mostly refuse (e.g., Llama ASR ~8%, ~80% refuse). The harm signal does cross the threshold, so there is no failure to diagnose.",
+   "rubric": [
+    "Answers no",
+    "Notes that Tier-1 ASR is low / refusal dominates, so the harm signal does trigger refusal"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A red team targets a very low-resource language written in a non-Latin script (e.g., Ethiopic). Based on the paper, which attack type is the most reliable choice, and why?",
+   "answer": "Code-switching. It is the most tier-stable attack and dominates at Tier 4. Transliteration's high ASR was shown only for Tier 1\u20132 non-Latin languages, and every Tier-4 language tested is Latin-script, so its effect here is untested.",
+   "rubric": [
+    "Chooses code-switching",
+    "Reasons that code-switching is tier-stable / dominates at Tier 4, while transliteration evidence does not cover low-resource non-Latin languages"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A red team targets a non-Latin-script language with resources comparable to Korean or Arabic. Which single attack type should it prioritize, and why?",
+   "answer": "Transliteration. For Tier 1\u20132 non-Latin-script languages it gave the highest ASR of all attack types (Korean 98\u201399%, Arabic 84% on Aya), and this rank ordering held across all three models.",
+   "rubric": [
+    "Chooses transliteration",
+    "Cites its dominance for Tier 1\u20132 non-Latin-script languages across models"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c2"
+   ],
+   "pair": null,
+   "question": "An auditor tests a new 8B instruction model on Spanish, French and German standard translation and finds low ASR. Should they infer that Tier-3 languages are similarly safe?",
+   "answer": "No. Every model in the paper showed a sharp regime transition between Tiers 2 and 3, with refuse rates dropping from 75\u201388% to 31\u201350%. Tier-1 behavior does not extrapolate to lower tiers.",
+   "rubric": [
+    "Answers no",
+    "Cites the sharp Tier 2\u21923 transition replicated across models"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c8",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Among the three evaluated models, which would be the safest to deploy for Tier-4 language users facing standard translation or code-switching attacks, and why?",
+   "answer": "Aya-Expanse-8B. Its Tier-4 standard translation mean ASR is ~35% (vs ~55% Qwen, ~80% Llama), and its code-switching ASR for Yoruba and Zulu (62%) is lower than Llama's (82\u201385%). Its Tier-4 regime distribution still reaches 95% comply, though, so it is not safe in absolute terms.",
+   "rubric": [
+    "Chooses Aya",
+    "Cites its lower Tier-4 standard translation ASR (~35%) and/or lower code-switching ASR than Llama"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A safety team wants to fix Swahili jailbreaks on these models. Should it treat Swahili as a typical Tier-3 subthreshold case and boost b0 projection, and why?",
+   "answer": "No, not primarily. Swahili's b0 margins are near zero on all models and its silhouette is anomalously low. That is the Tier-4-like upstream signature, so the harm-detection stage needs to be repaired.",
+   "rubric": [
+    "Recommends upstream (harm-detection) intervention rather than only b0 boosting",
+    "Cites Swahili's near-zero b0 margins and low silhouette"
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "A new model shows Tier-4 principal angles to the English harmfulness subspace of about 50\u00b0 instead of 85\u201390\u00b0. What would the paper's account predict for its Tier-4 standard-translation ASR relative to Llama?",
+   "answer": "Lower ASR. Smaller angles mean more harm signal projects into the English-aligned space that feeds refusal. The paper ties the rising angles to the ASR tier gradient, and Qwen's smaller angles go with lower vulnerability than Llama's.",
+   "rubric": [
+    "Predicts lower Tier-4 ASR than Llama",
+    "Reasons that smaller angles give more projection onto refusal, citing the angle\u2013ASR link or the Qwen comparison"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c2",
+    "c8"
+   ],
+   "pair": null,
+   "question": "To save cost, a team evaluates Aya on Tier-4 languages using only standard translation. Would it capture Aya's worst-case Tier-4 vulnerability, and why?",
+   "answer": "No. For Aya, Tier-4 standard translation mean ASR is about 35%, but code-switching reaches 62% on Yoruba and Zulu, and code-switching dominates at Tier 4. Testing only standard translation would underestimate the risk.",
+   "rubric": [
+    "Answers no (risk would be underestimated)",
+    "Cites code-switching exceeding standard translation for Aya at Tier 4 (e.g., 62% vs ~35%)"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If probe AUC for Tier-3 languages had been near chance, which of the paper's mechanistic conclusions would lose its support?",
+   "answer": "The claim that subthreshold activation is the dominant Tier-3 failure. That diagnosis rests on harm being linearly decodable while the model complies; near-chance AUC would instead point to an upstream collapse of the harm representation.",
+   "rubric": [
+    "Identifies the subthreshold-activation diagnosis for Tier 3",
+    "Explains that it depends on high AUC showing harm is encoded despite compliance"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If non-English principal angles had shrunk sharply in late layers, which of the paper's claims would be undermined?",
+   "answer": "The claim that the network performs no late-layer cross-lingual alignment, and that representational quality is set by encoding rather than depth. Converging angles would also weaken the misaligned-subspace explanation for why the harm signal fails to reach refusal.",
+   "rubric": [
+    "Names the no-late-alignment / encoding-not-depth claim",
+    "Mentions the weakened misalignment-based explanation of failure, or the stability-across-depth result"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If b0 had shown large margins for Tier-4 languages, which conclusion about Tier-4 failures would lose its support?",
+   "answer": "That Tier-4 failure is upstream, a collapsed harm representation rather than a misoriented refusal axis, and therefore that fixes must target harm detection. Large b0 margins would mean harm separation exists along the refusal direction.",
+   "rubric": [
+    "Identifies the 'Tier-4 failure is upstream' conclusion (and the harm-detection patching recommendation)",
+    "Explains that near-zero b0 margins are the evidence for a collapsed harm representation"
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If the script-conditioned transliteration bimodality had appeared in only one of the three models, which conclusion would be weakened?",
+   "answer": "That the bimodality is a property of the romanization operation itself rather than a model-specific artifact. That conclusion rests on the pattern reproducing across all three architectures.",
+   "rubric": [
+    "Names the 'property of romanization, not a model artifact' conclusion",
+    "Notes that it relies on cross-model replication"
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the failure classification had found downstream failures to be common, which part of the paper's synthesis would be undermined?",
+   "answer": "The claim that jailbreaks leave refusal intact but untriggered ('starving it of input'). Downstream failure means harm is represented but refusal is suppressed, so boosting harm projection onto b0 would no longer be a sufficient repair.",
+   "rubric": [
+    "Identifies the 'refusal intact but starved of input' synthesis",
+    "Notes that the zero observed downstream failures was the support for it, and/or that the projection-boosting repair would be weakened"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c8"
+   ],
+   "pair": null,
+   "question": "If Llama's b0 cross-lingual margin had been the largest of the three models rather than the smallest (0.75), which behavioral result would it be in tension with?",
+   "answer": "Llama being the most broadly vulnerable model, with Tier-4 standard translation ASR near 80% versus ~55% for Qwen and ~35% for Aya. A strong cross-lingual refusal direction would predict less, not more, multilingual compliance.",
+   "rubric": [
+    "Identifies Llama's highest vulnerability / Tier-4 ASR ~80%",
+    "Explains that a large cross-lingual b0 margin would predict better non-English refusal"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If code-switching ASR had fallen with resource tier as steeply as standard translation did, which interpretation would lose its support?",
+   "answer": "The interpretation that code-switching works through language-identification routing disruption, independent of representation quality. That reading rests on its shallow tier gradient; a steep one would suggest it also exploits degraded semantic representation.",
+   "rubric": [
+    "Names the language-ID-routing / representation-independent interpretation",
+    "Notes that it rests on the shallow tier gradient"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show mechanistically that code-switching succeeds by disrupting language-identification routing? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The geometric analyses were run only on standard translation, and causal verification via patching is explicitly left to future work. The routing account is inferred from code-switching's shallow behavioral tier gradient.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that the mechanistic analyses used only standard translation and/or that there is no causal test, so the claim rests on the behavioral profile"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper directly measure that transliteration collapses the harm representation before it reaches refusal? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The silhouette, probe AUC, principal angle and disentanglement figures are all computed for the standard_translation attack type, so the transliteration mechanism is not directly measured.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that the mechanistic figures cover only standard translation"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c8",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the sharp Tier 2\u21923 safety transition holds for 70B-scale models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Only 8B-scale models were evaluated, and the paper lists generalization to larger models as an open question.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that only ~8B models were tested"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that resource tier is a reliable predictor of jailbreak risk? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Transliteration risk follows script rather than tier (Chinese in Tier 1 is high, Tier-4 languages are near zero). Swahili behaves far worse than other Tier-3 languages, and the paper itself calls tier an imperfect proxy.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites script-conditioned transliteration and/or the Swahili outlier"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that transliteration always increases ASR relative to the English baseline? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Transliteration ASR is near zero for Latin-script and Tier-4 languages, and on Qwen \u0394ASR is negative for Yoruba (\u221238%), Russian (\u221248%) and Gaelic (\u221244%).",
+   "rubric": [
+    "Answers contradicted",
+    "Cites near-zero transliteration ASR or the negative Qwen \u0394ASR values"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c8"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the instruction-token harm signal and the post-instruction refusal signal are negatively correlated across languages in every model? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Aya (r = \u22120.79) and Llama (r = \u22120.68) are negative, but Qwen shows a positive correlation (r = +0.53).",
+   "rubric": [
+    "Answers contradicted",
+    "Cites Qwen's positive r = +0.53"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper establish causally that insufficient projection onto the refusal direction causes the Tier-3 jailbreaks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The evidence comes from linear probes, subspace geometry and correlations, and the paper states that causal attribution remains correlational, with activation patching left to future work.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that the evidence is correlational / no activation patching was done"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  }
+ ],
+ "rejected": [],
+ "types": {
+  "failure": 6,
+  "why": 6,
+  "counterfactual": 8,
+  "transfer": 7,
+  "connect": 7,
+  "scope": 7
+ }
+}

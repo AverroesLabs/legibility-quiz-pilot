@@ -1,0 +1,27 @@
+{
+ "paper": "2607.28685v1",
+ "quiz": "quiz-claude-opus-5.5-1-screened.json",
+ "section": "s6",
+ "title": "6 Limitations and Threats to Validity",
+ "eligible": [
+  "s2",
+  "s3",
+  "s4",
+  "s5",
+  "s6",
+  "s7",
+  "s8"
+ ],
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p2",
+ "seeded_pick": "s6",
+ "call": "741273a27a28ad8987340faba68d5f9904bf8a8ca173cf8129fbed37ffe88deb",
+ "finish": "stop",
+ "chars_before": 3101,
+ "chars_after": 3117,
+ "items_tagged": [
+  "q6",
+  "q14",
+  "q23"
+ ]
+}

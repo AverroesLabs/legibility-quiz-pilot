@@ -1,0 +1,27 @@
+{
+  "abstract": "Safety alignment in large language models remains brittle across languages: prompts reliably refused in English can elicit harmful compliance in non-English and low-resource settings. We introduce \\textsc{Minionese}, a multilingual jailbreak benchmark spanning 18 languages, 4 resource tiers, and 4 perturbation types (standard translation, code-switching, transliteration, and translationese), paired with a geometric mechanistic analysis of refusal failure across language tiers. We show that each attack type produces a distinct vulnerability profile: transliteration vulnerability is mediated by script identity, code-switching maintains effectiveness through the lowest-resource tier, and a sharp safety regime transition between Tiers 2 and 3 is consistent across all models. Mechanistically, low-resource jailbreaks succeed by routing harmful content through a geometrically misaligned subspace that projects insufficiently onto the refusal directions, leaving the refusal mechanism intact but untriggered. These findings show that English-only safety evaluations are insufficient; they require accounting for script family, perturbation type, and per-language alignment coverage. The benchmark and analysis code is at https://github.com/Brentkong/Minionese-Comprehensive-Benchmark-and-Mechanistic-Study-of-Multilingual-LLM-Safety.git.",
+  "arxiv_id": "2607.10112",
+  "ascii_ratio": 0.9954,
+  "authors": [
+    "Chigozirim Ifebi",
+    "Brent Kong",
+    "Ayushi Mehrotra"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 1,
+  "figures": 11,
+  "hidden_style_hits": 1,
+  "html_sha256": "dfe70bea18549fa3e20356e80403f73fa6d6dc09983c9d01cb8593b9bc5de333",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.CR",
+  "published": "2026-07-11T04:13:42Z",
+  "rank": "04b4eaa9340c5e3266e318a2cef30c1550dabe89239f2e73acc43d880538305c",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2607.10112v1",
+  "stratum": "B",
+  "text_sha256": "3a7180b6eece9ea8d091dd6882bbf2e71227b675c793741df10bd8b9382e0cfd",
+  "title": "Minionese: Comprehensive Benchmark and Mechanistic Study of Multilingual LLM Safety",
+  "version": 1,
+  "words": 6480
+}

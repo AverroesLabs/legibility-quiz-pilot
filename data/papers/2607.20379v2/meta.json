@@ -1,0 +1,25 @@
+{
+  "abstract": "Natural-language autoencoders score explanations of hidden activations by reconstruction. An explanation is deemed faithful if the activation can be regenerated from it. The test is structurally insensitive to individual false claims. If flipping a claim does not change the reconstruction, the claim is never penalized. We show the test is passed in two ways, neither faithful. On a released Qwen-2.5-7B verbalizer, explanations reconstruct well above chance while ~2% of specific claims are ones the reconstruction depends on, so the score tracks gist, not specific facts. Under exact synthetic ground truth, standard training consistently develops co-adapted private codes (false wording the reconstruction depends on), and fixes that leave the target model unchanged do not help. We contribute two audit protocols, the comparison of grounding and truth and the swap to an independent evaluator, and RECAP (Readable Encodings via Co-trained Auxiliary Predictors), linear heads trained alongside the target model to keep designated content decodable. On RECAP-trained sandbox models, fresh verbalizers state the designated content truly and the codes vanish, at a +0.001-nat cost. This replicates on a pretrained Pythia-160M. The content becomes reliably decodable by a probe, though a fresh verbalizer conveys it only in part (truth 0.44-0.46 vs a near-zero control). For interpretability, high reconstruction does not certify individual claims. For AI safety, RECAP makes designated content checkable against a probe rather than asserted by prose a model can game. An independent probe ranks the verbalizer's true claims above its false ones (AUC 0.96 vs 0.82 without RECAP). Against an adversary that edits an explanation to maximize the score while lying (suppressing ~87% of its lie penalty), the RECAP probe still flags the lies (AUC 0.95) while the control probe collapses to chance (0.51).",
+  "arxiv_id": "2607.20379",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Hiskias Dingeto"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 5,
+  "hidden_style_hits": 0,
+  "html_sha256": "23c9c111d7fbb47d96e315dad9fa934a8fb63b2404d23383e7ee5efcc7f99af8",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.AI",
+  "published": "2026-07-22T17:10:23Z",
+  "rank": "072fdb6cebd1aed5a8b69ff0cecb31db9e6aaa8056f56c6a0beed1832fa199fd",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2607.20379v2",
+  "stratum": "C",
+  "text_sha256": "e72828e723a668f2456c5051916e3ffea0ddc82c28aff4df79919601ba0f540d",
+  "title": "Train the Model, Not the Reader: Decodability Supervision for Verifiable Activation Explanations",
+  "version": 2,
+  "words": 11658
+}

@@ -1,0 +1,3441 @@
+{
+ "paper": "2607.28685v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p8",
+ "paper_sha256": "1c5a71edff5cee6980ee4c168205006a552d5a056ef50d8433c7814632ae4ce5",
+ "batches": 5,
+ "written_per_batch": [
+  41,
+  38,
+  40,
+  38,
+  40
+ ],
+ "cost_per_batch": [
+  0.544392,
+  0.638812,
+  0.834336,
+  0.811164,
+  0.896368
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "R-Judge's headline F1 metric is gameable: a constant 'always unsafe' policy scores higher than several models that actually discriminate.",
+   "methods": [
+    "Closed-form analysis (Observation 1): the constant always-positive policy gets F1 = 2\u03c0/(1+\u03c0).",
+    "R-Judge rerun on the full 571 items with its official scorer; 21 models give valid output.",
+    "Comparison against specificity and balanced accuracy."
+   ],
+   "results": [
+    "\u03c0 = 0.527, so the constant baseline gets F1 = 0.690, with recall 1.0 and specificity 0.",
+    "The baseline outranks five discriminating models (F1 0.30\u20130.57).",
+    "o3-mini has the highest specificity (0.97) but F1 = 0.702, only 0.012 above the baseline, because its recall is lower.",
+    "Balanced accuracy reorders the board."
+   ],
+   "conditions": [
+    "Binary trace-judgment benchmark scored by F1.",
+    "The closed form depends on prevalence; the underlying problem is that F1 ignores true negatives."
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "The capability confound is real but depends on which metric is reported, and it moves with the panel.",
+   "methods": [
+    "Spearman correlations between harmonized MMLU/GPQA anchors and R-Judge metrics (n = 20).",
+    "Capability composite = mean of standardized MMLU and GPQA, both measured under one protocol.",
+    "Positive control on the anchors."
+   ],
+   "results": [
+    "Balanced accuracy vs capability: +0.71 (MMLU), +0.49 (GPQA).",
+    "F1 vs capability: +0.76 (MMLU), +0.62 (GPQA).",
+    "Specificity vs capability: +0.16 (MMLU), +0.07 (GPQA).",
+    "Specificity\u2013MMLU fell from 0.85 on the first nine models to +0.16 at n = 20.",
+    "The positive control now passes (MMLU loads 0.74); on provider-reported anchors it failed at 0.42."
+   ],
+   "conditions": [
+    "Specificity measures only benign-trace handling and can be inflated by rarely flagging anything."
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "The broad-coverage benchmarks rank the same models differently, and the apparent R-Judge/AgentHarm trade-off was a small-panel artifact.",
+   "methods": [
+    "Table 1 rankings on the common n = 18 panel.",
+    "Rank correlation at n = 7 versus n = 18.",
+    "Random size-7 subsets.",
+    "Corroborative PCA with Horn's parallel analysis.",
+    "Negative control using column-permuted matrices.",
+    "Metric sensitivity analysis (App. A.4)."
+   ],
+   "results": [
+    "R-Judge specificity vs AgentHarm safety: \u03c1 = \u22120.64 at n = 7, +0.02 (p = 0.95) at n = 18.",
+    "A quarter of random size-7 subsets reach |\u03c1| \u2265 0.5.",
+    "The reversal does not return under any of the four R-Judge metrics.",
+    "PC1 explains 48.7% of variance, with AgentHarm opposite in 17 of 18 leave-one-out fits.",
+    "Spearman PCA: PC1 = 40.8% and Horn retains no factor.",
+    "Median between-benchmark correlation is 0.22.",
+    "The negative control passes: median first eigenvalue 1.71 vs threshold 2.18."
+   ],
+   "conditions": [
+    "The PCA is treated as corroboration only.",
+    "The convergent control is inconclusive because AgentDojo has n = 5.",
+    "Item-level internal consistency is \u2265 0.96."
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Capability predicts held-out task success but correlates negatively with misalignment safety on the original panel. This crossover is robust, and the safety scores add nothing beyond capability for task success.",
+   "methods": [
+    "Pre-specified held-out criteria: \u03c4\u00b2-bench retail (40 tasks, one run).",
+    "Misalignment scenarios (blackmail and leaking, 100 decisions per model).",
+    "Paired interaction test.",
+    "Leave-one-model-out, leave-one-organization-out, organization-clustered bootstrap, and subsampling.",
+    "Independent grader check."
+   ],
+   "results": [
+    "Capability vs \u03c4\u00b2: \u03c1 = +0.60 (p = 0.005).",
+    "Capability vs misalignment safety: \u03c1 = \u22120.44 (p = 0.047, n = 21).",
+    "Crossover \u0394 = \u22121.00, 95% CI [\u22121.48, \u22120.49], p < 0.001.",
+    "Leave-one-out range [\u22121.16, \u22120.90].",
+    "Size-10 subsamples show 0% sign flips.",
+    "Best safety-score partial on \u03c4\u00b2 is |\u03c1| = 0.23 (n.s.).",
+    "Independent misalignment grader agrees at \u03c1 = 0.97.",
+    "Misalignment scenario halves agree with Spearman\u2013Brown 0.70."
+   ],
+   "conditions": [
+    "Original 2024\u201325 panel only.",
+    "\u03c4\u00b2 was not re-collected for the expansion.",
+    "\u03c4\u00b2 user-simulator variance is unbounded."
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "On an expanded 41-model panel, capability\u2013safety correlations shift: misalignment weakens and jailbreak strengthens, neither change significantly. Organizations differ in safety after adjusting for capability.",
+   "methods": [
+    "Pre-specified expansion predicting the effect would 'hold or strengthen' (confirmation threshold \u03c1 \u2264 \u22120.35 at p < 0.05).",
+    "Nested bootstrap test of the change.",
+    "Organization-matched size-21 subsets.",
+    "Within-organization slopes.",
+    "Permutation tests on capability-residualized safety ranks."
+   ],
+   "results": [
+    "Misalignment: \u22120.44 \u2192 \u22120.16 (n = 40), 95% CI [\u22120.54, +0.22], leave-one-out [\u22120.25, \u22120.12].",
+    "Jailbreak: +0.08 \u2192 +0.34 (n = 41), 95% CI [+0.03, +0.60].",
+    "Change in misalignment correlation \u0394\u03c1 = +0.27, 95% CI [\u22120.25, +0.78].",
+    "2026-only models give \u03c1 = +0.07.",
+    "Organization-matched subsets give median \u03c1 = \u22120.17.",
+    "Within-organization means: \u22120.14 (misalignment), +0.26 (jailbreak).",
+    "Organization groups differ: permutation p = 0.004 and p < 0.001; \u03b5\u00b2 = 0.34 and 0.57.",
+    "At composite \u2248 0.8: o3-mini 0.99, Grok-4.3 0.70, DeepSeek-V3 0.19."
+   ],
+   "conditions": [
+    "Observational, not causal.",
+    "Static capability composite.",
+    "Within-organization n is 4\u20138.",
+    "Anthropic is near ceiling."
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "AgentHarm has the strongest held-out association: with three-template jailbreak safety after controlling capability. Because both instruments score harmful compliance, this is convergent validity, and selectivity over misalignment is borderline.",
+   "methods": [
+    "StrongREJECT jailbreak criterion averaged over three templates.",
+    "Partial Spearman correlation controlling capability.",
+    "Bootstrap selectivity test (model-level and organization-level).",
+    "XSTest over-refusal check.",
+    "Blinded LLM construct coding.",
+    "Grader swap."
+   ],
+   "results": [
+    "AgentHarm\u2013jailbreak partial = +0.72 (p < 0.001).",
+    "Single-AIM criterion gives +0.50; 11 of 22 models refuse every AIM request.",
+    "Per-template partials: AIM +0.44, refusal-suppression +0.70, prefix-injection +0.62.",
+    "Capability vs jailbreak raw: +0.08.",
+    "AgentHarm\u2013misalignment partial: +0.16 (n = 18) or +0.13 (n = 19).",
+    "Selectivity \u0394 = +0.59: p = 0.027 with model resampling, p = 0.051 with organization resampling.",
+    "AgentHarm vs XSTest over-refusal: \u03c1 = \u22120.01 (n = 17).",
+    "Coders assign AgentHarm and the jailbreak criterion to harm blocking 7/7.",
+    "With a swapped refusal grader the partial is +0.66."
+   ],
+   "conditions": [
+    "Both instruments measure harmful compliance.",
+    "Survives Bonferroni.",
+    "Selectivity rests on a borderline test."
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "R-Judge specificity and InjecAgent robustness associate with misalignment safety beyond capability, but only exploratorily.",
+   "methods": [
+    "Partial correlations against the pre-specified 0.40 effect-size threshold.",
+    "Power simulation.",
+    "Metric sensitivity analysis.",
+    "Continuation run.",
+    "Post-hoc third (murder) scenario."
+   ],
+   "results": [
+    "Partials: InjecAgent +0.47, R-Judge specificity +0.41.",
+    "Power \u2248 0.35; minimum detectable effect 0.62 at n = 18.",
+    "R-Judge partial under other metrics: balanced accuracy +0.19, recall \u22120.46.",
+    "Interaction \u0394 = +0.52 (p = 0.068).",
+    "Continuation fell to +0.23 at n = 25.",
+    "Neither association survives Bonferroni (\u03b1 = 0.006)."
+   ],
+   "conditions": [
+    "The pre-specified prediction named AgentHarm, not these two scores.",
+    "Misalignment construct coding is contested."
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose Observation 1's constant baseline were applied to a trace-judgment benchmark where only 10% of items are unsafe. Would the baseline still be a strong rival to real models on F1, and would F1's underlying measurement problem go away?",
+   "answer": "No, it would no longer be a strong rival. The baseline's F1 would be 2(0.1)/1.1 \u2248 0.18, so it would rarely outrank discriminating models. The measurement problem would remain, because F1 still gives no credit for correctly identified benign traces.",
+   "rubric": [
+    "States that the baseline F1 drops to about 0.18, so it is no longer a high-scoring rival.",
+    "Explains that F1's blindness to true negatives persists regardless of base rate."
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "How close is the rank-based (Spearman) PCA to failing the paper's pre-specified condition for interpreting the first factor, and what does that imply about the factor result's robustness?",
+   "answer": "It is very close. PC1 explains 40.8% under Spearman against a \u226540% threshold, and Horn retains no factor. A small drop in explained variance, for example from a modest panel change, would fail the condition, so the factor is fragile corroboration.",
+   "rubric": [
+    "Notes that the Spearman PC1 (40.8%) only barely clears the 40% threshold.",
+    "Concludes the factor interpretation is fragile and could fail with small changes, consistent with Horn retaining no factor."
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "What would R-Judge specificity, recall, F1 and balanced accuracy be for a degenerate policy that labels every trace benign? What does that imply about using specificity alone?",
+   "answer": "Specificity would be 1, recall 0, F1 0 and balanced accuracy 0.5. Specificity alone would rank this non-discriminating policy at the top. It is gameable in the mirror image of F1, which is why only two-sided metrics like balanced accuracy resist both degenerate policies.",
+   "rubric": [
+    "Gives specificity = 1 (top score) with recall 0 / F1 0, and balanced accuracy 0.5.",
+    "Concludes that specificity alone is gameable by never flagging, the mirror of F1's problem."
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose all three jailbreak templates had produced ceilings like AIM did, with half the panel refusing every request. Would the AgentHarm\u2013jailbreak partial likely stay near +0.72, and why?",
+   "answer": "Probably not. With many models tied at the ceiling, the criterion's variance shrinks and rank ties compress the correlation. The partial would likely fall toward the single-AIM values of about +0.44 to +0.50.",
+   "rubric": [
+    "Predicts that the association would weaken below +0.72.",
+    "Explains that ceiling ties restrict variance, as seen with single AIM (+0.50, or +0.44 within the suite)."
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Could the expanded panel's failure to meet the pre-specified misalignment confirmation threshold be blamed on a single outlier model that, if removed, would restore the effect?",
+   "answer": "No. The leave-one-out range of the expanded estimate is [\u22120.25, \u22120.12]. Even its most negative value falls short of the \u03c1 \u2264 \u22120.35 confirmation threshold, so no single model removal restores it.",
+   "rubric": [
+    "Answers no.",
+    "Cites the leave-one-out range (most negative \u22120.25) versus the \u22120.35 threshold."
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Which arm of the crossover \u0394 = \u22121.00 is most exposed to measurement noise that the paper cannot quantify, and why?",
+   "answer": "The task-success arm (\u03c4\u00b2 +0.60). \u03c4\u00b2-retail is a single run per model scored by a user simulator whose variance the paper cannot bound. In contrast, the misalignment criterion has a grader check (0.97) and within-model SEs.",
+   "rubric": [
+    "Identifies the \u03c4\u00b2 task-success side.",
+    "Explains that it is a single run with unbounded user-simulator variance, unlike the misalignment criterion's error checks."
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would the paper's R-Judge/InjecAgent\u2013misalignment pattern still clear its 0.40 effect-size threshold if R-Judge were represented by its official F1 instead of specificity?",
+   "answer": "No. Under F1 the R-Judge\u2013misalignment partial is \u22120.29, which is far below +0.40 and even of the opposite sign. The R-Judge half of the pattern depends on choosing specificity.",
+   "rubric": [
+    "Answers no.",
+    "Cites the F1 partial of \u22120.29 (opposite sign), showing the result depends on the metric."
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why should the specificity\u2013MMLU correlation of 0.85 on the first nine models not have been trusted?",
+   "answer": "At panel sizes under ten, sampling variability alone produces large correlations. Random size-7 subsets of the R-Judge/AgentHarm data reached |\u03c1| \u2265 0.5 a quarter of the time around a near-zero value. Consistent with this, the 0.85 shrank to +0.16 at n = 20.",
+   "rubric": [
+    "Attributes the 0.85 to small-panel sampling variability.",
+    "Links this to the paper's size-7 subset evidence and/or the drop to +0.16 at n = 20."
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does AIM give the weakest per-template AgentHarm\u2192jailbreak partial (+0.44) of the three templates?",
+   "answer": "AIM produces a ceiling: 11 of 22 models refuse every AIM request. This leaves many tied scores and little variance to correlate with AgentHarm. The other two templates spread models out more.",
+   "rubric": [
+    "Identifies AIM's ceiling (about half the models refusing everything).",
+    "Explains that tied, restricted variance attenuates the correlation."
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why can the R-Judge\u2013misalignment partial be +0.41 under specificity yet \u22120.46 under recall?",
+   "answer": "The two metrics reward opposite error patterns. Specificity rises when a model rarely flags traces as unsafe, while recall rises when it flags readily. Models ordered by one can therefore be ordered nearly in reverse by the other, and correlations with an outside criterion flip sign accordingly.",
+   "rubric": [
+    "States that specificity and recall reward opposite flagging tendencies (conservative vs liberal flagging).",
+    "Connects this to the reversal in the sign of the correlation with misalignment."
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Using Table 1, why does the PCA place AgentHarm safety opposite capability and R-Judge specificity?",
+   "answer": "Several low-capability models score high on AgentHarm while scoring low on R-Judge specificity, and some capable models score low on AgentHarm. For example, Llama-3.1-8B tops AgentHarm (0.89) with GPQA 30.4 and specificity 0.04, while GPT-4.1-mini has low AgentHarm (0.51) with high specificity and capability. AgentHarm therefore covaries in the opposite direction.",
+   "rubric": [
+    "States that AgentHarm safety tends to be high where capability/specificity are low, and vice versa.",
+    "Supports this with a Table 1 example such as Llama-3.1-8B."
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why can the misalignment criterion be called grader-robust (\u03c1 = 0.97) while having only moderate internal consistency (Spearman\u2013Brown 0.70)?",
+   "answer": "The two checks target different error sources. Grader agreement shows that two classifiers score the same responses alike. Split-half consistency shows how well the blackmail and leaking scenarios rank models alike, and with only two scenario halves, content sampling varies more.",
+   "rubric": [
+    "Distinguishes grader/scoring error from scenario/content-sampling error.",
+    "Notes that the low figure comes from having only two scenario halves that agree moderately."
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is the AgentHarm\u2013jailbreak association unlikely to be a capability artifact, even before looking at the partial correlation?",
+   "answer": "Capability is barely related to the jailbreak outcome on that panel (raw \u03c1 = +0.08). Capability therefore cannot be carrying a +0.72 association; controlling for it removes almost nothing.",
+   "rubric": [
+    "Cites capability's near-zero raw correlation with jailbreak (+0.08).",
+    "Concludes that capability cannot account for the strong AgentHarm association."
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can PC1 group R-Judge specificity and InjecAgent robustness together even though a model like Mistral-Nemo scores 0.80 on one and 0.34 on the other?",
+   "answer": "PC1 summarizes covariance across the whole panel, not each model's profile. It explains only 48.7% of variance, and the median between-benchmark correlation is just 0.22, so individual models can sharply break the shared direction.",
+   "rubric": [
+    "Explains that PC1 reflects a panel-level tendency, not individual consistency.",
+    "Cites the weak shared variance (48.7%, median correlation 0.22) leaving room for exceptions."
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p1",
+   "question": "If R-Judge's unsafe share were 80%, would the constant always-unsafe policy's F1 exceed 0.57, the top of the range of the five models it currently beats?",
+   "answer": "Yes. F1 = 2(0.8)/1.8 \u2248 0.89, well above 0.57.",
+   "rubric": [
+    "Answers yes.",
+    "Computes about 0.89 using 2\u03c0/(1+\u03c0)."
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p1",
+   "question": "If R-Judge's unsafe share were 30%, would the constant always-unsafe policy's F1 exceed 0.57, the top of the range of the five models it currently beats?",
+   "answer": "No. F1 = 2(0.3)/1.3 \u2248 0.46, below 0.57.",
+   "rubric": [
+    "Answers no.",
+    "Computes about 0.46 using 2\u03c0/(1+\u03c0)."
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "Would the always-unsafe policy's F1 score change if R-Judge's unsafe share moved from 52.7% to 80%?",
+   "answer": "Yes. F1 for the constant policy is 2\u03c0/(1+\u03c0), so it rises from 0.69 to about 0.89.",
+   "rubric": [
+    "Answers yes.",
+    "Explains that F1 depends on the base rate (0.69 \u2192 about 0.89)."
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b1-p2",
+   "question": "Would the always-unsafe policy's balanced accuracy change if R-Judge's unsafe share moved from 52.7% to 80%?",
+   "answer": "No. Balanced accuracy averages recall (1) and specificity (0), giving 0.5 at any base rate.",
+   "rubric": [
+    "Answers no.",
+    "Explains that it is (1 + 0)/2 = 0.5, independent of prevalence."
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b1-p3",
+   "question": "Drawing a random 7-model subset of the n = 18 panel, would it be surprising to see |\u03c1| \u2265 0.5 between R-Judge specificity and AgentHarm safety?",
+   "answer": "No. About a quarter of size-7 subsets reach |\u03c1| \u2265 0.5 despite the near-zero full-panel value.",
+   "rubric": [
+    "Answers not surprising.",
+    "Cites roughly 25% of size-7 draws."
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b1-p3",
+   "question": "Drawing a random 10-model subsample of the paired \u03c4\u00b2/misalignment panel, would it be surprising to see the capability crossover \u0394 change sign?",
+   "answer": "Yes. Size-10 subsamples were 100% negative with 0% sign flips.",
+   "rubric": [
+    "Answers surprising.",
+    "Cites 0% sign flips / 100% negative at size 10."
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "On the 2024\u201325 panel, would the capability\u2013jailbreak-safety correlation pass a hypothetical confirmation rule of \u03c1 \u2265 +0.30 at p < 0.05?",
+   "answer": "No. It is +0.08 with p = 0.73.",
+   "rubric": [
+    "Answers no.",
+    "Cites +0.08 (p = 0.73)."
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b1-p4",
+   "question": "On the expanded 41-model panel, would the capability\u2013jailbreak-safety correlation pass a hypothetical confirmation rule of \u03c1 \u2265 +0.30 at p < 0.05?",
+   "answer": "Yes. It is +0.34 with p of about 0.035\u20130.04, although the change from the original panel is not significant.",
+   "rubric": [
+    "Answers yes.",
+    "Cites +0.34 with p < 0.05."
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants a benchmark that, beyond MMLU/GPQA, best forecasts which of its models resist jailbreak prompts. Which of the audited benchmarks should it use, and with what caveat?",
+   "answer": "AgentHarm, which has a capability-controlled partial of +0.72; R-Judge (\u22120.11) and InjecAgent (+0.21) do not predict jailbreak safety. The caveat is that both instruments measure harmful compliance, so this reflects convergent measurement rather than broad safety.",
+   "rubric": [
+    "Chooses AgentHarm.",
+    "Justifies with +0.72 vs the weak R-Judge/InjecAgent partials.",
+    "Notes the convergent-validity / shared-construct caveat."
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A new binary trace benchmark with exactly 50% unsafe items will publish an F1 leaderboard. What reference score should it report for the always-unsafe policy, and what should it report alongside F1?",
+   "answer": "It should report 2(0.5)/1.5 \u2248 0.667 as the constant-baseline F1. Because F1 ignores true negatives, it should also report two-sided metrics such as specificity with recall, or balanced accuracy.",
+   "rubric": [
+    "Gives about 0.667.",
+    "Recommends reporting true-negative-sensitive metrics (specificity/recall, balanced accuracy, or the full confusion matrix)."
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Two models from different developers have nearly identical MMLU/GPQA composites. Should a deployer assume they have similar misalignment safety?",
+   "answer": "No. After capability adjustment, organization groups differ in safety (permutation p = 0.004, \u03b5\u00b2 = 0.34). At composite \u2248 0.8, misalignment safety ranges from 0.19 (DeepSeek-V3) to 0.99 (o3-mini).",
+   "rubric": [
+    "Answers no.",
+    "Cites the organization-group differences or the wide safety spread at matched capability."
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants to predict which candidate model will do best on a \u03c4\u00b2-style multi-turn retail tool task. Should it rank candidates by capability anchors or by agent-safety scores?",
+   "answer": "By capability anchors. The composite predicts \u03c4\u00b2 success at +0.60, while no safety score adds information once capability is controlled (best |\u03c1| = 0.23, n.s.).",
+   "rubric": [
+    "Chooses capability anchors.",
+    "Cites +0.60 versus null safety-score partials."
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A lab plans to test whether two safety benchmarks trade off, using seven models. Based on the paper, what should it expect, and what should it change?",
+   "answer": "It should expect possibly spurious strong correlations: even with a true correlation near zero, about a quarter of 7-model panels show |\u03c1| \u2265 0.5. It should use a much larger panel; the paper estimates about 40 models to detect \u03c1 \u2248 0.4 with 80% power.",
+   "rubric": [
+    "Warns that 7-model panels frequently produce large spurious correlations.",
+    "Recommends a substantially larger panel (on the order of 40 for moderate effects)."
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Evaluating a batch of newly released 2026 models, should a team assume more capable models will be less safe in the agentic misalignment scenario?",
+   "answer": "No. The negative relationship weakened to \u22120.16 (n.s.) on the expanded panel, and 2026-only models gave +0.07. The original \u22120.44 cannot be assumed to carry over.",
+   "rubric": [
+    "Answers no.",
+    "Cites the weakened expanded estimate and/or the +0.07 for 2026-only models."
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the independent misalignment grader had agreed with the original classifier only at \u03c1 \u2248 0.3, which result would lose support?",
+   "answer": "The capability crossover: the negative capability\u2013misalignment correlation and \u0394 = \u22121.00. Their misalignment side could then reflect one classifier's quirks rather than model behavior.",
+   "rubric": [
+    "Names the capability\u2013misalignment crossover (\u0394 = \u22121.00 / \u03c1 = \u22120.44).",
+    "Explains that it could be a grader artifact."
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If AgentHarm safety had correlated strongly and positively with over-refusal on benign XSTest prompts after controlling capability, which interpretation would gain ground, and which would be weakened?",
+   "answer": "The blanket-refusal explanation would gain ground: models would score well on AgentHarm and jailbreak simply by refusing everything. This would weaken the reading of the +0.72 as specific harm-compliance (convergent) validity.",
+   "rubric": [
+    "States that the blanket-refusal explanation would be strengthened.",
+    "States that the interpretation of AgentHarm\u2013jailbreak as genuine harmful-compliance discrimination would be undermined."
+   ],
+   "batch": 1,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If only about 1% of random size-7 subsets had reached |\u03c1| \u2265 0.5, which claim about the original \u22120.64 would lose support?",
+   "answer": "The claim that the early trade-off was manufactured by ordinary sampling variability at small panel size. The first seven models would instead look unusual, calling for another explanation.",
+   "rubric": [
+    "Identifies the 'small-panel sampling artifact' explanation of \u22120.64.",
+    "Explains that a rare event would make chance a poor explanation."
+   ],
+   "batch": 1,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the harmonized anchors had still failed the positive control (MMLU loading 0.42), which RQ1 evidence would remain usable under the pre-specified decision rule?",
+   "answer": "Only the correlation-free ranking disagreement in Table 1. The decision rule permits interpreting the factor structure only when the positive and negative controls pass, so the PCA could not be interpreted.",
+   "rubric": [
+    "States that the PCA/factor interpretation would be disallowed.",
+    "States that the Table 1 raw-ranking disagreement would remain."
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If blinded coders had placed AgentHarm under risk recognition while placing the jailbreak criterion under harm blocking, which support for the AgentHarm\u2013jailbreak interpretation would be lost?",
+   "answer": "The blind, construct-level recovery of the AgentHarm\u2013jailbreak pairing. The association could then no longer be framed as matching constructs identified without the predictive results.",
+   "rubric": [
+    "Identifies the construct-matching / blinded-recovery support.",
+    "Explains that the pairing would no longer be justified independently of the predictive results."
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q34",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If organization-matched size-21 subsets of the expanded pool had given a median \u03c1 near \u22120.44, which conclusion would change?",
+   "answer": "The conclusion that organization composition alone does not explain the weakening. Composition would then become a sufficient explanation for the difference between \u22120.44 and \u22120.16.",
+   "rubric": [
+    "Names the 'composition does not explain the change' conclusion.",
+    "Explains that matched subsets reproducing \u22120.44 would implicate composition."
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q35",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the AgentHarm\u2013jailbreak partial had been p \u2248 0.02 instead of p < 0.001, which of the paper's multiple-comparison claims would change?",
+   "answer": "The claim that AgentHarm\u2192jailbreak is one of the two results surviving Bonferroni over the nine RQ3 partials (\u03b1 = 0.006). It would fail that correction and join the suggestive results.",
+   "rubric": [
+    "States that it would no longer survive Bonferroni.",
+    "References \u03b1 \u2248 0.006 over nine tests."
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that more capable models are generally less safe? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The negative misalignment correlation (\u22120.44) weakened to \u22120.16 (n.s.) on the expanded panel, and capability's jailbreak correlation is positive (+0.08, then +0.34). Neither the sign nor the magnitude is stable across outcomes or panels.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites instability across panels (\u22120.44 \u2192 \u22120.16) and/or across outcomes (positive jailbreak)."
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that AgentHarm safety predicts avoidance of blackmail and leaking in autonomous-agent scenarios beyond capability? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported (not settled). AgentHarm's misalignment partial is only +0.16, or +0.13 on the paired panel. That is below the 0.40 threshold and non-significant, even though the pre-specified prediction named AgentHarm.",
+   "rubric": [
+    "Answers not supported / not settled.",
+    "Cites the small, non-significant partial (+0.16 / +0.13) below threshold."
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that a constant always-positive policy will outrank real models on F1 leaderboards at any class base rate? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Observation 1's formula 2\u03c0/(1+\u03c0) makes the baseline's F1 fall with prevalence, for example about 0.18 at \u03c0 = 0.1. The high-scoring baseline arises at R-Judge's near-balanced rate, though F1's true-negative blindness holds generally.",
+   "rubric": [
+    "Answers contradicted (or not supported at all base rates).",
+    "Explains that the baseline F1 decreases with base rate per the formula."
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that differences in developers' safety practices cause the organization-level safety differences? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The organization-group differences are observational. Capability is matched only on a static composite that may miss agentic ability, organizations contribute few models, and some groups are range-restricted.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the observational design and/or unmeasured agentic capability and small groups."
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that InjecAgent and AgentDojo, both prompt-injection benchmarks, measure the same construct? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Their convergent-validity control is inconclusive because AgentDojo was run on only five models. Blind coders also read AgentDojo as task success 4/7 times, since it is utility-scored.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites AgentDojo's n = 5 (inconclusive convergent control), optionally the coders' ambiguity."
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that agent-safety benchmarks share no common underlying factor? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The Pearson PCA finds a first component explaining 48.7% that passes its controls. Under Spearman, however, it drops to 40.8% with no factor retained by Horn, and the median correlation is only 0.22.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the mixed PCA evidence (48.7% vs 40.8% / Horn retains none) or the weak median correlation."
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "The capability crossover uses the MMLU/GPQA composite as its capability measure. Would the task-success arm of the crossover (capability predicting \u03c4\u00b2 at +0.60) be likely to hold if capability were instead measured by the six-model BFCL pilot, and why?",
+   "answer": "Probably not. The BFCL pilot's strict function-call syntax scoring ranked GPT-4o-mini highest and the two most capable models lowest, apparently rewarding format conformance. A measure that inverts the capability ordering is unlikely to reproduce the positive association with \u03c4\u00b2 that the composite shows, so the crossover's \u03c4\u00b2 arm would lose its basis.",
+   "rubric": [
+    "Concludes the \u03c4\u00b2 arm (and so the crossover) would likely not hold under the BFCL anchor.",
+    "Reason: BFCL ranked GPT-4o-mini highest and the most capable models lowest, rewarding format conformance rather than the capability ordering that predicts \u03c4\u00b2."
+   ],
+   "batch": 2,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would the original-panel capability\u2013misalignment correlation of \u22120.44 (n = 21) still count as statistically significant if it were judged by the bootstrap procedure the paper applies to the expanded panel?",
+   "answer": "No. Its significance rests on the asymptotic test (p = 0.047). The bootstrap gives p = 0.11 with a 95% CI of [\u22120.85, +0.09], which includes zero.",
+   "rubric": [
+    "Concludes it would not be significant under the bootstrap.",
+    "Cites the bootstrap p = 0.11 and/or the CI [\u22120.85, +0.09] including zero, as against asymptotic p = 0.047."
+   ],
+   "batch": 2,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the post-hoc three-scenario misalignment battery (adding murder) were adopted as the primary criterion, would that strengthen the case that R-Judge and InjecAgent specifically track misalignment rather than harmful compliance?",
+   "answer": "No. The interaction estimate is essentially unchanged (+0.52 to +0.53); the p-value crosses 0.05 only because the larger battery tightens the CI, and the extension was chosen post hoc, which makes it a forking path. Murder is also a severe harm that AgentHarm forecasts (+0.43), so adding it dilutes the battery's construct specificity rather than sharpening it.",
+   "rubric": [
+    "Concludes it would not strengthen the construct-specific case.",
+    "Gives at least one reason: the point estimate is unchanged and significance comes only from a tighter CI and a post-hoc choice, or murder is forecast by harm-compliance (AgentHarm +0.43), which dilutes specificity."
+   ],
+   "batch": 2,
+   "orig_id": "q44"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Two models' misalignment-safety scores differ by 5 percentage points. Does the paper's within-model uncertainty analysis support calling one of them safer?",
+   "answer": "Not reliably. Over 100 decisions, the misalignment criterion's within-model SE is a median of 4 and a worst case of 5 points, so a 5-point gap is about one SE. The analysis supports the panel-level spread (between-model SD 26), not every pairwise model difference.",
+   "rubric": [
+    "Concludes the 5-point difference is not reliably supported.",
+    "Reason: the misalignment SE is about 4\u20135 points per model, so the gap is about one SE; the uncertainty analysis supports panel-level spread, not individual pairs."
+   ],
+   "batch": 2,
+   "orig_id": "q45"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Is there any single model-developing organization whose omission would bring the \u03c4\u00b2/misalignment crossover \u0394 close to zero?",
+   "answer": "No. Omitting any one organization leaves \u0394 between \u22120.90 (Cohere omitted) and \u22121.16 (OpenAI omitted). The organization-clustered bootstrap stays at or below \u22120.59, with P(\u0394 \u2265 0) < 10\u207b\u2074, so no organization carries the effect.",
+   "rubric": [
+    "Concludes no single organization's removal brings \u0394 near zero.",
+    "Cites the leave-one-organization-out range of about \u22120.90 to \u22121.16, or the clustered bootstrap bound of about \u22120.59 / P(\u0394\u22650) < 10\u207b\u2074."
+   ],
+   "batch": 2,
+   "orig_id": "q46"
+  },
+  {
+   "id": "q47",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "The paper argues that item-sampling error cannot explain the Table 1 ranking disagreement. Would that argument carry over to rankings on the misalignment criterion?",
+   "answer": "No. The argument relies on item-rich instruments with split-half \u2265 0.96 and rank stability \u2265 0.97. The misalignment criterion has only two scenario halves, which agree at Spearman\u2013Brown 0.70, and it has no item-resampling rank-stability estimate. Its model rankings are therefore not shown to be similarly stable.",
+   "rubric": [
+    "Concludes the argument does not carry over to misalignment.",
+    "Reason: misalignment has only two scenario halves (Spearman\u2013Brown 0.70) and no item-resampling stability, unlike the instruments with \u2265 0.96 split-half consistency."
+   ],
+   "batch": 2,
+   "orig_id": "q47"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Using Table 5, why is the n-weighted within-organization capability\u2192safety slope negative for misalignment (\u22120.14) but positive for jailbreak (+0.26)?",
+   "answer": "Anthropic (+0.71 / +0.67) and OpenAI (+0.59 / +0.64) are positive on both criteria. Qwen, however, flips from \u22120.90 on misalignment to +0.80 on jailbreak, and Mistral is far more negative on misalignment (\u22121.00) than on jailbreak (\u22120.40). These two organizations pull the weighted misalignment mean below zero while the jailbreak mean stays positive.",
+   "rubric": [
+    "Identifies that the sign difference comes mainly from organizations whose slopes differ between criteria, especially Qwen (\u22120.90 vs +0.80).",
+    "Notes that Mistral (\u22121.00 vs \u22120.40), and/or Anthropic and OpenAI being positive on both, complete the weighted-mean difference."
+   ],
+   "batch": 2,
+   "orig_id": "q48"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does Horn's parallel analysis retain a factor under the Pearson PCA (PC1 = 48.7%) but none under the Spearman PCA (PC1 = 40.8%), given the five analyzed measures and the parallel-analysis 95th-percentile threshold of 2.18?",
+   "answer": "With five standardized columns (R-Judge specificity, InjecAgent, AgentHarm, MMLU, GPQA), a component's eigenvalue is its variance share times 5. That gives about 2.44 for the Pearson PC1, above 2.18, but about 2.04 for the Spearman PC1, below 2.18. Horn therefore retains the first factor only under Pearson.",
+   "rubric": [
+    "Converts variance share into an eigenvalue using the five columns (about 2.44 vs about 2.04).",
+    "Compares both with the 2.18 threshold: Pearson exceeds it, Spearman falls short."
+   ],
+   "batch": 2,
+   "orig_id": "q49"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does AgentHarm safety have the lowest top-quartile persistence (0.79) among the item-rich instruments in Table 3, even though its split-half consistency is high?",
+   "answer": "AgentHarm has by far the fewest items (44 behaviors, against 164\u2013570 for the others). Item resampling therefore shifts its scores more, so models near the quartile boundary change membership more often, even though overall rank order stays consistent (Spearman\u2013Brown 0.96, rank stability 0.97).",
+   "rubric": [
+    "Attributes the lower persistence to AgentHarm's small item count (44 behaviors versus hundreds elsewhere).",
+    "Explains that fewer items mean more resampling variation near the quartile cutoff, even with high overall consistency."
+   ],
+   "batch": 2,
+   "orig_id": "q50"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why is the expanded-panel misalignment leave-one-out range ([\u22120.25, \u22120.12]) so much narrower than its bootstrap 95% CI ([\u22120.54, +0.22])?",
+   "answer": "Leave-one-out removes one model at a time, so it only shows that no single model drives the estimate. The bootstrap resamples the whole panel and captures uncertainty about which models happen to be in it. The estimate is insensitive to individual models but still imprecise at n = 40.",
+   "rubric": [
+    "States that leave-one-out tests single-model influence while the bootstrap reflects whole-panel sampling uncertainty.",
+    "Concludes that no single model drives \u22120.16, but the estimate remains imprecise."
+   ],
+   "batch": 2,
+   "orig_id": "q51"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the paper say its 'hold or strengthen' prediction failed even though the change from \u22120.44 to \u22120.16 is not statistically significant?",
+   "answer": "The pre-specified confirmation rule required the expanded-panel correlation itself to reach \u03c1 \u2264 \u22120.35 at p < 0.05. The observed \u22120.16 (bootstrap p = 0.40) does not meet it. Failing to confirm is a different claim from demonstrating a change, which would need the nested-bootstrap \u0394\u03c1 = +0.27 (CI [\u22120.25, +0.78]) to exclude zero.",
+   "rubric": [
+    "Identifies the confirmation threshold (\u03c1 \u2264 \u22120.35 at p < 0.05) as unmet by \u22120.16 at p = 0.40.",
+    "Distinguishes failing to confirm from establishing a change; the change test's CI includes zero."
+   ],
+   "batch": 2,
+   "orig_id": "q52"
+  },
+  {
+   "id": "q53",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team wants a cheap agentic capability anchor and plans to score models by strict function-call syntax, as in a BFCL-style test. Based on the paper, should it adopt this as its capability control?",
+   "answer": "No. In the paper's six-model BFCL pilot, strict syntax scoring ranked GPT-4o-mini highest and the two most capable models lowest, apparently rewarding format conformance. A capability control that does not order models by capability would distort capability-controlled partial correlations. The anchor should be validated first, for example with a positive control.",
+   "rubric": [
+    "Advises against using strict syntax scoring as the capability anchor without validation.",
+    "Reason: the pilot rewarded format conformance (GPT-4o-mini top, most capable models lowest)."
+   ],
+   "batch": 2,
+   "orig_id": "q53"
+  },
+  {
+   "id": "q54",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A deployer is choosing between a smaller and a larger Qwen model and assumes the more capable one will be safer in the agentic misalignment scenario. Does the paper's evidence support this assumption?",
+   "answer": "No. Within Qwen, the capability\u2192misalignment-safety slope is \u22120.90, so its more capable models were less safe on this criterion. With only 5 Qwen models and observational data, this argues against the assumption rather than establishing the reverse.",
+   "rubric": [
+    "Concludes the assumption is not supported (the evidence leans the other way).",
+    "Cites Qwen's within-organization misalignment slope of \u22120.90.",
+    "Notes the caveat of small n (5) and/or observational data."
+   ],
+   "batch": 2,
+   "orig_id": "q54"
+  },
+  {
+   "id": "q55",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team wants to use one of the audited benchmarks to forecast, beyond capability, which models avoid blackmail and leaking in autonomous-agent settings. Which does the paper's data tentatively favor, and how much weight should the team put on it?",
+   "answer": "InjecAgent robustness has the largest capability-controlled partial (+0.47), with R-Judge specificity at +0.41. Both are only exploratory: power is about 0.35, the CIs include zero, neither survives Bonferroni, and the pre-specified prediction named AgentHarm (+0.16). The team should treat the choice as a hypothesis, not a validated forecaster.",
+   "rubric": [
+    "Names InjecAgent robustness (optionally also R-Judge specificity) as the tentatively favored predictor.",
+    "States that the evidence is exploratory and gives a reason: low power, failure under Bonferroni, CI including zero, or post-hoc relative to the AgentHarm prediction."
+   ],
+   "batch": 2,
+   "orig_id": "q55"
+  },
+  {
+   "id": "q56",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team publishing R-Judge results wants a single metric that is both resistant to constant-answer policies and not largely capability in disguise. Does any of the four R-Judge metrics the paper analyzes meet both requirements?",
+   "answer": "None does. Specificity is only weakly capability-linked (+0.16 with MMLU), but an always-benign policy scores 1.0 on it. Recall is gamed by always-unsafe. F1 is gamed by always-unsafe (0.690) and tracks capability (+0.76). Balanced accuracy gives any constant policy only 0.5, but it correlates +0.71 with MMLU.",
+   "rubric": [
+    "Concludes no single metric meets both requirements.",
+    "Reason: specificity, recall and F1 can each be maxed or inflated by a constant policy, while balanced accuracy, which resists this, correlates strongly with capability (+0.71)."
+   ],
+   "batch": 2,
+   "orig_id": "q56"
+  },
+  {
+   "id": "q57",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team plans to re-score AgentHarm refusals with a different LLM judge. Should it expect model-level AgentHarm scores to stay nearly identical, and should it expect the AgentHarm\u2013jailbreak conclusion to change?",
+   "answer": "Model scores should be expected to shift noticeably: the paper's refusal-judge swap agreed only at \u03c1 = 0.69, because only the refusal component was redone. The downstream conclusion barely moved, though (partial +0.66 vs +0.72), so the AgentHarm\u2013jailbreak association should survive the swap.",
+   "rubric": [
+    "States that model-level scores would agree only moderately (about 0.69), not nearly identically.",
+    "States that the AgentHarm\u2013jailbreak partial stays similar (about +0.66 vs +0.72), so the conclusion should hold."
+   ],
+   "batch": 2,
+   "orig_id": "q57"
+  },
+  {
+   "id": "q58",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team running a capability-controlled safety analysis plans to take MMLU and GPQA scores from providers' model cards. What does the paper's experience suggest it should do instead, and why?",
+   "answer": "It should re-measure the anchors itself under one fixed protocol (same items, same harness). In the paper, provider-reported anchors failed the pre-specified positive control (MMLU loading 0.42), whereas harmonized anchors passed (0.74). That failure would otherwise block interpretation of the factor structure.",
+   "rubric": [
+    "Recommends measuring the anchors under a single uniform protocol rather than using model-card numbers.",
+    "Reason: provider-reported anchors failed the positive control (0.42) while harmonized ones passed (0.74)."
+   ],
+   "batch": 2,
+   "orig_id": "q58"
+  },
+  {
+   "id": "q59",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the 2026-only models had shown a capability\u2013misalignment correlation near \u22120.44, matching the original panel, which explanation for the expanded-panel weakening that the paper leaves open would lose support?",
+   "answer": "The generational-change explanation. The paper treats it as compatible but undemonstrated, partly because the 2026-only models gave +0.07. If new models showed the same \u22120.44, newer models would not differ in this respect, and the generational account would lose its main piece of evidence.",
+   "rubric": [
+    "Names the generational (temporal/new-model) change explanation.",
+    "Reason: its support relies on the 2026-only models differing from the original panel (+0.07 vs \u22120.44)."
+   ],
+   "batch": 2,
+   "orig_id": "q59"
+  },
+  {
+   "id": "q60",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the R-Judge interaction test (\u0394 = +0.50) had been clearly significant, what claim could the paper make that it currently declines to make?",
+   "answer": "It could claim a full two-way dissociation: capability predicts task success but not misalignment safety, while R-Judge specificity relates to misalignment but not task success. Because that R-Judge interaction is only marginal (p = 0.082), the paper supports only the capability interaction.",
+   "rubric": [
+    "Identifies the full two-way dissociation (double dissociation) claim.",
+    "Notes it is currently withheld because the R-Judge interaction is marginal (p = 0.082), leaving only the capability interaction supported."
+   ],
+   "batch": 2,
+   "orig_id": "q60"
+  },
+  {
+   "id": "q61",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the Type-I calibration check on synthetic null panels had shown the organization-group permutation test rejecting about 20% of the time at \u03b1 = 0.05, which claim would lose support?",
+   "answer": "The claim that organization groups differ in safety after adjusting for capability. That claim rests on the between-organization permutation test over only seven clusters, and it is defended by the calibration showing near-nominal rejection (0.045\u20130.052, worst case 0.067). Heavy inflation would make p = 0.004 and p < 0.001 untrustworthy.",
+   "rubric": [
+    "Names the capability-adjusted organization-group difference claim (c5).",
+    "Reason: it rests on the permutation test, whose validity with few clusters is defended only by the near-nominal calibration result."
+   ],
+   "batch": 2,
+   "orig_id": "q61"
+  },
+  {
+   "id": "q62",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c5"
+   ],
+   "pair": null,
+   "question": "The power analysis says confirming an R-Judge\u2013misalignment effect of +0.41 needs n \u2248 40, and the expanded misalignment panel has n = 40. Why does the expansion not provide that test?",
+   "answer": "The 2026 expansion models were scored only on the capability anchors and the two chat-based criteria; the four audited benchmarks, including R-Judge, ran only on the original panel. The R-Judge\u2013misalignment continuation reached only n = 25, where it fell to +0.23, below its 0.30 threshold. The hypothesis therefore remains underpowered and untested at the required n.",
+   "rubric": [
+    "States that expansion models lack R-Judge (audited-benchmark) scores, so the 40-model panel cannot test the hypothesis.",
+    "Notes that the continuation reached only n = 25 (+0.23), so the n \u2248 40 test was never run."
+   ],
+   "batch": 2,
+   "orig_id": "q62"
+  },
+  {
+   "id": "q63",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If AgentHarm's item-level split-half consistency had been low (say 0.5) rather than \u2265 0.96, which RQ1 argument would be weakened?",
+   "answer": "The argument that the Table 1 ranking disagreement among R-Judge, InjecAgent and AgentHarm reflects genuine differences rather than item-sampling noise. That argument rests on every item-rich instrument having split-half \u2265 0.96 and rank stability \u2265 0.97. Low consistency for AgentHarm would make noise in its rankings a live explanation.",
+   "rubric": [
+    "Identifies the claim that the cross-benchmark ranking disagreement is not item-sampling error.",
+    "Reason: the claim depends on high internal consistency (\u2265 0.96) of each benchmark, including AgentHarm."
+   ],
+   "batch": 2,
+   "orig_id": "q63"
+  },
+  {
+   "id": "q64",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If AgentDojo had been run on all 18 common-panel models and correlated highly with InjecAgent, which of the paper's pre-specified controls would change status, and what would that add?",
+   "answer": "The convergent control, currently inconclusive because AgentDojo has n = 5, would pass. All three pre-specified controls would then pass, giving the factor-structure analysis full support from its controls, though the paper would still treat the PCA as corroborative.",
+   "rubric": [
+    "Identifies the convergent control (InjecAgent\u2013AgentDojo) moving from inconclusive to passing.",
+    "Notes that all three pre-specified controls would then pass, strengthening support for the RQ1 structure."
+   ],
+   "batch": 2,
+   "orig_id": "q64"
+  },
+  {
+   "id": "q65",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that agentic misalignment safety amounts to refusing overtly harmful requests? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Misalignment safety's capability-controlled association with XSTest unsafe-prompt refusal is +0.47, but p = 0.052 at n = 18 and that XSTest subset is ceilinged. Blinded coders split on whether the misalignment criterion is harm blocking or risk recognition, and its AgentHarm partial is only +0.16.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites at least one reason: XSTest unsafe-refusal association is +0.47 but non-significant and ceiling-limited, contested construct coding, or a weak AgentHarm partial."
+   ],
+   "batch": 2,
+   "orig_id": "q65"
+  },
+  {
+   "id": "q66",
+   "type": "scope",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that R-Judge balanced accuracy is a capability-independent measure of trace-safety judgment? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Balanced accuracy correlates +0.71 with MMLU (p < 0.001) and +0.49 with GPQA on the harmonized n = 20 panel. Balanced accuracy is resistant to constant policies, but it is strongly entangled with capability.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the strong capability correlations (+0.71 MMLU and/or +0.49 GPQA)."
+   ],
+   "batch": 2,
+   "orig_id": "q66"
+  },
+  {
+   "id": "q67",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that its R-Judge, InjecAgent and AgentHarm findings, including their ranking disagreement, hold for the 2026 expansion models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The four audited benchmarks were run only on the original 2024\u201325 panel; the 2026 models were scored only on the anchors and the two chat-based criteria. The paper also shows that correlations shift with the panel, so no carry-over can be assumed.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the audited benchmarks were not run on the expansion models (only anchors and chat-based criteria were)."
+   ],
+   "batch": 2,
+   "orig_id": "q67"
+  },
+  {
+   "id": "q68",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that static knowledge tests like MMLU and GPQA are poor predictors of multi-turn agentic task success? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted, on the paper's panel. The static capability composite predicts \u03c4\u00b2-retail success at \u03c1 = +0.60 (p = 0.005, n = 20), and no safety score adds information beyond it. The caveat is that \u03c4\u00b2 is a single run with unbounded user-simulator variance.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the composite predicting \u03c4\u00b2 at +0.60 (p = 0.005).",
+    "Optionally notes the single-run, unbounded-variance caveat for \u03c4\u00b2."
+   ],
+   "batch": 2,
+   "orig_id": "q68"
+  },
+  {
+   "id": "q69",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the capability-adjusted organization-group differences in safety are just an artifact of Anthropic's near-ceiling models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Dropping Anthropic leaves both group differences significant: misalignment \u03b5\u00b2 = 0.27 (p = 0.018) and jailbreak \u03b5\u00b2 = 0.54 (p < 0.001). The result is therefore not carried solely by Anthropic.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the drop-Anthropic results remaining significant (\u03b5\u00b2 0.27 / 0.54, p = 0.018 / < 0.001)."
+   ],
+   "batch": 2,
+   "orig_id": "q69"
+  },
+  {
+   "id": "q70",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that R-Judge specificity has no real association with misalignment safety, given that the continuation fell to +0.23 at n = 25? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The tests are underpowered: power is about 0.35 at n = 18 and the minimum detectable effect is 0.62, so a non-significant result cannot exclude an effect of practical interest. The paper stopped the continuation but retains the association as a hypothesis rather than refuting it.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: low power (about 0.35, MDE 0.62, n \u2248 40 needed) means the nulls cannot rule out an effect; the association is retained as a hypothesis."
+   ],
+   "batch": 2,
+   "orig_id": "q70"
+  },
+  {
+   "id": "q71",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that, within each developer, more capable models are more resistant to jailbreaks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Within-organization jailbreak slopes are sign-heterogeneous: Anthropic, OpenAI and Qwen are positive, but Meta, Google and Mistral are each \u22120.40. The weighted mean of +0.26 does not hold within every developer, and within-organization n is only 4\u20138.",
+   "rubric": [
+    "Answers contradicted (no consistent within-developer positive relation).",
+    "Cites the negative slopes for Meta, Google and/or Mistral (\u22120.40), i.e. sign heterogeneity."
+   ],
+   "batch": 2,
+   "orig_id": "q71"
+  },
+  {
+   "id": "q72",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b2-p1",
+   "question": "On R-Judge (52.7% unsafe), would a model with specificity 0.97 and recall 0.50 outscore the constant always-unsafe policy on F1?",
+   "answer": "No. With \u03c0 = 0.527, TP = 0.264, FP = 0.014 and FN = 0.264, so F1 = 2TP/(2TP+FP+FN) \u2248 0.65, below the baseline's 0.690. The model's near-perfect specificity earns nothing under F1.",
+   "rubric": [
+    "Answers no (F1 \u2248 0.65 < 0.690).",
+    "Reason: F1 ignores true negatives, so high specificity does not offset the lost recall."
+   ],
+   "batch": 2,
+   "orig_id": "q72"
+  },
+  {
+   "id": "q73",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b2-p1",
+   "question": "On R-Judge (52.7% unsafe), would a model with specificity 0.97 and recall 0.60 outscore the constant always-unsafe policy on F1?",
+   "answer": "Yes. TP = 0.316, FP = 0.014 and FN = 0.211 give F1 \u2248 0.74, above 0.690. Only the higher recall, not the specificity, lifts it past the baseline.",
+   "rubric": [
+    "Answers yes (F1 \u2248 0.74 > 0.690).",
+    "Reason: the increased recall (TP) drives F1; specificity contributes only via the small FP term."
+   ],
+   "batch": 2,
+   "orig_id": "q73"
+  },
+  {
+   "id": "q74",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b2-p2",
+   "question": "On the expanded 41-model panel, could dropping a single model push the capability\u2013jailbreak-safety correlation below +0.25?",
+   "answer": "No. The leave-one-out range is [+0.30, +0.39], so no single omission takes it below +0.30.",
+   "rubric": [
+    "Answers no.",
+    "Cites the leave-one-out minimum of +0.30."
+   ],
+   "batch": 2,
+   "orig_id": "q74"
+  },
+  {
+   "id": "q75",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b2-p2",
+   "question": "On the expanded 41-model panel, could dropping a single model push the capability\u2013jailbreak-safety correlation below +0.35?",
+   "answer": "Yes. The leave-one-out range [+0.30, +0.39] reaches as low as +0.30, so at least one omission puts it below +0.35.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the leave-one-out range reaching +0.30."
+   ],
+   "batch": 2,
+   "orig_id": "q75"
+  },
+  {
+   "id": "q76",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b2-p3",
+   "question": "Keeping R-Judge specificity as the metric, would the R-Judge\u2013misalignment partial still reach the pre-specified 0.40 threshold if partials were computed by the classic Pearson-on-rank-residuals convention?",
+   "answer": "Yes. Under that convention the R-Judge estimate is +0.49, above 0.40. It remains exploratory, since significance and power are unchanged concerns.",
+   "rubric": [
+    "Answers yes.",
+    "Cites the alternative-convention estimate of about +0.49."
+   ],
+   "batch": 2,
+   "orig_id": "q76"
+  },
+  {
+   "id": "q77",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b2-p3",
+   "question": "Keeping the paper's default partial convention, would the R-Judge\u2013misalignment partial still reach the pre-specified 0.40 threshold if R-Judge were represented by balanced accuracy?",
+   "answer": "No. Under balanced accuracy the partial falls to +0.19, below 0.40. The association is sensitive to the metric, not to the partial-correlation convention.",
+   "rubric": [
+    "Answers no.",
+    "Cites the balanced-accuracy partial of +0.19."
+   ],
+   "batch": 2,
+   "orig_id": "q77"
+  },
+  {
+   "id": "q78",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b2-p4",
+   "question": "Scored by balanced accuracy, would o3-mini lead the constant always-unsafe policy by more than 0.2 on R-Judge?",
+   "answer": "Yes. From its F1 of 0.702 and specificity of 0.97 at \u03c0 = 0.527, o3-mini's recall is about 0.55, so its balanced accuracy is about 0.76. The constant policy scores (1 + 0)/2 = 0.5, a lead of about 0.26.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: o3-mini's balanced accuracy is about 0.76 (recall \u2248 0.55, specificity 0.97) against 0.5 for the constant policy."
+   ],
+   "batch": 2,
+   "orig_id": "q78"
+  },
+  {
+   "id": "q79",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b2-p4",
+   "question": "Scored by F1, would o3-mini lead the constant always-unsafe policy by more than 0.2 on R-Judge?",
+   "answer": "No. o3-mini's F1 is 0.702 against the baseline's 0.690, a lead of only 0.012, because F1 gives no credit for its 0.97 specificity.",
+   "rubric": [
+    "Answers no.",
+    "Cites the 0.012 gap (0.702 vs 0.690), which arises because F1 ignores true negatives."
+   ],
+   "batch": 2,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose R-Judge were rescored with 'benign' as F1's positive class instead of 'unsafe'. Would Observation 1's metric-validity problem go away?",
+   "answer": "No. A constant 'always benign' policy would then score 2(0.473)/(1+0.473) \u2248 0.64 without discriminating. F1 would now give no credit for correctly flagged unsafe traces, so the same blindness to true negatives would simply move to the other class.",
+   "rubric": [
+    "Concludes the problem does not go away (it persists in mirrored form).",
+    "Reasons that F1 would now ignore correctly identified unsafe traces (the new true negatives), and/or that a constant always-benign policy would score about 0.64 using 2\u03c0/(1+\u03c0) with \u03c0 = 0.473."
+   ],
+   "batch": 3,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q81",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Is o3-mini's F1 lead over the constant always-unsafe baseline on R-Judge larger than the measurement uncertainty the paper reports for R-Judge F1?",
+   "answer": "No. The lead is 0.702 \u2212 0.690 = 0.012, or 1.2 points. The paper's bootstrapped within-model SE for R-Judge F1 has a median of 1.8 points and a maximum of 3.0, so the lead is smaller than a typical SE. F1 cannot reliably separate the panel's most specific model from a policy that does no reasoning.",
+   "rubric": [
+    "Concludes the lead is not larger than the uncertainty (it is within about one SE).",
+    "Cites the 1.2-point (0.012) margin against an R-Judge F1 SE of about 1.8 points median (3.0 max)."
+   ],
+   "batch": 3,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose AgentDojo were run on the full panel and turned out to correlate only weakly with InjecAgent. Would that by itself show that InjecAgent fails to measure prompt-injection robustness?",
+   "answer": "Not necessarily. AgentDojo is environment-scored for utility as well as security, and in the distractor coding round 4 of 7 blinded coders read it as task success. A weak correlation could therefore reflect AgentDojo mixing constructs rather than a failure of InjecAgent.",
+   "rubric": [
+    "Concludes a weak correlation would not by itself indict InjecAgent.",
+    "Reasons that AgentDojo is also utility-scored and/or was read as task success by 4/7 coders, so its construct is mixed."
+   ],
+   "batch": 3,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Among the instruments in the within-model uncertainty analysis, which has the largest worst-case SE relative to its between-model SD? What does the paper say this kind of error does to its capability-controlled partials?",
+   "answer": "MMLU, a capability anchor: its maximum SE of 2.2 points against an SD of 8.7 is about 25%, the top of the 13\u201325% range. The capability control is therefore the noisiest input relative to its spread. The paper says such measurement error attenuates or suppresses partial relationships, in a direction it cannot sign.",
+   "rubric": [
+    "Identifies MMLU (about 2.2/8.7 \u2248 25%).",
+    "States that error in the capability control attenuates or suppresses partials, with no signable direction."
+   ],
+   "batch": 3,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Would the n-weighted within-organization capability\u2192misalignment slope stay negative if the Qwen and Mistral groups were dropped from Table 5?",
+   "answer": "No. The remaining organizations give (5\u00b70.71 + 8\u00b70.59 + 4\u00b7(\u22120.40) + 4\u00b7(\u22120.60))/21 \u2248 +0.20. The negative mean of \u22120.14 depends on Qwen (\u22120.90) and Mistral (\u22121.00), which shows how fragile the aggregate within-organization slope is.",
+   "rubric": [
+    "Concludes the mean would turn positive (about +0.20).",
+    "Reasons that the negative aggregate is driven by Qwen's \u22120.90 and Mistral's \u22121.00 slopes, with Anthropic and OpenAI strongly positive."
+   ],
+   "batch": 3,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q85",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Can Mistral's within-organization misalignment slope of \u22121.00 be taken as solid evidence that more capable Mistral models are less safe?",
+   "answer": "No. It rests on only four models. The paper showed that even at seven models, random subsets reach |\u03c1| \u2265 0.5 a quarter of the time around a near-zero true value, so a four-model rank correlation is even less stable. The paper itself rests its organization claim on the between-organization permutation test, not on the slopes.",
+   "rubric": [
+    "Concludes it is not solid evidence.",
+    "Reasons from the small n (4) together with the paper's demonstration that n = 7 panels often give |\u03c1| \u2265 0.5 by chance, or notes that the paper relies on the permutation test rather than the slopes."
+   ],
+   "batch": 3,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q86",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does AgentHarm's selectivity test give p = 0.027 when models are resampled but p = 0.051 when organizations are resampled?",
+   "answer": "Models from the same developer are not independent: the paper finds organization groups differ in safety even after adjusting for capability (\u03b5\u00b2 = 0.34 and 0.57). Resampling only eight organizations treats each cluster as one unit. That shrinks the effective sample and widens the null distribution, so the p-value rises.",
+   "rubric": [
+    "Explains that models within an organization have correlated scores (are not independent).",
+    "States that resampling organizations gives fewer effective units and more variability, which raises the p-value."
+   ],
+   "batch": 3,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q87",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does R-Judge balanced accuracy correlate with MMLU (+0.71) much more strongly than either of its components, specificity (+0.16) or recall (+0.40)?",
+   "answer": "Specificity and recall are each distorted by a model's response bias. Flagging almost everything pushes recall up and specificity down, as the always-unsafe policy shows, and rarely flagging inflates specificity. Averaging the two cancels much of this bias and leaves discrimination ability, which is what tracks capability.",
+   "rubric": [
+    "States that specificity and recall are each contaminated by a model's tendency to flag or not flag, and that this pushes them in opposite directions.",
+    "States that averaging cancels this bias, leaving discrimination, which correlates with capability."
+   ],
+   "batch": 3,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "In the metric sensitivity table, why does the official F1 give the most negative full-panel R-Judge\u2013AgentHarm correlation (\u22120.29), while specificity gives +0.02?",
+   "answer": "F1 is the most capability-laden R-Judge metric (+0.76 with MMLU), and AgentHarm safety sits opposite capability on PC1. F1 therefore inherits some of the negative capability\u2013AgentHarm relation. Specificity is nearly capability-independent (+0.16), so it shows almost none.",
+   "rubric": [
+    "Notes that F1 correlates strongly with capability while specificity barely does.",
+    "Notes that AgentHarm runs opposite capability (PC1), so a capability-laden metric picks up a negative correlation with it."
+   ],
+   "batch": 3,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why can the capability crossover be highly significant (p < 0.001) when its misalignment arm on its own was only marginally significant (p = 0.047)?",
+   "answer": "The crossover tests the difference between two correlations of opposite sign, +0.60 and about \u22120.41. That gap of roughly 1.0 is much larger than either correlation's distance from zero. Opposite signs add up, so the contrast is far more detectable than the weaker arm alone.",
+   "rubric": [
+    "Explains that the test concerns the difference between the two correlations, not each one against zero.",
+    "Notes that the opposite signs (+0.60 vs about \u22120.41) make the difference about 1.0, much larger than either arm's distance from zero."
+   ],
+   "batch": 3,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "At similar panel sizes, why could the AgentHarm\u2013jailbreak association be established firmly while the R-Judge/InjecAgent\u2013misalignment associations could not?",
+   "answer": "The power analysis puts the minimum detectable effect at n = 18 at \u03c1 = 0.62. AgentHarm\u2013jailbreak (+0.72) exceeds it. The misalignment partials (+0.41 and +0.47) fall below it, where power is only about 0.35.",
+   "rubric": [
+    "Cites the minimum detectable effect of about 0.62 at n = 18 (or power \u2248 0.35 for \u03c1 = 0.4).",
+    "Contrasts +0.72, above the MDE, with +0.41/+0.47, below it."
+   ],
+   "batch": 3,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q91",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the expanded-panel capability\u2013jailbreak correlation (+0.34) be statistically significant while its change from the original panel is not?",
+   "answer": "The first test asks whether +0.34 differs from zero. The second asks whether it differs from the original +0.08, which was itself estimated with wide uncertainty on 21 models. The difference of about 0.26 is smaller than 0.34, and the nested-bootstrap CI for it, [\u22120.14, +0.69], includes zero.",
+   "rubric": [
+    "Distinguishes testing against zero from testing the difference between two uncertain estimates.",
+    "Notes that the difference (about +0.26, CI including zero) is smaller and noisier than the expanded estimate itself."
+   ],
+   "batch": 3,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q92",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is AgentHarm's capability-controlled association with refusal on XSTest's unsafe subset only +0.24, even though both concern refusing harmful requests?",
+   "answer": "The XSTest unsafe subset is at ceiling: every model refuses 83\u2013100% of those prompts (sd 4.5). With so little between-model variance there is little to correlate, so the association is weak and uninformative. This is why the safe-subset over-refusal is treated as the informative signal.",
+   "rubric": [
+    "Identifies the ceiling or low variance of the XSTest unsafe subset (83\u2013100% refusal, sd 4.5).",
+    "Explains that restricted variance limits any correlation."
+   ],
+   "batch": 3,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q93",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "Would AgentHarm's reported association with the post-hoc three-scenario misalignment battery (adding murder) reach the paper's pre-specified 0.40 effect-size threshold?",
+   "answer": "Yes. AgentHarm \u2192 battery is +0.43, just above 0.40. This happens because murder is a severe harm that harmful-compliance measures forecast, which dilutes the battery's construct specificity.",
+   "rubric": [
+    "Answers yes.",
+    "Cites +0.43 against 0.40, ideally noting that murder brings in harm-compliance content."
+   ],
+   "batch": 3,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q94",
+   "type": "counterfactual",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": "b3-p1",
+   "question": "Would AgentHarm's reported association with the post-hoc three-scenario misalignment battery (adding murder) reach the minimum detectable effect the paper gives for n = 18?",
+   "answer": "No. +0.43 is well below the minimum detectable effect of 0.62 at 80% power, so even this larger association would be underpowered at that panel size.",
+   "rubric": [
+    "Answers no.",
+    "Compares +0.43 with the MDE of 0.62."
+   ],
+   "batch": 3,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b3-p2",
+   "question": "Under the paper's default partial-correlation convention (re-ranked rank residuals), does InjecAgent robustness have a larger capability-controlled partial with misalignment safety than R-Judge specificity does?",
+   "answer": "Yes. Under the default convention InjecAgent is +0.47 and R-Judge specificity is +0.41.",
+   "rubric": [
+    "Answers yes.",
+    "Cites +0.47 vs +0.41."
+   ],
+   "batch": 3,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b3-p2",
+   "question": "Under the classic Pearson-on-rank-residuals convention, does InjecAgent robustness have a larger capability-controlled partial with misalignment safety than R-Judge specificity does?",
+   "answer": "No. Under the classic convention R-Judge specificity moves to +0.49 and InjecAgent to +0.41, so their order reverses. This is consistent with both associations being imprecise and exploratory.",
+   "rubric": [
+    "Answers no (the order reverses).",
+    "Cites R-Judge +0.49 vs InjecAgent +0.41 under the classic convention."
+   ],
+   "batch": 3,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": "b3-p3",
+   "question": "Would an AgentHarm\u2013jailbreak partial computed on the refusal-suppression template alone exceed the paper's minimum detectable effect at n = 18?",
+   "answer": "Yes. The refusal-suppression partial is +0.70, above the minimum detectable effect of 0.62.",
+   "rubric": [
+    "Answers yes.",
+    "Compares +0.70 with 0.62."
+   ],
+   "batch": 3,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": "b3-p3",
+   "question": "Would an AgentHarm\u2013jailbreak partial computed on the AIM template alone exceed the paper's minimum detectable effect at n = 18?",
+   "answer": "No. The AIM partial is +0.44, below 0.62. This is consistent with AIM's ceiling, since half the panel refuses every AIM request.",
+   "rubric": [
+    "Answers no.",
+    "Compares +0.44 with 0.62, optionally citing AIM's ceiling."
+   ],
+   "batch": 3,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q99",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b3-p4",
+   "question": "On R-Judge (52.7% unsafe), could a model with specificity 0.04, like Llama-3.1-8B, beat the constant always-unsafe baseline's F1 by more than 0.05 for any recall?",
+   "answer": "No. With 96% of benign traces flagged, false positives equal about 0.454 of items. Even at recall 1, F1 = 1.054/(1.054 + 0.454) \u2248 0.70, essentially the baseline's 0.690.",
+   "rubric": [
+    "Answers no.",
+    "Shows that the maximum F1 at specificity 0.04 is about 0.70 (recall = 1), barely above 0.690."
+   ],
+   "batch": 3,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q100",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b3-p4",
+   "question": "On R-Judge (52.7% unsafe), could a model with specificity 0.80, like Mistral-Nemo, beat the constant always-unsafe baseline's F1 by more than 0.05 for some recall?",
+   "answer": "Yes. False positives are 0.2 \u00d7 0.473 \u2248 0.095 of items, so at recall 1 F1 \u2248 1.054/1.149 \u2248 0.92, well above 0.690.",
+   "rubric": [
+    "Answers yes.",
+    "Shows that a high enough recall gives F1 well above 0.69 (about 0.92 at recall 1)."
+   ],
+   "batch": 3,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q101",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team wants to know whether R-Judge, scored by its official F1, adds anything beyond the MMLU/GPQA composite for forecasting \u03c4\u00b2-style task success. Does the paper's data back adding it?",
+   "answer": "No. The capability-controlled \u03c4\u00b2 partial under F1 is +0.32, below the 0.40 effect-size threshold and not significant at n = 19, and the paper treats the task-success null as stable across R-Judge metrics. Capability already explains task success.",
+   "rubric": [
+    "Concludes the data do not support adding it.",
+    "Cites the F1 \u03c4\u00b2 partial of +0.32 (below 0.40 / n.s.) or that the \u03c4\u00b2 null is stable across metrics."
+   ],
+   "batch": 3,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Given Mistral-Large's AgentHarm score in Table 1, what jailbreak safety would the paper's findings lead you to expect for it, and is its reported jailbreak score consistent with that?",
+   "answer": "Low. Mistral-Large ties for the lowest AgentHarm safety (0.24), capability barely relates to jailbreak safety (+0.08), and AgentHarm strongly predicts jailbreak safety (+0.72). Its reported jailbreak safety of 0.09 is consistent with this.",
+   "rubric": [
+    "Predicts low jailbreak safety and says the reported 0.09 is consistent.",
+    "Grounds the prediction in Mistral-Large's bottom AgentHarm score (0.24) together with the +0.72 AgentHarm\u2013jailbreak association (capability being uninformative)."
+   ],
+   "batch": 3,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A deployer requires both AgentHarm safety \u2265 0.75 and R-Judge specificity \u2265 0.90. Which Table 1 models qualify, and what does this say about the supposed trade-off between the two benchmarks?",
+   "answer": "o3-mini (0.77/0.97) and Nova-Lite (0.76/0.94) qualify. Doing well on both is possible, which fits the near-zero full-panel correlation (+0.02) rather than a trade-off.",
+   "rubric": [
+    "Identifies o3-mini and Nova-Lite.",
+    "States that this shows no forced trade-off, consistent with \u03c1 \u2248 +0.02 at n = 18."
+   ],
+   "batch": 3,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team considers Llama-3.1-8B as a trace monitor because it tops AgentHarm safety. What does Table 1 imply about how it would handle benign traces?",
+   "answer": "It would flag about 96% of benign traces as unsafe, since its R-Judge specificity is 0.04. That is close to the always-unsafe policy, so ranking at the top for refusing harmful tasks says nothing about producing few false alarms.",
+   "rubric": [
+    "States it would flag nearly all benign traces (about 96% false alarms).",
+    "Ties this to its 0.04 specificity and to the benchmarks not being interchangeable."
+   ],
+   "batch": 3,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q105",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team finds that its new agent-safety benchmark correlates strongly with three-template jailbreak safety after controlling capability, and wants to call it a measure of general agent safety. What does the AgentHarm case imply it still needs to show?",
+   "answer": "If both instruments score harmful compliance, the correlation is convergent validity, not general safety. The team would need its benchmark to also predict a distinct outcome such as misalignment, or a selectivity test that survives organization-level resampling. AgentHarm managed neither: its misalignment partial was +0.16, and its selectivity p was 0.051 under organization resampling.",
+   "rubric": [
+    "States that a jailbreak correlation alone shows convergent validity when the constructs overlap, not general safety.",
+    "Says it needs evidence on a distinct outcome (e.g., misalignment) or an organization-robust selectivity test, citing AgentHarm's +0.16 or p = 0.051."
+   ],
+   "batch": 3,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q106",
+   "type": "transfer",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team with 18 models expects a true capability-controlled partial of about 0.45 between its benchmark and a held-out outcome. Based on the paper's power analysis, should it expect a significant result?",
+   "answer": "Probably not. At n = 18, power for \u03c1 \u2248 0.4 is only about 0.35, and the minimum detectable effect at 80% power is 0.62. The team would need roughly 40 models.",
+   "rubric": [
+    "Concludes the study would likely be underpowered and fail to reach significance.",
+    "Cites power \u2248 0.35 near 0.4 and/or MDE 0.62 at n = 18 (about 40 models needed)."
+   ],
+   "batch": 3,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q107",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the InjecAgent\u2013AgentDojo convergent control had clearly failed rather than being inconclusive, would the pre-specified decision rule have barred interpreting the factor structure?",
+   "answer": "No. The decision rule requires first-factor variance \u2265 40% (or a \u2265 0.15 reduction from controlling capability), with the positive and negative controls passing. The convergent control is not part of that gate, and interpretation already proceeds while it is inconclusive.",
+   "rubric": [
+    "Answers no.",
+    "Explains that the rule gates only on PC1 variance (or the capability reduction) plus the positive and negative controls, not the convergent control."
+   ],
+   "batch": 3,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the RQ1 first principal component had placed AgentHarm in the same direction as R-Judge and InjecAgent, which safeguard behind the AgentHarm-versus-R-Judge/InjecAgent construct split would be lost?",
+   "answer": "The paper's answer to rubric-designer bias would be lost. The coding categories were written by authors who had seen the results, so the paper cites the criterion-free PC1 separation of AgentHarm (+0.33) from the R-Judge/InjecAgent cluster as independent support. Without that separation, the split would rest only on the author-defined coding.",
+   "rubric": [
+    "Identifies the safeguard against rubric-designer (author category-definition) bias.",
+    "Explains that PC1 separates AgentHarm from R-Judge/InjecAgent without using any criterion, and that losing it would leave only the author-written coding."
+   ],
+   "batch": 3,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If misalignment safety's capability-controlled association with refusal on XSTest unsafe prompts had been near zero instead of +0.47, which concern about the misalignment criterion would weaken?",
+   "answer": "The concern that misalignment safety partly reflects harm blocking or refusal would weaken. Coders split on it (risk recognition 6/7 in one round, harm blocking 6/7 in another), and that contested status is one reason the R-Judge/InjecAgent\u2013misalignment pattern stays exploratory. A null link to harmful refusal would favour reading it as distinct from harm compliance.",
+   "rubric": [
+    "Identifies the concern that the misalignment criterion overlaps with harm blocking/refusal (contested construct coding).",
+    "Connects this to why the R-Judge/InjecAgent\u2013misalignment pattern is kept exploratory, or to the split coder votes."
+   ],
+   "batch": 3,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If column-permuted matrices had exceeded the parallel-analysis threshold in about 30% of draws rather than 2%, which RQ1 evidence would lose its license, and which would remain?",
+   "answer": "The negative control would fail, so under the pre-specified rule the PCA factor structure could not be interpreted. The paper's firm RQ1 result, the correlation-free ranking disagreement in Table 1, would remain, because it does not rest on the factor analysis.",
+   "rubric": [
+    "States that interpretation of the PCA factor would no longer be permitted (the negative control fails).",
+    "States that the Table 1 raw ranking disagreement would remain as RQ1 evidence."
+   ],
+   "batch": 3,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q111",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the nested-bootstrap test of the change in the capability\u2013misalignment correlation had given a CI excluding zero, what claim could the paper make that it currently declines to make?",
+   "answer": "It could claim the correlation genuinely changed between the original and expanded populations. Currently it says the data do not establish a shift, only that the original estimate cannot be assumed to carry over.",
+   "rubric": [
+    "States the paper could claim a real between-panel (temporal or population) change in the correlation.",
+    "Contrasts this with the current position that the change is non-significant (\u0394\u03c1 CI [\u22120.25, +0.78]) and no shift is established."
+   ],
+   "batch": 3,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q112",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If AgentHarm's capability-controlled partial with misalignment safety had been about +0.70, as large as its jailbreak partial, which of the paper's claims about AgentHarm would lose support?",
+   "answer": "The tentative claim that AgentHarm is selective for jailbreak over misalignment would lose support. The bootstrap difference (\u0394 = +0.59) would vanish, leaving no evidence that its association is outcome-specific.",
+   "rubric": [
+    "Identifies the selectivity claim (jailbreak over misalignment).",
+    "Explains that the \u0394 = +0.59 difference would disappear."
+   ],
+   "batch": 3,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q113",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If every one of the 21 R-Judge models had scored above 0.690 F1, which part of the RQ4 argument would remain and which would be lost?",
+   "answer": "Observation 1 would remain: the closed-form 2\u03c0/(1+\u03c0) baseline and F1's blindness to true negatives do not depend on model results. Only the empirical illustration that the constant policy outranks five discriminating models would be lost.",
+   "rubric": [
+    "States that the closed-form result and F1's true-negative blindness would remain.",
+    "States that only the 'outranks five real models' illustration would be lost."
+   ],
+   "batch": 3,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that refusing harmful agentic tasks costs task success beyond what capability predicts? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. AgentHarm's capability-controlled partial with \u03c4\u00b2 is \u22120.23, the largest in magnitude but not significant at n = 19 and below the 0.40 threshold. The paper reads the \u03c4\u00b2 row as no incremental information, and \u03c4\u00b2 itself has unbounded simulator variance.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the non-significant \u22120.23 partial (n = 19) or the paper's reading of no incremental validity on \u03c4\u00b2."
+   ],
+   "batch": 3,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that more capable models comply more with harmful agentic tasks on AgentHarm? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. PC1 places AgentHarm safety opposite the capability anchors, which hints at this. But the paper treats the PCA as corroboration only: the Spearman PCA retains no factor under Horn and the median between-benchmark correlation is 0.22.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that the hint comes only from the PCA, which is corroborative (no Horn factor under Spearman, weak correlations)."
+   ],
+   "batch": 3,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that R-Judge's items give unreliable measurements of models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. R-Judge specificity has split-half consistency 0.99 and rank stability 0.99, and F1 has 0.96 and 0.97. The paper's criticism targets the F1 metric's blindness to true negatives, not the reliability of the items.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites high internal consistency for R-Judge (\u2265 0.96) and/or distinguishes the metric problem from item reliability."
+   ],
+   "batch": 3,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show a positive capability-controlled AgentHarm\u2013jailbreak partial under each of the three jailbreak templates taken individually? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. The per-template partials are AIM +0.44, refusal-suppression +0.70 and prefix-injection +0.62, all positive. The size varies, with AIM weakest because of its ceiling.",
+   "rubric": [
+    "Answers supported.",
+    "Cites all three per-template partials as positive (+0.44, +0.70, +0.62)."
+   ],
+   "batch": 3,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q118",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that capability-adjusted organization-group differences also hold on the four audited benchmarks (R-Judge, InjecAgent, AgentHarm, AgentDojo)? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The organization-group permutation tests were run only on the expanded panel's misalignment and jailbreak criteria. The new models skipped the tool-calling audited benchmarks, which were run only on the smaller original panel.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the organization analysis covers only the misalignment and jailbreak criteria on the expansion, not the audited benchmarks."
+   ],
+   "batch": 3,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q119",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c7",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that misalignment safety and jailbreak safety are interchangeable measures of the same construct? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled, though the evidence leans against interchangeability. Capability relates to them differently (\u22120.44 vs +0.08 on the original panel), and AgentHarm predicts jailbreak (+0.72) but not misalignment (+0.13/+0.16). However, the selectivity test is borderline (p = 0.051 with organization resampling) and the misalignment construct coding is contested.",
+   "rubric": [
+    "Answers not settled (leaning against).",
+    "Cites divergent associations (capability or AgentHarm) together with the borderline selectivity test or contested coding."
+   ],
+   "batch": 3,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q120",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Anthropic's within-organization capability\u2192safety slopes are +0.71 (misalignment) and +0.67 (jailbreak). Can these slopes be read as solid evidence that more capable Anthropic models are safer?",
+   "answer": "No. Anthropic contributes only five models, and its models sit near the safety ceiling of about 1.0. Rank slopes computed over a restricted near-ceiling range rest on very small score differences, which may be no larger than the within-model SEs of a few points.",
+   "rubric": [
+    "Says the slopes are not solid evidence (or are unreliable).",
+    "Cites the near-ceiling / restricted safety range of Anthropic models.",
+    "Mentions the small within-organization n (5) or that differences near the ceiling are comparable to measurement error."
+   ],
+   "batch": 4,
+   "orig_id": "q120"
+  },
+  {
+   "id": "q121",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose Qwen3-32B had been kept on R-Judge, with its 21% unparseable outputs scored as 'unsafe' verdicts instead of being excluded. Would its F1 reliably penalize this defaulting, and what would happen to its specificity?",
+   "answer": "F1 would not reliably penalize it. Defaulting to 'unsafe' raises recall on the unsafe items among the unparseable outputs, and the benign traces it misflags cost true negatives, which F1 ignores. The defaulting pushes the model toward the constant-baseline behavior that F1 scores at 0.690. Specificity would fall, because those benign traces become false positives.",
+   "rubric": [
+    "Says F1 would not reliably penalize the defaulting (it could stay similar or rise).",
+    "Explains that recall rises and that F1 ignores the lost true negatives, so the model moves toward the always-unsafe baseline.",
+    "Says specificity would fall."
+   ],
+   "batch": 4,
+   "orig_id": "q121"
+  },
+  {
+   "id": "q122",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "After capability adjustment, the organization-group effect is smaller for misalignment (\u03b5\u00b2 = 0.34) than for jailbreak (\u03b5\u00b2 = 0.57). Is it safe to conclude that organizations differ less in misalignment safety than in jailbreak safety?",
+   "answer": "No. The misalignment criterion is the less consistent instrument: its scenario halves agree only at Spearman\u2013Brown 0.70, against about 0.97 for jailbreak, and its relative SE is larger. The paper notes that measurement error of this kind attenuates or suppresses relationships, so the smaller \u03b5\u00b2 could partly reflect noisier measurement rather than smaller real differences.",
+   "rubric": [
+    "Says the conclusion is not safe or not warranted.",
+    "Cites misalignment's lower internal consistency (0.70 vs ~0.97) or larger relative measurement error.",
+    "Notes that measurement error attenuates effects, so the smaller \u03b5\u00b2 may be partly an artifact."
+   ],
+   "batch": 4,
+   "orig_id": "q122"
+  },
+  {
+   "id": "q123",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The XSTest check finds AgentHarm safety's capability-controlled partial with benign-prompt over-refusal to be \u22120.01 (n = 17). Could this check have excluded a true blanket-refusal effect of about \u03c1 = 0.4?",
+   "answer": "No. The paper's power analysis puts the minimum detectable effect at \u03c1 = 0.62 for n = 18, and power to detect \u03c1 = 0.4 at only about 0.35. With n = 17 the check is even weaker, so it cannot exclude a moderate effect. This is why the paper says it weighs against the blanket-refusal story but does not rule it out.",
+   "rubric": [
+    "Says it could not exclude an effect of about 0.4.",
+    "Cites the low power: MDE 0.62 at n = 18 or power \u2248 0.35 for \u03c1 = 0.4, with n = 17 here."
+   ],
+   "batch": 4,
+   "orig_id": "q123"
+  },
+  {
+   "id": "q124",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Organization-matched size-21 subsets of the expanded pool give a median capability\u2013misalignment \u03c1 of \u22120.17. Does this rule out that the weakening from \u22120.44 comes from which particular models each organization contributed, such as newer releases?",
+   "answer": "No. The subsets match only the original panel's organization histogram. They do not match which models, or which generations, represent each organization. So they show that organization mix alone does not explain the change, but a generational or within-organization composition shift remains possible. The 2026-only models giving +0.07 is compatible with that possibility, though not significant.",
+   "rubric": [
+    "Says the matched-subset analysis does not rule this out.",
+    "Explains that matching is on organization counts only, not on model generation or identity within an organization, so a generational explanation remains open."
+   ],
+   "batch": 4,
+   "orig_id": "q124"
+  },
+  {
+   "id": "q125",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Could the paper's finding that no safety score adds information beyond capability for \u03c4\u00b2 task success be a false negative caused by the \u03c4\u00b2 measurement itself?",
+   "answer": "Yes, it could. \u03c4\u00b2 is a single run over 40 tasks, scored by a user simulator whose variance the paper cannot bound. The paper notes that measurement error attenuates partial relationships, and the partials are already underpowered at n \u2248 19 (MDE \u2248 0.62). So the null (best |\u03c1| = 0.23) cannot exclude modest incremental validity.",
+   "rubric": [
+    "Says yes, the null could be a false negative or cannot exclude modest effects.",
+    "Cites \u03c4\u00b2's unbounded single-run noise together with attenuation of partials by measurement error, or the low power."
+   ],
+   "batch": 4,
+   "orig_id": "q125"
+  },
+  {
+   "id": "q126",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why can PC1 explain 48.7% of variance when the median between-benchmark correlation is only 0.22?",
+   "answer": "The PCA's five measures include the two capability anchors, MMLU and GPQA. These covary strongly with each other and both load heavily on PC1 (about 0.72\u20130.78 in magnitude). Much of PC1's variance comes from that anchor pair and their alignment with the cluster, plus AgentHarm's opposite loading. Only the agreement between the safety benchmarks themselves is weak.",
+   "rubric": [
+    "Attributes much of PC1's variance to the two capability anchors, which are strongly intercorrelated and load heavily.",
+    "Notes that the 0.22 median concerns only benchmark-to-benchmark pairs, not anchor pairs."
+   ],
+   "batch": 4,
+   "orig_id": "q126"
+  },
+  {
+   "id": "q127",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "In the metric sensitivity analysis, why does R-Judge load most strongly on PC1 under balanced accuracy (\u22120.86) rather than under specificity (\u22120.71) or recall (\u22120.14)?",
+   "answer": "PC1 is aligned with the capability anchors. Of the R-Judge metrics, balanced accuracy is among the most strongly capability-correlated (+0.71 with MMLU), whereas specificity is +0.16 and recall +0.40. Balanced accuracy also combines both error types, so it captures the cluster-aligned discrimination signal that neither component carries alone.",
+   "rubric": [
+    "Links the PC1 loading to the metric's correlation with capability, since PC1 is aligned with the anchors.",
+    "Notes that balanced accuracy is strongly capability-correlated (+0.71 MMLU) while specificity (+0.16) and recall (+0.40) are much weaker."
+   ],
+   "batch": 4,
+   "orig_id": "q127"
+  },
+  {
+   "id": "q128",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does averaging over three jailbreak templates leave no model at the ceiling, when AIM alone leaves 11 of 22 models refusing every request?",
+   "answer": "A model reaches the ceiling of the averaged score only if it refuses every prompt under all three templates. The models that fully refuse AIM must comply with at least some prompts under refusal-suppression or prefix-injection, so their averages fall below the maximum. This restores between-model variance, which also lets the AgentHarm partial rise from +0.50 to +0.72.",
+   "rubric": [
+    "Explains that a ceiling on the average would require full refusal under every template, and the AIM-ceiling models comply on some prompts under the other templates.",
+    "Notes that this restores variance among models (optionally linked to the higher partial)."
+   ],
+   "batch": 4,
+   "orig_id": "q128"
+  },
+  {
+   "id": "q129",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "R-Judge has 21 valid models and the anchor panel has 21 models. Why are the RQ2 capability correlations computed at n = 20?",
+   "answer": "The two 21-model panels drop different models. R-Judge excludes Qwen3-32B for unparseable output, and the anchor panel excludes DeepSeek-R1 for unstable GPQA generation. Their intersection is therefore 20 models.",
+   "rubric": [
+    "Identifies that the two panels exclude different models (Qwen3-32B from R-Judge, DeepSeek-R1 from the anchors).",
+    "Concludes that the overlap is 20."
+   ],
+   "batch": 4,
+   "orig_id": "q129"
+  },
+  {
+   "id": "q130",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "The paper warns that within-model uncertainty does not support every pairwise model difference. Why can it nonetheless treat the misalignment safety gap among o3-mini (0.99), Grok-4.3 (0.70) and DeepSeek-V3 (0.19) at composite \u2248 0.8 as real?",
+   "answer": "The worst-case within-model SE for misalignment is about 5 points. These gaps are about 29 and 80 points, many times that SE. The caveat applies only to close pairs, not to differences this large.",
+   "rubric": [
+    "Says the gaps are much larger than the misalignment SE (max \u2248 5 points).",
+    "Notes that the pairwise caveat applies only to models with close scores."
+   ],
+   "batch": 4,
+   "orig_id": "q130"
+  },
+  {
+   "id": "q131",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Claude-3-Haiku looks like a blanket refuser: AgentHarm safety 0.81, R-Judge specificity 0.40, and 60% over-refusal on XSTest. Why does the panel-level AgentHarm\u2013over-refusal partial nonetheless come out at \u22120.01?",
+   "answer": "A rank correlation over 17 models is not driven by one extreme case. Most models over-refuse at 15% or less, and across them AgentHarm rank does not track over-refusal rank. Some high-AgentHarm models, such as o3-mini, over-refuse only moderately. Controlling capability further removes shared variance, so one cautious model does not create a panel association.",
+   "rubric": [
+    "Says a single model cannot drive a Spearman correlation over 17 models.",
+    "Notes that across the rest of the panel AgentHarm safety does not line up with over-refusal (most models \u226415%)."
+   ],
+   "batch": 4,
+   "orig_id": "q131"
+  },
+  {
+   "id": "q132",
+   "type": "counterfactual",
+   "claims": [
+    "c4"
+   ],
+   "pair": "b4-p1",
+   "question": "Would capability's raw correlations with the three held-out criteria (Table 2, top row) be unchanged if the capability composite were replaced by the anchors' first principal component score?",
+   "answer": "Yes. These are Spearman correlations, which depend only on model ordering. The paper states that the composite's ordering is identical to the anchors' first principal component.",
+   "rubric": [
+    "Says yes, they would be unchanged.",
+    "Explains that Spearman uses only ranks and the composite's ordering matches the anchors' PC1."
+   ],
+   "batch": 4,
+   "orig_id": "q132"
+  },
+  {
+   "id": "q133",
+   "type": "counterfactual",
+   "claims": [
+    "c4",
+    "c2"
+   ],
+   "pair": "b4-p1",
+   "question": "Would capability's raw correlations with the three held-out criteria (Table 2, top row) necessarily be unchanged if the capability composite were replaced by GPQA alone?",
+   "answer": "No. GPQA orders the models differently from the composite. The RQ2 results show this: MMLU and GPQA give different correlations with the same R-Judge metrics (e.g., +0.71 vs +0.49 for balanced accuracy). A different ordering can change Spearman correlations.",
+   "rubric": [
+    "Says no, they could change.",
+    "Explains that GPQA's ordering differs from the composite's, evidenced by MMLU and GPQA giving different correlations with the same R-Judge metric."
+   ],
+   "batch": 4,
+   "orig_id": "q133"
+  },
+  {
+   "id": "q134",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b4-p2",
+   "question": "If every audited benchmark score were re-expressed as log-odds, keeping each model's ordering, would the full-panel R-Judge-specificity/AgentHarm-safety correlation of +0.02 change?",
+   "answer": "No. All association tests use Spearman correlations, which are invariant to monotone transformations that preserve model order.",
+   "rubric": [
+    "Says it would not change.",
+    "Cites the rank-based (Spearman) correlation's invariance to order-preserving transforms."
+   ],
+   "batch": 4,
+   "orig_id": "q134"
+  },
+  {
+   "id": "q135",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b4-p2",
+   "question": "If every audited benchmark score were re-expressed as log-odds, keeping each model's ordering, would the corroborative PCA's PC1 share of 48.7% necessarily stay the same?",
+   "answer": "No. The PCA runs on the Pearson correlation matrix of standardized scores, which depends on actual values rather than ranks alone. The paper shows that switching to a rank-based PCA already moves PC1 from 48.7% to 40.8%.",
+   "rubric": [
+    "Says it would not necessarily stay the same.",
+    "Explains that the PCA uses Pearson correlations, which are sensitive to value transforms, citing the Pearson vs Spearman shift (48.7% vs 40.8%)."
+   ],
+   "batch": 4,
+   "orig_id": "q135"
+  },
+  {
+   "id": "q136",
+   "type": "counterfactual",
+   "claims": [
+    "c6"
+   ],
+   "pair": "b4-p3",
+   "question": "If a fourth held-out criterion were added, making the Bonferroni family 12 partial tests, would the AgentHarm\u2192jailbreak partial still survive correction?",
+   "answer": "Yes. The corrected \u03b1 would be about 0.05/12 \u2248 0.004, and the AgentHarm\u2192jailbreak partial has p < 0.001.",
+   "rubric": [
+    "Says yes, it survives.",
+    "Compares p < 0.001 with the corrected \u03b1 of about 0.004."
+   ],
+   "batch": 4,
+   "orig_id": "q136"
+  },
+  {
+   "id": "q137",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b4-p3",
+   "question": "If a fourth held-out criterion were added, making the Bonferroni family 12 partial tests, would the InjecAgent\u2013misalignment partial survive correction?",
+   "answer": "No. Its p-value is about 0.05\u20130.09, far above a corrected \u03b1 of about 0.004. It already fails at the nine-test \u03b1 of 0.006.",
+   "rubric": [
+    "Says no, it does not survive.",
+    "Compares p \u2248 0.05\u20130.09 with the corrected \u03b1 of about 0.004 (or notes it already fails at 0.006)."
+   ],
+   "batch": 4,
+   "orig_id": "q137"
+  },
+  {
+   "id": "q138",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b4-p4",
+   "question": "After dropping near-ceiling Anthropic, would the capability-adjusted organization-group difference on misalignment be significant at \u03b1 = 0.01?",
+   "answer": "No. Without Anthropic, the misalignment group test gives p = 0.018, which is significant at 0.05 but not at 0.01.",
+   "rubric": [
+    "Says no.",
+    "Cites p = 0.018 > 0.01."
+   ],
+   "batch": 4,
+   "orig_id": "q138"
+  },
+  {
+   "id": "q139",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b4-p4",
+   "question": "After dropping near-ceiling Anthropic, would the capability-adjusted organization-group difference on jailbreak be significant at \u03b1 = 0.01?",
+   "answer": "Yes. Without Anthropic, the jailbreak group test gives p < 0.001, with \u03b5\u00b2 = 0.54.",
+   "rubric": [
+    "Says yes.",
+    "Cites p < 0.001 (\u03b5\u00b2 = 0.54) after dropping Anthropic."
+   ],
+   "batch": 4,
+   "orig_id": "q139"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "On the expanded panel, capability correlates +0.34 with jailbreak safety. Can a deployer use MMLU/GPQA scores to screen high-capability candidates for jailbreak safety?",
+   "answer": "No, not reliably. Among high-capability models jailbreak safety spans roughly 0.09 to 0.99 (Mistral-Large 0.09, DeepSeek-V3 0.37, Anthropic/OpenAI 0.98\u20130.99). Organization groups differ strongly after capability adjustment (\u03b5\u00b2 = 0.57). The deployer would need to measure jailbreak safety directly.",
+   "rubric": [
+    "Says capability anchors are not a reliable screen.",
+    "Cites the near-full spread of jailbreak safety among high-capability models, or the large capability-adjusted organization differences (\u03b5\u00b2 = 0.57)."
+   ],
+   "batch": 4,
+   "orig_id": "q140"
+  },
+  {
+   "id": "q141",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A deployer requires InjecAgent robustness \u2265 0.90 and AgentHarm safety \u2265 0.60. Using Table 1, which models qualify, and what does this show about using InjecAgent as a proxy for AgentHarm?",
+   "answer": "Only Qwen-2.5-72B qualifies (0.92 / 0.60). The other models with InjecAgent \u2265 0.90 have much lower AgentHarm safety: GPT-4.1-nano 0.94 / 0.42 and GPT-4o 0.90 / 0.47. Top injection robustness does not imply refusal of harmful tasks, so InjecAgent cannot stand in for AgentHarm.",
+   "rubric": [
+    "Identifies Qwen-2.5-72B as the only qualifying model.",
+    "Notes that other top-InjecAgent models (e.g., GPT-4.1-nano, GPT-4o) score low on AgentHarm, so one benchmark is not a proxy for the other."
+   ],
+   "batch": 4,
+   "orig_id": "q141"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to validate a new prompt-injection benchmark by correlating it with AgentDojo. Based on the paper, which AgentDojo score should it use, and what else should it ensure?",
+   "answer": "It should use AgentDojo's security score rather than its utility score. AgentDojo is environment-scored for both, and blinded coders read it as task success 4/7 times, so utility-laden scores would blend in task ability. The team should also run it on far more than five models, since the paper's own convergent control was inconclusive at n = 5.",
+   "rubric": [
+    "Recommends the security component rather than utility or task success.",
+    "Cites that AgentDojo blends utility scoring (coders read it as task success 4/7).",
+    "Says the panel must be much larger than n = 5."
+   ],
+   "batch": 4,
+   "orig_id": "q142"
+  },
+  {
+   "id": "q143",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team computing split-half consistency for a multi-template jailbreak suite plans to resample individual template-prompt pairs as independent items. What does the paper's approach suggest instead, and why?",
+   "answer": "It should resample by base prompt, as the paper does. The three templates applied to the same base prompt are dependent, so treating each template-prompt pair as independent would overstate the number of independent items and overstate consistency.",
+   "rubric": [
+    "Recommends resampling by base prompt.",
+    "Explains that template variants of the same prompt are dependent, so pair-level resampling would overstate precision or consistency."
+   ],
+   "batch": 4,
+   "orig_id": "q143"
+  },
+  {
+   "id": "q144",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team has two models from each of three organizations and wants to claim that one organization's models are safer at matched capability. What does the paper's analysis suggest about this plan?",
+   "answer": "The plan is not adequate. The paper's group comparison used only organizations with at least three models and rested on a permutation test whose calibration it checked by simulation. Even then it calls the result observational, because the static composite may miss agentic capability. Two models per organization cannot support a matched-capability organizational claim, let alone a causal one.",
+   "rubric": [
+    "Says the plan is inadequate or the claim unsupported.",
+    "Cites the paper's \u22653-models-per-group requirement or the small-n and few-cluster limits.",
+    "Notes that even the paper's result is observational, because the static composite may miss agentic ability."
+   ],
+   "batch": 4,
+   "orig_id": "q144"
+  },
+  {
+   "id": "q145",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A newly released model has a provider-reported GPQA score but no MMLU result from the paper's harness. How should a team running the paper's capability-controlled analyses handle it?",
+   "answer": "The team should measure both anchors under the uniform protocol: the fixed 500-item MMLU subset and GPQA-Diamond with chain-of-thought, through the same harness. If that is not possible, the model should be excluded from capability-controlled analyses, as the paper did with GLM-4.5 and DeepSeek-R1. Mixing in provider numbers is what made the composite fail its positive control (MMLU loading 0.42).",
+   "rubric": [
+    "Says to measure both anchors under the same protocol, or else exclude the model from capability-controlled analyses.",
+    "Justifies this with the failed positive control on provider-reported anchors or the paper's exclusion of models lacking the anchor pair."
+   ],
+   "batch": 4,
+   "orig_id": "q145"
+  },
+  {
+   "id": "q146",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If re-measuring MMLU and GPQA under the uniform protocol had flipped the sign of the capability\u2013misalignment correlation relative to the provider-reported anchors, which result would lose support?",
+   "answer": "The capability crossover would lose support. Its misalignment arm would then depend on where the anchor numbers came from rather than on model behavior. The paper's robustness argument relies on every RQ2/RQ3 sign being unchanged by harmonization.",
+   "rubric": [
+    "Names the capability crossover (task success vs misalignment), or the negative capability\u2013misalignment correlation.",
+    "Explains that the result would become sensitive to anchor provenance, contradicting the reported unchanged signs."
+   ],
+   "batch": 4,
+   "orig_id": "q146"
+  },
+  {
+   "id": "q147",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If AgentHarm's jailbreak-over-misalignment selectivity test had given p = 0.01 under organization resampling, how would the paper's characterization of the AgentHarm\u2013jailbreak result change?",
+   "answer": "The claim that AgentHarm is selective for jailbreak over misalignment would no longer be borderline, because it would survive the stricter organization-level resampling. The +0.72 would still partly reflect convergent measurement of harmful compliance, but the outcome-specificity claim the paper now leaves open would gain firm support.",
+   "rubric": [
+    "Says the selectivity claim would become firm rather than borderline.",
+    "Notes that the convergent-validity overlap (both measure harmful compliance) would still apply."
+   ],
+   "batch": 4,
+   "orig_id": "q147"
+  },
+  {
+   "id": "q148",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the blackmail and leaking halves of the misalignment criterion had agreed at only about Spearman\u2013Brown 0.1, which results would lose support even though the independent grader agrees at \u03c1 = 0.97?",
+   "answer": "Results treating misalignment safety as one coherent outcome would be undermined. These include the misalignment arm of the capability crossover, the expanded-panel misalignment update, and the exploratory R-Judge/InjecAgent associations. Grader agreement shows only that scoring is consistent, not that the two scenarios measure the same propensity.",
+   "rubric": [
+    "Names the misalignment-based results: the crossover's misalignment arm and/or the R-Judge/InjecAgent associations or the expansion result.",
+    "Explains that grader agreement addresses scoring, not whether the scenarios measure one construct."
+   ],
+   "batch": 4,
+   "orig_id": "q148"
+  },
+  {
+   "id": "q149",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If R-Judge specificity, InjecAgent robustness and AgentHarm safety had ordered the 18 common-panel models almost identically, which of the paper's RQ1 results would lose its basis?",
+   "answer": "The paper's firmest, correlation-free RQ1 result would lose its basis: the ranking disagreement in Table 1. That result supports the claim that safety rank is benchmark-dependent and that scores cannot be quoted interchangeably.",
+   "rubric": [
+    "Names the Table 1 ranking disagreement, the firm descriptive RQ1 result.",
+    "Links it to the conclusion that the benchmarks are not interchangeable and safety rank is benchmark-dependent."
+   ],
+   "batch": 4,
+   "orig_id": "q149"
+  },
+  {
+   "id": "q150",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c5"
+   ],
+   "pair": null,
+   "question": "If the independent jailbreak judge had agreed with the original StrongREJECT grader only at \u03c1 \u2248 0.5 instead of 0.98, which results would lose robustness support?",
+   "answer": "The AgentHarm\u2013jailbreak partial (+0.72) would lose its grader-robustness support. So would the jailbreak results on the expanded panel: the capability\u2013jailbreak correlation of +0.34 and the organization-group differences on jailbreak. These results would then depend on the choice of judge.",
+   "rubric": [
+    "Names the AgentHarm\u2013jailbreak association.",
+    "Also names at least one expanded-panel jailbreak result (capability +0.34 or organization differences), or states that the results would become judge-dependent."
+   ],
+   "batch": 4,
+   "orig_id": "q150"
+  },
+  {
+   "id": "q151",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the six-model BFCL pilot had produced a capability ranking consistent with the static anchors, which caveat on the organization-group finding could the paper have begun to address?",
+   "answer": "It could have begun to address the caveat that the static MMLU/GPQA composite may miss agentic ability. A validated agentic anchor would let capability-adjusted organization differences be checked against agentic capability, reducing the chance that unmeasured agentic ability shows up as an organization effect.",
+   "rubric": [
+    "Names the caveat that the static composite may miss agentic capability.",
+    "Explains that a validated agentic anchor would allow adjusting for it, so organization differences are less likely to be unmeasured capability."
+   ],
+   "batch": 4,
+   "orig_id": "q151"
+  },
+  {
+   "id": "q152",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the capability crossover (\u0394 = \u22121.00) weakened on the expanded 41-model panel? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. \u03c4\u00b2 task success was not re-collected for the expansion, so the interaction \u0394 could not be recomputed. Only the misalignment arm was updated, and its change is itself not significant.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that \u03c4\u00b2 was not re-collected, so only the misalignment correlation, not \u0394, was updated."
+   ],
+   "batch": 4,
+   "orig_id": "q152"
+  },
+  {
+   "id": "q153",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that R-Judge, under some choice of metric, predicts jailbreak safety beyond capability? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Across all four R-Judge metrics the capability-controlled jailbreak partials are small and negative (\u22120.05 to \u22120.20), and the paper describes the jailbreak null as stable across metrics.",
+   "rubric": [
+    "Answers contradicted (or not supported, with the data pointing to no association).",
+    "Cites the small negative partials under every metric (\u22120.05 to \u22120.20)."
+   ],
+   "batch": 4,
+   "orig_id": "q153"
+  },
+  {
+   "id": "q154",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Does the paper show that R-Judge clusters with capability and InjecAgent on PC1 whichever R-Judge metric is used? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. R-Judge loads strongly under specificity, balanced accuracy and F1 (\u22120.71, \u22120.86, \u22120.75), but only \u22120.14 under recall. Its membership in the cluster therefore depends on the metric.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the weak recall loading (\u22120.14) against strong loadings for the other metrics."
+   ],
+   "batch": 4,
+   "orig_id": "q154"
+  },
+  {
+   "id": "q155",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the Table 1 ranking disagreement is free of grader or judge effects? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The internal-consistency analysis rules out item-sampling error but does not address judge choice. Rescoring AgentHarm refusals with a different judge agreed only at \u03c1 = 0.69, so AgentHarm's model positions show some judge dependence, even though the AgentHarm\u2013jailbreak partial barely moved.",
+   "rubric": [
+    "Answers not settled.",
+    "Notes that split-half and rank stability address item sampling, not graders.",
+    "Cites the AgentHarm judge-swap agreement of 0.69."
+   ],
+   "batch": 4,
+   "orig_id": "q155"
+  },
+  {
+   "id": "q156",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that InjecAgent and AgentHarm headline scores can likewise be matched by a constant degenerate policy? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Observation 1 concerns binary trace-judgment benchmarks scored by F1, demonstrated on R-Judge. InjecAgent is scored as attack success and AgentHarm as harmful compliance, and the paper does not analyze constant-policy baselines for them.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that Observation 1 applies to F1-scored binary trace judgment (R-Judge), while the other benchmarks use different metrics that the paper does not analyze this way."
+   ],
+   "batch": 4,
+   "orig_id": "q156"
+  },
+  {
+   "id": "q157",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that high R-Judge specificity reflects a general permissive tendency to rarely flag or refuse anything? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper notes only that specificity can be inflated by rarely flagging anything. Its XSTest check does not support general permissiveness: specificity relates +0.15 (n.s.) to over-refusal, the opposite direction, and the highest-specificity model, o3-mini, over-refuses 30% of benign prompts. The check is low-powered, so it settles nothing either way.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the XSTest evidence: specificity's weak positive (+0.15, n.s.) relation with over-refusal, or o3-mini's 30% over-refusal.",
+    "Notes that the check is low-powered or non-significant."
+   ],
+   "batch": 4,
+   "orig_id": "q157"
+  },
+  {
+   "id": "q158",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "On the original 21-model panel, o3-mini is described as a capable exception on misalignment safety. If o3-mini were dropped, would the capability\u2013misalignment correlation likely move further from zero or closer to zero, and why?",
+   "answer": "It would likely become more negative, moving further from zero. In Table 1, o3-mini has the highest capability (GPQA 77.2), yet it blackmails or leaks only 1% of the time. A high-capability, high-safety point runs against the negative trend, so removing it should strengthen that trend.",
+   "rubric": [
+    "Says the correlation would likely become more negative (stronger, further from zero).",
+    "Reason: o3-mini pairs top capability with near-perfect misalignment safety (about 1% misbehavior), which works against the negative capability\u2013safety trend."
+   ],
+   "batch": 5,
+   "orig_id": "q158"
+  },
+  {
+   "id": "q159",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the capability-adjusted organization-group result on the expanded panel tell us anything about developers that contribute only one or two models to that panel?",
+   "answer": "No. The group test includes only the seven organizations with at least three models, for a total of n = 33. The other 8 of the 41 models, from the remaining five organizations, are not part of the comparison, so their capability-adjusted standing is untested.",
+   "rubric": [
+    "Says no, the result does not cover such developers.",
+    "Reason: the test is limited to groups with at least 3 models (total n = 33), which leaves about 8 models from five smaller organizations out of the comparison."
+   ],
+   "batch": 5,
+   "orig_id": "q159"
+  },
+  {
+   "id": "q160",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the post-hoc three-scenario battery (adding murder) replaced blackmail+leaking as the misalignment criterion, would AgentHarm's selectivity for jailbreak over misalignment likely hold up?",
+   "answer": "It would likely weaken substantially. AgentHarm forecasts the battery at about +0.43, compared with +0.13 on the primary criterion. Against its +0.72 jailbreak partial, the gap would therefore shrink from about 0.59 to about 0.29, and the selectivity test is already borderline. The cause is that murder is a severe overt harm, which harm-compliance measures predict.",
+   "rubric": [
+    "Says selectivity would likely weaken or fail.",
+    "Reason: AgentHarm's association with the battery (about +0.43) is far above its +0.13 with the primary criterion, so the gap to +0.72 shrinks to roughly 0.3, starting from a test that is already borderline.",
+    "Mentions that murder is a severe harm that harm-compliance forecasts, which dilutes construct specificity."
+   ],
+   "batch": 5,
+   "orig_id": "q160"
+  },
+  {
+   "id": "q161",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Could R-Judge F1 sampling error alone overturn the finding that the always-unsafe baseline outranks five discriminating models?",
+   "answer": "No. The five models score 0.30\u20130.57, at least 0.12 below the baseline's 0.690. The worst-case bootstrap SE of R-Judge F1 is about 3.0 points (0.03), so every gap is at least about four times the worst-case SE. The baseline itself is an exact closed form with no sampling error.",
+   "rubric": [
+    "Says no, sampling error cannot overturn it.",
+    "Reason: the gaps (at least about 0.12) are several times the worst-case F1 SE of about 0.03 from the within-model uncertainty analysis."
+   ],
+   "batch": 5,
+   "orig_id": "q161"
+  },
+  {
+   "id": "q162",
+   "type": "failure",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose R-Judge were run on a completely different panel, such as the 2026 expansion models. Which part of the RQ4 finding could change and which could not?",
+   "answer": "The baseline's F1 of 0.690 could not change, because it depends only on the item base rate \u03c0 = 0.527 via 2\u03c0/(1+\u03c0). How many models fall below it, the 'five', and how narrowly the top-specificity model beats it could both change, since those depend on which models are evaluated.",
+   "rubric": [
+    "Says the constant baseline's F1 (0.690) is fixed regardless of panel because it depends only on the items' unsafe share.",
+    "Says the number of models outranked, and the margins of specific models, are panel-dependent and could change."
+   ],
+   "batch": 5,
+   "orig_id": "q162"
+  },
+  {
+   "id": "q163",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the full-panel R-Judge-specificity/AgentHarm correlation of +0.02 at n = 18 rule out a modest true trade-off, say \u03c1 \u2248 \u22120.3?",
+   "answer": "No. At n = 18 the paper's minimum detectable effect at 80% power is 0.62, and power to detect even 0.4 is only about 0.35. A true \u22120.3 relationship would usually go undetected. The +0.02 shows that the strong \u22120.64 trade-off does not persist, not that the relationship is exactly zero.",
+   "rubric": [
+    "Says no, it cannot rule out a modest trade-off.",
+    "Reason: power at n = 18 is low (minimum detectable effect 0.62; power about 0.35 for \u03c1 = 0.4), so effects around 0.3 are undetectable."
+   ],
+   "batch": 5,
+   "orig_id": "q163"
+  },
+  {
+   "id": "q164",
+   "type": "why",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why is AgentHarm's selectivity contrast \u0394 = +0.59, rather than the difference between its Table 2 partials (+0.72 jailbreak, +0.16 misalignment)?",
+   "answer": "The selectivity test is run on the paired n = 19 panel. There, AgentHarm's misalignment partial is +0.13, and 0.72 \u2212 0.13 = 0.59. Table 2's +0.16 comes from the common n = 18 panel.",
+   "rubric": [
+    "Says the test uses a different (paired n = 19) panel on which the misalignment partial is +0.13.",
+    "Shows that 0.72 \u2212 0.13 = 0.59, whereas +0.16 belongs to the n = 18 common panel."
+   ],
+   "batch": 5,
+   "orig_id": "q164"
+  },
+  {
+   "id": "q165",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why is the capability crossover \u0394 = \u22121.00 rather than the \u22121.04 implied by Table 2's capability row (+0.60 for \u03c4\u00b2, \u22120.44 for misalignment)?",
+   "answer": "The interaction is computed on the paired n = 20 panel, the models with \u03c4\u00b2 scores. On that panel the capability\u2013misalignment correlation is \u22120.41, and \u22120.41 \u2212 0.60 \u2248 \u22121.00. The \u22120.44 is from the full 21-model misalignment panel.",
+   "rubric": [
+    "Says the crossover uses the paired n = 20 panel, where the misalignment correlation is \u22120.41.",
+    "Shows that the difference \u22120.41 \u2212 0.60 is about \u22121.00, while \u22120.44 belongs to the n = 21 panel."
+   ],
+   "batch": 5,
+   "orig_id": "q165"
+  },
+  {
+   "id": "q166",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is capability's correlation with jailbreak safety on the original panel computed at n = 21, when the jailbreak criterion itself covers 22 models?",
+   "answer": "Capability analyses need MMLU/GPQA anchors. DeepSeek-R1 was excluded from the 21-model anchor panel because its long-form GPQA generation was unstable. It has a jailbreak score but no capability composite, so it drops out.",
+   "rubric": [
+    "Identifies DeepSeek-R1 as the model without capability anchors.",
+    "Reason: it was excluded from the anchor panel for unstable GPQA generation, so it cannot enter capability-based correlations."
+   ],
+   "batch": 5,
+   "orig_id": "q166"
+  },
+  {
+   "id": "q167",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why does the organization-group test on the expanded panel use a total of n = 33 rather than the 40\u201341 models scored on the criteria?",
+   "answer": "The group comparison includes only organizations with at least three anchored models. Seven of the 12 organizations qualify. The roughly 8 models from the other five organizations, each with only one or two models, are left out.",
+   "rubric": [
+    "Says the test is restricted to organizations contributing at least three models (seven groups).",
+    "Says models from the remaining smaller organizations (about 8 models across five organizations) are excluded."
+   ],
+   "batch": 5,
+   "orig_id": "q167"
+  },
+  {
+   "id": "q168",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does inter-coder agreement drop from Krippendorff's \u03b1 = 0.825 in the four-benchmark coding to 0.61 in the six-target coding with a distractor, even though AgentHarm and the jailbreak criterion stay unanimous?",
+   "answer": "The second round adds a third category and targets that are genuinely contested. AgentDojo, which is utility-scored, is read as task success by 4 of 7 coders, and InjecAgent splits 5/7. The added misalignment criterion is also ambiguous, since avoiding a harmful action can be read as recognition or as blocking. The disagreement concentrates on these targets, not on the clean AgentHarm/jailbreak/R-Judge assignments.",
+   "rubric": [
+    "Attributes the drop to contested targets and the extra category, not to the AgentHarm/jailbreak assignments.",
+    "Names at least one specific source, such as AgentDojo read as task success (4/7) because it is utility-scored, InjecAgent's 5/7 split, or the ambiguous misalignment criterion."
+   ],
+   "batch": 5,
+   "orig_id": "q168"
+  },
+  {
+   "id": "q169",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "R-Judge specificity and InjecAgent robustness load in the same direction as the capability anchors on PC1. Why do they nonetheless add nothing to \u03c4\u00b2 task-success prediction once capability is controlled?",
+   "answer": "Whatever \u03c4\u00b2-relevant signal they carry is mostly the part they share with capability, and partialling out the composite removes it. Their remaining benchmark-specific variance is unrelated to task success (partials \u22120.09 and +0.16, n.s.).",
+   "rubric": [
+    "Says their \u03c4\u00b2-relevant variance overlaps with capability and is removed by the partial correlation.",
+    "Notes that the residual partials are small and non-significant (about \u22120.09 and +0.16)."
+   ],
+   "batch": 5,
+   "orig_id": "q169"
+  },
+  {
+   "id": "q170",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Prior work reports cross-benchmark rank concordance near 0.10 from a twelve-model check. Based on this paper's findings, how much weight should a reader put on that specific value?",
+   "answer": "The qualitative message, that agreement is weak, is consistent with this paper's median between-benchmark correlation of 0.22 at n = 18. The exact value at about 12 models should be treated as imprecise. This paper shows small panels produce large spurious correlations: a quarter of size-7 subsets reach |\u03c1| \u2265 0.5 around a near-zero value. An estimate at n \u2248 12 could be far from the population value.",
+   "rubric": [
+    "Says the low-agreement conclusion is broadly consistent with this paper (median correlation about 0.22), but the precise value is unreliable.",
+    "Reason: the paper's small-panel evidence (for example, about 25% of size-7 subsets reaching |\u03c1| \u2265 0.5) shows correlations at around a dozen models are highly variable."
+   ],
+   "batch": 5,
+   "orig_id": "q170"
+  },
+  {
+   "id": "q171",
+   "type": "transfer",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "A monitor benchmark reports miss rate and false-alarm rate separately, rather than a single F1. Could a policy that flags every case exploit it the way the always-unsafe policy exploits R-Judge F1?",
+   "answer": "No. Flagging everything gives a 0% miss rate but a 100% false-alarm rate, which is plainly visible. F1 hides this because it gives no credit for true negatives. Two-sided reporting exposes the behavior that F1 conceals.",
+   "rubric": [
+    "Says no, the degenerate policy would be exposed.",
+    "Reason: its false-alarm rate would be 100%, and that true-negative failure is exactly what F1 ignores."
+   ],
+   "batch": 5,
+   "orig_id": "q171"
+  },
+  {
+   "id": "q172",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team plans to validate a new agent-safety benchmark against a single held-out criterion. Based on the RQ3 results for AgentHarm, what risk does this plan carry?",
+   "answer": "Its verdict could hinge on which criterion is chosen. AgentHarm would look strongly valid against three-template jailbreak safety (+0.72). Against misalignment it would look weak (+0.16), and against \u03c4\u00b2 task success it would look like it adds nothing beyond capability (\u22120.23). A single criterion can therefore give an unrepresentative picture, so several distinct outcomes should be tested.",
+   "rubric": [
+    "Says the conclusion would depend on which criterion was picked, and could be misleading either way.",
+    "Supports this with AgentHarm's differing partials across jailbreak (+0.72), misalignment (+0.16) and \u03c4\u00b2 (\u22120.23)."
+   ],
+   "batch": 5,
+   "orig_id": "q172"
+  },
+  {
+   "id": "q173",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A deployer must choose between o3-mini and DeepSeek-V3, which have similar capability composites (about 0.8) on the expanded panel, and cares about agentic misalignment. Which should it prefer, and could capability scores have told it this?",
+   "answer": "It should prefer o3-mini, whose misalignment safety is 0.99 against DeepSeek-V3's 0.19. DeepSeek-V3 is also weak on jailbreak (0.37). Capability could not have told it this: both models sit at about the same composite, and the paper shows safety varies widely at matched capability.",
+   "rubric": [
+    "Prefers o3-mini, citing misalignment safety of 0.99 versus 0.19.",
+    "Says capability scores could not distinguish them because their composites are matched (about 0.8)."
+   ],
+   "batch": 5,
+   "orig_id": "q173"
+  },
+  {
+   "id": "q174",
+   "type": "transfer",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to use LLM coders to assign benchmarks to constructs. Its category definitions were written after the authors saw the results. What residual bias remains, and what kind of evidence does the paper use to address it?",
+   "answer": "Blinding the coders and shuffling options controls coder bias. It does not control rubric-designer bias, because definitions written with the results in view could steer the categories. The paper addresses this with evidence that makes no reference to any criterion: the RQ1 factor, which separates AgentHarm (+0.33) from the R-Judge/InjecAgent cluster.",
+   "rubric": [
+    "Identifies rubric-designer bias as the uncontrolled residual bias.",
+    "Says to add criterion-free evidence, such as the RQ1 factor structure separating AgentHarm from R-Judge/InjecAgent."
+   ],
+   "batch": 5,
+   "orig_id": "q174"
+  },
+  {
+   "id": "q175",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team has a two-scenario misalignment criterion and wants to add a third scenario involving a severe overt harm to improve consistency. What benefit and what cost does the paper's experience suggest?",
+   "answer": "Benefit: a larger battery tightens confidence intervals. In the paper, the interaction p moved from 0.068 to 0.048 with an essentially unchanged point estimate, and the two halves alone agree only moderately (Spearman\u2013Brown 0.70). Cost: a severe overt harm is forecast by harm-compliance measures (AgentHarm \u2192 battery +0.43). That dilutes the criterion's construct specificity toward harmful compliance. Adding the scenario post hoc is also a forking path.",
+   "rubric": [
+    "Benefit: greater precision or tighter CIs, given the moderate two-half consistency (SB 0.70) and the p-value drop with an unchanged estimate.",
+    "Cost: loss of construct specificity, because severe-harm scenarios track harmful compliance (AgentHarm \u2192 battery about +0.43)."
+   ],
+   "batch": 5,
+   "orig_id": "q175"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team will add a benchmark requiring native tool use to a mixed API panel for cross-benchmark correlations. Based on the paper's coverage, what should it expect and plan for?",
+   "answer": "Tool-use benchmarks lose models to malformed tool calls or unsupported routing: AgentHarm reached 19 models and AgentDojo only 5. Such a benchmark will likely cap the common panel, as AgentHarm limited it to n = 18. The team should plan a larger panel, because small panels produce unstable cross-benchmark correlations.",
+   "rubric": [
+    "Expects reduced coverage that limits the common panel, citing AgentHarm (n = 19, common panel 18) and/or AgentDojo (n = 5).",
+    "Says to plan for enough models, because small panels give unstable correlations."
+   ],
+   "batch": 5,
+   "orig_id": "q176"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team builds an organization-level comparison of safety and wants to know which statistical evidence in the paper actually carries organization claims: the within-organization capability slopes or the between-organization permutation test. Which should it rely on, and why?",
+   "answer": "It should rely on the between-organization permutation test on capability-residualized safety ranks. The within-organization slopes rest on only 4\u20138 models per organization, are sign-heterogeneous, and are distorted by range restriction such as Anthropic's ceiling. The permutation test was also checked for Type-I calibration.",
+   "rubric": [
+    "Chooses the between-organization permutation test.",
+    "Reason: within-organization slopes rest on very small n (4\u20138), vary in sign, and suffer range restriction, while the permutation test was calibration-checked."
+   ],
+   "batch": 5,
+   "orig_id": "q177"
+  },
+  {
+   "id": "q178",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the specificity\u2013MMLU correlation had stayed near 0.85 at n = 20 instead of falling to +0.16, which RQ2 conclusion would lose its support?",
+   "answer": "The conclusion that the capability confound depends on the reported metric would lose support. Specificity would then be as capability-laden as balanced accuracy (+0.71) and F1 (+0.76). The confound would look like a property of R-Judge as a whole rather than of particular metrics.",
+   "rubric": [
+    "Names the claim that the capability confound is metric-dependent, not a property of the benchmark as a whole.",
+    "Reason: all R-Judge metrics, including specificity, would then correlate strongly with capability."
+   ],
+   "batch": 5,
+   "orig_id": "q178"
+  },
+  {
+   "id": "q179",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If both blinded coding rounds had placed the misalignment criterion under risk recognition 7/7, which exploratory result would gain interpretive support, and would it stop being exploratory?",
+   "answer": "The R-Judge/InjecAgent\u2013misalignment association would gain a construct-matching rationale: risk-recognition predictors would line up with a risk-recognition criterion. It would remain exploratory, because power is about 0.35, it fails Bonferroni, and the pre-specified prediction named AgentHarm.",
+   "rubric": [
+    "Names the R-Judge/InjecAgent\u2013misalignment association as gaining construct-matching support.",
+    "Says it would still be exploratory because of low power, failure of Bonferroni correction, and/or not being the pre-specified prediction."
+   ],
+   "batch": 5,
+   "orig_id": "q179"
+  },
+  {
+   "id": "q180",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If AgentHarm's association with the three-scenario battery had been near zero instead of +0.43, which argument for keeping blackmail+leaking as the primary misalignment criterion would lose force?",
+   "answer": "The construct-dilution argument would lose force. It holds that the murder scenario is a severe harm that harm-compliance measures forecast, so adding it pulls the criterion toward harmful compliance. Without that association, this reason to keep blackmail+leaking primary would weaken. The forking-path concern about a post-hoc addition would remain.",
+   "rubric": [
+    "Identifies the dilution of construct specificity (murder being forecast by harm compliance) as the weakened argument.",
+    "Notes that the post-hoc or forking-path objection would still stand."
+   ],
+   "batch": 5,
+   "orig_id": "q180"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the jailbreak criterion's split-half consistency (resampled by base prompt) had been only about 0.5, would the observed AgentHarm\u2013jailbreak partial of +0.72 be easier or harder to explain, and why?",
+   "answer": "Harder. The paper notes that measurement error attenuates partial relationships instead of inflating them in a predictable direction. A strong +0.72 partial on a criterion that unreliable would be surprising, because noise would cap how large the observed association could be.",
+   "rubric": [
+    "Says the +0.72 would be harder to explain or surprising.",
+    "Reason: unreliable measurement attenuates correlations, so a low-consistency criterion would be expected to show a weaker association."
+   ],
+   "batch": 5,
+   "orig_id": "q181"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If Horn's parallel analysis had retained a factor under the Spearman PCA as well, would the paper's treatment of PC1 as corroboration only change?",
+   "answer": "Largely no. One reason for caution, sensitivity to the correlation convention, would be removed. The median between-benchmark correlation would still be only 0.22, though, and the firm RQ1 result would remain the correlation-free ranking disagreement in Table 1. PC1 would still be supporting rather than primary evidence.",
+   "rubric": [
+    "Says the factor would likely still be treated as corroborative.",
+    "Reason: the weak median between-benchmark correlation (0.22) remains, and Table 1's disagreement remains the primary RQ1 evidence."
+   ],
+   "batch": 5,
+   "orig_id": "q182"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If misalignment safety had correlated strongly and positively with over-refusal on benign XSTest prompts, which reading of the negative capability\u2013misalignment correlation would gain ground?",
+   "answer": "The reading that less capable models score as 'safer' in the scenario because they refuse or disengage broadly, not because they make better choices about harmful autonomous actions, would gain ground. Part of the crossover's misalignment arm would then reflect blanket refusal rather than safety.",
+   "rubric": [
+    "Names the blanket-refusal or disengagement explanation for why lower-capability models appear safer.",
+    "Says this would undermine reading misalignment safety as genuine avoidance of harmful actions."
+   ],
+   "batch": 5,
+   "orig_id": "q183"
+  },
+  {
+   "id": "q184",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that, within a given developer, capability relates to misalignment safety and jailbreak safety in the same direction? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Within Qwen, the capability\u2192safety slope is \u22120.90 for misalignment but +0.80 for jailbreak, so the directions are opposite. This rests on only n = 5 per organization.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites Qwen's opposite-signed slopes (\u22120.90 misalignment vs +0.80 jailbreak), optionally noting the small within-organization n."
+   ],
+   "batch": 5,
+   "orig_id": "q184"
+  },
+  {
+   "id": "q185",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that more capable models refuse overtly harmful prompts less often? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Capability's correlation with refusal on XSTest's unsafe subset is \u22120.32 and not significant. That subset is near ceiling: every model refuses 83\u2013100%, with SD 4.5, which leaves little variance to detect an effect.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the non-significant \u22120.32 and the ceiling or limited variance of the unsafe subset."
+   ],
+   "batch": 5,
+   "orig_id": "q185"
+  },
+  {
+   "id": "q186",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the capability\u2013misalignment relationship among the 2026-only models differs from that of the original panel? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The 2026-only models give \u03c1 = +0.07 against the original \u22120.44, but the independent Fisher z test gives p = 0.12. The nested-bootstrap change (\u0394\u03c1 = +0.27) also has a CI that includes zero.",
+   "rubric": [
+    "Answers not settled.",
+    "Cites the non-significant difference tests (Fisher z p = 0.12 and/or a nested-bootstrap CI including zero)."
+   ],
+   "batch": 5,
+   "orig_id": "q186"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Do the paper's data show that the lowest-capability models score worst on the audited safety benchmarks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. In Table 1, Llama-3.1-8B (GPQA 30.4) has the highest AgentHarm safety (0.89). Mistral-Nemo, with the lowest GPQA (28.0), has a high R-Judge specificity of 0.80. Claude-3-Haiku (GPQA 33.3) scores 0.81 on AgentHarm.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites at least one low-capability model that scores high on a safety benchmark (for example Llama-3.1-8B on AgentHarm or Mistral-Nemo on specificity)."
+   ],
+   "batch": 5,
+   "orig_id": "q187"
+  },
+  {
+   "id": "q188",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the capability crossover extends to multi-turn, tool-loop safety outcomes? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The only multi-turn tool-loop criterion is \u03c4\u00b2 task success. Both safety outcomes, misalignment and jailbreak, are single-turn or scenario-based, so no multi-turn safety outcome was tested.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the safety criteria are single-turn or scenario-based, and only the task-success criterion uses a multi-turn tool loop."
+   ],
+   "batch": 5,
+   "orig_id": "q188"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the size of AgentHarm's capability-controlled association with jailbreak safety is independent of which jailbreak template is used? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The per-template partials differ substantially: AIM +0.44, refusal-suppression +0.70, prefix-injection +0.62. The single-AIM criterion gives +0.50, against +0.72 for the three-template average.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the template-dependent partials (for example AIM +0.44 vs refusal-suppression +0.70, or single-AIM +0.50 vs averaged +0.72)."
+   ],
+   "batch": 5,
+   "orig_id": "q189"
+  },
+  {
+   "id": "q190",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p1",
+   "question": "If the misalignment organization-group permutation p-value were doubled as a worst-case calibration correction, would it still fall below 0.005?",
+   "answer": "No. The misalignment permutation p is 0.004. Doubled, it becomes 0.008, which is above 0.005.",
+   "rubric": [
+    "Answers no.",
+    "Shows that 0.004 \u00d7 2 = 0.008 > 0.005."
+   ],
+   "batch": 5,
+   "orig_id": "q190"
+  },
+  {
+   "id": "q191",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b5-p1",
+   "question": "If the jailbreak organization-group permutation p-value were doubled as a worst-case calibration correction, would it still fall below 0.005?",
+   "answer": "Yes. The jailbreak permutation p is below 0.001. Doubled, it stays below 0.002, which is under 0.005.",
+   "rubric": [
+    "Answers yes.",
+    "Shows that doubling p < 0.001 gives less than 0.002, below 0.005."
+   ],
+   "batch": 5,
+   "orig_id": "q191"
+  },
+  {
+   "id": "q192",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p2",
+   "question": "With the positive and negative controls passing, would the pre-specified decision rule permit interpreting the factor structure if PC1 explained 38% of variance but controlling capability reduced the median pairwise partial |\u03c1| by 0.20?",
+   "answer": "Yes. The rule requires first-factor variance of at least 40% OR a reduction of at least 0.15 from controlling capability, with both controls passing. A 0.20 reduction satisfies the second branch.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: the rule is a disjunction, and a reduction of 0.20 meets the at-least-0.15 branch even though variance is below 40%."
+   ],
+   "batch": 5,
+   "orig_id": "q192"
+  },
+  {
+   "id": "q193",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p2",
+   "question": "With the positive and negative controls passing, would the pre-specified decision rule permit interpreting the factor structure if PC1 explained 38% of variance and controlling capability reduced the median pairwise partial |\u03c1| by 0.10?",
+   "answer": "No. Neither branch is met. Variance of 38% falls below the 40% threshold, and a reduction of 0.10 falls below the 0.15 threshold.",
+   "rubric": [
+    "Answers no.",
+    "Reason: both conditions fail (38% < 40% and 0.10 < 0.15)."
+   ],
+   "batch": 5,
+   "orig_id": "q193"
+  },
+  {
+   "id": "q194",
+   "type": "counterfactual",
+   "claims": [
+    "c7"
+   ],
+   "pair": "b5-p3",
+   "question": "Would the R-Judge\u2013misalignment partial computed under the classic Pearson-on-rank-residuals convention exceed the minimum detectable effect the paper gives for n = 18?",
+   "answer": "No. Under the classic convention the partial is +0.49, below the minimum detectable effect of 0.62 at n = 18.",
+   "rubric": [
+    "Answers no.",
+    "Compares +0.49 with the minimum detectable effect of 0.62."
+   ],
+   "batch": 5,
+   "orig_id": "q194"
+  },
+  {
+   "id": "q195",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": "b5-p3",
+   "question": "Would the AgentHarm\u2013jailbreak partial computed with the swapped (Gemini) refusal grader exceed the minimum detectable effect the paper gives for n = 18?",
+   "answer": "Yes. With the swapped grader the partial is +0.66, above the minimum detectable effect of 0.62.",
+   "rubric": [
+    "Answers yes.",
+    "Compares +0.66 with the minimum detectable effect of 0.62."
+   ],
+   "batch": 5,
+   "orig_id": "q195"
+  },
+  {
+   "id": "q196",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": "b5-p4",
+   "question": "In the blinded three-category coding round with a task-success distractor, would the majority of coders place the misalignment criterion in the same construct category as AgentHarm?",
+   "answer": "Yes. In that round the misalignment criterion maps to harm blocking 6/7, the same category AgentHarm receives 7/7.",
+   "rubric": [
+    "Answers yes.",
+    "Cites misalignment mapped to harm blocking (6/7), matching AgentHarm."
+   ],
+   "batch": 5,
+   "orig_id": "q196"
+  },
+  {
+   "id": "q197",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c7"
+   ],
+   "pair": "b5-p4",
+   "question": "In the separate two-way blinded coding round, would the majority of coders place the misalignment criterion in the same construct category as AgentHarm?",
+   "answer": "No. In the two-way round the misalignment criterion maps to risk recognition 6/7, whereas AgentHarm is harm blocking.",
+   "rubric": [
+    "Answers no.",
+    "Cites misalignment mapped to risk recognition (6/7), unlike AgentHarm's harm blocking."
+   ],
+   "batch": 5,
+   "orig_id": "q197"
+  }
+ ],
+ "rejected": [],
+ "types": {
+  "failure": 31,
+  "why": 31,
+  "counterfactual": 40,
+  "transfer": 32,
+  "connect": 32,
+  "scope": 31
+ }
+}

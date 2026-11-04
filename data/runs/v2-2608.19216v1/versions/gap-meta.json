@@ -1,0 +1,156 @@
+{
+ "paper": "2608.19216v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "insight": {
+  "insight": "Control protocols carry hidden access assumptions: each one presupposes a specific bundle of access across the data, model, infrastructure and interaction layers. So for a deployer that does not own the model, which protocols can actually run depends on what it can observe, log, intercept, pin and audit. Access is therefore a safety condition, separate from protocol effectiveness, and missing access must be paid for through contracts, architecture, residual risk or reduced scope (the sovereignty discount cost).",
+  "dependent_results": [
+   "Gateway separates detection from prevention: average catastrophic failure was 5.53% without a pre-execution gateway and 3.13% with one; intervention success was 0.47% without a gateway and 39.52% with one (5.2 Gateway and logging).",
+   "Logging drives reconstructability: diagnosis success was 0.00% with no I/O logs, 37.41% with partial logs and 78.57% with complete logs; failure was 6.17%, 5.04% and 3.41% respectively (5.2 Logging improves reconstructability).",
+   "Model-side access drives diagnosis: diagnosis success was 50.86% with no trace access, 74.69% with limited access and 100% with oracle access (by construction); version control gave 5.31% unpinned, 83.00% notified and 99.87% pinned (5.3).",
+   "No protocol dominates: scope restriction had the lowest failure (0.50%) but cut task success to 60.06%; resampling was next at 3.49%; several other protocols clustered near 4.0% (5.4).",
+   "Restricted tool scope cut failure from 4.48% to 0.60%, while task success fell from 84.51% to 60.06%; the paper reads this as a sovereignty discount paid in lost usefulness (5.5).",
+   "Reachability of \u22641% failure with \u226575% usefulness was 90% of access profiles for the honest agent, 40% for the careless agent and 35% for the stealthy access-aware agent (5.5, 5.6).",
+   "Bounded sovereignty shifts cost rather than simply raising it: some bounded profiles hit loose targets more cheaply by restricting scope or relying on a benign agent (5.6).",
+   "Under API-only access the feasible set collapses toward output-level protocols, which depend on complete logging and an owned gateway; internal-trace protocols are infeasible, and these are the ones most relevant to deceptive or systemic failures (3.2, 6.2, 7.1)."
+  ],
+  "key_definitions": [
+   "Sovereignty: technical and contractual access sufficient to independently verify or intervene on an AI system without the vendor's ongoing discretionary cooperation; this is distinct from territorial sovereignty (3.1).",
+   "Sovereignty and control are orthogonal: sovereignty is an access condition, control is a protocol (3.1).",
+   "Four-layer typology (3.1): data, model, infrastructure and interaction sovereignty. Interaction sovereignty covers prompts, outputs, tool calls, logs, traces and pre-execution intervention points.",
+   "Bounded sovereignty: partial access across the four layers (Abstract, 8).",
+   "Control tax: the operational and financial cost of integrating control into AI pipelines, following Terekhov et al. 2025 (3.1).",
+   "Two-layer control problem (1.2): Layer 1 is protocol effectiveness given access; Layer 2 is access feasibility.",
+   "Sovereignty discount cost: the extra expenditure, delay, residual risk or usefulness loss needed to approximate a protocol whose required access is missing. Realised control tax = instrumented-control cost + sovereignty discount cost, and the discount is not always finite (3.3).",
+   "Sovereignty-discount proxy: the minimum cost to reach a target failure rate under bounded access, minus the minimum cost under full instrumentation. A strict variant also requires \u226575% task success (4.3).",
+   "Experimental access factors (4.2): I/O logs, tool-call logs, gateway, trace access, model-version control, vendor support and tool scope, combined into 20 fractional-factorial access profiles.",
+   "Diagnosis success is evidence-based: a failure counts as diagnosable only if the evidence available under the access profile is enough to reconstruct it (4.3).",
+   "Catastrophic-action classes C1\u2013C4 (4.1, 6.1): incorrect hold or release, systematic mis-triage, sensitive-data exposure, and settlement-critical action.",
+   "Synthetic agents: honest, careless and stealthy access-aware (4.2)."
+  ],
+  "reasoning_steps": [
+   "Many regulated deployers in AI-importing jurisdictions consume models through APIs and lack weights, traces, serving-stack visibility and update control (1.1, 3.1 access typology table).",
+   "The protocol-by-layer matrix derives each canonical protocol's binding access layers from its definition and shows which protocols survive API-only access (3.2).",
+   "Detection without a pre-execution intercept is audit, not prevention, so logging and the gateway are the load-bearing interaction-layer conditions (3.2).",
+   "Substituting for missing access through contracts, architecture, capacity or scope restriction is a distinct cost component: the sovereignty discount (3.3, 6.3).",
+   "The typology is operationalised as seven manipulable access factors, crossed with 10 protocols, 3 agents, thresholds, audit budgets and seeds, giving 27,000 condition rows and 1.35M synthetic cases (4.2, 4.4).",
+   "Metrics separate prevention (intervention success, failure rate), diagnosis (evidence-based reconstruction), usefulness (task success) and cost proxies, which yields three penalties: prevention, diagnosis and usefulness (4.3, 5.1).",
+   "Comparing profiles that differ in one factor isolates each factor's effect: gateway on prevention, logs on diagnosis and failure, traces and version control on diagnosis, scope on the safety-usefulness trade-off (5.2\u20135.5).",
+   "A strict joint safety-plus-usefulness target prevents counting usefulness loss as free safety, which reveals cost-shifting (4.3, 5.6).",
+   "Applying the access audit to a payments operator shows output monitoring and gateway-based defer-to-trusted are executable, while trace-based protocols are infeasible. Hence bounded control is real but has a ceiling, and the paper recommends that protocols state their access assumptions (6.1\u20136.2, 7.1, 8)."
+  ]
+ },
+ "insight_call": "63c948e2d37f44ba7cd9cb87efe6ed7aa6604201ac66f8b508e8a5452178b234",
+ "chars": {
+  "orig": 58835,
+  "rem": 61372,
+  "imp": 48430
+ },
+ "versions": {
+  "rem": {
+   "tries": [
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "c8f9c510e5a35a48a8ed9a115afffcd258317852d6b999661d5b42a1240c77a4",
+     "finish": "stop",
+     "cost": 0.519872,
+     "chars": 61372,
+     "ratio": 1.043,
+     "same_sections": true,
+     "missing": [
+      "35",
+      "40",
+      "90",
+      "4.0",
+      "0.00",
+      "0.47",
+      "0.50",
+      "0.60",
+      "0.98",
+      "3.13",
+      "3.41",
+      "3.49",
+      "4.47",
+      "4.48",
+      "5.04",
+      "5.31",
+      "5.53",
+      "6.17",
+      "6.82",
+      "37.41",
+      "39.52",
+      "50.86",
+      "60.06",
+      "74.69",
+      "78.57",
+      "83.00",
+      "84.51",
+      "99.87",
+      "100.00"
+     ],
+     "pass": true
+    }
+   ],
+   "used_try": 0,
+   "missing_vs_original": [
+    "35",
+    "40",
+    "90",
+    "4.0",
+    "0.00",
+    "0.47",
+    "0.50",
+    "0.60",
+    "0.98",
+    "3.13",
+    "3.41",
+    "3.49",
+    "4.47",
+    "4.48",
+    "5.04",
+    "5.31",
+    "5.53",
+    "6.17",
+    "6.82",
+    "37.41",
+    "39.52",
+    "50.86",
+    "60.06",
+    "74.69",
+    "78.57",
+    "83.00",
+    "84.51",
+    "99.87",
+    "100.00"
+   ]
+  },
+  "imp": {
+   "tries": [
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "3d51a0327078e346327227990a31ac300a18a7a1284f0a9f827abecf32deb23f",
+     "finish": "stop",
+     "cost": 0.44398,
+     "chars": 45656,
+     "ratio": 0.776,
+     "same_sections": true,
+     "missing": [],
+     "pass": false
+    },
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "64290cb095abbf4801c615ad922159a42387f85ebc1d3a75523724a2a8c7d0f6",
+     "finish": "stop",
+     "cost": 0.43544,
+     "chars": 48430,
+     "ratio": 0.823,
+     "same_sections": true,
+     "missing": [],
+     "pass": true
+    }
+   ],
+   "used_try": 1,
+   "missing_vs_original": []
+  }
+ }
+}

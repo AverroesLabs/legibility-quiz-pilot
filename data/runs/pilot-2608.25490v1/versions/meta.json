@@ -1,0 +1,38 @@
+{
+ "paper": "2608.25490v1",
+ "quiz": "quiz-claude-opus-5.5-1-screened.json",
+ "section": "s10",
+ "title": "Appendix C Extended Results and Ablations",
+ "eligible": [
+  "s3",
+  "s4",
+  "s5",
+  "s6",
+  "s8",
+  "s9",
+  "s10"
+ ],
+ "rewriter": "moonshotai/kimi-k3",
+ "prompt_version": "p2",
+ "call": "992fe7ea111d34470b1077e4cdc3cef081461e7995b3e7c6bb289ed30d5f62bd",
+ "finish": "stop",
+ "chars_before": 9414,
+ "chars_after": 9906,
+ "items_tagged": [
+  "q6",
+  "q9",
+  "q10",
+  "q11",
+  "q12",
+  "q14",
+  "q17",
+  "q18",
+  "q21",
+  "q22",
+  "q23",
+  "q25",
+  "q26",
+  "q27",
+  "q28"
+ ]
+}

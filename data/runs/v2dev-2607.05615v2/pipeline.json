@@ -1,0 +1,18 @@
+{
+ "paper": "2607.05615v2",
+ "status": "done",
+ "error": null,
+ "finished": "2026-11-03T22:46:47Z",
+ "seconds": 3,
+ "logged_cost": {
+  "glossary": 0.0928,
+  "obf": 10.3276,
+  "comp": 3.8261,
+  "write_v2": 4.8851,
+  "filter_retrieval": 1.1315,
+  "grade": 0.9858,
+  "filter_nopaper": 1.6594,
+  "filter_withpaper": 1.0797
+ },
+ "note": "logged_cost excludes failed calls and includes any earlier runs in this directory"
+}

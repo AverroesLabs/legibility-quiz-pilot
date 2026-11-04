@@ -1,0 +1,32 @@
+{
+ "terms": [
+  "Factorized instance x_{h,t,v,c} = (L(h,t,c), V(h,v)). The instruction text depends on intent h, framing t and carrier c; the image depends on intent h and visual semantics v (3.1 Factorized Design).",
+  "Harmful intent: an intent-level behavioral seed (272 total, 9 domains, 18 scenarios), kept fixed while the contextual factors vary (3.2; A.1).",
+  "Prompt framing: 6 templates (academic, system, story, code, structured, safety-paradox) that change the linguistic presentation while preserving intent (3.3; A.2).",
+  "Visual semantics: 5 task-relevant image conditions (danger, scenario, professional role, identity credential, authorization document), plus control conditions (no image, blank, noise, nature) used in the ablation (3.4; A.3).",
+  "Instruction carrier: TEXT (instruction given directly as text) vs OCR (instruction rendered inside an image) (3.5; A.4).",
+  "ASR: the fraction of responses with judge harmfulness score s \u2265 4 on a 1\u20135 rubric, where 4 means actionable harmful assistance (4.2; Table 7).",
+  "CASR = N_success / (N \u2212 N_mismatch). Mismatch covers OCR recognition failures, irrelevant responses and misinterpretation of the intent (4.2).",
+  "\u0394 factor score: the range of ASR across the configurations of a given factor for a given model (Table 4, 5.3)."
+ ],
+ "orig": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "imp2": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ]
+}

@@ -1,0 +1,589 @@
+{
+ "claims": [
+  {
+   "id": "c1",
+   "text": "The paper argues that a node's importance and its functional role are codependent. Circuit discovery and functional interpretation should therefore be solved jointly rather than as two sequential stages. Doing so faces two challenges: role labels in prior work are node- and task-specific, and they are assigned subjectively.",
+   "sections": [
+    "s0",
+    "s1",
+    "s5"
+   ],
+   "depends_on": []
+  },
+  {
+   "id": "c2",
+   "text": "Node behavior is abstracted into two task-agnostic computational roles: functional nodes, which transform their inputs, and passthrough nodes, which relocate information with little change. The dichotomy describes how a node processes information, not what content it processes. The specific roles in the IOI and Acronym circuits map consistently onto it.",
+   "sections": [
+    "s1",
+    "s2"
+   ],
+   "depends_on": [
+    "c1"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "Each node carries three learnable coefficients (unimportant, passthrough, functional) that should sum to one. A node is a circuit candidate if c_p + c_f > c_u. The discovery stage minimizes an \u03b1-weighted mix of KL divergence to the full model and cross-entropy on the true answer. Hard argmax assignments are used only at evaluation.",
+   "sections": [
+    "s3"
+   ],
+   "depends_on": [
+    "c1",
+    "c2"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Roles are assigned with a quantitative FI metric: the normalized Frobenius change in off-diagonal token-wise cosine similarity between a node's input and its output. The classification loss rewards c_f in proportion to FI and rewards c_p in inverse proportion to FI.",
+   "sections": [
+    "s3"
+   ],
+   "depends_on": [
+    "c2",
+    "c3"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "Training uses a regularizer with confidence, validity and sparsity terms. A warmup phase runs the discovery objective alone. After warmup, training alternates between one discovery step and k classification steps, so importance and role influence each other in both directions.",
+   "sections": [
+    "s3",
+    "s4"
+   ],
+   "depends_on": [
+    "c3",
+    "c4"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Evaluation ablates the discovered circuit, so a more negative accuracy drop means better circuit discovery. S\u00b3martCirc achieves the largest accuracy drop and logit difference across GPT-2, Llama and Qwen on both tasks. It does not always find the smallest circuit, and it runs much faster than patching methods.",
+   "sections": [
+    "s4",
+    "s7"
+   ],
+   "depends_on": [
+    "c3",
+    "c5"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "S\u00b3martCirc recovers a larger share of the human-verified IOI circuit than most baselines; only Activation Patching is comparable. It recovers 4 of the 8 Acronym circuit nodes, with role labels matching the Figure 1 mapping. Disagreements on heads 8.11 and 10.10 are attributed to those heads being multi-functional.",
+   "sections": [
+    "s4",
+    "s8"
+   ],
+   "depends_on": [
+    "c2",
+    "c4",
+    "c6"
+   ]
+  },
+  {
+   "id": "c8",
+   "text": "Parameter and ablation studies show three things. First, \u03b1=0.75 is best for GPT-2 IOI, and dropping the cross-entropy term (\u03b1=1) degrades performance sharply. Second, performance improves with k up to about 6. Third, removing warmup or replacing alternation with discovery-first or interpretation-first ordering hurts; discovery-first is worst.",
+   "sections": [
+    "s4"
+   ],
+   "depends_on": [
+    "c3",
+    "c5"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "q1",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s1",
+    "s2"
+   ],
+   "question": "Suppose S\u00b3martCirc's two general roles were replaced by the fine-grained IOI role labels from Wang et al. (e.g., S-inhibition head, name mover head). Which of the paper's two stated challenges would this reintroduce, and why would the same objective then not carry over to the Acronym task?",
+   "answer": "It would reintroduce the first challenge, node-specific interpretations. Those labels are tied to particular nodes in the IOI task and give no shared abstraction. The Acronym circuit has different roles, such as letter movers and bridge heads, so the IOI labels would not apply to it.",
+   "rubric": [
+    "Identifies the node-specific (task-bound) interpretation challenge",
+    "Explains that IOI-specific labels do not exist or apply in the Acronym circuit, so there is no general abstraction shared across tasks"
+   ]
+  },
+  {
+   "id": "q2",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s1",
+    "s3"
+   ],
+   "question": "The paper claims role information should influence which nodes are deemed important, not just the reverse. Given how S\u00b3martCirc decides whether a node is a candidate, explain concretely how a classification-stage update can change a node's importance status.",
+   "answer": "Importance is decided by whether c_p + c_f exceeds c_u. The classification loss directly changes c_p and c_f, so a classification update can raise or lower that sum relative to c_u. This can move a node into or out of the candidate set used by the next discovery step.",
+   "rubric": [
+    "States that the candidate criterion compares c_p + c_f against c_u",
+    "Notes that the classification stage updates c_p and c_f, which therefore can flip importance status across alternating steps"
+   ]
+  },
+  {
+   "id": "q3",
+   "claim": "c1",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "textbase",
+   "sections": [
+    "s1",
+    "s3"
+   ],
+   "question": "Which specific component of S\u00b3martCirc is the paper's answer to its second challenge (subjective functional roles)? What measurable quantity does that component compute, which lets roles enter an optimization objective?",
+   "answer": "The FI metric addresses the second challenge. It measures how much the pairwise token-wise similarity structure changes between a node's input and its output activations. Because this is a numeric quantity computed from activations, it can be placed directly in the classification loss instead of relying on human judgment.",
+   "rubric": [
+    "Names the FI (functional interpretation) metric",
+    "Says FI measures the change in token-wise similarity between a node's input and output",
+    "Notes that being numeric and computed from activations lets it be used in the loss rather than requiring human judgment"
+   ]
+  },
+  {
+   "id": "q4",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s2"
+   ],
+   "question": "Under the paper's mapping from node-specific roles to its two general roles, how would an Acronym-circuit bridge head and an IOI name mover head each be classified, and why?",
+   "answer": "The bridge head is passthrough because it propagates letter information downstream. The name mover head is functional because it transforms information to selectively amplify specific names in the output logits.",
+   "rubric": [
+    "Bridge head is labeled passthrough",
+    "Name mover head is labeled functional",
+    "Justification: bridge heads propagate information, while name movers transform it to amplify specific outputs"
+   ]
+  },
+  {
+   "id": "q5",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s2"
+   ],
+   "question": "Previous token heads appear in both circuits the paper examines. Under the paper's dichotomy, do they get the same general label in both tasks? What does this illustrate about the dichotomy?",
+   "answer": "Yes, they are passthrough in both circuits, because they write or propagate previous-token information with little transformation. This holds even though the content differs (names versus letters). It illustrates that the dichotomy classifies how a node operates on information rather than what information it carries, which is what lets the roles generalize across tasks.",
+   "rubric": [
+    "States that previous token heads are passthrough in both tasks",
+    "Explains that the dichotomy depends on how a node processes information rather than its content, enabling cross-task generalization"
+   ]
+  },
+  {
+   "id": "q6",
+   "claim": "c2",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s2",
+    "s3"
+   ],
+   "question": "A reader argues that IOI S-inhibition heads must be functional nodes in the paper's dichotomy because they strongly affect the model's final answer. Why is this reasoning inconsistent with how the paper defines and assigns roles?",
+   "answer": "Affecting the answer bears on a node's importance, which the paper models with a separate coefficient. The role depends only on whether the node transforms or merely relocates information. The paper classifies S-inhibition heads as passthrough because they route subject information downstream.",
+   "rubric": [
+    "States that S-inhibition heads are passthrough in the paper",
+    "Explains that influence on the answer reflects importance (c_u versus c_p + c_f), whereas the role reflects transforming versus relocating information"
+   ]
+  },
+  {
+   "id": "q7",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "A node ends training with coefficients c_u = 0.4, c_p = 0.35, c_f = 0.25. Is it a candidate circuit node under S\u00b3martCirc's selection rule? What label would the paper's evaluation-time hard assignment (Eq. 1) give it?",
+   "answer": "It is a candidate during training, because c_p + c_f = 0.6 > 0.4. However, Eq. 1 takes the argmax over the three individual coefficients, and c_u = 0.4 is the largest, so the hard assignment labels it unimportant. The two rules therefore disagree for this node.",
+   "rubric": [
+    "Computes c_p + c_f = 0.6 > 0.4, so the node is a candidate",
+    "Notes that the argmax over individual coefficients picks c_u, giving the label unimportant (the rules disagree)"
+   ]
+  },
+  {
+   "id": "q8",
+   "claim": "c3",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "If S\u00b3martCirc's discovery objective (Eq. 2) were run with \u03b1 = 0, what would the objective reduce to? Which of its two stated goals would no longer be enforced?",
+   "answer": "With \u03b1 = 0 the KL term vanishes, leaving only the cross-entropy on the ground-truth token. The circuit would still be pushed to give correct answers, but it would no longer be pushed to faithfully reproduce the full model's output distribution.",
+   "rubric": [
+    "States that the objective reduces to cross-entropy on the ground-truth answer only",
+    "Identifies faithfulness to the original model's distribution (the KL term) as no longer enforced"
+   ]
+  },
+  {
+   "id": "q9",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4"
+   ],
+   "question": "In the paper's evaluation, why does a better discovered circuit produce a more negative accuracy drop rather than a smaller one? Answer using how P_circ is constructed and the paper's rationale for what makes a node important.",
+   "answer": "At evaluation, P_circ masks the circuit nodes themselves. The paper defines important nodes as those whose removal substantially degrades task performance. So if the method has found the truly critical nodes, removing them should cause a large accuracy drop, which is recorded as a large negative value.",
+   "rubric": [
+    "Notes that P_circ masks or removes the circuit nodes at evaluation",
+    "Connects this to the paper's premise that removing truly important nodes should substantially degrade performance, so a larger drop means a better circuit"
+   ]
+  },
+  {
+   "id": "q10",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "Consider a node whose output preserves every off-diagonal pairwise token similarity of its input exactly. What FI value does the paper's metric give it? Which role does the paper's classification loss push it toward, and why?",
+   "answer": "FI is 0, because Sim(X) \u2212 Sim(Y) is the zero matrix. In L_class the passthrough term is \u2212c_p/FI, which becomes extremely negative as FI approaches zero, while the functional reward \u2212c_f\u00b7FI vanishes. The loss is therefore minimized by putting weight on c_p, so the node is pushed toward passthrough.",
+   "rubric": [
+    "States FI = 0 (or near zero)",
+    "Concludes the node is pushed toward passthrough",
+    "Reason: the \u2212c_p/FI term dominates as FI approaches 0, while the c_f\u00b7FI reward vanishes"
+   ]
+  },
+  {
+   "id": "q11",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s2",
+    "s3"
+   ],
+   "question": "A node's input has the model's hidden dimension, while its output has the node's own output dimension; for a feedforward neuron this is 1. Why can the paper's FI metric still compare input and output directly?",
+   "answer": "FI does not compare the activations themselves. It compares their token-by-token similarity matrices, and the Sim operator turns any T\u00d7d matrix into a T\u00d7T matrix of pairwise token similarities. Input and output similarity matrices therefore always have the same shape and can be subtracted, whatever their feature dimensions.",
+   "rubric": [
+    "States that the Sim operator maps both input and output to T\u00d7T token-similarity matrices",
+    "Concludes that the feature-dimension mismatch is irrelevant because only the T\u00d7T matrices are compared"
+   ]
+  },
+  {
+   "id": "q12",
+   "claim": "c4",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "Suppose the paper's classification loss were altered so the passthrough term also rewarded FI: each node's term becomes \u2212c_f\u00b7FI \u2212 c_p\u00b7FI. Why would this break the classification the paper intends?",
+   "answer": "The node's term would become \u2212(c_f + c_p)\u00b7FI, so the loss could no longer tell the two roles apart. Low-FI nodes would no longer be steered toward passthrough. The original inverse term \u2212c_p/FI is what makes passthrough preferred when FI is small and functional preferred when FI is large.",
+   "rubric": [
+    "Notes the altered loss depends only on c_f + c_p, so it cannot distinguish the roles",
+    "Explains that the inverse dependence of the c_p term on FI is what assigns low-FI (similarity-preserving) nodes to passthrough"
+   ]
+  },
+  {
+   "id": "q13",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s3"
+   ],
+   "question": "Using the confidence term of the paper's regularizer (Eq. 5), what penalty does a single coefficient of 0.5 incur compared with a coefficient of 1.0? What training behavior does this difference encourage?",
+   "answer": "A value of 0.5 incurs \u00bd\u00b7|0.5\u00b70.5| = 0.125, while 1.0 incurs \u00bd\u00b7|1\u00b70| = 0. The term therefore pushes coefficients toward binary values (0 or 1), giving confident assignments.",
+   "rubric": [
+    "Computes 0.125 for 0.5 and 0 for 1.0",
+    "Concludes the term encourages coefficients to become binary or confident"
+   ]
+  },
+  {
+   "id": "q14",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3"
+   ],
+   "question": "If S\u00b3martCirc's three per-node coefficients were produced by a softmax over three logits instead of being free parameters, which term of its regularizer would become redundant, and why?",
+   "answer": "The validity term would be redundant. Its only purpose is to push c_u + c_p + c_f toward 1, and a softmax output always sums to exactly one, so that term would always be zero.",
+   "rubric": [
+    "Identifies the validity term",
+    "Reason: a softmax already guarantees that the three values sum to one"
+   ]
+  },
+  {
+   "id": "q15",
+   "claim": "c5",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4"
+   ],
+   "question": "Using the paper's definition of an iteration in its parameter analysis, how many discovery steps and how many classification steps occur in 10 post-warmup iterations with k = 6? Why does the paper not begin these alternating iterations from the very first training step?",
+   "answer": "There would be 10 discovery steps and 60 classification steps. The paper first runs a warmup on the discovery objective alone, because assigning roles from randomly initialized coefficients is unreliable before a reasonable set of important nodes has been identified.",
+   "rubric": [
+    "Computes 10 discovery and 60 classification steps",
+    "Explains that warmup is used because role assignment with random initial coefficients is unreliable"
+   ]
+  },
+  {
+   "id": "q16",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "Using Table 1 for the GPT-2 Acronym setting, compare the Random baseline with S\u00b3martCirc in circuit size and accuracy drop. What does this comparison show, according to the paper's reasoning about circuit size?",
+   "answer": "Both have an average circuit size of 60.33. Random causes a 0% accuracy drop, while S\u00b3martCirc causes \u221297.50%. At equal size, S\u00b3martCirc's advantage must come from choosing the right nodes, not simply more nodes, which supports the paper's claim of more effective node selection.",
+   "rubric": [
+    "Notes the equal circuit size (about 60) with 0% versus \u221297.5% accuracy drop",
+    "Concludes that the gain reflects better node selection rather than larger circuits"
+   ]
+  },
+  {
+   "id": "q17",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4"
+   ],
+   "question": "Prune. and IBCircuit, like S\u00b3martCirc, optimize continuous masks, yet they perform far worse in Table 1. What does the paper conclude from this, and which part of S\u00b3martCirc does that conclusion credit?",
+   "answer": "The paper concludes that masking alone is not enough. Incorporating functional interpretation provides essential guidance for identifying circuit nodes, so the conclusion credits the Important Node Classification stage (the FI-based role assignment coupled into training).",
+   "rubric": [
+    "States that continuous masking by itself does not explain S\u00b3martCirc's advantage",
+    "Credits the functional-interpretation / Important Node Classification stage"
+   ]
+  },
+  {
+   "id": "q18",
+   "claim": "c6",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s7"
+   ],
+   "question": "Using the paper's runtime table, roughly how many times faster is S\u00b3martCirc than Activation Patching on Qwen IOI? What feature of how Activation Patching works, as described in the baselines, explains its cost?",
+   "answer": "About 179 times faster (187,664 s versus 1,048 s). Activation Patching ablates each node individually and re-evaluates the model, so its cost grows with the number of nodes. S\u00b3martCirc instead optimizes masks over all nodes jointly.",
+   "rubric": [
+    "Gives a ratio of roughly 170\u2013180\u00d7",
+    "Explains that Activation Patching evaluates or ablates nodes one at a time"
+   ]
+  },
+  {
+   "id": "q19",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "spot-wrong-version",
+   "level": "textbase",
+   "sections": [
+    "s2",
+    "s4"
+   ],
+   "question": "Suppose S\u00b3martCirc had labeled the Acronym circuit's Letter Mover head 11.4 as a passthrough node. Under the paper's Figure 1 mapping, would this count as agreement with the human-derived circuit? Why or why not?",
+   "answer": "No. The mapping assigns letter mover heads to the functional role, because they transform letter information to emphasize the correct output. A passthrough label would contradict it.",
+   "rubric": [
+    "Concludes this would be a disagreement",
+    "Reason: letter movers map to functional because they transform information rather than relocate it"
+   ]
+  },
+  {
+   "id": "q20",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "The paper explains why S\u00b3martCirc labels heads 8.11 and 10.10 differently from each other. If prior work had instead shown that head 10.10 acts only as a Bridge head under every intervention, would the paper's explanation still justify S\u00b3martCirc's label for 10.10? Explain.",
+   "answer": "No. The explanation relies on 10.10 being multi-functional, able to act as either a bridge or a letter mover, so S\u00b3martCirc's functional label reflects its dominant contribution. If 10.10 were purely a bridge head, the mapping would make it passthrough, and the functional label would be a genuine misclassification.",
+   "rubric": [
+    "Concludes the explanation would no longer hold (it would be a misclassification)",
+    "Reason: the justification depends on the head being multi-functional, and bridge heads map to passthrough"
+   ]
+  },
+  {
+   "id": "q21",
+   "claim": "c7",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "Activation Patching is the only baseline whose IOI circuit recovery is comparable to S\u00b3martCirc's. Using Table 1, what distinguishes S\u00b3martCirc from Activation Patching on GPT-2 IOI in accuracy drop?",
+   "answer": "S\u00b3martCirc reaches about \u221296% with a small standard deviation (about 2.9). Activation Patching reaches only about \u221271% with a large standard deviation (about 26). So even with similar recovery of known nodes, S\u00b3martCirc's circuits are more critical and more consistent.",
+   "rubric": [
+    "Cites S\u00b3martCirc at about \u221296% versus Activation Patching at about \u221271%",
+    "Notes Activation Patching's much larger variance, or concludes that S\u00b3martCirc's circuits are more critical or consistent"
+   ]
+  },
+  {
+   "id": "q22",
+   "claim": "c8",
+   "kind": "claim",
+   "form": "change-condition",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s4"
+   ],
+   "question": "According to the paper's parameter analysis, what happens to S\u00b3martCirc on GPT-2 IOI when the discovery objective is set to \u03b1 = 1.0? What does the paper infer from this about baselines?",
+   "answer": "Performance degrades sharply, because \u03b1 = 1.0 removes the cross-entropy term and leaves only the KL term. The paper infers that baselines relying mainly on output-distribution differences miss critical components, since some nodes contribute to correct behavior without causing large changes in the logits.",
+   "rubric": [
+    "States that performance degrades sharply because the cross-entropy term is removed",
+    "Explains the inference: methods relying only on output-distribution or logit differences miss components that support correct answers without large logit changes"
+   ]
+  },
+  {
+   "id": "q23",
+   "claim": "c8",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "Which of the paper's ablation variants tests whether functional information helps discovery even without alternating training? What did its result show relative to the discovery-first variant and the full method?",
+   "answer": "S\u00b3martCirc-IF (interpretation first) tests this. It clearly outperformed S\u00b3martCirc-DF, showing that role information is a useful prior for discovery. It still underperformed the full method, showing that this prior is insufficient without alternation.",
+   "rubric": [
+    "Identifies the interpretation-first (IF) variant",
+    "States it beat DF but was worse than full S\u00b3martCirc",
+    "Interprets this: functional information helps as a prior but alternation is still needed"
+   ]
+  },
+  {
+   "id": "q24",
+   "claim": "c8",
+   "kind": "claim",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4"
+   ],
+   "question": "The paper explains the failure of S\u00b3martCirc-DF in terms of the candidate set handed to classification. Given that explanation, why does alternating training specifically benefit the classification stage?",
+   "answer": "Under DF, classification receives an overly broad, noisy candidate set and cannot separate critical nodes from less relevant ones. Under alternation, classification repeatedly works on candidate sets that discovery has progressively narrowed, so its role assignments operate on more focused, less noisy sets.",
+   "rubric": [
+    "Notes that DF gives classification an overly broad, noisy candidate set",
+    "Explains that alternation lets classification work on progressively more focused candidate sets"
+   ]
+  },
+  {
+   "id": "q25",
+   "claim": "c8",
+   "kind": "claim",
+   "form": "apply-new-case",
+   "level": "textbase",
+   "sections": [
+    "s4"
+   ],
+   "question": "A practitioner runs S\u00b3martCirc on GPT-2 IOI with k = 2 to save time. Based on the paper's parameter analysis, what accuracy drop should they expect compared with k = 6? What happens to IOI circuit recovery?",
+   "answer": "They should expect roughly \u221271% instead of about \u221296%, a substantially weaker circuit. Circuit recovery would also be lower, since it increased monotonically with k.",
+   "rubric": [
+    "Expects about \u221271% at k = 2 versus about \u221296% at k = 6",
+    "Notes that circuit recovery would also be lower because it rises monotonically with k"
+   ]
+  },
+  {
+   "id": "q26",
+   "claim": "c8",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s7"
+   ],
+   "question": "The paper's parameter analysis found a best \u03b1 for GPT-2 IOI. According to the appendix hyperparameters, which Table 1 model\u2013task runs used a different \u03b1? What does this imply about the scope of the parameter-analysis finding?",
+   "answer": "Acronym with GPT-2 and IOI with Llama both used \u03b1 = 0.25, while the parameter analysis found \u03b1 = 0.75 best for GPT-2 IOI. The best balance between KL and cross-entropy therefore varies with task and model, consistent with the paper scoping its finding to 'for the IOI task'.",
+   "rubric": [
+    "Identifies GPT-2 Acronym and Llama IOI (\u03b1 = 0.25)",
+    "Concludes that the optimal \u03b1 is task- or model-dependent, so the \u03b1 = 0.75 finding does not generalize automatically"
+   ]
+  },
+  {
+   "id": "q27",
+   "claim": "c4",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s3",
+    "s6"
+   ],
+   "question": "The paper's conclusion admits that the same node may be labeled differently across tasks. Which property of how S\u00b3martCirc's role metric is computed makes this possible?",
+   "answer": "FI is computed from a node's actual input and output activations on the task's prompts, through the token-similarity matrices. Different tasks supply different tokens, and so different similarity structures, so the same node can change similarity a lot on one task and little on another, yielding different roles.",
+   "rubric": [
+    "Notes that FI is computed from task-specific input and output activations (token similarities)",
+    "Explains that different task inputs can give different FI values and hence different role labels for the same node"
+   ]
+  },
+  {
+   "id": "q28",
+   "claim": "c6",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s4",
+    "s7"
+   ],
+   "question": "On Qwen Acronym, Activation Patching matches S\u00b3martCirc's accuracy drop in Table 1. Why should that baseline result be weighted less than S\u00b3martCirc's? How does the runtime appendix explain the reason?",
+   "answer": "The Activation Patching entry is marked as coming from a single run because of the 48-hour limit, so it has no variance estimate. S\u00b3martCirc's result is averaged over three runs. The runtime table shows why: Activation Patching took roughly 169,000 seconds (about 47 hours) on Qwen Acronym, so repeated runs would not fit the time limit.",
+   "rubric": [
+    "Notes that the Activation Patching result is from only one run (asterisk) versus three runs for S\u00b3martCirc",
+    "Links this to the runtime table, which shows Activation Patching takes about 169k seconds (near the 48-hour limit) on Qwen"
+   ]
+  },
+  {
+   "id": "q29",
+   "claim": "c1",
+   "kind": "integration",
+   "form": "connect-sections",
+   "level": "situation",
+   "sections": [
+    "s1",
+    "s4"
+   ],
+   "question": "The introduction cites a view that the two MI stages can be performed in reverse order. Which ablation variant implements that reversed ordering? Does its result support treating the stages as a single jointly optimized problem rather than just reordering them?",
+   "answer": "S\u00b3martCirc-IF implements interpretation before discovery. It beat discovery-first but still underperformed full alternating S\u00b3martCirc. This supports the paper's view that reordering is not enough and the stages should be coupled bidirectionally.",
+   "rubric": [
+    "Identifies the IF (interpretation first) variant",
+    "Notes it outperforms DF but underperforms the full method",
+    "Concludes that this supports joint or alternating optimization over mere reordering"
+   ]
+  }
+ ],
+ "paper": "2609.00755v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "seed": 1,
+ "prompt_version": "p2",
+ "paper_sha256": "4e47758dbb7678eea7807f4a577a2b0022845d92935f709e2e101dfd09023e9c",
+ "problems": [
+  "c3 has 2 items"
+ ]
+}

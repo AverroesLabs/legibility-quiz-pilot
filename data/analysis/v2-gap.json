@@ -1,0 +1,2138 @@
+{
+ "papers": {
+  "2607.10112v1": {
+   "kept": 11,
+   "gated": false,
+   "versions_ok": [
+    "rem",
+    "imp"
+   ],
+   "insight": "The paper treats harmfulness detection and refusal activation as two separable properties of the residual stream. Multilingual jailbreaks then succeed because the refusal mechanism is never triggered, not because it is broken. Harmful content in lower-resource or perturbed languages is encoded in a harmfulness subspace that is geometrically misaligned with the English refusal direction (or collapses entirely), so its projection onto that direction stays below threshold. Holding semantic content fixed while varying the perturbation type (translation, code-switching, transliteration, translationese) exposes distinct routes to this failure.",
+   "chars_ratio": {
+    "rem": 1.036,
+    "imp": 0.805
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.4394,
+     "orig": 0.8939,
+     "rem": 0.4091,
+     "imp": 0.7879,
+     "drop_rem": 0.4848,
+     "drop_rem_ci95": [
+      0.2576,
+      0.7273
+     ],
+     "drop_imp": 0.1061,
+     "drop_imp_ci95": [
+      -0.0152,
+      0.2424
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.1364,
+     "orig": 0.7424,
+     "rem": 0.3939,
+     "imp": 0.6515,
+     "drop_rem": 0.3485,
+     "drop_rem_ci95": [
+      0.0455,
+      0.6515
+     ],
+     "drop_rem_minus_smart": -0.1364,
+     "drop_rem_minus_smart_ci95": [
+      -0.3939,
+      0.1515
+     ],
+     "drop_imp": 0.0909,
+     "drop_imp_ci95": [
+      -0.0758,
+      0.2576
+     ],
+     "drop_imp_minus_smart": -0.0152,
+     "drop_imp_minus_smart_ci95": [
+      -0.2727,
+      0.2121
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.197,
+     "orig": 0.6667,
+     "rem": 0.4848,
+     "imp": 0.6515,
+     "drop_rem": 0.1818,
+     "drop_rem_ci95": [
+      0.0152,
+      0.3485
+     ],
+     "drop_rem_minus_smart": -0.303,
+     "drop_rem_minus_smart_ci95": [
+      -0.5455,
+      -0.0606
+     ],
+     "drop_imp": 0.0152,
+     "drop_imp_ci95": [
+      -0.0606,
+      0.0909
+     ],
+     "drop_imp_minus_smart": -0.0909,
+     "drop_imp_minus_smart_ci95": [
+      -0.2576,
+      0.0758
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.1061,
+     "orig": 0.2273,
+     "rem": 0.2273,
+     "imp": 0.2879,
+     "drop_rem": 0.0,
+     "drop_rem_ci95": [
+      -0.1515,
+      0.1364
+     ],
+     "drop_rem_minus_smart": -0.4848,
+     "drop_rem_minus_smart_ci95": [
+      -0.7576,
+      -0.197
+     ],
+     "drop_imp": -0.0606,
+     "drop_imp_ci95": [
+      -0.1818,
+      0.0455
+     ],
+     "drop_imp_minus_smart": -0.1667,
+     "drop_imp_minus_smart_ci95": [
+      -0.3333,
+      0.0
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.4577,
+     "pass": false
+    },
+    "imp": {
+     "ratio": 0.8814,
+     "pass": false
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 4.0,
+     "openai/gpt-5.6-sol|rem": 8.667,
+     "openai/gpt-5.6-sol|imp": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 4.0,
+     "mistralai/ministral-8b-2512|imp": 3.333,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.667,
+     "meta-llama/llama-3.2-3b-instruct|imp": 5.333
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 6.333,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.0,
+     "openai/gpt-5.6-sol|rem": 5.333,
+     "openai/gpt-5.6-sol|imp": 6.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 8.0,
+     "mistralai/ministral-8b-2512|imp": 5.667,
+     "meta-llama/llama-3.2-3b-instruct|rem": 5.667,
+     "meta-llama/llama-3.2-3b-instruct|imp": 5.667
+    }
+   }
+  },
+  "2607.17117v2": {
+   "kept": 38,
+   "gated": true,
+   "versions_ok": [
+    "rem"
+   ],
+   "insight": "Standard SAE features already show temporal persistence that varies by feature. After a feature activates, the hidden state stays aligned with its decoder direction, and past activations help reconstruct later states, but only in globally coherent documents. Making this explicit with a diagonal EMA state per feature, with a learned decay coefficient \u03bb_j trained by reconstruction alone, lets the model discover a spectrum of feature timescales without predefined temporal partitions. Fast (low-\u03bb) features stay locally interpretable, while slow (high-\u03bb) features carry context.",
+   "chars_ratio": {
+    "rem": 1.095
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.4167,
+     "orig": 0.7895,
+     "rem": 0.3947,
+     "drop_rem": 0.3947,
+     "drop_rem_ci95": [
+      0.2632,
+      0.5219
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.1623,
+     "orig": 0.4912,
+     "rem": 0.2193,
+     "drop_rem": 0.2719,
+     "drop_rem_ci95": [
+      0.1667,
+      0.3816
+     ],
+     "drop_rem_minus_smart": -0.1228,
+     "drop_rem_minus_smart_ci95": [
+      -0.25,
+      0.0
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1711,
+     "orig": 0.3947,
+     "rem": 0.2237,
+     "drop_rem": 0.1711,
+     "drop_rem_ci95": [
+      0.0833,
+      0.2632
+     ],
+     "drop_rem_minus_smart": -0.2237,
+     "drop_rem_minus_smart_ci95": [
+      -0.3904,
+      -0.0526
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.0965,
+     "orig": 0.136,
+     "rem": 0.1272,
+     "drop_rem": 0.0088,
+     "drop_rem_ci95": [
+      -0.0395,
+      0.057
+     ],
+     "drop_rem_minus_smart": -0.386,
+     "drop_rem_minus_smart_ci95": [
+      -0.5175,
+      -0.2544
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.4999,
+     "pass": false
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 5.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 5.333,
+     "openai/gpt-5.6-sol|rem": 8.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 5.667,
+     "meta-llama/llama-3.2-3b-instruct|rem": 5.667
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 8.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 7.667,
+     "openai/gpt-5.6-sol|rem": 4.667,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 8.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 7.0
+    }
+   }
+  },
+  "2607.20379v2": {
+   "kept": 63,
+   "gated": true,
+   "versions_ok": [
+    "rem"
+   ],
+   "insight": "Reconstruction-based scoring cannot detect individual false claims, because its objective is indifferent among claim values that yield the same reconstruction. Faithfulness therefore cannot be fixed by improving the reader (verbalizer, reconstructor or probe). It has to be fixed by training the target model so that designated content is decodable against external ground truth. Once that holds, an independent probe can check claims against the model's internals instead of trusting the verbalizer's prose.",
+   "chars_ratio": {
+    "rem": 1.025
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3827,
+     "orig": 0.7549,
+     "rem": 0.5044,
+     "drop_rem": 0.2504,
+     "drop_rem_ci95": [
+      0.1675,
+      0.3386
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.2116,
+     "orig": 0.5608,
+     "rem": 0.3554,
+     "drop_rem": 0.2055,
+     "drop_rem_ci95": [
+      0.119,
+      0.2945
+     ],
+     "drop_rem_minus_smart": -0.045,
+     "drop_rem_minus_smart_ci95": [
+      -0.1323,
+      0.0397
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1861,
+     "orig": 0.4021,
+     "rem": 0.336,
+     "drop_rem": 0.0661,
+     "drop_rem_ci95": [
+      0.0097,
+      0.1217
+     ],
+     "drop_rem_minus_smart": -0.1843,
+     "drop_rem_minus_smart_ci95": [
+      -0.2787,
+      -0.0908
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.1032,
+     "orig": 0.1473,
+     "rem": 0.1429,
+     "drop_rem": 0.0044,
+     "drop_rem_ci95": [
+      -0.037,
+      0.0441
+     ],
+     "drop_rem_minus_smart": -0.246,
+     "drop_rem_minus_smart_ci95": [
+      -0.3474,
+      -0.1464
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.6682,
+     "pass": false
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 3.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 5.333,
+     "openai/gpt-5.6-sol|rem": 8.333,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.0
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 7.0,
+     "google/gemma-4-31b-it|orig": 9.0,
+     "mistralai/ministral-8b-2512|orig": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 5.0,
+     "openai/gpt-5.6-sol|rem": 5.333,
+     "google/gemma-4-31b-it|rem": 9.333,
+     "mistralai/ministral-8b-2512|rem": 8.333,
+     "meta-llama/llama-3.2-3b-instruct|rem": 5.333
+    }
+   }
+  },
+  "2607.28685v1": {
+   "kept": 71,
+   "gated": true,
+   "versions_ok": [
+    "rem",
+    "imp"
+   ],
+   "insight": "Treat agent-safety benchmark scores as measurements that can fail in identifiable ways, and keep three kinds of validity apart: construct (what the score measures), metric (whether the metric captures that target), and criterion (whether the score tracks held-out behavior). Test each with capability controls and different panel sizes. Viewed this way, interchangeable 'safety' scores break down. The headline metric can be gamed, cross-benchmark relationships are panel artifacts, and held-out validity depends on which outcome is chosen.",
+   "chars_ratio": {
+    "rem": 0.914,
+    "imp": 0.819
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3122,
+     "orig": 0.8341,
+     "rem": 0.4045,
+     "imp": 0.8318,
+     "drop_rem": 0.4296,
+     "drop_rem_ci95": [
+      0.3443,
+      0.5156
+     ],
+     "drop_imp": 0.0023,
+     "drop_imp_ci95": [
+      -0.0368,
+      0.0423
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.0829,
+     "orig": 0.5822,
+     "rem": 0.2316,
+     "imp": 0.5696,
+     "drop_rem": 0.3505,
+     "drop_rem_ci95": [
+      0.2621,
+      0.4374
+     ],
+     "drop_rem_minus_smart": -0.079,
+     "drop_rem_minus_smart_ci95": [
+      -0.1643,
+      0.0078
+     ],
+     "drop_imp": 0.0125,
+     "drop_imp_ci95": [
+      -0.0266,
+      0.0501
+     ],
+     "drop_imp_minus_smart": 0.0102,
+     "drop_imp_minus_smart_ci95": [
+      -0.0446,
+      0.0618
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1346,
+     "orig": 0.3474,
+     "rem": 0.2254,
+     "imp": 0.3216,
+     "drop_rem": 0.1221,
+     "drop_rem_ci95": [
+      0.061,
+      0.1831
+     ],
+     "drop_rem_minus_smart": -0.3075,
+     "drop_rem_minus_smart_ci95": [
+      -0.4014,
+      -0.2136
+     ],
+     "drop_imp": 0.0258,
+     "drop_imp_ci95": [
+      -0.0141,
+      0.0673
+     ],
+     "drop_imp_minus_smart": 0.0235,
+     "drop_imp_minus_smart_ci95": [
+      -0.029,
+      0.0767
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.0782,
+     "orig": 0.1142,
+     "rem": 0.126,
+     "imp": 0.1228,
+     "drop_rem": -0.0117,
+     "drop_rem_ci95": [
+      -0.0493,
+      0.0235
+     ],
+     "drop_rem_minus_smart": -0.4413,
+     "drop_rem_minus_smart_ci95": [
+      -0.5305,
+      -0.3529
+     ],
+     "drop_imp": -0.0086,
+     "drop_imp_ci95": [
+      -0.0415,
+      0.0235
+     ],
+     "drop_imp_minus_smart": -0.011,
+     "drop_imp_minus_smart_ci95": [
+      -0.0642,
+      0.0407
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.485,
+     "pass": false
+    },
+    "imp": {
+     "ratio": 0.9972,
+     "pass": true
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 3.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 4.0,
+     "openai/gpt-5.6-sol|rem": 9.0,
+     "openai/gpt-5.6-sol|imp": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 3.667,
+     "mistralai/ministral-8b-2512|imp": 3.333,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|imp": 4.333
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 9.0,
+     "mistralai/ministral-8b-2512|orig": 7.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 5.333,
+     "openai/gpt-5.6-sol|rem": 6.333,
+     "openai/gpt-5.6-sol|imp": 7.667,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 7.333,
+     "mistralai/ministral-8b-2512|rem": 8.0,
+     "mistralai/ministral-8b-2512|imp": 7.667,
+     "meta-llama/llama-3.2-3b-instruct|rem": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|imp": 7.0
+    }
+   }
+  },
+  "2608.13754v1": {
+   "kept": 61,
+   "gated": true,
+   "versions_ok": [
+    "rem"
+   ],
+   "insight": "A circuit's evidentiary value for a regulatory filing can be measured. A deterministic claim map turns each discovered circuit into a structured Annex IV statement. One then measures how often that statement changes across a pre-registered space of defensible analytic choices (flip rate F, modal share \u03c0*). Filing presumes a second competent analyst would reach a compatible claim, so evidence is 'filable' only if \u03c0* \u2265 1\u2212\u03b1. The study finds that circuit discovery on GPT-2/IOI fails this test, and that circuit size is a hidden outcome variable that can invert pooled statistics.",
+   "chars_ratio": {
+    "rem": 0.893
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3415,
+     "orig": 0.7787,
+     "rem": 0.429,
+     "drop_rem": 0.3497,
+     "drop_rem_ci95": [
+      0.2705,
+      0.429
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.041,
+     "orig": 0.5137,
+     "rem": 0.1175,
+     "drop_rem": 0.3962,
+     "drop_rem_ci95": [
+      0.3142,
+      0.4781
+     ],
+     "drop_rem_minus_smart": 0.0464,
+     "drop_rem_minus_smart_ci95": [
+      -0.0601,
+      0.1503
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1257,
+     "orig": 0.3388,
+     "rem": 0.1858,
+     "drop_rem": 0.153,
+     "drop_rem_ci95": [
+      0.0902,
+      0.2186
+     ],
+     "drop_rem_minus_smart": -0.1967,
+     "drop_rem_minus_smart_ci95": [
+      -0.2896,
+      -0.1066
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.1011,
+     "orig": 0.1202,
+     "rem": 0.0929,
+     "drop_rem": 0.0273,
+     "drop_rem_ci95": [
+      -0.0055,
+      0.0628
+     ],
+     "drop_rem_minus_smart": -0.3224,
+     "drop_rem_minus_smart_ci95": [
+      -0.4071,
+      -0.2377
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.5509,
+     "pass": false
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 3.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 3.667,
+     "openai/gpt-5.6-sol|rem": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 3.333,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.0
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 9.0,
+     "mistralai/ministral-8b-2512|orig": 7.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 3.333,
+     "openai/gpt-5.6-sol|rem": 5.0,
+     "google/gemma-4-31b-it|rem": 9.667,
+     "mistralai/ministral-8b-2512|rem": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.667
+    }
+   }
+  },
+  "2608.19216v1": {
+   "kept": 42,
+   "gated": true,
+   "versions_ok": [
+    "rem",
+    "imp"
+   ],
+   "insight": "Control protocols carry hidden access assumptions: each one presupposes a specific bundle of access across the data, model, infrastructure and interaction layers. So for a deployer that does not own the model, which protocols can actually run depends on what it can observe, log, intercept, pin and audit. Access is therefore a safety condition, separate from protocol effectiveness, and missing access must be paid for through contracts, architecture, residual risk or reduced scope (the sovereignty discount cost).",
+   "chars_ratio": {
+    "rem": 1.043,
+    "imp": 0.823
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.4405,
+     "orig": 0.7474,
+     "rem": 0.4286,
+     "imp": 0.7765,
+     "drop_rem": 0.3188,
+     "drop_rem_ci95": [
+      0.213,
+      0.4339
+     ],
+     "drop_imp": -0.0291,
+     "drop_imp_ci95": [
+      -0.0688,
+      0.0093
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.131,
+     "orig": 0.619,
+     "rem": 0.3016,
+     "imp": 0.623,
+     "drop_rem": 0.3175,
+     "drop_rem_ci95": [
+      0.2063,
+      0.4365
+     ],
+     "drop_rem_minus_smart": -0.0013,
+     "drop_rem_minus_smart_ci95": [
+      -0.1019,
+      0.0992
+     ],
+     "drop_imp": -0.004,
+     "drop_imp_ci95": [
+      -0.0476,
+      0.0397
+     ],
+     "drop_imp_minus_smart": 0.0251,
+     "drop_imp_minus_smart_ci95": [
+      -0.037,
+      0.0873
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.2275,
+     "orig": 0.5556,
+     "rem": 0.3519,
+     "imp": 0.4868,
+     "drop_rem": 0.2037,
+     "drop_rem_ci95": [
+      0.123,
+      0.2897
+     ],
+     "drop_rem_minus_smart": -0.1151,
+     "drop_rem_minus_smart_ci95": [
+      -0.2302,
+      -0.0093
+     ],
+     "drop_imp": 0.0688,
+     "drop_imp_ci95": [
+      0.0053,
+      0.131
+     ],
+     "drop_imp_minus_smart": 0.0979,
+     "drop_imp_minus_smart_ci95": [
+      0.0225,
+      0.172
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.1402,
+     "orig": 0.25,
+     "rem": 0.1984,
+     "imp": 0.2579,
+     "drop_rem": 0.0516,
+     "drop_rem_ci95": [
+      -0.0146,
+      0.1138
+     ],
+     "drop_rem_minus_smart": -0.2672,
+     "drop_rem_minus_smart_ci95": [
+      -0.377,
+      -0.1587
+     ],
+     "drop_imp": -0.0079,
+     "drop_imp_ci95": [
+      -0.0754,
+      0.0595
+     ],
+     "drop_imp_minus_smart": 0.0212,
+     "drop_imp_minus_smart_ci95": [
+      -0.0542,
+      0.0979
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.5735,
+     "pass": false
+    },
+    "imp": {
+     "ratio": 1.0389,
+     "pass": true
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 4.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 4.0,
+     "openai/gpt-5.6-sol|rem": 9.0,
+     "openai/gpt-5.6-sol|imp": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 3.667,
+     "mistralai/ministral-8b-2512|imp": 3.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|imp": 4.667
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 8.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.667,
+     "openai/gpt-5.6-sol|rem": 8.0,
+     "openai/gpt-5.6-sol|imp": 8.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 9.0,
+     "mistralai/ministral-8b-2512|imp": 8.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 5.667,
+     "meta-llama/llama-3.2-3b-instruct|imp": 5.333
+    }
+   }
+  },
+  "2608.25490v1": {
+   "kept": 95,
+   "gated": true,
+   "versions_ok": [
+    "rem"
+   ],
+   "insight": "Existing multimodal jailbreak benchmarks bundle four things into each fixed prompt-image instance: harmful intent, prompt framing, visual semantics and instruction carrier. Because of this, their ASR shows only aggregate vulnerability. MMJailBench factorizes instances into these four components and takes their full Cartesian product over matched intents (272\u00d76\u00d75\u00d72 = 16,320 per model). Holding the intent fixed while varying one factor at a time allows controlled comparisons that attribute vulnerability to individual factors.",
+   "chars_ratio": {
+    "rem": 0.857
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3269,
+     "orig": 0.8468,
+     "rem": 0.2877,
+     "drop_rem": 0.5591,
+     "drop_rem_ci95": [
+      0.4696,
+      0.6485
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.007,
+     "orig": 0.5708,
+     "rem": 0.107,
+     "drop_rem": 0.4637,
+     "drop_rem_ci95": [
+      0.3825,
+      0.5462
+     ],
+     "drop_rem_minus_smart": -0.0953,
+     "drop_rem_minus_smart_ci95": [
+      -0.1807,
+      -0.0094
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1602,
+     "orig": 0.3538,
+     "rem": 0.1977,
+     "drop_rem": 0.1561,
+     "drop_rem_ci95": [
+      0.1053,
+      0.207
+     ],
+     "drop_rem_minus_smart": -0.4029,
+     "drop_rem_minus_smart_ci95": [
+      -0.4965,
+      -0.3053
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.0696,
+     "orig": 0.1298,
+     "rem": 0.1251,
+     "drop_rem": 0.0047,
+     "drop_rem_ci95": [
+      -0.0281,
+      0.0368
+     ],
+     "drop_rem_minus_smart": -0.5544,
+     "drop_rem_minus_smart_ci95": [
+      -0.6427,
+      -0.4661
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.3397,
+     "pass": false
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 5.667,
+     "meta-llama/llama-3.2-3b-instruct|orig": 5.333,
+     "openai/gpt-5.6-sol|rem": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.0
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 7.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.667,
+     "openai/gpt-5.6-sol|rem": 6.667,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 8.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 8.0
+    }
+   }
+  },
+  "2608.30724v1": {
+   "kept": 85,
+   "gated": true,
+   "versions_ok": [
+    "rem",
+    "imp"
+   ],
+   "insight": "The shortcut is planted in the data rather than in the evaluation machinery. Because it appears only in the public test split and not in a held-out split generated the same way, exploiting it is optional, and the public-to-held-out performance gap gives a ground-truth signal of whether a reported gain is genuine or reward hacking. This lets the benchmark measure an agent's propensity to cheat, as opposed to forcing fabrication, with the exploit mechanism known by construction.",
+   "chars_ratio": {
+    "rem": 1.042,
+    "imp": 0.8
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3444,
+     "orig": 0.8176,
+     "rem": 0.4627,
+     "imp": 0.8046,
+     "drop_rem": 0.3549,
+     "drop_rem_ci95": [
+      0.2824,
+      0.4261
+     ],
+     "drop_imp": 0.0131,
+     "drop_imp_ci95": [
+      -0.0281,
+      0.0542
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.0745,
+     "orig": 0.4438,
+     "rem": 0.2275,
+     "imp": 0.4784,
+     "drop_rem": 0.2163,
+     "drop_rem_ci95": [
+      0.1516,
+      0.281
+     ],
+     "drop_rem_minus_smart": -0.1386,
+     "drop_rem_minus_smart_ci95": [
+      -0.215,
+      -0.0608
+     ],
+     "drop_imp": -0.0346,
+     "drop_imp_ci95": [
+      -0.0732,
+      0.0039
+     ],
+     "drop_imp_minus_smart": -0.0477,
+     "drop_imp_minus_smart_ci95": [
+      -0.1124,
+      0.015
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1935,
+     "orig": 0.3745,
+     "rem": 0.2804,
+     "imp": 0.3392,
+     "drop_rem": 0.0941,
+     "drop_rem_ci95": [
+      0.0451,
+      0.1431
+     ],
+     "drop_rem_minus_smart": -0.2608,
+     "drop_rem_minus_smart_ci95": [
+      -0.3438,
+      -0.1791
+     ],
+     "drop_imp": 0.0353,
+     "drop_imp_ci95": [
+      -0.0092,
+      0.0791
+     ],
+     "drop_imp_minus_smart": 0.0222,
+     "drop_imp_minus_smart_ci95": [
+      -0.0307,
+      0.0752
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.1222,
+     "orig": 0.1758,
+     "rem": 0.1392,
+     "imp": 0.1588,
+     "drop_rem": 0.0366,
+     "drop_rem_ci95": [
+      0.0039,
+      0.0699
+     ],
+     "drop_rem_minus_smart": -0.3183,
+     "drop_rem_minus_smart_ci95": [
+      -0.3974,
+      -0.2392
+     ],
+     "drop_imp": 0.017,
+     "drop_imp_ci95": [
+      -0.0105,
+      0.0444
+     ],
+     "drop_imp_minus_smart": 0.0039,
+     "drop_imp_minus_smart_ci95": [
+      -0.0418,
+      0.049
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.5659,
+     "pass": false
+    },
+    "imp": {
+     "ratio": 0.9841,
+     "pass": true
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 5.333,
+     "openai/gpt-5.6-sol|rem": 9.0,
+     "openai/gpt-5.6-sol|imp": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 5.0,
+     "mistralai/ministral-8b-2512|imp": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.667,
+     "meta-llama/llama-3.2-3b-instruct|imp": 4.0
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.0,
+     "openai/gpt-5.6-sol|rem": 7.0,
+     "openai/gpt-5.6-sol|imp": 8.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 7.667,
+     "mistralai/ministral-8b-2512|imp": 6.667,
+     "meta-llama/llama-3.2-3b-instruct|rem": 6.667,
+     "meta-llama/llama-3.2-3b-instruct|imp": 5.333
+    }
+   }
+  },
+  "2609.00755v1": {
+   "kept": 80,
+   "gated": true,
+   "versions_ok": [
+    "rem"
+   ],
+   "insight": "A node's importance and its functional role depend on each other, so circuit discovery and functional interpretation can be optimized jointly. This becomes possible once roles are abstracted into a task-agnostic dichotomy: functional nodes transform their input, while passthrough nodes relocate information. The dichotomy is quantified by how much a node changes pairwise token-similarity structure, which lets role assignment enter a differentiable objective that alternates with importance discovery.",
+   "chars_ratio": {
+    "rem": 1.021
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3014,
+     "orig": 0.7764,
+     "rem": 0.3715,
+     "drop_rem": 0.4049,
+     "drop_rem_ci95": [
+      0.3139,
+      0.4938
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.1646,
+     "orig": 0.4194,
+     "rem": 0.25,
+     "drop_rem": 0.1694,
+     "drop_rem_ci95": [
+      0.0965,
+      0.2417
+     ],
+     "drop_rem_minus_smart": -0.2354,
+     "drop_rem_minus_smart_ci95": [
+      -0.3208,
+      -0.1521
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1819,
+     "orig": 0.3076,
+     "rem": 0.241,
+     "drop_rem": 0.0667,
+     "drop_rem_ci95": [
+      0.0194,
+      0.1167
+     ],
+     "drop_rem_minus_smart": -0.3382,
+     "drop_rem_minus_smart_ci95": [
+      -0.4236,
+      -0.2514
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.1049,
+     "orig": 0.1778,
+     "rem": 0.1715,
+     "drop_rem": 0.0063,
+     "drop_rem_ci95": [
+      -0.0271,
+      0.0396
+     ],
+     "drop_rem_minus_smart": -0.3986,
+     "drop_rem_minus_smart_ci95": [
+      -0.5,
+      -0.2986
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.4785,
+     "pass": false
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 5.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 5.333,
+     "openai/gpt-5.6-sol|rem": 8.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 6.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 5.333
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 6.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 7.333,
+     "openai/gpt-5.6-sol|rem": 5.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "mistralai/ministral-8b-2512|rem": 8.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 7.0
+    }
+   }
+  },
+  "2609.02893v1": {
+   "kept": 53,
+   "gated": true,
+   "versions_ok": [
+    "rem",
+    "imp"
+   ],
+   "insight": "Probes fail out of distribution because of where they place their weight, not because the information is missing. The 100-PC source basis holds enough signal to separate deceptive from honest responses on every target, but a source-trained probe leans on source-specific surface directions. A small subset of source PCs that encode the honest/deceptive contrast abstractly does transfer. That subset can be partly found without target data by having an LLM judge score natural-language interpretations of each PC.",
+   "chars_ratio": {
+    "rem": 1.064,
+    "imp": 0.835
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3878,
+     "orig": 0.7453,
+     "rem": 0.4581,
+     "imp": 0.7327,
+     "drop_rem": 0.2872,
+     "drop_rem_ci95": [
+      0.1751,
+      0.3952
+     ],
+     "drop_imp": 0.0126,
+     "drop_imp_ci95": [
+      -0.0314,
+      0.0566
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.1342,
+     "orig": 0.4036,
+     "rem": 0.2956,
+     "imp": 0.4329,
+     "drop_rem": 0.108,
+     "drop_rem_ci95": [
+      0.0262,
+      0.1918
+     ],
+     "drop_rem_minus_smart": -0.1792,
+     "drop_rem_minus_smart_ci95": [
+      -0.2841,
+      -0.0713
+     ],
+     "drop_imp": -0.0294,
+     "drop_imp_ci95": [
+      -0.0765,
+      0.0157
+     ],
+     "drop_imp_minus_smart": -0.0419,
+     "drop_imp_minus_smart_ci95": [
+      -0.0996,
+      0.0157
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1887,
+     "orig": 0.3512,
+     "rem": 0.3103,
+     "imp": 0.3365,
+     "drop_rem": 0.0409,
+     "drop_rem_ci95": [
+      -0.0398,
+      0.1216
+     ],
+     "drop_rem_minus_smart": -0.2463,
+     "drop_rem_minus_smart_ci95": [
+      -0.3679,
+      -0.1195
+     ],
+     "drop_imp": 0.0147,
+     "drop_imp_ci95": [
+      -0.0283,
+      0.0587
+     ],
+     "drop_imp_minus_smart": 0.0021,
+     "drop_imp_minus_smart_ci95": [
+      -0.0577,
+      0.0629
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.1331,
+     "orig": 0.2432,
+     "rem": 0.1813,
+     "imp": 0.2013,
+     "drop_rem": 0.0618,
+     "drop_rem_ci95": [
+      0.0241,
+      0.1027
+     ],
+     "drop_rem_minus_smart": -0.2254,
+     "drop_rem_minus_smart_ci95": [
+      -0.3302,
+      -0.1164
+     ],
+     "drop_imp": 0.0419,
+     "drop_imp_ci95": [
+      0.0,
+      0.0839
+     ],
+     "drop_imp_minus_smart": 0.0294,
+     "drop_imp_minus_smart_ci95": [
+      -0.0283,
+      0.0849
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.6147,
+     "pass": false
+    },
+    "imp": {
+     "ratio": 0.9831,
+     "pass": true
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 6.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 4.667,
+     "openai/gpt-5.6-sol|rem": 7.333,
+     "openai/gpt-5.6-sol|imp": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 6.333,
+     "mistralai/ministral-8b-2512|imp": 5.667,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|imp": 4.667
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 7.667,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.667,
+     "openai/gpt-5.6-sol|rem": 5.333,
+     "openai/gpt-5.6-sol|imp": 8.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 7.667,
+     "mistralai/ministral-8b-2512|imp": 8.0,
+     "meta-llama/llama-3.2-3b-instruct|rem": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|imp": 6.667
+    }
+   }
+  },
+  "2609.30094v2": {
+   "kept": 73,
+   "gated": true,
+   "versions_ok": [
+    "rem",
+    "imp"
+   ],
+   "insight": "Topic drift inside an active conversation is not a privacy boundary. Whether a user-disclosed secret can be recovered is a behavioral question: will the model reproduce it when a later prompt asks? It is not a question of whether the secret is still in the context. In practice this is decided mainly by format-sensitive safety cues tied to the secret type. Separating drift length and persuasion level as controlled axes, and scoring with a hybrid detector plus a stability-based metric (Privacy Half-Life), shows that leakage persists across drift and is governed by secret type.",
+   "chars_ratio": {
+    "rem": 1.113,
+    "imp": 0.875
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.3288,
+     "orig": 0.8333,
+     "rem": 0.3341,
+     "imp": 0.8303,
+     "drop_rem": 0.4992,
+     "drop_rem_ci95": [
+      0.3988,
+      0.6012
+     ],
+     "drop_imp": 0.003,
+     "drop_imp_ci95": [
+      -0.0251,
+      0.032
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.0297,
+     "orig": 0.5799,
+     "rem": 0.2199,
+     "imp": 0.5449,
+     "drop_rem": 0.36,
+     "drop_rem_ci95": [
+      0.261,
+      0.4627
+     ],
+     "drop_rem_minus_smart": -0.1393,
+     "drop_rem_minus_smart_ci95": [
+      -0.2192,
+      -0.0586
+     ],
+     "drop_imp": 0.035,
+     "drop_imp_ci95": [
+      -0.0053,
+      0.0769
+     ],
+     "drop_imp_minus_smart": 0.032,
+     "drop_imp_minus_smart_ci95": [
+      -0.0167,
+      0.0822
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.1202,
+     "orig": 0.2062,
+     "rem": 0.14,
+     "imp": 0.2306,
+     "drop_rem": 0.0662,
+     "drop_rem_ci95": [
+      0.0145,
+      0.1233
+     ],
+     "drop_rem_minus_smart": -0.433,
+     "drop_rem_minus_smart_ci95": [
+      -0.5365,
+      -0.3288
+     ],
+     "drop_imp": -0.0244,
+     "drop_imp_ci95": [
+      -0.0677,
+      0.0213
+     ],
+     "drop_imp_minus_smart": -0.0274,
+     "drop_imp_minus_smart_ci95": [
+      -0.0845,
+      0.0297
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.0639,
+     "orig": 0.0807,
+     "rem": 0.0951,
+     "imp": 0.0967,
+     "drop_rem": -0.0145,
+     "drop_rem_ci95": [
+      -0.051,
+      0.0198
+     ],
+     "drop_rem_minus_smart": -0.5137,
+     "drop_rem_minus_smart_ci95": [
+      -0.6225,
+      -0.4049
+     ],
+     "drop_imp": -0.016,
+     "drop_imp_ci95": [
+      -0.0525,
+      0.0205
+     ],
+     "drop_imp_minus_smart": -0.019,
+     "drop_imp_minus_smart_ci95": [
+      -0.0647,
+      0.0259
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.4009,
+     "pass": false
+    },
+    "imp": {
+     "ratio": 0.9964,
+     "pass": true
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.333,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 6.667,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.0,
+     "openai/gpt-5.6-sol|rem": 7.667,
+     "openai/gpt-5.6-sol|imp": 9.667,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 6.0,
+     "mistralai/ministral-8b-2512|imp": 6.333,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.667,
+     "meta-llama/llama-3.2-3b-instruct|imp": 5.333
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 7.667,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.667,
+     "openai/gpt-5.6-sol|rem": 5.333,
+     "openai/gpt-5.6-sol|imp": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 8.333,
+     "mistralai/ministral-8b-2512|imp": 7.333,
+     "meta-llama/llama-3.2-3b-instruct|rem": 7.333,
+     "meta-llama/llama-3.2-3b-instruct|imp": 6.0
+    }
+   }
+  },
+  "2609.34091v1": {
+   "kept": 44,
+   "gated": true,
+   "versions_ok": [
+    "rem",
+    "imp"
+   ],
+   "insight": "A latent's sensitivity to a perturbation does not show what it represents. EEG power falls off as 1/f, so an alpha band-stop deletes far more signal energy than an equal-width sham notch. The raw alpha response therefore has to be checked against how much distortion each intervention causes, and against clean, unperturbed data, before a latent can be called an alpha feature. This reasoning yields a forked validation ladder: stages for sensitivity, distortion-controlled selectivity, specificity, and clean-data validation support a representational claim, while a separate readout-intervention stage supports a claim of task relevance.",
+   "chars_ratio": {
+    "rem": 1.08,
+    "imp": 0.903
+   },
+   "readers": {
+    "openai/gpt-5.6-sol": {
+     "none": 0.428,
+     "orig": 0.7765,
+     "rem": 0.4242,
+     "imp": 0.7538,
+     "drop_rem": 0.3523,
+     "drop_rem_ci95": [
+      0.2462,
+      0.4583
+     ],
+     "drop_imp": 0.0227,
+     "drop_imp_ci95": [
+      -0.0379,
+      0.0833
+     ]
+    },
+    "google/gemma-4-31b-it": {
+     "none": 0.1477,
+     "orig": 0.4167,
+     "rem": 0.2008,
+     "imp": 0.428,
+     "drop_rem": 0.2159,
+     "drop_rem_ci95": [
+      0.0947,
+      0.3371
+     ],
+     "drop_rem_minus_smart": -0.1364,
+     "drop_rem_minus_smart_ci95": [
+      -0.2614,
+      -0.0152
+     ],
+     "drop_imp": -0.0114,
+     "drop_imp_ci95": [
+      -0.0947,
+      0.072
+     ],
+     "drop_imp_minus_smart": -0.0341,
+     "drop_imp_minus_smart_ci95": [
+      -0.1402,
+      0.0682
+     ]
+    },
+    "mistralai/ministral-8b-2512": {
+     "none": 0.2083,
+     "orig": 0.3106,
+     "rem": 0.2045,
+     "imp": 0.2879,
+     "drop_rem": 0.1061,
+     "drop_rem_ci95": [
+      0.0455,
+      0.1629
+     ],
+     "drop_rem_minus_smart": -0.2462,
+     "drop_rem_minus_smart_ci95": [
+      -0.3598,
+      -0.1326
+     ],
+     "drop_imp": 0.0227,
+     "drop_imp_ci95": [
+      -0.0189,
+      0.0606
+     ],
+     "drop_imp_minus_smart": -0.0,
+     "drop_imp_minus_smart_ci95": [
+      -0.0682,
+      0.0682
+     ]
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+     "none": 0.0947,
+     "orig": 0.1212,
+     "rem": 0.1212,
+     "imp": 0.1326,
+     "drop_rem": 0.0,
+     "drop_rem_ci95": [
+      -0.0341,
+      0.0341
+     ],
+     "drop_rem_minus_smart": -0.3523,
+     "drop_rem_minus_smart_ci95": [
+      -0.4659,
+      -0.2386
+     ],
+     "drop_imp": -0.0114,
+     "drop_imp_ci95": [
+      -0.0417,
+      0.0189
+     ],
+     "drop_imp_minus_smart": -0.0341,
+     "drop_imp_minus_smart_ci95": [
+      -0.1061,
+      0.0341
+     ]
+    }
+   },
+   "information_check": {
+    "rem": {
+     "ratio": 0.5463,
+     "pass": false
+    },
+    "imp": {
+     "ratio": 0.9708,
+     "pass": true
+    }
+   },
+   "judge": {
+    "self": {
+     "openai/gpt-5.6-sol|orig": 9.0,
+     "google/gemma-4-31b-it|orig": 10.0,
+     "mistralai/ministral-8b-2512|orig": 3.333,
+     "meta-llama/llama-3.2-3b-instruct|orig": 4.0,
+     "openai/gpt-5.6-sol|rem": 9.0,
+     "openai/gpt-5.6-sol|imp": 9.0,
+     "google/gemma-4-31b-it|rem": 10.0,
+     "google/gemma-4-31b-it|imp": 10.0,
+     "mistralai/ministral-8b-2512|rem": 6.667,
+     "mistralai/ministral-8b-2512|imp": 3.333,
+     "meta-llama/llama-3.2-3b-instruct|rem": 4.0,
+     "meta-llama/llama-3.2-3b-instruct|imp": 3.667
+    },
+    "human": {
+     "openai/gpt-5.6-sol|orig": 8.0,
+     "google/gemma-4-31b-it|orig": 9.333,
+     "mistralai/ministral-8b-2512|orig": 8.0,
+     "meta-llama/llama-3.2-3b-instruct|orig": 6.333,
+     "openai/gpt-5.6-sol|rem": 8.0,
+     "openai/gpt-5.6-sol|imp": 7.667,
+     "google/gemma-4-31b-it|rem": 9.333,
+     "google/gemma-4-31b-it|imp": 9.0,
+     "mistralai/ministral-8b-2512|rem": 8.667,
+     "mistralai/ministral-8b-2512|imp": 7.667,
+     "meta-llama/llama-3.2-3b-instruct|rem": 7.0,
+     "meta-llama/llama-3.2-3b-instruct|imp": 6.667
+    }
+   }
+  }
+ },
+ "pooled": {
+  "openai/gpt-5.6-sol": {
+   "drop_rem": {
+    "mean": 0.3955,
+    "ci95": [
+     0.366,
+     0.4243
+    ],
+    "papers": 11,
+    "questions": 705,
+    "papers_ci_above_0": 11,
+    "papers_mean_above_0": 11
+   },
+   "drop_imp": {
+    "mean": 0.0053,
+    "ci95": [
+     -0.0119,
+     0.0226
+    ],
+    "papers": 6,
+    "questions": 368,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 5
+   }
+  },
+  "google/gemma-4-31b-it": {
+   "drop_rem": {
+    "mean": 0.2882,
+    "ci95": [
+     0.2615,
+     0.3151
+    ],
+    "papers": 11,
+    "questions": 705,
+    "papers_ci_above_0": 11,
+    "papers_mean_above_0": 11
+   },
+   "drop_rem_minus_smart": {
+    "mean": -0.1073,
+    "ci95": [
+     -0.1351,
+     -0.0793
+    ],
+    "papers": 11,
+    "questions": 705,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 1
+   },
+   "drop_imp": {
+    "mean": -0.0047,
+    "ci95": [
+     -0.0245,
+     0.0145
+    ],
+    "papers": 6,
+    "questions": 368,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 2
+   },
+   "drop_imp_minus_smart": {
+    "mean": -0.01,
+    "ci95": [
+     -0.0365,
+     0.0165
+    ],
+    "papers": 6,
+    "questions": 368,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 3
+   }
+  },
+  "mistralai/ministral-8b-2512": {
+   "drop_rem": {
+    "mean": 0.1093,
+    "ci95": [
+     0.0915,
+     0.1276
+    ],
+    "papers": 11,
+    "questions": 705,
+    "papers_ci_above_0": 10,
+    "papers_mean_above_0": 11
+   },
+   "drop_rem_minus_smart": {
+    "mean": -0.2862,
+    "ci95": [
+     -0.3169,
+     -0.2552
+    ],
+    "papers": 11,
+    "questions": 705,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 0
+   },
+   "drop_imp": {
+    "mean": 0.021,
+    "ci95": [
+     0.0017,
+     0.0394
+    ],
+    "papers": 6,
+    "questions": 368,
+    "papers_ci_above_0": 1,
+    "papers_mean_above_0": 5
+   },
+   "drop_imp_minus_smart": {
+    "mean": 0.0157,
+    "ci95": [
+     -0.0091,
+     0.0397
+    ],
+    "papers": 6,
+    "questions": 368,
+    "papers_ci_above_0": 1,
+    "papers_mean_above_0": 4
+   }
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+   "drop_rem": {
+    "mean": 0.014,
+    "ci95": [
+     0.0027,
+     0.0252
+    ],
+    "papers": 11,
+    "questions": 705,
+    "papers_ci_above_0": 2,
+    "papers_mean_above_0": 9
+   },
+   "drop_rem_minus_smart": {
+    "mean": -0.3815,
+    "ci95": [
+     -0.4114,
+     -0.351
+    ],
+    "papers": 11,
+    "questions": 705,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 0
+   },
+   "drop_imp": {
+    "mean": 0.0029,
+    "ci95": [
+     -0.0128,
+     0.0186
+    ],
+    "papers": 6,
+    "questions": 368,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 2
+   },
+   "drop_imp_minus_smart": {
+    "mean": -0.0024,
+    "ci95": [
+     -0.0254,
+     0.0205
+    ],
+    "papers": 6,
+    "questions": 368,
+    "papers_ci_above_0": 0,
+    "papers_mean_above_0": 3
+   }
+  }
+ },
+ "judge": {
+  "self": {
+   "openai/gpt-5.6-sol": {
+    "orig": {
+     "mean": 9.028,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 9.0,
+      "2607.17117v2": 9.0,
+      "2607.20379v2": 9.0,
+      "2607.28685v1": 9.0,
+      "2608.13754v1": 9.0,
+      "2608.19216v1": 9.0,
+      "2608.25490v1": 9.0,
+      "2608.30724v1": 9.0,
+      "2609.00755v1": 9.0,
+      "2609.02893v1": 9.0,
+      "2609.30094v2": 9.333,
+      "2609.34091v1": 9.0
+     }
+    },
+    "rem": {
+     "mean": 8.5,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 8.667,
+      "2607.17117v2": 8.0,
+      "2607.20379v2": 8.333,
+      "2607.28685v1": 9.0,
+      "2608.13754v1": 9.0,
+      "2608.19216v1": 9.0,
+      "2608.25490v1": 9.0,
+      "2608.30724v1": 9.0,
+      "2609.00755v1": 8.0,
+      "2609.02893v1": 7.333,
+      "2609.30094v2": 7.667,
+      "2609.34091v1": 9.0
+     },
+     "minus_orig": -0.528,
+     "papers_within_1": 10
+    },
+    "imp": {
+     "mean": 9.095,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 9.0,
+      "2607.28685v1": 9.0,
+      "2608.19216v1": 9.0,
+      "2608.30724v1": 9.0,
+      "2609.02893v1": 9.0,
+      "2609.30094v2": 9.667,
+      "2609.34091v1": 9.0
+     },
+     "minus_orig": 0.067,
+     "papers_within_1": 7
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "orig": {
+     "mean": 10.0,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 10.0,
+      "2607.17117v2": 10.0,
+      "2607.20379v2": 10.0,
+      "2607.28685v1": 10.0,
+      "2608.13754v1": 10.0,
+      "2608.19216v1": 10.0,
+      "2608.25490v1": 10.0,
+      "2608.30724v1": 10.0,
+      "2609.00755v1": 10.0,
+      "2609.02893v1": 10.0,
+      "2609.30094v2": 10.0,
+      "2609.34091v1": 10.0
+     }
+    },
+    "rem": {
+     "mean": 10.0,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 10.0,
+      "2607.17117v2": 10.0,
+      "2607.20379v2": 10.0,
+      "2607.28685v1": 10.0,
+      "2608.13754v1": 10.0,
+      "2608.19216v1": 10.0,
+      "2608.25490v1": 10.0,
+      "2608.30724v1": 10.0,
+      "2609.00755v1": 10.0,
+      "2609.02893v1": 10.0,
+      "2609.30094v2": 10.0,
+      "2609.34091v1": 10.0
+     },
+     "minus_orig": 0.0,
+     "papers_within_1": 12
+    },
+    "imp": {
+     "mean": 10.0,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 10.0,
+      "2607.28685v1": 10.0,
+      "2608.19216v1": 10.0,
+      "2608.30724v1": 10.0,
+      "2609.02893v1": 10.0,
+      "2609.30094v2": 10.0,
+      "2609.34091v1": 10.0
+     },
+     "minus_orig": 0.0,
+     "papers_within_1": 7
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "orig": {
+     "mean": 4.5,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 4.0,
+      "2607.17117v2": 5.333,
+      "2607.20379v2": 3.333,
+      "2607.28685v1": 3.0,
+      "2608.13754v1": 3.0,
+      "2608.19216v1": 4.333,
+      "2608.25490v1": 5.667,
+      "2608.30724v1": 4.0,
+      "2609.00755v1": 5.333,
+      "2609.02893v1": 6.0,
+      "2609.30094v2": 6.667,
+      "2609.34091v1": 3.333
+     }
+    },
+    "rem": {
+     "mean": 4.861,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 4.0,
+      "2607.17117v2": 5.667,
+      "2607.20379v2": 4.0,
+      "2607.28685v1": 3.667,
+      "2608.13754v1": 3.333,
+      "2608.19216v1": 3.667,
+      "2608.25490v1": 4.0,
+      "2608.30724v1": 5.0,
+      "2609.00755v1": 6.0,
+      "2609.02893v1": 6.333,
+      "2609.30094v2": 6.0,
+      "2609.34091v1": 6.667
+     },
+     "minus_orig": 0.361,
+     "papers_within_1": 10
+    },
+    "imp": {
+     "mean": 4.143,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 3.333,
+      "2607.28685v1": 3.333,
+      "2608.19216v1": 3.0,
+      "2608.30724v1": 4.0,
+      "2609.02893v1": 5.667,
+      "2609.30094v2": 6.333,
+      "2609.34091v1": 3.333
+     },
+     "minus_orig": -0.357,
+     "papers_within_1": 6
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "orig": {
+     "mean": 4.75,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 4.0,
+      "2607.17117v2": 5.333,
+      "2607.20379v2": 5.333,
+      "2607.28685v1": 4.0,
+      "2608.13754v1": 3.667,
+      "2608.19216v1": 4.0,
+      "2608.25490v1": 5.333,
+      "2608.30724v1": 5.333,
+      "2609.00755v1": 5.333,
+      "2609.02893v1": 4.667,
+      "2609.30094v2": 6.0,
+      "2609.34091v1": 4.0
+     }
+    },
+    "rem": {
+     "mean": 4.417,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 4.667,
+      "2607.17117v2": 5.667,
+      "2607.20379v2": 4.0,
+      "2607.28685v1": 4.0,
+      "2608.13754v1": 4.0,
+      "2608.19216v1": 4.0,
+      "2608.25490v1": 4.0,
+      "2608.30724v1": 4.667,
+      "2609.00755v1": 5.333,
+      "2609.02893v1": 4.0,
+      "2609.30094v2": 4.667,
+      "2609.34091v1": 4.0
+     },
+     "minus_orig": -0.333,
+     "papers_within_1": 9
+    },
+    "imp": {
+     "mean": 4.571,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 5.333,
+      "2607.28685v1": 4.333,
+      "2608.19216v1": 4.667,
+      "2608.30724v1": 4.0,
+      "2609.02893v1": 4.667,
+      "2609.30094v2": 5.333,
+      "2609.34091v1": 3.667
+     },
+     "minus_orig": -0.179,
+     "papers_within_1": 5
+    }
+   }
+  },
+  "human": {
+   "openai/gpt-5.6-sol": {
+    "orig": {
+     "mean": 7.694,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 6.333,
+      "2607.17117v2": 8.0,
+      "2607.20379v2": 7.0,
+      "2607.28685v1": 8.0,
+      "2608.13754v1": 8.0,
+      "2608.19216v1": 8.0,
+      "2608.25490v1": 8.0,
+      "2608.30724v1": 8.0,
+      "2609.00755v1": 6.0,
+      "2609.02893v1": 8.0,
+      "2609.30094v2": 9.0,
+      "2609.34091v1": 8.0
+     }
+    },
+    "rem": {
+     "mean": 6.0,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 5.333,
+      "2607.17117v2": 4.667,
+      "2607.20379v2": 5.333,
+      "2607.28685v1": 6.333,
+      "2608.13754v1": 5.0,
+      "2608.19216v1": 8.0,
+      "2608.25490v1": 6.667,
+      "2608.30724v1": 7.0,
+      "2609.00755v1": 5.0,
+      "2609.02893v1": 5.333,
+      "2609.30094v2": 5.333,
+      "2609.34091v1": 8.0
+     },
+     "minus_orig": -1.694,
+     "papers_within_1": 5
+    },
+    "imp": {
+     "mean": 7.762,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 6.0,
+      "2607.28685v1": 7.667,
+      "2608.19216v1": 8.0,
+      "2608.30724v1": 8.0,
+      "2609.02893v1": 8.0,
+      "2609.30094v2": 9.0,
+      "2609.34091v1": 7.667
+     },
+     "minus_orig": 0.068,
+     "papers_within_1": 7
+    }
+   },
+   "google/gemma-4-31b-it": {
+    "orig": {
+     "mean": 9.694,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 10.0,
+      "2607.17117v2": 10.0,
+      "2607.20379v2": 9.0,
+      "2607.28685v1": 9.0,
+      "2608.13754v1": 9.0,
+      "2608.19216v1": 10.0,
+      "2608.25490v1": 10.0,
+      "2608.30724v1": 10.0,
+      "2609.00755v1": 10.0,
+      "2609.02893v1": 10.0,
+      "2609.30094v2": 10.0,
+      "2609.34091v1": 9.333
+     }
+    },
+    "rem": {
+     "mean": 9.861,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 10.0,
+      "2607.17117v2": 10.0,
+      "2607.20379v2": 9.333,
+      "2607.28685v1": 10.0,
+      "2608.13754v1": 9.667,
+      "2608.19216v1": 10.0,
+      "2608.25490v1": 10.0,
+      "2608.30724v1": 10.0,
+      "2609.00755v1": 10.0,
+      "2609.02893v1": 10.0,
+      "2609.30094v2": 10.0,
+      "2609.34091v1": 9.333
+     },
+     "minus_orig": 0.167,
+     "papers_within_1": 12
+    },
+    "imp": {
+     "mean": 9.476,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 10.0,
+      "2607.28685v1": 7.333,
+      "2608.19216v1": 10.0,
+      "2608.30724v1": 10.0,
+      "2609.02893v1": 10.0,
+      "2609.30094v2": 10.0,
+      "2609.34091v1": 9.0
+     },
+     "minus_orig": -0.218,
+     "papers_within_1": 6
+    }
+   },
+   "mistralai/ministral-8b-2512": {
+    "orig": {
+     "mean": 7.5,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 7.0,
+      "2607.17117v2": 8.333,
+      "2607.20379v2": 7.0,
+      "2607.28685v1": 7.333,
+      "2608.13754v1": 7.333,
+      "2608.19216v1": 8.333,
+      "2608.25490v1": 7.333,
+      "2608.30724v1": 7.0,
+      "2609.00755v1": 7.0,
+      "2609.02893v1": 7.667,
+      "2609.30094v2": 7.667,
+      "2609.34091v1": 8.0
+     }
+    },
+    "rem": {
+     "mean": 8.056,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 8.0,
+      "2607.17117v2": 8.0,
+      "2607.20379v2": 8.333,
+      "2607.28685v1": 8.0,
+      "2608.13754v1": 7.0,
+      "2608.19216v1": 9.0,
+      "2608.25490v1": 8.0,
+      "2608.30724v1": 7.667,
+      "2609.00755v1": 8.0,
+      "2609.02893v1": 7.667,
+      "2609.30094v2": 8.333,
+      "2609.34091v1": 8.667
+     },
+     "minus_orig": 0.556,
+     "papers_within_1": 11
+    },
+    "imp": {
+     "mean": 7.286,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 5.667,
+      "2607.28685v1": 7.667,
+      "2608.19216v1": 8.0,
+      "2608.30724v1": 6.667,
+      "2609.02893v1": 8.0,
+      "2609.30094v2": 7.333,
+      "2609.34091v1": 7.667
+     },
+     "minus_orig": -0.214,
+     "papers_within_1": 6
+    }
+   },
+   "meta-llama/llama-3.2-3b-instruct": {
+    "orig": {
+     "mean": 6.139,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 6.0,
+      "2607.17117v2": 7.667,
+      "2607.20379v2": 5.0,
+      "2607.28685v1": 5.333,
+      "2608.13754v1": 3.333,
+      "2608.19216v1": 6.667,
+      "2608.25490v1": 6.667,
+      "2608.30724v1": 6.0,
+      "2609.00755v1": 7.333,
+      "2609.02893v1": 6.667,
+      "2609.30094v2": 6.667,
+      "2609.34091v1": 6.333
+     }
+    },
+    "rem": {
+     "mean": 6.528,
+     "papers": 12,
+     "paper_means": {
+      "2607.10112v1": 5.667,
+      "2607.17117v2": 7.0,
+      "2607.20379v2": 5.333,
+      "2607.28685v1": 7.0,
+      "2608.13754v1": 4.667,
+      "2608.19216v1": 5.667,
+      "2608.25490v1": 8.0,
+      "2608.30724v1": 6.667,
+      "2609.00755v1": 7.0,
+      "2609.02893v1": 7.0,
+      "2609.30094v2": 7.333,
+      "2609.34091v1": 7.0
+     },
+     "minus_orig": 0.389,
+     "papers_within_1": 9
+    },
+    "imp": {
+     "mean": 6.095,
+     "papers": 7,
+     "paper_means": {
+      "2607.10112v1": 5.667,
+      "2607.28685v1": 7.0,
+      "2608.19216v1": 5.333,
+      "2608.30724v1": 5.333,
+      "2609.02893v1": 6.667,
+      "2609.30094v2": 6.0,
+      "2609.34091v1": 6.667
+     },
+     "minus_orig": -0.044,
+     "papers_within_1": 5
+    }
+   }
+  }
+ },
+ "imp_information_check_pass": "6 of 6 gated papers"
+}

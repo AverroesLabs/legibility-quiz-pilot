@@ -1,0 +1,159 @@
+{
+ "paper": "2609.00755v1",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "insight": {
+  "insight": "A node's importance and its functional role depend on each other, so circuit discovery and functional interpretation can be optimized jointly. This becomes possible once roles are abstracted into a task-agnostic dichotomy: functional nodes transform their input, while passthrough nodes relocate information. The dichotomy is quantified by how much a node changes pairwise token-similarity structure, which lets role assignment enter a differentiable objective that alternates with importance discovery.",
+  "dependent_results": [
+   "RQ1 / Table 1: S\u00b3martCirc gives the largest accuracy drop and logit difference on every model/task. GPT-2 Acronym: -97.50% vs -54.67% for Activation Patching. GPT-2 IOI: -95.99%. Llama Acronym/IOI: -57.33% / -69.00%. Qwen: -100% on both tasks. The authors attribute the margin over Prune. and IBCircuit, which also use masks, to the added functional interpretation.",
+   "RQ1 Circuit Size: on Llama IOI, S\u00b3martCirc reaches -69.00% with 35 nodes, while Attr. IG reaches -5.67% with 47.67 nodes.",
+   "RQ2: S\u00b3martCirc recovers a higher share of the human-verified IOI circuit than most baselines at thresholds of 50\u2013200 nodes and is comparable only to Activation Patching (Figure 3). It is reported as best on Acronym recovery (Appendix B, Figure 7).",
+   "RQ2 Acronym circuit: 4 of 8 nodes recovered (50%). Previous Token head 1.0 is classified as passthrough and Letter Mover head 11.4 as functional, matching the Figure 1 mapping. Heads 8.11 and 10.10 diverge from the reference and are explained as multi-functional.",
+   "RQ4 ablation: Discovery First (sequential) collapses to -4.33% on Acronym vs -97.5% for the full method. Interpretation First is better than Discovery First but below the full method. Removing warmup also hurts. Together these support alternating, bidirectional optimization.",
+   "RQ3: more classification steps k improve accuracy drop from -71% at k=2 to about -96% at k=6. \u03b1=0.75 is best, and \u03b1=1.0 (KL divergence only) degrades sharply."
+  ],
+  "key_definitions": [
+   "Computational graph and circuit: nodes are attention heads or feedforward neurons, edges are flows through the residual stream, and a circuit is the subgraph responsible for task performance (Preliminaries and Definitions).",
+   "Functional node: actively transforms its input, producing output whose representation or semantics differs substantially. Passthrough node: relocates input features downstream with minimal modification (Preliminaries and Definitions).",
+   "Masking coefficients c_n = {c_{n,u}, c_{n,p}, c_{n,f}}: probabilities that a node is unimportant, passthrough, or functional, summing to 1. A node is a candidate if c_p + c_f > c_u. Masks are soft in training and hard via argmax at evaluation (S\u00b3martCirc Overview).",
+   "Sim(A) = \u00c2\u00c2^T \u2299 (11^T \u2212 I): pairwise cosine similarity between token rows, excluding self-similarity (Important Node Classification).",
+   "FI(X,Y) = ||Sim(X) \u2212 Sim(Y)||_F / ||Sim(X)||_F: normalized change in token-similarity structure from a node's input to its output (Important Node Classification).",
+   "L_disc = \u03b1\u00b7KL(P_orig || P_mask) \u2212 (1\u2212\u03b1)\u00b7log P_mask(y) (Important Node Discovery).",
+   "L_class = \u03a3 over important nodes of [\u2212c_f\u00b7FI \u2212 c_p/FI], which rewards high FI for functional nodes and low FI for passthrough nodes (Important Node Classification).",
+   "L_sparsity: three terms, for confidence (push coefficients to binary values), validity (coefficients sum to 1), and sparsity (penalize c_p + c_f) (S\u00b3martCirc Training Process).",
+   "Evaluation metrics: Circuit Size is the number of nodes in the end-to-end connected circuit. Acc. is the percent accuracy drop when the circuit nodes are masked. Logit. is the change in logit for the original prediction (Experiment Setup)."
+  ],
+  "reasoning_steps": [
+   "Circuits from different tasks (IOI, Acronym) share recurring roles, and these map onto two general categories: passthrough (S-inhibition, previous token, bridge heads) and functional (name mover, letter mover heads) (Preliminaries and Definitions).",
+   "Because roles describe how a node processes information rather than what content it processes, they are task-agnostic. They can also be measured as change in relational token structure, so they can be optimized (Important Node Classification).",
+   "Importance is learned by masking, with faithfulness (KL divergence) and correctness (cross-entropy) objectives, so that removing important nodes degrades the task (Important Node Discovery).",
+   "Role probabilities are learned from FI over the candidate nodes, and the shared coefficients link role assignment back to importance (Important Node Classification; S\u00b3martCirc Overview).",
+   "A warmup phase on L_disc only provides a reasonable candidate set; after that, one discovery step alternates with k classification steps, giving each stage bidirectional influence on the other (S\u00b3martCirc Training Process; RQ3).",
+   "Masking only the discovered circuit causes large accuracy and logit drops, which shows the nodes are critical. Gains over other mask-based methods are attributed to the functional-role guidance (RQ1).",
+   "Agreement with human-verified circuits and roles is taken as evidence that the joint, metric-based roles reflect real mechanisms (RQ2).",
+   "Ablations show sequential variants underperform the alternating scheme, supporting the codependence premise (RQ4)."
+  ]
+ },
+ "insight_call": "d61b89f3813faa492e8ee6b3942205550bfabded63f56bd0f1be5975720a9ee0",
+ "chars": {
+  "orig": 42058,
+  "rem": 42949
+ },
+ "versions": {
+  "rem": {
+   "tries": [
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "37b7a35d1409bbb1197d7b8d7e7eea095a6bc89b9d8503e6415d51bcc05853d9",
+     "finish": "stop",
+     "cost": 0.422516,
+     "chars": 42949,
+     "ratio": 1.021,
+     "same_sections": true,
+     "missing": [
+      "35",
+      "66",
+      "67",
+      "71",
+      "88",
+      "96",
+      "1.63",
+      "11.4",
+      "2.85",
+      "2.96",
+      "3.17",
+      "3.74",
+      "4.33",
+      "4.50",
+      "5.00",
+      "5.72",
+      "7.93",
+      "97.5",
+      "10.42",
+      "10.97",
+      "12.01",
+      "16.33",
+      "42.43",
+      "47.33",
+      "57.33",
+      "69.00",
+      "76.00",
+      "95.99",
+      "97.50"
+     ],
+     "pass": true
+    }
+   ],
+   "used_try": 0,
+   "missing_vs_original": [
+    "35",
+    "66",
+    "67",
+    "71",
+    "88",
+    "96",
+    "1.63",
+    "11.4",
+    "2.85",
+    "2.96",
+    "3.17",
+    "3.74",
+    "4.33",
+    "4.50",
+    "5.00",
+    "5.72",
+    "7.93",
+    "97.5",
+    "10.42",
+    "10.97",
+    "12.01",
+    "16.33",
+    "42.43",
+    "47.33",
+    "57.33",
+    "69.00",
+    "76.00",
+    "95.99",
+    "97.50"
+   ]
+  },
+  "imp": {
+   "tries": [
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "881afad7a2bcc4e1e88d420658f71d03d3e0c3b108012247209128a0b14428ad",
+     "finish": "stop",
+     "cost": 0.309604,
+     "chars": 24303,
+     "ratio": 0.578,
+     "same_sections": true,
+     "missing": [],
+     "pass": false
+    },
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "93ee7b1942c421b66d482c6ffa76a2a25a2c21ff62933b2a5bf40f05ebb2e29a",
+     "finish": "stop",
+     "cost": 0.348424,
+     "chars": 31202,
+     "ratio": 0.742,
+     "same_sections": true,
+     "missing": [],
+     "pass": false
+    },
+    {
+     "model": "anthropic/claude-opus-5.5",
+     "call": "66b62f11f0cdb2d7678eec61c5741dcb4a8a3102063d6230391cdc414cc932d4",
+     "finish": "stop",
+     "cost": 0.332384,
+     "chars": 29265,
+     "ratio": 0.696,
+     "same_sections": true,
+     "missing": [],
+     "pass": false
+    }
+   ],
+   "failed": true
+  }
+ }
+}

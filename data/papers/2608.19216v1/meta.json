@@ -1,0 +1,25 @@
+{
+  "abstract": "AI control research asks how to deploy models safely even when they may be misaligned, but many control protocols assume that the deployer can instrument the model and its surrounding pipeline. That assumption often fails for regulated organisations using frontier models through APIs or managed endpoints, where the deployer may control the business process but not the model weights, serving infrastructure, internal traces, update process, or full interaction logs. This paper introduces bounded sovereignty: partial technical and contractual access across the data, model, infrastructure, and interaction layers of the AI stack. It argues that these access conditions determine which control protocols can be executed in practice. The paper contributes a four-layer access typology, a protocol-by-layer requirements matrix, and the concept of sovereignty discount cost: the part of the control tax spent substituting for missing access through contracts, architecture, audit, vendor assurance, residual risk, or reduced system scope. It also reports a synthetic access-ablation experiment over 1.35 million synthetic case simulations and interprets the findings through an anonymised national-payments-infrastructure scenario. The experiment is not real-world payment-system evidence; it is a construct-validity exercise. The results show that complete logs improve diagnosis, a pre-execution gateway enables intervention, trace access and model-version control strengthen post-incident explanation, and scope restriction can improve safety while reducing usefulness. Control protocols proposed as general safety solutions should therefore state their access assumptions explicitly.",
+  "arxiv_id": "2608.19216",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Zhen Wen Lim"
+  ],
+  "changes": "Converted from arXiv HTML to plain text; images removed.",
+  "conversion_errors": 0,
+  "figures": 5,
+  "hidden_style_hits": 0,
+  "html_sha256": "1791a75ce51f697a06f8ea1a06e097cd6d70a30fcbdd5b9a8ecd5f305ecf468d",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "primary_category": "cs.AI",
+  "published": "2026-07-06T17:38:18Z",
+  "rank": "0a710247275fd647c207ad66e956c575e51fab932f259203b0ca97a8b12ac19a",
+  "role": "core",
+  "source_url": "https://arxiv.org/abs/2608.19216v1",
+  "stratum": "C",
+  "text_sha256": "b7c5531c07882d7a1be24c10d1d1245b0b668ccc176352feef9dd364de2ab5b1",
+  "title": "Bounded Sovereignty and the Control Tax: Pricing AI Oversight When the Deployer Does Not Own the Model",
+  "version": 1,
+  "words": 8181
+}

@@ -1,0 +1,3393 @@
+{
+ "paper": "2609.00755v1-rem",
+ "writer": "anthropic/claude-opus-5.5",
+ "prompt_version": "p9",
+ "paper_sha256": "cec1eac8f89a0e11c5546ecbbd9955bae80169ccee85e63a0df282d1ae1c5ad1",
+ "batches": 5,
+ "written_per_batch": [
+  43,
+  37,
+  39,
+  36,
+  39
+ ],
+ "cost_per_batch": [
+  0.524792,
+  0.63236,
+  0.654116,
+  0.83284,
+  0.963636
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "text": "S\u00b3martCirc learns node-level circuits over attention heads and feedforward neurons. It uses soft masking coefficients trained jointly, so each node is evaluated in the context of all others rather than in isolation.",
+   "methods": [
+    "Per-node coefficients c_{n,u}, c_{n,i} meant to sum to one",
+    "Soft masking during training; hard argmax assignment (Eq. 1) at evaluation",
+    "Discovery loss (Eq. 2): alpha-weighted KL to the full model's distribution (faithfulness) plus (1-alpha)-weighted cross-entropy on the ground-truth token (correctness)"
+   ],
+   "results": [
+    "Paper argues joint optimization handles redundancy and compensation that per-node patching scores miss"
+   ],
+   "conditions": [
+    "The training-time masked model removes nodes judged unimportant",
+    "alpha is tuned per setting"
+   ]
+  },
+  {
+   "id": "c2",
+   "text": "A coefficient regularizer (confidence, validity, sparsity) plus a warmup phase yields confident, valid and sparse masks whose hard assignment closely matches the soft mask.",
+   "methods": [
+    "Confidence term 1/2|v(1-v)| pushes coefficients to 0 or 1",
+    "Validity term 1/2|1-(c_u+c_i)| keeps the two coefficients summing to one",
+    "Sparsity term penalizes c_{n,i} only",
+    "Warmup epochs in which L_disc dominates before the full objective is applied"
+   ],
+   "results": [
+    "No quantitative ablation numbers are given in the text; Figure 6 is described only qualitatively"
+   ],
+   "conditions": [
+    "The full objective is applied only after warmup",
+    "Sparsity coefficient weights the regularizer"
+   ]
+  },
+  {
+   "id": "c3",
+   "text": "A unified evaluation protocol (shared node set, shared end-to-end connectivity extraction, shared metrics) lets patching-based and optimization-based methods be compared on equal footing.",
+   "methods": [
+    "Remove selected nodes that cannot be reached from the input embeddings or cannot reach the unembedding",
+    "Circuit Size, Accuracy Drop (percent drop when only the circuit nodes are masked), Logit. difference on the original model's predicted answer",
+    "Three runs per baseline; datasets regenerated per tokenizer"
+   ],
+   "results": [
+    "Empty cells where no connected circuit is found, e.g., IBCircuit on GPT-2 for both tasks",
+    "Random baseline: about 48 to 77 nodes, 0.00 accuracy drop"
+   ],
+   "conditions": [
+    "Evaluation masks the circuit nodes, unlike training, which masks the non-circuit nodes",
+    "IOI/Acronym data filtered to single-token names and valid letters per tokenizer"
+   ]
+  },
+  {
+   "id": "c4",
+   "text": "Existing discovery methods behave poorly or inconsistently under the protocol. Activation Patching gives large but high-variance drops; its approximations barely affect accuracy; Pruning and IBCircuit mostly yield zero drop; circuit size does not track effect; behavior varies across models.",
+   "methods": [
+    "Act., Attr., Attr. IG, IBCircuit, node-level Prune., Random on GPT-2, Llama 3.2 1B, Qwen 3 1.7B for IOI and Acronym"
+   ],
+   "results": [
+    "Act. GPT-2: -54.67\u00b138.33 (Acronym), -70.71\u00b125.89 (IOI)",
+    "Attr. GPT-2 Acronym -0.17\u00b10.24; Attr. IG GPT-2 IOI -0.17\u00b10.24",
+    "IBCircuit Llama IOI 7.33 nodes, 0.00 drop vs Attr. IG 47.67 nodes, -5.67",
+    "Act. Llama Acronym empty; Act. Qwen Acronym -100.00 (single run)",
+    "Prune. and Random 0.00\u00b10.00 everywhere"
+   ],
+   "conditions": [
+    "Qwen Act. completed only one run within the 48-hour limit",
+    "Baselines adapted to node level"
+   ]
+  },
+  {
+   "id": "c5",
+   "text": "S\u00b3martCirc is computationally efficient compared with exact patching and the more expensive approximation and pruning methods.",
+   "methods": [
+    "Wall-clock runtime comparison (Table 2)"
+   ],
+   "results": [
+    "Act.: 6239.72 s (GPT-2 Acronym) to 168689.44 s (Qwen Acronym) and 187663.88 s (Qwen IOI)",
+    "S\u00b3martCirc: 197.14 / 264.44 (GPT-2), 507.67 / 901.02 (Llama), 982.16 / 1047.59 (Qwen)",
+    "Attr.: 299.54 / 267.94 (GPT-2), 1114.46 / 1128.62 (Llama), 829.43 / 783.17 (Qwen)",
+    "Attr. IG and Prune. take thousands to tens of thousands of seconds; IBCircuit 426.70 to 5152.79"
+   ],
+   "conditions": [
+    "Attr. and Attr. IG on Qwen ran on A6000 48GB GPUs; everything else on 16GB GPUs",
+    "Epoch counts differ by setting (e.g., Llama IOI 75 vs Llama Acronym 50)"
+   ]
+  },
+  {
+   "id": "c6",
+   "text": "Recovery of prior human-verified circuits is a complementary but limited lens for validating discovery.",
+   "methods": [
+    "Percent of the IOI (Figure 3) and Acronym (Figure 7) reference nodes recovered at thresholds of 50, 100, 150 and 200 nodes"
+   ],
+   "results": [
+    "Recovery numbers are shown only in figures; the text gives no values",
+    "Acronym reference circuit is much smaller, so each miss costs a large fraction",
+    "Heads 8.11 and 10.10 can act as bridge or letter mover heads"
+   ],
+   "conditions": [
+    "References exist only for GPT-2",
+    "Agreement is interpreted at node-membership level only",
+    "Small thresholds reward precision, large thresholds reward coverage"
+   ]
+  },
+  {
+   "id": "c7",
+   "text": "Mask-based discovery is governed by alpha, the sparsity coefficient and warmup length, and needs per-setting tuning.",
+   "methods": [
+    "alpha swept over {0, 0.25, 0.5, 0.75, 1.0} on GPT-2 IOI (Figure 5)",
+    "Per-setting hyperparameters in Appendix A"
+   ],
+   "results": [
+    "alpha: 0.25 (GPT-2 Acronym, Llama IOI), 0.75 elsewhere",
+    "Sparsity coefficient 0.3 to 1.0",
+    "Warmup 5 to 10 epochs, except GPT-2 Acronym with 60 warmup of 60 epochs",
+    "Single seed 42"
+   ],
+   "conditions": [
+    "Appropriate alpha expected to depend on how concentrated the output distribution is"
+   ]
+  }
+ ],
+ "filtered_batch": null,
+ "items": [
+  {
+   "id": "q1",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "The paper claims the hard assignment of Eq. 1 closely matches the soft mask used in training. Should this claim be trusted for the Acronym with GPT-2 configuration in Appendix A, and why?",
+   "answer": "No, not by the paper's own logic. That configuration has 60 warmup epochs out of 60 total, so the full regularized objective, including the confidence term, is never applied after warmup. Coefficients may therefore remain near intermediate values, and the argmax becomes a poor approximation of the trained soft mask.",
+   "rubric": [
+    "Concludes the match is doubtful or not guaranteed for that setting",
+    "Notes that warmup epochs equal total epochs (60/60), so the confidence and regularizer terms never take full effect",
+    "Links this to coefficients possibly hovering near 0.5, making the hard assignment diverge from the soft mask"
+   ],
+   "batch": 1,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q2",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "With alpha = 1.0, would S\u00b3martCirc's circuit be expected to capture the mechanism that produces the correct answer on samples the full model gets wrong, and why?",
+   "answer": "No. At alpha = 1.0 only the KL term to the full model's distribution matters. On samples the full model gets wrong, the circuit is trained to reproduce the wrong prediction rather than the components that would produce the ground-truth token.",
+   "rubric": [
+    "Concludes no",
+    "Explains that alpha = 1 optimizes only faithfulness (KL to P_orig) with no correctness term",
+    "Notes that P_orig places mass on the wrong token for those samples, so the faithful circuit preserves the error"
+   ],
+   "batch": 1,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q3",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose two heads redundantly implement the same function, so either alone suffices. Would Activation Patching be expected to rank them as important, and why?",
+   "answer": "Probably not. Activation Patching ablates one node at a time while the rest of the model stays intact, so the redundant partner compensates and each ablation barely changes the logit difference. Joint mask optimization can expose this kind of interaction; per-node scoring cannot.",
+   "rubric": [
+    "Concludes they would likely receive low scores or be missed",
+    "Explains that patching scores each node in isolation, so the other head compensates",
+    "Contrasts with joint optimization, which evaluates nodes in the context of others"
+   ],
+   "batch": 1,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q4",
+   "type": "failure",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "In the IOI data, corrupted prompts are made by swapping the second name. Would Attribution Patching give a high score to a node whose activation is identical on clean and corrupted prompts, even if the task depends on it, and why?",
+   "answer": "No. Attribution Patching's score is the clean-minus-corrupted activation difference multiplied by a gradient. If the activation does not change under the corruption, the difference is zero and the score is near zero, however important the node is.",
+   "rubric": [
+    "Concludes the node would get a near-zero or low score",
+    "Reasons from the score definition: (clean \u2212 corrupted activation) \u00d7 gradient, which is zero when the activations match"
+   ],
+   "batch": 1,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q5",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3",
+    "c7"
+   ],
+   "pair": null,
+   "question": "When could S\u00b3martCirc reach a low training loss yet show almost no accuracy drop under the paper's Acc. metric?",
+   "answer": "Training asks the model with the non-circuit nodes masked to preserve behavior, but Acc. masks the circuit nodes instead. If the non-circuit remainder also contains components that can carry the task, for example redundant pathways or many small contributors pruned away by a strong sparsity penalty, then removing the circuit leaves behavior largely intact.",
+   "rubric": [
+    "Identifies the case where the complement of the circuit can still perform the task (redundant or backup components, or modest contributors excluded by sparsity)",
+    "Explains the mismatch: training preserves behavior when only the circuit is kept, while evaluation removes the circuit"
+   ],
+   "batch": 1,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q6",
+   "type": "failure",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "S\u00b3martCirc is faster than Attribution Patching on GPT-2 and Llama. Does this ordering hold on Qwen, and is the Qwen comparison clean?",
+   "answer": "It does not hold: on Qwen, Attr. takes 829.43 s and 783.17 s versus 982.16 s and 1047.59 s for S\u00b3martCirc. The comparison is also confounded, because Attr. on Qwen ran on A6000 48GB GPUs while S\u00b3martCirc ran on 16GB GPUs.",
+   "rubric": [
+    "States that S\u00b3martCirc is slower than Attr. on Qwen for both tasks, citing the Table 2 runtimes",
+    "Notes the hardware confound: Attr. on Qwen used 48GB A6000 GPUs, unlike S\u00b3martCirc"
+   ],
+   "batch": 1,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q7",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If a method picked heads 8.11 and 10.10 into its acronym circuit, would that confirm the method found their letter-mover role, and why?",
+   "answer": "No. Those heads can act as either bridge or letter mover heads depending on the intervention. Automated methods estimate a contribution averaged over samples, so selecting them confirms node membership only, not a specific functional role.",
+   "rubric": [
+    "Concludes it would not confirm the specific role",
+    "Cites the heads' multi-functionality and the fact that automated scores average over samples, so agreement holds only at the membership level"
+   ],
+   "batch": 1,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q8",
+   "type": "why",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why could Activation Patching on Qwen complete only one run within the time limit, even though it completed three runs on Llama?",
+   "answer": "A single Qwen run takes about 168,689 to 187,664 s, roughly 47 to 52 hours, which is at or above the 48-hour limit. A Llama run takes about 61,510 to 64,640 s, roughly 17 to 18 hours.",
+   "rubric": [
+    "Converts the Qwen Act. runtimes to roughly 47 to 52 hours and compares them with the 48-hour limit",
+    "Contrasts with Llama runs of about 17 to 18 hours each"
+   ],
+   "batch": 1,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q9",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does Activation Patching's runtime grow about 27-fold from GPT-2 to Qwen on Acronym while S\u00b3martCirc's grows only about 5-fold?",
+   "answer": "Activation Patching needs a separate intervention for every candidate node, so its cost scales with the node count, which is much larger in Qwen. S\u00b3martCirc instead optimizes all coefficients jointly with gradients in a single training run.",
+   "rubric": [
+    "Explains that patching repeats an intervention per node, so cost grows with the number of nodes",
+    "Explains that S\u00b3martCirc scores all nodes simultaneously through one gradient-based optimization"
+   ],
+   "batch": 1,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q10",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why do the Activation Patching entries for Qwen show a standard deviation of \u00b10.00?",
+   "answer": "Only one run was completed for Act. on Qwen (marked with an asterisk), so no spread across runs could be computed. The zero does not indicate stability, and other Act. settings show very large variance.",
+   "rubric": [
+    "Attributes the \u00b10.00 to there being a single run",
+    "States that it therefore does not indicate low variance or stability"
+   ],
+   "batch": 1,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q11",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the Random baseline produce a 0.00 accuracy drop with zero variance despite circuits of roughly 48 to 77 nodes?",
+   "answer": "The models contain thousands of heads and many thousands of feedforward neurons, while the task depends on a small set of components. A few dozen randomly chosen nodes almost never include the critical ones, so masking them leaves accuracy unchanged.",
+   "rubric": [
+    "Points to the huge node pool (thousands of heads, many thousands of neurons) relative to the selected circuit size",
+    "Concludes that random picks rarely hit task-critical nodes, so removal does not change accuracy"
+   ],
+   "batch": 1,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q12",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "The sparsity term penalizes only c_{n,i}. Why can this alone move a node out of the circuit under Eq. 1?",
+   "answer": "The validity term keeps c_{n,u} + c_{n,i} near one, so pushing c_{n,i} down effectively pushes c_{n,u} up. Once c_{n,u} exceeds c_{n,i}, the argmax assigns the node as unimportant.",
+   "rubric": [
+    "Notes that the validity or sum-to-one coupling ties the two coefficients together",
+    "Explains that lowering c_i raises c_u until it wins the argmax, removing the node"
+   ],
+   "batch": 1,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q13",
+   "type": "why",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why can the sparsity coefficient of 0.5 listed for Acronym with GPT-2 not have shaped that circuit through the post-warmup objective?",
+   "answer": "The number of warmup epochs (60) equals the total number of epochs (60). The whole run is spent in the warmup phase where L_disc dominates, so the full regularized objective is never applied.",
+   "rubric": [
+    "Identifies that warmup epochs equal total epochs (60/60)",
+    "Concludes that the full objective containing the sparsity-weighted regularizer is never reached after warmup"
+   ],
+   "batch": 1,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q14",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does S\u00b3martCirc take noticeably longer on Llama IOI (901.02 s) than on Llama Acronym (507.67 s)?",
+   "answer": "Part of the difference comes from the hyperparameters: Llama IOI trains for 75 epochs versus 50 for Llama Acronym. Because S\u00b3martCirc's cost is a training loop, more epochs mean more time.",
+   "rubric": [
+    "Cites the epoch difference from Appendix A (75 vs 50)",
+    "Links runtime to the number of training epochs in the optimization"
+   ],
+   "batch": 1,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q15",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "If the two masking coefficients were produced by a softmax over two logits, would removing the validity term change the training objective?",
+   "answer": "No. A softmax guarantees c_{n,u} + c_{n,i} = 1, so the validity term is always zero and contributes no gradient.",
+   "rubric": [
+    "Answers no or no effect",
+    "Explains that a softmax already enforces summing to one, so the validity term is identically zero"
+   ],
+   "batch": 1,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q16",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b1-p1",
+   "question": "If the two masking coefficients were independent free parameters, would removing the validity term change the training objective's behavior?",
+   "answer": "Yes. Without it nothing ties the coefficients together; for example, the sparsity term could shrink c_{n,i} while c_{n,u} drifts arbitrarily. The coefficients would stop being interpretable as probabilities, and the argmax comparison would be affected.",
+   "rubric": [
+    "Answers yes",
+    "Explains that free parameters need the term to enforce sum-to-one, otherwise they drift or lose their probability interpretation, affecting the argmax"
+   ],
+   "batch": 1,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q17",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b1-p2",
+   "question": "On a task where the full model assigns nearly all probability to the correct answer, would moving alpha from 1.0 to 0.0 substantially change what S\u00b3martCirc optimizes?",
+   "answer": "No, not substantially. When P_orig is concentrated on the correct token y, the KL term is approximately -log P_mask(y), which is essentially the cross-entropy term. Both ends of alpha target nearly the same quantity.",
+   "rubric": [
+    "Answers no or little change",
+    "Explains that with P_orig concentrated on y, the KL term reduces approximately to the cross-entropy on y"
+   ],
+   "batch": 1,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q18",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b1-p2",
+   "question": "On a task where the full model often places most probability on an incorrect token, would moving alpha from 1.0 to 0.0 substantially change what S\u00b3martCirc optimizes?",
+   "answer": "Yes. The KL term pulls the circuit toward reproducing the model's incorrect distribution, while the cross-entropy term pulls it toward the ground-truth token. The two objectives diverge, so the selected nodes can differ.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the faithfulness and correctness terms now point to different targets (the model's wrong answer vs the ground truth)"
+   ],
+   "batch": 1,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q19",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": "b1-p3",
+   "question": "If the connectivity-based extraction step were skipped, would IBCircuit's GPT-2 cells in Table 1 still be empty?",
+   "answer": "No. The empty cells mean no connected circuit could be found within the nodes IBCircuit selected, so IBCircuit did select nodes. Without the connectivity pruning, those nodes would be reported as a non-empty circuit.",
+   "rubric": [
+    "Answers no, they would not be empty",
+    "Explains that the emptiness comes from the connectivity requirement removing all selected nodes, not from an absence of selections"
+   ],
+   "batch": 1,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q20",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": "b1-p3",
+   "question": "If the connectivity-based extraction were kept and IBCircuit were simply rerun on GPT-2 a few more times, would its GPT-2 cells be expected to remain empty?",
+   "answer": "Yes, most likely. The cells are already empty when aggregated over three runs on both tasks, which indicates a systematic failure of IBCircuit's node-level selections to form end-to-end circuits rather than bad luck in a single run.",
+   "rubric": [
+    "Answers yes, likely still empty",
+    "Reasons that the failure persisted across three runs on both tasks, so it is systematic rather than run-dependent"
+   ],
+   "batch": 1,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q21",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b1-p4",
+   "question": "If the IOI with GPT-2 warmup were lengthened from 5 epochs to 60, would its sparsity coefficient of 0.3 still influence the circuit through the post-warmup objective?",
+   "answer": "No. That setting trains for 60 epochs, so a 60-epoch warmup would consume the entire run and the full regularized objective would never be applied.",
+   "rubric": [
+    "Answers no",
+    "Notes that 60 warmup epochs would equal the 60 total epochs, leaving no post-warmup phase"
+   ],
+   "batch": 1,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q22",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b1-p4",
+   "question": "If the Acronym with GPT-2 warmup were shortened from 60 epochs to 5, would its sparsity coefficient of 0.5 influence the circuit through the post-warmup objective?",
+   "answer": "Yes. With 60 total epochs, 55 epochs would remain after warmup, during which the full objective, including the sparsity-weighted regularizer, is applied.",
+   "rubric": [
+    "Answers yes",
+    "Notes that 55 post-warmup epochs would remain in which the full regularized objective acts"
+   ],
+   "batch": 1,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q23",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team wants node-level circuits for a model substantially larger than Qwen 3 1.7B under the same 48-hour-per-run limit. Should they use Activation Patching, and why?",
+   "answer": "No. A single Act. run on Qwen 1.7B already takes about 47 to 52 hours, and its cost grows with the number of nodes. On a larger model it would exceed the limit, so they should use a gradient-based method such as S\u00b3martCirc, which took about 1,000 s on Qwen.",
+   "rubric": [
+    "Recommends against Activation Patching",
+    "Cites the roughly 47 to 52 hour Qwen runtime and cost scaling with node count",
+    "Suggests a cheaper joint-optimization method such as S\u00b3martCirc"
+   ],
+   "batch": 1,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q24",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "A team discovers an IOI circuit in Llama 3.2 1B and wants to validate it using the paper's recovery analysis. Can they, and what should they rely on instead?",
+   "answer": "Not directly. The human-verified IOI and Acronym reference circuits exist only for GPT-2, so there is nothing to compute recovery against in Llama. They would have to rely on the masking-based metrics (Circuit Size, Acc., Logit.).",
+   "rubric": [
+    "States that recovery cannot be computed for Llama",
+    "Explains that reference circuits exist only for GPT-2",
+    "Points to the masking-based metrics as the alternative"
+   ],
+   "batch": 1,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q25",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A practitioner wants the most compact Llama IOI circuit and picks IBCircuit because of its 7.33-node size. Is that a good choice given Table 1, and why?",
+   "answer": "No. IBCircuit's Llama IOI circuit produces a 0.00 accuracy drop, so its nodes are not shown to be critical. Compactness is informative only if removing the circuit disrupts behavior; Attr. IG, for example, has a larger circuit but a measurable -5.67 drop.",
+   "rubric": [
+    "Concludes it is not a good choice",
+    "Explains that the 0.00 accuracy drop means the compact circuit is not shown to be necessary, so size must be read jointly with Acc./Logit."
+   ],
+   "batch": 1,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q26",
+   "type": "transfer",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "A team applies the Acronym with GPT-2 hyperparameters unchanged to a new model and expects a compact circuit. Is that expectation justified by the framework's design?",
+   "answer": "No. In that configuration warmup equals total epochs, so the sparsity term never acts through the full objective. Without the sparsity term, the framework itself says the circuit tends toward a near-copy of the full model rather than a compact one. The paper also notes that hyperparameters need per-setting tuning.",
+   "rubric": [
+    "Concludes the expectation is not justified",
+    "Explains that warmup = total epochs disables the post-warmup sparsity pressure, which the paper says is what makes circuits compact",
+    "Optionally notes the paper's call for per-setting tuning"
+   ],
+   "batch": 1,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q27",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A lab with only 16GB GPUs wants to compare Attribution Patching and S\u00b3martCirc on Qwen 3 1.7B. Based on the paper's resources, which method is it more likely to run without changing hardware?",
+   "answer": "S\u00b3martCirc. In the paper, Attr. and Attr. IG on Qwen had to run on 48GB A6000 GPUs because of the model size, whereas S\u00b3martCirc ran on the 16GB GPU clusters.",
+   "rubric": [
+    "Chooses S\u00b3martCirc",
+    "Cites that Attr. on Qwen required 48GB A6000 GPUs while the other experiments used 16GB GPUs"
+   ],
+   "batch": 1,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q28",
+   "type": "transfer",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "For a new task with a very small reference circuit, method A recovers 80% at the 200-node threshold and method B recovers 60% at the 50-node threshold. Which result is stronger evidence of precise node selection, and why?",
+   "answer": "Method B's. Recovery at small thresholds rewards precise selection, while recovery at large thresholds rewards coverage and can be inflated by including many irrelevant nodes.",
+   "rubric": [
+    "Chooses method B's result as stronger evidence of precision",
+    "Explains that small thresholds reward precision while large thresholds reward coverage"
+   ],
+   "batch": 1,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q29",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the Random baseline had produced accuracy drops around -30% on GPT-2, which interpretation in RQ1 would be undermined?",
+   "answer": "The interpretation of Act.'s large drops, and of Attr./Prune.'s near-zero drops, as reflecting the quality of node selection. Random is the lower bound; if arbitrary nodes caused large drops, accuracy drop would not distinguish informed selection from chance.",
+   "rubric": [
+    "Identifies the use of accuracy drop as evidence of good or bad node selection (e.g., Act. being meaningfully better, approximations being poor)",
+    "Explains that Random serves as the lower bound, so a large random drop would make the metric non-discriminative"
+   ],
+   "batch": 1,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If IBCircuit's 7.33-node Llama IOI circuit had caused a large accuracy drop, which argument would lose the example the paper uses for it?",
+   "answer": "The argument that smaller circuits do not systematically correspond to larger effects, so circuit size must be read jointly with accuracy and logit metrics. The comparison with Attr. IG's 47.67 nodes and -5.67 drop would no longer illustrate it.",
+   "rubric": [
+    "Identifies the claim that circuit size does not track performance effect",
+    "Notes that the IBCircuit vs Attr. IG Llama IOI comparison is the paper's example for it"
+   ],
+   "batch": 1,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Activation Patching had produced a connected circuit with a large accuracy drop on Acronym with Llama, which point would lose its illustrating example?",
+   "answer": "The cross-model variation point, i.e., that the same method behaves very differently across architectures and so evaluation across multiple model families is needed. The paper illustrates it by contrasting the empty Llama result with the -100% Qwen result.",
+   "rubric": [
+    "Identifies the cross-model variation claim",
+    "Notes that it rests on the Llama-empty vs Qwen -100% contrast for Act. on Acronym"
+   ],
+   "batch": 1,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q32",
+   "type": "connect",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's runtime on Qwen had exceeded that of Attr. IG and Pruning, which claim would be undermined?",
+   "answer": "The runtime claim that S\u00b3martCirc needs substantially less time than exact patching and the more expensive approximation and pruning methods across all settings. The abstract's efficiency goal would also be weakened.",
+   "rubric": [
+    "Identifies the efficiency claim in the runtime appendix and abstract",
+    "Notes that it is stated to hold across all settings, so the Qwen case would contradict it"
+   ],
+   "batch": 1,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q33",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If an ablation showed that coefficients still cluster near 0.5 at the end of training with the confidence term included, which design claim of the classification stage would be undermined?",
+   "answer": "The claim that the regularizer makes most nodes assigned with high confidence, so the hard assignment in Eq. 1 closely matches the soft training mask and reduces the training-evaluation gap.",
+   "rubric": [
+    "Identifies the claim that the hard assignment closely matches the soft mask, or that the training-evaluation gap is reduced",
+    "Links it to the confidence term's role in pushing coefficients toward binary values"
+   ],
+   "batch": 1,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q34",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc produces larger accuracy drops than the baselines in Table 1? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Table 1 and the RQ1 text report only the baselines; no S\u00b3martCirc accuracy or logit numbers appear, despite the section title. The only quantitative S\u00b3martCirc comparison is runtime.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that Table 1 contains no S\u00b3martCirc row or accuracy/logit numbers, and only runtime is reported for it"
+   ],
+   "batch": 1,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q35",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc is faster than every non-random baseline in every setting? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Attribution Patching is faster on Qwen (829.43 s and 783.17 s vs 982.16 s and 1047.59 s), and on GPT-2 IOI it is nearly tied (267.94 vs 264.44). The paper's own wording restricts the claim to exact patching and the more expensive methods.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites Attr. being faster on Qwen from Table 2"
+   ],
+   "batch": 1,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q36",
+   "type": "scope",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc's discovered circuits are stable across random seeds? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Appendix A says all experiments used seed 42, and no run-to-run variance is reported for S\u00b3martCirc; only the baselines have three-run statistics.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the single seed 42 and the absence of variance reporting for S\u00b3martCirc"
+   ],
+   "batch": 1,
+   "orig_id": "q38"
+  },
+  {
+   "id": "q37",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that the cross-model differences in Table 1 are due to architecture alone? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Datasets are regenerated per tokenizer, keeping only single-token names and valid letters, so the samples differ across models; the Qwen hardware also differed for some methods. Architecture is therefore not isolated.",
+   "rubric": [
+    "Answers not settled",
+    "Cites a confound such as per-tokenizer data regeneration and filtering (or different hardware for some methods)"
+   ],
+   "batch": 1,
+   "orig_id": "q39"
+  },
+  {
+   "id": "q38",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does S\u00b3martCirc's training objective directly optimize the Acc. metric used in Table 1? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Training masks the non-circuit nodes and asks the remaining circuit to preserve the full model's behavior, which is a sufficiency objective. Acc. instead masks the circuit nodes and measures the damage, which is a necessity test.",
+   "rubric": [
+    "Answers contradicted (it does not directly optimize Acc.)",
+    "Explains that training removes the non-circuit nodes to preserve behavior, while evaluation removes the circuit nodes to measure the drop"
+   ],
+   "batch": 1,
+   "orig_id": "q40"
+  },
+  {
+   "id": "q39",
+   "type": "scope",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Does high recovery of the GPT-2 reference circuits by a method show that it will find the true mechanism in Llama or Qwen? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. References exist only for GPT-2, and Table 1 shows that the same method can behave very differently across architectures. Recovery in GPT-2 therefore does not establish correctness elsewhere.",
+   "rubric": [
+    "Answers not settled",
+    "Cites the GPT-2-only references and/or the observed cross-model variation"
+   ],
+   "batch": 1,
+   "orig_id": "q41"
+  },
+  {
+   "id": "q40",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 show that Attribution Patching on Acronym with GPT-2 selects nodes meaningfully better than Random? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Attr. gives a -0.17\u00b10.24 accuracy drop versus Random's 0.00; the difference is smaller than one standard deviation, so the data do not show a meaningful advantage.",
+   "rubric": [
+    "Answers not settled (or no meaningful evidence)",
+    "Notes that -0.17 lies within its \u00b10.24 spread of Random's 0.00"
+   ],
+   "batch": 1,
+   "orig_id": "q42"
+  },
+  {
+   "id": "q41",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 establish that Activation Patching consistently lowers the logit of the original answer on IOI with GPT-2? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The reported Logit. value is -9.11 with a standard deviation of \u00b125.89, much larger than the mean, so the sign of the effect is not reliable across runs.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that the \u00b125.89 standard deviation exceeds the -9.11 mean, so consistency is not established"
+   ],
+   "batch": 1,
+   "orig_id": "q43"
+  },
+  {
+   "id": "q42",
+   "type": "failure",
+   "claims": [
+    "c6",
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose many of S\u00b3martCirc's highest-ranked nodes on GPT-2 IOI were feedforward neurons. Would its recovery percentage at a fixed threshold, such as 50 nodes, fairly reflect the quality of its node selection, and why?",
+   "answer": "No, recovery would understate it. The reference circuits are described only in terms of attention heads (named head types, layer.head labels). S\u00b3martCirc's node set also includes feedforward neurons, so every neuron in the budget uses up a slot that can never match a reference node.",
+   "rubric": [
+    "Concludes recovery would understate or unfairly penalize the method's selection.",
+    "Reason: the reference circuits contain only attention heads, while the node set includes feedforward neurons that can never count as recovered yet consume the fixed node budget."
+   ],
+   "batch": 2,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q43",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Table 1's asterisk says only one Activation Patching run on Qwen was completed within the 48-hour limit. Does this account hold for Qwen IOI once Table 2's runtime is taken into account?",
+   "answer": "No. Table 2 lists 187663.88 s for Act. on Qwen IOI, which is about 52 hours and longer than the 48-hour limit, so even one run would not have fit. Either the runtime measures something other than a single run, or the limit was not applied as stated. Qwen Acronym, at about 46.9 hours, does fit.",
+   "rubric": [
+    "Concludes the account does not hold, or that there is an unresolved inconsistency, for Qwen IOI.",
+    "Reason: 187663.88 s is about 52 hours, which exceeds 48 hours (whereas Qwen Acronym, at about 46.9 hours, fits)."
+   ],
+   "batch": 2,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q44",
+   "type": "failure",
+   "claims": [
+    "c7",
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Under a sparsity coefficient as large as Llama's 1.0, would S\u00b3martCirc be expected to retain a mechanism spread over many feedforward neurons that each contribute only modestly, and why?",
+   "answer": "Probably not. The sparsity term penalizes every node's importance coefficient, and the paper states that larger sparsity coefficients produce smaller circuits at the risk of discarding components that contribute modestly but consistently. A mechanism made of many weak contributors is exactly the case where each node's benefit to the discovery loss may not outweigh its penalty.",
+   "rubric": [
+    "Concludes such a distributed mechanism would likely be partly or largely dropped.",
+    "Reason: the sparsity term penalizes each node's inclusion, and large coefficients discard components with small but consistent contributions, since each weak node's gain does not offset its penalty."
+   ],
+   "batch": 2,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q45",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If a model's tokenizer left only one place/object pair that tokenizes as a single token, would the IOI evaluation set still cover varied sentence contexts, and why?",
+   "answer": "No. The generation draws 1000/p samples from each valid place/object pair. With p = 1, all 1000 samples share the same place and object and differ only in names, so the evaluation reflects one context.",
+   "rubric": [
+    "Concludes the evaluation would lack contextual diversity, with all samples sharing one place/object.",
+    "Reason: samples are drawn as 1000/p per valid pair, so p = 1 puts every sample in that single pair, with only the names varying."
+   ],
+   "batch": 2,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q46",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "On Acronym, suppose a node raises the logits of all capital-letter tokens equally. Would Activation Patching's scoring be expected to rate this node as important, even if removing it hurts accuracy, and why?",
+   "answer": "Likely not. Act. scores a node by the change in the logit difference between the original answer and an alternative response. A node that raises both letters equally leaves that difference unchanged when ablated, even though it may matter for keeping letter tokens above non-letter tokens, which affects accuracy.",
+   "rubric": [
+    "Concludes Activation Patching would likely not rate it as important.",
+    "Reason: its metric is the logit difference between the original answer and an alternative, and an equal boost to both cancels in that difference, so ablation shows little change."
+   ],
+   "batch": 2,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q47",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why can Activation Patching on Qwen Acronym show a -100.00% accuracy drop yet a Logit. change of only -1.00?",
+   "answer": "Logit. tracks only the logit of the original model's predicted answer, while accuracy depends on whether that answer stays the top-ranked token. A modest fall in the answer's logit, combined with competing tokens rising, can flip every prediction even though the tracked logit changes little.",
+   "rubric": [
+    "States that Logit. measures only the original answer's logit, while accuracy depends on its rank relative to competing tokens.",
+    "Explains that a small change in that one logit, together with competitors overtaking it, can flip all predictions."
+   ],
+   "batch": 2,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q48",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Random selects k nodes, yet its Circuit Size varies across runs (e.g., 60.33\u00b17.76 on GPT-2 Acronym). Why?",
+   "answer": "Circuit Size is measured after the shared connectivity extraction step. That step removes selected nodes that cannot be reached from the input embeddings or cannot reach the unembedding. How many randomly chosen nodes fail this test depends on which nodes were drawn, so the final size varies from run to run.",
+   "rubric": [
+    "Attributes the variation to the connectivity-based extraction applied before measuring size.",
+    "Explains that a different number of randomly drawn nodes is removed as unreachable from the input or unable to reach the output in each run."
+   ],
+   "batch": 2,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q49",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does Attr. IG take roughly ten times as long as Attr. on GPT-2 (e.g., 3452.48 s vs 299.54 s on Acronym)?",
+   "answer": "Attr. needs only one gradient-based linear approximation per node score. Attr. IG integrates gradients along a path between the corrupted and clean activations, which requires gradients at many intermediate points, multiplying the cost.",
+   "rubric": [
+    "States that Attr. IG requires many gradient computations, while Attr. needs essentially one.",
+    "Links this to Attr. IG integrating gradients along a path between corrupted and clean activations."
+   ],
+   "batch": 2,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q50",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does the size of the Random baseline's circuits strengthen the conclusion that Activation Patching's accuracy drops come from which nodes it selects, rather than from how many nodes are removed?",
+   "answer": "Random circuits are larger than Act.'s in every setting (about 48 to 77 nodes, against 12 to 39 for Act.), yet removing them causes no accuracy drop. Removing more nodes does not by itself hurt accuracy, so Act.'s large drops must come from the specific nodes it picks.",
+   "rubric": [
+    "Notes that Random circuits are larger than Activation Patching's circuits, yet cause a 0.00 drop.",
+    "Concludes that node count alone does not cause drops, so Activation Patching's drops reflect which nodes it selects."
+   ],
+   "batch": 2,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q51",
+   "type": "why",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Attribution Patching runs faster on Qwen (829.43 s on Acronym) than on the smaller Llama (1114.46 s). Why might this not reflect the method itself?",
+   "answer": "Attr. on Qwen was run on A6000 48GB GPUs, while Llama runs used 16GB A4000/A16 GPUs. The faster Qwen time can reflect the stronger hardware rather than better scaling of the method.",
+   "rubric": [
+    "Identifies a hardware difference: Qwen Attr. ran on A6000 48GB GPUs, while Llama ran on 16GB GPUs.",
+    "Concludes the runtime ordering is confounded by hardware rather than showing a property of the method."
+   ],
+   "batch": 2,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q52",
+   "type": "why",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why would comparing IOI recovery using each method's final Table 1 circuit be biased against Activation Patching (39.33 nodes) relative to Random (77.33 nodes) on GPT-2?",
+   "answer": "Recovery is the fraction of reference nodes contained in the circuit, and a larger circuit has more chances to contain reference nodes. Random's nearly doubled size would inflate its recovery, which is why the paper compares at fixed thresholds of 50 to 200 nodes.",
+   "rubric": [
+    "States that larger circuits naturally recover more reference nodes, so differences in circuit size bias the comparison.",
+    "Notes that fixed-size thresholds control for this."
+   ],
+   "batch": 2,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q53",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": "b2-p1",
+   "question": "Would the Random baseline still show an accuracy drop near 0.00 if, at evaluation, all non-circuit nodes were masked and only its roughly 60 random nodes were kept?",
+   "answer": "No. Keeping only about 60 random nodes out of thousands of heads and neurons removes almost the entire model, so performance would collapse and the drop would be large.",
+   "rubric": [
+    "Answers no: a large accuracy drop would be expected.",
+    "Reason: masking the non-circuit nodes leaves only a few dozen random nodes out of thousands, effectively destroying the model's computation."
+   ],
+   "batch": 2,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q54",
+   "type": "counterfactual",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": "b2-p1",
+   "question": "Would the Random baseline still show an accuracy drop near 0.00 if circuit nodes were still masked as in the paper's protocol, but its k were raised by about ten nodes?",
+   "answer": "Yes. Removing a few dozen random nodes out of thousands already causes no drop, and comparable removals elsewhere also show zero drop (Random at 77.33 nodes on GPT-2 IOI, Prune. at 70.67 on Llama). About ten more random nodes would be expected to leave accuracy essentially unchanged.",
+   "rubric": [
+    "Answers yes: the drop would stay near zero.",
+    "Reason: removing a few dozen random nodes is a tiny fraction of the model, and similar or larger removals in Table 1 (e.g., 77.33-node Random) already show a 0.00 drop."
+   ],
+   "batch": 2,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q55",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": "b2-p2",
+   "question": "Could a discovered circuit made entirely of feedforward neurons receive any credit in the paper's IOI recovery analysis?",
+   "answer": "No. The IOI reference circuit consists of named attention heads (previous token, induction, S-inhibition, name mover heads and so on), so no neuron can match a reference node and recovery would be 0%.",
+   "rubric": [
+    "Answers no: the circuit would receive zero recovery.",
+    "Reason: the reference circuit is made of attention heads only, so neurons cannot match any reference node."
+   ],
+   "batch": 2,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q56",
+   "type": "counterfactual",
+   "claims": [
+    "c6",
+    "c1"
+   ],
+   "pair": "b2-p2",
+   "question": "Could a discovered circuit made entirely of attention heads receive credit in the paper's IOI recovery analysis?",
+   "answer": "Yes. The reference nodes are themselves attention heads, so any reference head the circuit contains counts toward recovery.",
+   "rubric": [
+    "Answers yes: nonzero recovery is possible.",
+    "Reason: the IOI reference circuit is composed of attention heads, so selected heads can match reference nodes."
+   ],
+   "batch": 2,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q57",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "For a coefficient sitting at exactly 0.5, does the confidence term 1/2|v(1-v)| by itself push it toward either 0 or 1?",
+   "answer": "No. The term v(1-v) is symmetric about 0.5 and reaches its maximum there, so the gradient is zero and neither direction is favoured. The push toward 0 or 1 must come from the other loss terms.",
+   "rubric": [
+    "Answers no: there is no push at exactly 0.5.",
+    "Reason: v(1-v) is symmetric with its maximum, and zero gradient, at 0.5, so it favours neither extreme."
+   ],
+   "batch": 2,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q58",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b2-p3",
+   "question": "For a coefficient sitting at 0.8, does the confidence term 1/2|v(1-v)| by itself push it toward 0 or 1?",
+   "answer": "Yes, toward 1. Above 0.5 the term v(1-v) decreases as v increases, so minimizing it moves the coefficient up to 1, the nearer binary value.",
+   "rubric": [
+    "Answers yes: it pushes the coefficient toward 1.",
+    "Reason: above 0.5, v(1-v) decreases as v increases, so the term is minimized by moving to the nearer extreme, 1."
+   ],
+   "batch": 2,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q59",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b2-p4",
+   "question": "If S\u00b3martCirc's runtime on GPT-2 IOI were 2% higher than reported, would it still be faster than Attribution Patching in that setting?",
+   "answer": "No. A 2% increase gives about 269.7 s, which exceeds Attr.'s 267.94 s on GPT-2 IOI.",
+   "rubric": [
+    "Answers no.",
+    "Reason: 264.44 \u00d7 1.02 \u2248 269.7 s, which is greater than Attr.'s 267.94 s."
+   ],
+   "batch": 2,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q60",
+   "type": "counterfactual",
+   "claims": [
+    "c5"
+   ],
+   "pair": "b2-p4",
+   "question": "If S\u00b3martCirc's runtime on GPT-2 IOI were 50% higher than reported, would it still be faster than IBCircuit in that setting?",
+   "answer": "Yes. A 50% increase gives about 396.7 s, still below IBCircuit's 467.19 s on GPT-2 IOI.",
+   "rubric": [
+    "Answers yes.",
+    "Reason: 264.44 \u00d7 1.5 \u2248 396.7 s, which is less than IBCircuit's 467.19 s."
+   ],
+   "batch": 2,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q61",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team studies a task for which no sensible corrupted counterpart prompt can be built. Which of the paper's approaches can they still apply directly: S\u00b3martCirc or the patching-based baselines? Why?",
+   "answer": "S\u00b3martCirc. Its training signal is KL divergence to the full model's own output distribution plus cross-entropy on the ground-truth token, and neither needs a corrupted input. Act., Attr. and Attr. IG all score nodes using corrupted activations or a corrupted-versus-clean difference.",
+   "rubric": [
+    "Chooses S\u00b3martCirc.",
+    "Reason: its loss uses only the full model's outputs and the ground-truth token, while the patching methods require corrupted activations or clean/corrupted differences."
+   ],
+   "batch": 2,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q62",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team's tokenizer encodes every space-prefixed capitalized word as a single token. Can they build the Acronym dataset with the paper's generation procedure, and why?",
+   "answer": "No. A word is kept only if its formatted version tokenizes into exactly two tokens, the first being the space-prefixed capital letter. If every such word is one token, no word qualifies, every letter is discarded, and no samples can be formed.",
+   "rubric": [
+    "Concludes the dataset cannot be built (no valid samples).",
+    "Reason: words are kept only if they split into exactly two tokens beginning with the capital letter, so single-token words leave no valid letters."
+   ],
+   "batch": 2,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q63",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Method A's circuit has 30 nodes, mostly attention heads; method B's has 30 nodes, mostly feedforward neurons. Should a team conclude, from the paper's Circuit Size metric, that the two circuits are equally compact in terms of computation? Why?",
+   "answer": "No. Circuit Size counts every node equally, but an attention head produces a multi-dimensional output while a feedforward neuron has output dimension 1. Equal node counts can therefore correspond to very different amounts of computation.",
+   "rubric": [
+    "Concludes equal Circuit Size does not imply equal computational compactness.",
+    "Reason: heads and neurons are counted as one node each, although a neuron's output dimension is 1 and a head's is larger."
+   ],
+   "batch": 2,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q64",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team on GPT-2 IOI wants a cheaper stand-in for Activation Patching and must choose between Attr. and Attr. IG. Based on Tables 1 and 2, which should they pick, and why?",
+   "answer": "Attr. On GPT-2 IOI it produces a clearly larger accuracy drop than Attr. IG (-12.73% vs -0.17%) and runs about ten times faster (267.94 s vs 2801.64 s), despite Attr. IG being described as more accurate.",
+   "rubric": [
+    "Chooses Attr.",
+    "Reason: it gives a larger drop than Attr. IG on GPT-2 IOI (-12.73 vs -0.17) and is much faster (\u2248268 s vs \u22482802 s)."
+   ],
+   "batch": 2,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q65",
+   "type": "transfer",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team working with a model similar to Llama 3.2 1B can spend at most 1000 seconds per discovery run on comparable hardware, on both IOI and Acronym. Using Table 2, which non-random method fits this budget?",
+   "answer": "Only S\u00b3martCirc, at 507.67 s on Acronym and 901.02 s on IOI. Attr. (about 1114 to 1129 s), IBCircuit (1267 to 1618 s), and Attr. IG, Prune. and Act. all exceed 1000 s on Llama.",
+   "rubric": [
+    "Identifies S\u00b3martCirc as the only non-random method within budget.",
+    "Supports this with Table 2: S\u00b3martCirc takes 507.67 and 901.02 s, while Attr. (\u22481114 to 1129 s) and the other methods exceed 1000 s on Llama."
+   ],
+   "batch": 2,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q66",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team can afford only a single Activation Patching run on GPT-2 Acronym. Can they count on obtaining a large accuracy drop from that run, and why?",
+   "answer": "No. Across the paper's three runs the drop was -54.67% with a standard deviation of 38.33, so individual runs varied enormously. A single run could give a far weaker drop.",
+   "rubric": [
+    "Concludes a large drop is not reliable from a single run.",
+    "Reason: the standard deviation (38.33) is comparable to the mean (-54.67), showing large run-to-run variation."
+   ],
+   "batch": 2,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q67",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Attr. IG had matched Activation Patching's accuracy drops on GPT-2, which explanation in RQ1 would lose support?",
+   "answer": "The explanation that the gradient approximations yield weak circuits because linear and path-integrated approximations diverge from the true effect of an intervention, especially for nonlinear or interacting components. A path-integrated method matching exact patching would undercut that divergence account.",
+   "rubric": [
+    "Identifies the explanation that the approximations diverge from the true intervention effects.",
+    "Explains that Attr. IG matching Activation Patching would show the path-integrated approximation tracking the true effects, undercutting that account."
+   ],
+   "batch": 2,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q68",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Activation Patching's three runs on GPT-2 had shown near-zero variance in accuracy drop, which interpretation in RQ1 would lose its evidence?",
+   "answer": "The interpretation that Act.'s selected nodes are sensitive to the particular corrupted samples used. That claim rests on the large run-to-run variance (e.g., \u00b138.33 and \u00b125.89).",
+   "rubric": [
+    "Identifies the claim that Activation Patching's node selection is sensitive to the corrupted samples used.",
+    "Notes that this claim rests on the high variance across runs."
+   ],
+   "batch": 2,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q69",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If node-level Pruning had produced large accuracy drops in every setting, which stated motivation for S\u00b3martCirc's design would be weakened?",
+   "answer": "The argument that existing mask-based methods are highly sensitive to objective, granularity and post-processing. The paper says this sensitivity, shown by Pruning and IBCircuit's zero drops, is a central motivation for S\u00b3martCirc's self-supervised faithfulness and correctness objectives and its structured regularizer.",
+   "rubric": [
+    "Identifies the claim that mask-based methods are sensitive to objective, granularity and post-processing, which motivates S\u00b3martCirc's objectives and regularizer.",
+    "Notes that this claim relies on Pruning (and IBCircuit) yielding zero drops."
+   ],
+   "batch": 2,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q70",
+   "type": "connect",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "If an ablation removing the confidence term still ended with coefficients near 0 or 1, which component's stated justification would be weakened?",
+   "answer": "The justification for the confidence term. The paper says that without it many coefficients would hover near intermediate values, making the hard assignment of Eq. 1 a poor approximation; near-binary coefficients without it would show it is not needed to close that gap.",
+   "rubric": [
+    "Identifies the confidence term's justification.",
+    "Explains that its stated role is preventing intermediate coefficients and the soft/hard mismatch, which would be unnecessary if coefficients became binary without it."
+   ],
+   "batch": 2,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q71",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If evaluation masked the non-circuit nodes, as training does, rather than the circuit nodes, which RQ1 explanation for Pruning and IBCircuit's results would no longer apply?",
+   "answer": "The explanation that their objectives preserve behavior when the circuit is kept, and that this does not translate into selecting nodes whose removal disrupts behavior. That explanation depends on the mismatch between keep-style objectives and removal-style evaluation, which would disappear.",
+   "rubric": [
+    "Identifies the explanation that keep-the-circuit objectives do not translate to removal-based evaluation.",
+    "Explains that it depends on evaluation masking the circuit nodes, so matching the training-style masking would remove the mismatch."
+   ],
+   "batch": 2,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q72",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Do the standard deviations reported for Logit. in Table 1 provide independent evidence about how much the logit varies across runs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported; they look unreliable. In every row the Logit. standard deviation is identical to the Acc. standard deviation (e.g., -3.54\u00b138.33 next to -54.67\u00b138.33). This suggests the values were copied rather than computed separately.",
+   "rubric": [
+    "Answers that this is not supported (contradicted or not settled), i.e., they are not independent evidence.",
+    "Reason: every Logit. standard deviation equals the Acc. standard deviation in the same row, e.g., \u00b138.33 for both."
+   ],
+   "batch": 2,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q73",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 indicate that node-level Pruning finds task-specific circuits on Llama and Qwen? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted, or at least strongly doubtful. On each of these models, Prune. gives exactly the same Circuit Size, mean and spread, Acc. and Logit. for Acronym and IOI (70.67\u00b13.09 on Llama, 46.00\u00b14.24 on Qwen). This points to a selection that does not depend on the task.",
+   "rubric": [
+    "Answers contradicted (or strongly doubtful).",
+    "Reason: Pruning's results are identical across Acronym and IOI on both Llama (70.67\u00b13.09) and Qwen (46.00\u00b14.24), suggesting the selection does not depend on the task."
+   ],
+   "batch": 2,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q74",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does Pruning's 0.00\u00b10.00 accuracy drop on GPT-2 show that it consistently selects tiny circuits there? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Its GPT-2 circuit sizes vary hugely across runs (32.33\u00b137.97 and 38.33\u00b133.81), so some runs must have produced fairly large circuits. The drop was still zero every time, so its zero effect is not explained by consistently tiny circuits.",
+   "rubric": [
+    "Answers contradicted.",
+    "Reason: the circuit size standard deviation on GPT-2 (\u00b137.97, \u00b133.81) is as large as the mean, implying some large circuits, yet every run had zero drop."
+   ],
+   "batch": 2,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q75",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 show that Attr. IG, described as the more accurate approximation, generally yields more disruptive circuits than Attr.? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not supported as a general claim; the evidence is mixed. Attr. IG is larger on GPT-2 Acronym (-2.00 vs -0.17) and Llama IOI (-5.67 vs -1.50). Attr. is far larger on GPT-2 IOI (-12.73 vs -0.17), slightly larger on Qwen IOI, and the two tie on Qwen Acronym.",
+   "rubric": [
+    "Answers not settled or contradicted as a general claim (mixed evidence).",
+    "Cites cases in both directions, e.g., Attr. IG larger on GPT-2 Acronym or Llama IOI, but Attr. much larger on GPT-2 IOI (-12.73 vs -0.17)."
+   ],
+   "batch": 2,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q76",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Do Pruning's zero accuracy drops in Table 1 show that the original Pruning method of Bhaskar et al. fails at circuit discovery? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper adapted Pruning from edge level to node level and evaluated it under its own removal-based protocol. It even notes that an objective suited to edge-level discovery may not translate, so the results speak only to the adaptation.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the evaluated method was an edge-to-node adaptation under the paper's protocol, which the paper itself says may not translate from edge-level discovery."
+   ],
+   "batch": 2,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q77",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper empirically demonstrate that S\u00b3martCirc handles redundancy and compensation between nodes better than patching methods? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The advantage is argued conceptually: soft masks let each node be evaluated in the context of all others. But Table 1 reports only baselines, and no experiment isolates redundant or compensating nodes for S\u00b3martCirc.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the claim is a conceptual argument, and no S\u00b3martCirc results or targeted redundancy experiments are reported (Table 1 covers baselines only)."
+   ],
+   "batch": 2,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q78",
+   "type": "scope",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper quantitatively show that the warmup phase improves the circuits S\u00b3martCirc discovers? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The ablation (Figure 6) is described only qualitatively, with no numbers comparing runs with and without warmup. The warmup lengths in Appendix A are simply chosen per setting.",
+   "rubric": [
+    "Answers not settled.",
+    "Reason: the ablation is described only qualitatively, and no with/without-warmup numbers are given."
+   ],
+   "batch": 2,
+   "orig_id": "q37"
+  },
+  {
+   "id": "q79",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose a team sets S\u00b3martCirc's sparsity coefficient close to zero to get larger circuits. Would the hard assignment of Eq. 1 still be expected to closely match the soft mask, and why?",
+   "answer": "Not necessarily. The confidence and validity terms sit inside the same regularizer that the sparsity coefficient weights. Setting that coefficient near zero therefore also removes the pressure toward binary coefficients, and coefficients may stay at intermediate values, which makes the hard assignment a poor approximation of the trained soft mask.",
+   "rubric": [
+    "Says the close soft/hard match would no longer be assured (or would likely degrade).",
+    "Explains that the confidence (and validity) terms are part of the regularizer weighted by the sparsity coefficient, so lowering it weakens the push toward 0/1 values."
+   ],
+   "batch": 3,
+   "orig_id": "q79"
+  },
+  {
+   "id": "q80",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "The IOI generator draws 1000/p samples from each valid place/object pair. What would go wrong with this procedure if a tokenizer left more than 1000 valid place/object pairs?",
+   "answer": "1000/p would fall below one sample per pair. A balanced set of 1000 samples with an equal whole number of samples per pair could then not be drawn as described.",
+   "rubric": [
+    "States that the per-pair sample count would be less than one (fractional), so the balanced 1000-sample set cannot be formed as described.",
+    "Ties this to the 1000/p rule and the requirement of equal sampling per place/object pair."
+   ],
+   "batch": 3,
+   "orig_id": "q80"
+  },
+  {
+   "id": "q81",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose the full model often predicts a wrong token on a task. Would a large negative Logit. value for a circuit then show that the circuit supports task-correct behavior, and why?",
+   "answer": "No. Logit. is computed on the logit of the original model's predicted answer, not the ground-truth answer. When the model is often wrong, a large drop may only mean the circuit supported the model's wrong predictions.",
+   "rubric": [
+    "Says no, it would not establish support for correct behavior.",
+    "Explains that Logit. tracks the original model's predicted answer rather than the ground-truth token, so it can reflect components behind wrong predictions."
+   ],
+   "batch": 3,
+   "orig_id": "q81"
+  },
+  {
+   "id": "q82",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "If the full model's accuracy on a task were near zero, would the paper's Acc. metric still discriminate well between discovery methods, and why?",
+   "answer": "No. Acc. is the percent drop from the original model's accuracy. With a near-zero starting accuracy there is almost no accuracy to remove, and a relative percentage of a tiny baseline is unstable. Methods would then look alike or noisy no matter which nodes they selected.",
+   "rubric": [
+    "Says the metric would discriminate poorly or become unreliable.",
+    "Explains that Acc. is a drop relative to the original model's accuracy, so a near-zero baseline leaves little room to drop and makes the percentage unstable."
+   ],
+   "batch": 3,
+   "orig_id": "q82"
+  },
+  {
+   "id": "q83",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Suppose connectivity extraction removed many of the nodes that S\u00b3martCirc's Eq. 1 assignment selected. Would the circuit evaluated in Table-style metrics still correspond to the masked model that S\u00b3martCirc's training optimized, and why?",
+   "answer": "No. Training shaped the coefficients with all softly-masked nodes present, and the extraction step runs only afterward without being part of the objective. Removing many selected nodes yields a different node set from the one the loss was minimized for, which widens the training/evaluation gap.",
+   "rubric": [
+    "Says the evaluated circuit would diverge from the trained masked model.",
+    "Explains that connectivity extraction is applied after training and is not accounted for in the discovery loss, so removed nodes change the circuit relative to what was optimized."
+   ],
+   "batch": 3,
+   "orig_id": "q83"
+  },
+  {
+   "id": "q84",
+   "type": "failure",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose a method correctly selects IOI heads that make small but consistent contributions and that the original Wang et al. analysis missed. Would its recovery percentage at the 50-node threshold reward this, and why?",
+   "answer": "No, it could lower the score. Recovery counts only nodes in the reference circuit. Slots spent on genuinely relevant but unlisted heads are not credited and leave fewer slots for reference nodes at a small threshold.",
+   "rubric": [
+    "Says recovery would not reward it, and could lower it.",
+    "Explains that recovery only credits reference nodes, and the paper notes the reference may omit small-but-consistent components, so the limited threshold slots go uncredited."
+   ],
+   "batch": 3,
+   "orig_id": "q84"
+  },
+  {
+   "id": "q85",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "Why is the rule c_{n,i} > c_{n,u} in Eq. 1 equivalent to including a node whenever c_{n,i} exceeds 0.5, and what condition must hold for that equivalence?",
+   "answer": "If the two coefficients sum to one, then c_{n,u} = 1 \u2212 c_{n,i}. In that case c_{n,i} > c_{n,u} holds exactly when c_{n,i} > 0.5. The equivalence depends on the sum-to-one constraint that the validity term is meant to enforce.",
+   "rubric": [
+    "States that under the sum-to-one constraint, c_i > c_u is the same as c_i > 0.5.",
+    "Gives the reason: c_u = 1 \u2212 c_i.",
+    "Notes the condition: coefficients must actually sum to one (the validity property)."
+   ],
+   "batch": 3,
+   "orig_id": "q85"
+  },
+  {
+   "id": "q86",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Why does S\u00b3martCirc need the full model's output distribution for the training prompts in all six configurations listed in Appendix A?",
+   "answer": "Every configuration uses alpha of 0.25 or 0.75, which is never zero. The KL faithfulness term in Eq. 2 is therefore always active, and it compares the masked model's distribution with P_orig from the full model.",
+   "rubric": [
+    "States that the KL faithfulness term is active in every configuration.",
+    "Explains that alpha is 0.25 or 0.75 (never 0) in all settings, and that the KL term requires P_orig from the full model."
+   ],
+   "batch": 3,
+   "orig_id": "q86"
+  },
+  {
+   "id": "q87",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Why can the empty Llama Acronym cells for Act. and Attr. in Table 1 not be explained by the 48-hour time limit?",
+   "answer": "Table 2 shows that a run took about 61,510 s (about 17 hours) for Act. and 1,114 s for Attr. on Llama Acronym. Both are well under 48 hours, and neither entry carries the one-run asterisk. The empty cells therefore mean that the nodes the methods selected did not form an end-to-end connected circuit.",
+   "rubric": [
+    "States that the runs finished within the limit, citing the Table 2 runtimes (~61.5k s and ~1.1k s) and/or the absence of an asterisk.",
+    "Concludes that the empty cells reflect the selected nodes failing the connectivity requirement, not a timeout."
+   ],
+   "batch": 3,
+   "orig_id": "q87"
+  },
+  {
+   "id": "q88",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Attr. on GPT-2 Acronym shows Logit. +0.46 together with Acc. \u22120.17. What does the positive sign indicate about the nodes Attr. selected, and why can it be read that way?",
+   "answer": "Elsewhere in Table 1, negative Logit. values accompany accuracy drops; for example, Act. on Qwen Acronym has \u22121.00 with \u2212100% Acc. Negative therefore means the original answer's logit fell. A positive value means that masking Attr.'s circuit slightly raised that logit on average, so the selected nodes were not supporting the answer and may even have been mildly suppressing it.",
+   "rubric": [
+    "Interprets +0.46 as masking the circuit slightly increasing the original answer's logit, so the nodes do not support (or slightly suppress) the answer.",
+    "Justifies the sign reading from the table pattern in which negative Logit. accompanies accuracy drops."
+   ],
+   "batch": 3,
+   "orig_id": "q88"
+  },
+  {
+   "id": "q89",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Why does the Acronym generator keep a word only if its formatted version's first token is the space-prefixed capital letter?",
+   "answer": "The task requires the model to retrieve a word's capital letter and output it; the reference circuit uses letter mover heads for this step. The letter must therefore exist as its own token in the prompt so it can be read and copied as the answer token. Words whose first token merges the letter with other characters would not provide this.",
+   "rubric": [
+    "States that the capital letter must appear as a standalone token in the prompt.",
+    "Links this to the task mechanism: the model retrieves or copies that letter token to predict the acronym letter."
+   ],
+   "batch": 3,
+   "orig_id": "q89"
+  },
+  {
+   "id": "q90",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "What does Act.'s \u2212100.00% Acc. on Qwen Acronym imply about the masked model's accuracy, and why?",
+   "answer": "It implies the model with Act.'s circuit nodes masked answered none of the samples correctly. Acc. is the percent drop from the original model's accuracy, so a 100% drop means accuracy fell all the way to zero, at least in the single completed run.",
+   "rubric": [
+    "States that accuracy with the circuit masked was zero.",
+    "Explains that Acc. is a percent drop from the original accuracy, so \u2212100% means all of it was lost."
+   ],
+   "batch": 3,
+   "orig_id": "q90"
+  },
+  {
+   "id": "q91",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b3-p1",
+   "question": "Under Eq. 1, would a node with c_{n,i} = 0.6 and c_{n,u} = 0.4 be selected as a candidate circuit node?",
+   "answer": "Yes. c_{n,i} is the larger of the two coefficients, so the argmax assigns the node to the circuit, before any connectivity pruning.",
+   "rubric": [
+    "Says yes, it is selected.",
+    "Reason: c_i is the argmax of the two coefficients."
+   ],
+   "batch": 3,
+   "orig_id": "q91"
+  },
+  {
+   "id": "q92",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b3-p1",
+   "question": "Under Eq. 1, would a node with c_{n,i} = 0.6 and c_{n,u} = 0.7 be selected as a candidate circuit node?",
+   "answer": "No. Eq. 1 compares the two coefficients rather than thresholding c_{n,i} at 0.5. Here c_{n,u} is larger, so the node is excluded even though c_{n,i} exceeds 0.5; this is possible because the validity constraint is violated.",
+   "rubric": [
+    "Says no, it is not selected.",
+    "Reason: the argmax picks c_u, since Eq. 1 compares the two coefficients rather than applying a fixed 0.5 threshold on c_i (the sum-to-one property is violated)."
+   ],
+   "batch": 3,
+   "orig_id": "q92"
+  },
+  {
+   "id": "q93",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p2",
+   "question": "Would a node with c_{n,i} = 0.9 whose output cannot reach the unembedding appear in S\u00b3martCirc's final circuit?",
+   "answer": "No. It passes Eq. 1, but the connectivity extraction step removes nodes that cannot reach the unembedding, because they cannot take part in an end-to-end computation.",
+   "rubric": [
+    "Says no.",
+    "Reason: connectivity extraction removes nodes whose output cannot reach the unembedding, despite their high c_i."
+   ],
+   "batch": 3,
+   "orig_id": "q93"
+  },
+  {
+   "id": "q94",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": "b3-p2",
+   "question": "Would a node with c_{n,i} = 0.9 that receives input from the embeddings and whose output reaches the unembedding appear in S\u00b3martCirc's final circuit?",
+   "answer": "Yes. It is selected by Eq. 1 because c_{n,i} > c_{n,u}, and it satisfies both connectivity conditions, so extraction keeps it.",
+   "rubric": [
+    "Says yes.",
+    "Reason: it wins the argmax and meets both the input-reachability and output-reachability conditions of extraction."
+   ],
+   "batch": 3,
+   "orig_id": "q94"
+  },
+  {
+   "id": "q95",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p3",
+   "question": "In Acronym data generation, would a word whose formatted version tokenizes as [' A', 'pple'] be kept?",
+   "answer": "Yes. It tokenizes into exactly two tokens, and the first is the space-prefixed capital letter, so it meets the filter.",
+   "rubric": [
+    "Says yes, it is kept.",
+    "Reason: exactly two tokens, with the first being the space-prefixed capital letter."
+   ],
+   "batch": 3,
+   "orig_id": "q95"
+  },
+  {
+   "id": "q96",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p3",
+   "question": "In Acronym data generation, would a word whose formatted version tokenizes as [' Ap', 'ple'] be kept?",
+   "answer": "No. It has two tokens, but the first token is not the space-prefixed capital letter alone, so the filter discards it.",
+   "rubric": [
+    "Says no, it is discarded.",
+    "Reason: the first token is not the lone space-prefixed capital letter."
+   ],
+   "batch": 3,
+   "orig_id": "q96"
+  },
+  {
+   "id": "q97",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "Would a name that tokenizes as a single token under GPT-2's tokenizer be eligible for the GPT-2 IOI dataset?",
+   "answer": "Yes. The IOI generator keeps names that tokenize as a single token for the given model's tokenizer.",
+   "rubric": [
+    "Says yes.",
+    "Reason: the filter is a single-token check against that model's tokenizer."
+   ],
+   "batch": 3,
+   "orig_id": "q97"
+  },
+  {
+   "id": "q98",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b3-p4",
+   "question": "Would that same name be eligible for the Qwen IOI dataset if Qwen's tokenizer splits it into two tokens?",
+   "answer": "No. Datasets are regenerated per tokenizer, and only names that are single tokens under Qwen's tokenizer are kept, so this name is excluded there.",
+   "rubric": [
+    "Says no.",
+    "Reason: data are regenerated per model, and the name fails the single-token filter under Qwen's tokenizer."
+   ],
+   "batch": 3,
+   "orig_id": "q98"
+  },
+  {
+   "id": "q99",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team wants to apply S\u00b3martCirc to a task for which they have no ground-truth answer labels. Which alpha setting lets them use Eq. 2 unchanged, and why?",
+   "answer": "alpha = 1.0. At that value the cross-entropy term on the ground-truth token gets zero weight, and only the KL term to the full model's own distribution remains, which needs no labels.",
+   "rubric": [
+    "Chooses alpha = 1.0.",
+    "Explains that this zeroes the cross-entropy term, which is the only term requiring ground-truth labels, leaving only the KL to the full model."
+   ],
+   "batch": 3,
+   "orig_id": "q99"
+  },
+  {
+   "id": "q100",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team runs S\u00b3martCirc with a 5-epoch warmup and a sparsity coefficient of 1.0 on a new model. Most coefficients collapse toward exclusion before the task signal seems to have shaped them. Which hyperparameter does the paper's reasoning suggest changing first, and in which direction?",
+   "answer": "Lengthen the warmup. The paper says very short warmups expose coefficients to the sparsity penalty before a reasonable candidate set has formed, which drives them toward zero early. A longer warmup lets the discovery objective dominate first.",
+   "rubric": [
+    "Recommends increasing the warmup length.",
+    "Explains that a short warmup lets the sparsity penalty act on uninformed coefficients before the discovery objective forms a candidate set."
+   ],
+   "batch": 3,
+   "orig_id": "q100"
+  },
+  {
+   "id": "q101",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team has a new edge-level discovery method and wants to add a row to Table 1. What must they do so that the comparison follows the paper's protocol?",
+   "answer": "They must adapt the method to select nodes (heads and neurons) from the shared node set, as the paper did for Pruning, and apply the shared connectivity extraction. They should report Circuit Size, Acc. and Logit. with the circuit nodes masked, over three runs, on datasets regenerated for each model's tokenizer.",
+   "rubric": [
+    "Says the method must be adapted to node level over the shared head/neuron node set.",
+    "Says it must use the shared end-to-end connectivity extraction and the shared metrics, computed by masking circuit nodes (with per-tokenizer data and three runs as supporting details)."
+   ],
+   "batch": 3,
+   "orig_id": "q101"
+  },
+  {
+   "id": "q102",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Suppose a model's nodes respond almost linearly to moving between clean and corrupted activations and act largely independently of one another. Would the paper's explanation predict that Attr.'s circuits behave more like Act.'s on that model, and why?",
+   "answer": "Yes. The paper attributes the gap between the approximations and Act. to the linear and path-integrated estimates diverging from the true intervention effect for components that are nonlinear or depend on other components. Removing those conditions removes the stated source of divergence.",
+   "rubric": [
+    "Says yes, Attr. should track Act. more closely.",
+    "Explains that the paper attributes the divergence to nonlinear or interdependent component contributions, which are absent here."
+   ],
+   "batch": 3,
+   "orig_id": "q102"
+  },
+  {
+   "id": "q103",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team only needs the circuit to keep the correct answer highly probable and does not care how probability is spread over the other tokens. Toward which end of the alpha range should they set S\u00b3martCirc, and why?",
+   "answer": "Toward alpha = 0. That endpoint weights only the correctness term, so the masked model may change the rest of the distribution freely as long as it assigns high probability to the ground-truth token. High alpha would force it to also reproduce the alternatives' probabilities.",
+   "rubric": [
+    "Chooses low alpha (toward 0).",
+    "Explains that low alpha emphasizes cross-entropy on the ground-truth token and drops the KL requirement to match the full distribution."
+   ],
+   "batch": 3,
+   "orig_id": "q103"
+  },
+  {
+   "id": "q104",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team suspects that one node in their task only matters when a backup node is absent. Should they rely on Attr. IG scores or on S\u00b3martCirc to capture this, according to the paper's reasoning, and why?",
+   "answer": "S\u00b3martCirc. Attr. IG, like the other patching approximations, scores each node independently, so interactions such as compensation are not reflected. S\u00b3martCirc's joint soft-mask optimization evaluates each node in the context of all the others.",
+   "rubric": [
+    "Chooses S\u00b3martCirc.",
+    "Explains that Attr. IG scores nodes in isolation, while S\u00b3martCirc's joint optimization accounts for interactions such as compensation or redundancy."
+   ],
+   "batch": 3,
+   "orig_id": "q104"
+  },
+  {
+   "id": "q105",
+   "type": "connect",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If Figure 5 had shown that alpha = 0 on GPT-2 IOI yields circuits as good as alpha = 0.75, which argument from the ablation discussion would lose support?",
+   "answer": "The argument that removing the faithfulness term would make the optimization keep only a narrow set of components that boost one token. alpha = 0 is exactly the setting in which the KL faithfulness term is switched off.",
+   "rubric": [
+    "Identifies the RQ4 claim that dropping the faithfulness term harms the circuit (it retains only narrow components that boost one token).",
+    "Links this to alpha = 0 being equivalent to removing the KL term in Eq. 2."
+   ],
+   "batch": 3,
+   "orig_id": "q105"
+  },
+  {
+   "id": "q106",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If the alpha sweep in Figure 5 had produced essentially the same circuit at every alpha value, which choice in Appendix A would lose its justification?",
+   "answer": "The per-setting choice of alpha, 0.25 for GPT-2 Acronym and Llama IOI versus 0.75 elsewhere, and more broadly the claim that alpha is the most important hyperparameter that needs per-setting tuning.",
+   "rubric": [
+    "Identifies the per-setting alpha values (0.25 vs 0.75) and/or the claim that alpha is the key hyperparameter requiring tuning.",
+    "Explains that an alpha-insensitive result would remove the reason to vary or tune it."
+   ],
+   "batch": 3,
+   "orig_id": "q106"
+  },
+  {
+   "id": "q107",
+   "type": "connect",
+   "claims": [
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Suppose Act.'s GPT-2 IOI circuits, which cause about a \u221270% accuracy drop, recovered almost none of the reference IOI nodes. Which caveat stated in RQ2 would this case illustrate?",
+   "answer": "It would illustrate the caveat that accuracy drop and recovery can disagree: a method can select nodes whose removal is damaging for reasons unrelated to the described mechanism. This is why the paper treats the two lenses as complementary.",
+   "rubric": [
+    "Identifies the RQ2 caveat that a method can score well on accuracy drop but poorly on recovery.",
+    "States the reason given: the nodes may be damaging for reasons unrelated to the reference mechanism, so the two metrics complement each other."
+   ],
+   "batch": 3,
+   "orig_id": "q107"
+  },
+  {
+   "id": "q108",
+   "type": "connect",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "If, during S\u00b3martCirc training, coefficients of many nodes received no gradient and stayed at their initial values, which claimed advantage of mask-based discovery over patching would be undermined?",
+   "answer": "The claim that soft masking lets gradients flow to every coefficient, so each node is evaluated in the context of all others. That joint evaluation is what is supposed to handle redundancy and compensation.",
+   "rubric": [
+    "Identifies the claim that soft masking lets gradients reach every coefficient, giving context-dependent, joint evaluation.",
+    "Notes that this is the basis for handling redundancy and compensation better than patching."
+   ],
+   "batch": 3,
+   "orig_id": "q108"
+  },
+  {
+   "id": "q109",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If the Acronym reference circuit had been as large as the IOI reference circuit, which statement about Figure 7 would lose its stated basis?",
+   "answer": "The statement that Acronym recovery is a more demanding, more stringent test of precise node selection. That rests on the reference being small, so that each missed node costs a large fraction of it.",
+   "rubric": [
+    "Identifies the claim that Acronym recovery is more stringent or demanding.",
+    "Explains that this claim rests on the small reference size, where each miss is a large fraction."
+   ],
+   "batch": 3,
+   "orig_id": "q109"
+  },
+  {
+   "id": "q110",
+   "type": "connect",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc had used identical hyperparameters in all six model/task settings, which RQ3 claim would lose the evidence the paper offers for it?",
+   "answer": "The claim that mask-based discovery needs careful per-setting tuning. The paper supports it by noting that the Appendix A values vary noticeably across settings, reflecting model size and task structure.",
+   "rubric": [
+    "Identifies the RQ3 claim that per-setting tuning is needed.",
+    "Notes that the evidence cited is the noticeable variation of the Appendix A values across settings."
+   ],
+   "batch": 3,
+   "orig_id": "q110"
+  },
+  {
+   "id": "q111",
+   "type": "scope",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Is S\u00b3martCirc's training signal, as configured in the experiments, derived entirely from the model itself without external labels? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. Eq. 2 includes a cross-entropy term on the ground-truth token y, and every configuration uses alpha below 1 (0.25 or 0.75). External answer labels therefore always contribute to the loss.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites the cross-entropy term on ground-truth y being active because alpha < 1 in all settings."
+   ],
+   "batch": 3,
+   "orig_id": "q111"
+  },
+  {
+   "id": "q112",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that discovered circuits hold for IOI sentences phrased differently from its generated prompts? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. All IOI samples are generated from a single template ('When [NAME_1] and [NAME_2] went to the [PLACE], [NAME_1] handed the [OBJECT] to'), so no other phrasings are evaluated.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that all IOI data come from one fixed template, so other phrasings are never tested."
+   ],
+   "batch": 3,
+   "orig_id": "q112"
+  },
+  {
+   "id": "q113",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Is S\u00b3martCirc faster than both optimization-based baselines (IBCircuit and Prune.) in every setting of Table 2? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported. In all six settings S\u00b3martCirc's runtime (197 to 1048 s) is below IBCircuit's (427 to 5153 s) and far below Prune.'s (about 3,392 to 21,001 s).",
+   "rubric": [
+    "Answers supported.",
+    "Cites Table 2: S\u00b3martCirc's runtime is lower than both IBCircuit and Prune. in each of the six settings."
+   ],
+   "batch": 3,
+   "orig_id": "q113"
+  },
+  {
+   "id": "q114",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the unified protocol compare which edges between components each method discovers? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The protocol works at the node level: Circuit Size counts nodes, recovery is judged on node membership, and the edge-level Pruning method was adapted to select nodes. Connectivity is used only to filter nodes, not to compare edges.",
+   "rubric": [
+    "Answers contradicted.",
+    "Explains that the protocol is node-level (node counts, node-membership recovery, Pruning adapted from edges to nodes), with connectivity used only for filtering."
+   ],
+   "batch": 3,
+   "orig_id": "q114"
+  },
+  {
+   "id": "q115",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper establish that alpha = 0.75 is the best setting for Qwen 3 1.7B? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The alpha sweep in Figure 5 is reported only for GPT-2 on IOI. The Qwen values are listed in Appendix A without a sweep, and a single seed was used.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the alpha analysis covers only GPT-2 IOI, so Qwen's value is not validated by a sweep."
+   ],
+   "batch": 3,
+   "orig_id": "q115"
+  },
+  {
+   "id": "q116",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does S\u00b3martCirc differ from the baselines in Table 1 by being the only method that considers feedforward neurons as well as attention heads? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. The paper states that all compared discovery methods operate over the same node set and graph abstraction, which consists of attention heads and feedforward neurons, with baselines adapted to the node level.",
+   "rubric": [
+    "Answers contradicted.",
+    "Cites that all methods share the same node set of heads and feedforward neurons."
+   ],
+   "batch": 3,
+   "orig_id": "q116"
+  },
+  {
+   "id": "q117",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Do the Appendix A settings show that larger models require smaller learning rates for S\u00b3martCirc? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. GPT-2 uses 0.01 or 0.005 and the larger models use 0.001, but no learning-rate ablation is reported. Several other hyperparameters change across the same settings, and only one seed is used, so the pattern is a configuration choice, not a demonstrated requirement.",
+   "rubric": [
+    "Answers not settled.",
+    "Explains that the learning rates are only listed (no ablation) and are confounded with other changing hyperparameters and a single seed."
+   ],
+   "batch": 3,
+   "orig_id": "q117"
+  },
+  {
+   "id": "q118",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "Under the faithfulness term of Eq. 2, is the masked model directly penalized for lowering the probability of a token to which the full model assigns 30% probability?",
+   "answer": "Yes. That token's KL contribution is weighted by P_orig = 0.3, and log(P_orig/P_mask) grows as P_mask falls, so the loss rises directly.",
+   "rubric": [
+    "Answers yes, it is directly penalized",
+    "Explains that the token's KL term is weighted by its full-model probability (0.3) and grows as the masked probability drops below it"
+   ],
+   "batch": 4,
+   "orig_id": "q1"
+  },
+  {
+   "id": "q119",
+   "type": "counterfactual",
+   "claims": [
+    "c1"
+   ],
+   "pair": "b4-p1",
+   "question": "Under the faithfulness term of Eq. 2, is the masked model directly penalized for raising the probability of a token to which the full model assigns nearly zero probability?",
+   "answer": "No, not directly. That token's KL term is weighted by its near-zero P_orig, so it contributes almost nothing. The only penalty is indirect: the extra mass must be taken from tokens the full model favors.",
+   "rubric": [
+    "Answers no direct penalty (or only an indirect or negligible one)",
+    "Explains that the token's term is weighted by P_orig \u2248 0, so any penalty comes only through mass removed from tokens with high full-model probability"
+   ],
+   "batch": 4,
+   "orig_id": "q2"
+  },
+  {
+   "id": "q120",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b4-p2",
+   "question": "With alpha = 0, would moving probability from one incorrect token to another, while P_mask(y) stays fixed, change S\u00b3martCirc's discovery loss L_disc?",
+   "answer": "No. At alpha = 0 only the cross-entropy term \u2212log P_mask(y) remains, and it depends only on the ground-truth token's probability.",
+   "rubric": [
+    "Answers no, the loss is unchanged",
+    "Explains that with alpha = 0 only \u2212log P_mask(y) is left, which ignores how probability is spread over the other tokens"
+   ],
+   "batch": 4,
+   "orig_id": "q3"
+  },
+  {
+   "id": "q121",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c7"
+   ],
+   "pair": "b4-p2",
+   "question": "With alpha = 0.75, would moving probability from one incorrect token to another, while P_mask(y) stays fixed, change S\u00b3martCirc's discovery loss L_disc?",
+   "answer": "Yes, in general. The KL term carries weight 0.75 and compares the whole masked distribution with the full model's, so redistributing mass among incorrect tokens changes it.",
+   "rubric": [
+    "Answers yes, the loss generally changes",
+    "Explains that the KL (faithfulness) term with nonzero weight compares the entire output distribution, including the non-answer tokens"
+   ],
+   "batch": 4,
+   "orig_id": "q4"
+  },
+  {
+   "id": "q122",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7",
+    "c3"
+   ],
+   "pair": "b4-p3",
+   "question": "If S\u00b3martCirc were run three times on GPT-2 Acronym, as each baseline was, would its total runtime still be below that of a single Activation Patching run there?",
+   "answer": "Yes. Three runs take about 3 \u00d7 197.14 \u2248 591 s, far below Act.'s 6239.72 s for one run.",
+   "rubric": [
+    "Answers yes",
+    "Supports it with the numbers: about 591 s for three S\u00b3martCirc runs versus 6239.72 s for one Act. run"
+   ],
+   "batch": 4,
+   "orig_id": "q5"
+  },
+  {
+   "id": "q123",
+   "type": "counterfactual",
+   "claims": [
+    "c5",
+    "c7",
+    "c3"
+   ],
+   "pair": "b4-p3",
+   "question": "If S\u00b3martCirc were run three times on GPT-2 Acronym, as each baseline was, would its total runtime still be below that of a single Attribution Patching run there?",
+   "answer": "No. Three runs take about 591 s, which exceeds Attr.'s 299.54 s for one run. Its advantage over Attr. on GPT-2 relies on reporting a single seed.",
+   "rubric": [
+    "Answers no",
+    "Supports it with the numbers: about 591 s for three S\u00b3martCirc runs versus 299.54 s for one Attr. run"
+   ],
+   "batch": 4,
+   "orig_id": "q6"
+  },
+  {
+   "id": "q124",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "Two nodes are perfectly redundant: keeping either one alone preserves the task exactly. With a positive sparsity coefficient applied after warmup, would S\u00b3martCirc be expected to exclude one of them?",
+   "answer": "Yes. L_disc is the same whether one or both nodes are kept, but the sparsity term penalizes each node's c_{n,i}. Keeping only one therefore gives a lower total loss.",
+   "rubric": [
+    "Answers yes, one is expected to be excluded",
+    "Explains that the discovery loss is unaffected by dropping one redundant node, while the sparsity term charges for each included node"
+   ],
+   "batch": 4,
+   "orig_id": "q7"
+  },
+  {
+   "id": "q125",
+   "type": "counterfactual",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": "b4-p4",
+   "question": "Two nodes are perfectly redundant: keeping either one alone preserves the task exactly. If the sparsity coefficient that weights the regularizer were set to zero, would S\u00b3martCirc be expected to exclude one of them?",
+   "answer": "No. The regularizer is weighted by the sparsity coefficient, so at zero only L_disc acts. L_disc is indifferent between keeping one or both nodes, so nothing pushes either out.",
+   "rubric": [
+    "Answers no, there is no expected pressure to exclude one",
+    "Explains that a zero coefficient removes the regularizer (including the sparsity term), and L_disc does not distinguish keeping one redundant node from keeping both"
+   ],
+   "batch": 4,
+   "orig_id": "q8"
+  },
+  {
+   "id": "q126",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p5",
+   "question": "If the sparsity term in S\u00b3martCirc's regularizer penalized c_{n,u} instead of c_{n,i}, would the regularizer still push toward compact circuits?",
+   "answer": "No. It would push c_{n,u} down. With the validity term keeping the sum near one, c_{n,i} would rise, favoring inclusion and producing larger circuits.",
+   "rubric": [
+    "Answers no, it would favor inclusion or larger circuits",
+    "Explains that lowering c_{n,u} raises c_{n,i} relative to it (through validity and Eq. 1), so more nodes satisfy c_{n,i} > c_{n,u}"
+   ],
+   "batch": 4,
+   "orig_id": "q9"
+  },
+  {
+   "id": "q127",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b4-p5",
+   "question": "If the sparsity term in S\u00b3martCirc's regularizer penalized c_{n,i}\u00b2 instead of c_{n,i}, would the regularizer still push toward compact circuits?",
+   "answer": "Yes. The penalty still grows with c_{n,i}, so including a node is still costly. The pressure is just weaker on nodes whose c_{n,i} is already small.",
+   "rubric": [
+    "Answers yes",
+    "Explains that the penalty still increases with the importance coefficient, so inclusion remains penalized (possibly with weaker pressure near zero)"
+   ],
+   "batch": 4,
+   "orig_id": "q10"
+  },
+  {
+   "id": "q128",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Under the paper's Acronym generation procedure, what would go wrong if a model's tokenizer left only a few valid letters?",
+   "answer": "Letters with no valid words are discarded, and abbreviations are built only from the remaining letters. The 1000 samples would then cover only a small set of answer letters. The circuits and Acc values would reflect a narrow, letter-specific version of the task rather than general acronym prediction.",
+   "rubric": [
+    "States that the dataset would cover only a few answer letters or abbreviations, so it becomes narrow or unrepresentative",
+    "Explains this through the rule that letters without valid words are discarded and abbreviations are built only from valid letters"
+   ],
+   "batch": 4,
+   "orig_id": "q11"
+  },
+  {
+   "id": "q129",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Would S\u00b3martCirc's claimed advantage, that each node is evaluated in the context of all others, still hold if the regularizer drove the coefficients to near-binary values very early in training, before L_disc had shaped them?",
+   "answer": "Largely not. The context-dependent evaluation comes from soft masks that L_disc can still adjust. If coefficients become committed before the task signal acts, they reflect the regularizer and initialization rather than joint task behavior. The paper's warmup rationale names exactly this risk: uninformed coefficients and poor gradients for telling nodes apart.",
+   "rubric": [
+    "Answers that the advantage would be weakened or lost",
+    "Explains that the coefficients would be fixed by the regularizer before the discovery objective could jointly shape them, which is the failure the warmup is meant to prevent"
+   ],
+   "batch": 4,
+   "orig_id": "q12"
+  },
+  {
+   "id": "q130",
+   "type": "failure",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If a Llama setting needed 150 training epochs instead of the 75 used for Llama IOI, would S\u00b3martCirc's runtime advantage over Attribution Patching on Llama be expected to hold?",
+   "answer": "No. At 75 epochs S\u00b3martCirc already takes 901.02 s, and runtime scales roughly with epochs. Doubling the epochs gives about 1800 s, which exceeds Attr.'s roughly 1128 s.",
+   "rubric": [
+    "Answers no, the advantage would likely disappear",
+    "Reasons that runtime scales roughly with epoch count, giving about 1800 s versus Attr.'s roughly 1128 s on Llama IOI"
+   ],
+   "batch": 4,
+   "orig_id": "q13"
+  },
+  {
+   "id": "q131",
+   "type": "failure",
+   "claims": [
+    "c3",
+    "c6"
+   ],
+   "pair": null,
+   "question": "Could a method whose node scores rank all the reference IOI heads highly still show low recovery in Figure 3?",
+   "answer": "Yes. Recovery is measured within the final end-to-end circuits, after the shared connectivity extraction. Highly ranked reference heads that the extraction judges disconnected are removed and earn no credit.",
+   "rubric": [
+    "Answers yes",
+    "Explains that recovery is computed after the connectivity-based extraction, which can remove selected nodes that lack an input-to-output path"
+   ],
+   "batch": 4,
+   "orig_id": "q14"
+  },
+  {
+   "id": "q132",
+   "type": "failure",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "In Acronym data, clean and corrupted prompts come from pairs of valid abbreviations. If the two abbreviations in a pair shared the same final letter, would Activation Patching be expected to score letter-mover nodes as important on that pair, and why?",
+   "answer": "No. Act. scores a node by the change in logit difference between the original answer and the alternative. If both prompts lead to the same final letter, patching a letter mover with its corrupted activation barely changes which letter is promoted. The node therefore receives a low score.",
+   "rubric": [
+    "Answers no, such nodes would get low or uninformative scores",
+    "Explains that the clean and corrupted runs target the same letter, so swapping the node's activation hardly changes the logit-difference metric Act. relies on"
+   ],
+   "batch": 4,
+   "orig_id": "q15"
+  },
+  {
+   "id": "q133",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the Acronym generator keep only abbreviations whose three-letter concatenation tokenizes into exactly three tokens?",
+   "answer": "This makes each letter its own token. The prompt '(AB' then ends after the first two letters, and the target third letter is a single next token. That matches the single ground-truth token y used in Eq. 2 and in measuring accuracy.",
+   "rubric": [
+    "States that it ensures each letter is a separate token, so the answer (third letter) is a single next-token prediction",
+    "Connects this to the single-token target used in the loss or accuracy (e.g., y in Eq. 2), or to the '(AB' prompt ending cleanly before the third letter"
+   ],
+   "batch": 4,
+   "orig_id": "q16"
+  },
+  {
+   "id": "q134",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Llama Acronym and Qwen Acronym both use 50 epochs and both ran on 16GB GPUs. Why does S\u00b3martCirc take about twice as long on Qwen (982.16 s vs 507.67 s)?",
+   "answer": "The epoch count and GPU class are the same, so the difference comes from the model. Qwen 3 1.7B is larger than Llama 3.2 1B, so each epoch involves more nodes to mask and costlier forward and backward passes.",
+   "rubric": [
+    "Attributes the difference to Qwen being the larger model (1.7B vs 1B parameters), which means more per-epoch computation or nodes",
+    "Notes that epoch count and hardware are matched, which rules them out as the explanation"
+   ],
+   "batch": 4,
+   "orig_id": "q17"
+  },
+  {
+   "id": "q135",
+   "type": "why",
+   "claims": [
+    "c1",
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does S\u00b3martCirc still need the connectivity-based extraction step after applying Eq. 1, instead of reporting all nodes with c_{n,i} > c_{n,u} as its circuit?",
+   "answer": "Neither L_disc nor the regularizer encodes graph connectivity, since each node's coefficients are learned without any path constraint. The selected set can therefore include nodes with no end-to-end route from the input to the unembedding. Applying the same extraction also keeps S\u00b3martCirc comparable with the other methods.",
+   "rubric": [
+    "States that nothing in the training objective (discovery loss or regularizer) enforces end-to-end connectivity, so the selected nodes may include disconnected ones",
+    "Mentions that the extraction yields an end-to-end circuit and/or keeps the comparison uniform across methods"
+   ],
+   "batch": 4,
+   "orig_id": "q18"
+  },
+  {
+   "id": "q136",
+   "type": "why",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "On Llama IOI, Activation Patching's 13-node circuit causes a \u221259.17% accuracy drop, but Attribution Patching's 71.67-node circuit causes only \u22121.50%. Why, according to the paper's account?",
+   "answer": "Attr. ranks nodes by a linear approximation of the intervention effect. The paper argues this approximation diverges from the true effect, especially for nonlinear or interacting components, so Attr.'s top nodes are not the ones whose removal matters. Removing more nodes does not help if they are the wrong ones, as Random's roughly 62-node, zero-drop circuit also shows.",
+   "rubric": [
+    "Attributes the gap to Attr.'s linear approximation diverging from the true intervention effect, so it picks the wrong nodes",
+    "States that circuit size cannot compensate, because what matters is which nodes are removed, not how many"
+   ],
+   "batch": 4,
+   "orig_id": "q19"
+  },
+  {
+   "id": "q137",
+   "type": "transfer",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "A team using GPT-2 has a budget of one hour per discovery run on both IOI and Acronym and wants an optimization-based baseline (IBCircuit or Prune.) that yields a usable connected circuit. Based on Tables 1 and 2, which one meets both requirements?",
+   "answer": "Neither. IBCircuit fits the time budget (about 427 to 467 s), but on GPT-2 it found no connected circuit on either task. Prune. takes 3732.88 s on IOI, which exceeds 3600 s.",
+   "rubric": [
+    "Concludes that neither baseline satisfies both requirements",
+    "Notes that IBCircuit fits the budget but its GPT-2 cells are empty, and that Prune.'s IOI runtime (3732.88 s) exceeds one hour"
+   ],
+   "batch": 4,
+   "orig_id": "q20"
+  },
+  {
+   "id": "q138",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team needs circuits that, when kept alone, reproduce the model's behavior. Should they rule out node-level Pruning based on its 0.00 accuracy drops in Table 1, and why?",
+   "answer": "No, not on that basis. Acc measures what happens when the circuit nodes are removed, which tests necessity. The paper notes that an objective suited to preserving behavior when the circuit is kept may not select nodes whose removal disrupts behavior. Table 1 therefore does not test the property this team needs.",
+   "rubric": [
+    "Answers no, Table 1 alone does not justify ruling it out",
+    "Explains that Acc masks the circuit nodes (tests necessity), while the team needs sufficiency, which the paper says Pruning-style objectives target and Table 1 does not measure"
+   ],
+   "batch": 4,
+   "orig_id": "q21"
+  },
+  {
+   "id": "q139",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to compare IOI circuits from GPT-2 and Qwen 3 1.7B on exactly the same prompts. Can they reuse the paper's per-model datasets for this, and why?",
+   "answer": "Not directly. Each dataset keeps only the names and place/object pairs that tokenize as single tokens under that model's tokenizer, so the two prompt sets can differ. They would need to restrict generation to values that are single tokens under both tokenizers.",
+   "rubric": [
+    "Answers no, the datasets are not guaranteed to match",
+    "Explains that data is regenerated per tokenizer with single-token filtering, so a shared set would require values valid under both tokenizers"
+   ],
+   "batch": 4,
+   "orig_id": "q22"
+  },
+  {
+   "id": "q140",
+   "type": "transfer",
+   "claims": [
+    "c1",
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants to apply S\u00b3martCirc unchanged to a task whose correct answers span several tokens. Is the method usable as specified, and why?",
+   "answer": "Not as specified. Eq. 2's correctness term uses a single ground-truth token y, and accuracy is judged on one next token. The paper's data generators deliberately filter to single-token answers. A multi-token answer would require modifying the objective and the evaluation.",
+   "rubric": [
+    "Answers no, it would need modification",
+    "Cites the single ground-truth token y in Eq. 2 and/or the single-token filtering in data generation and evaluation"
+   ],
+   "batch": 4,
+   "orig_id": "q23"
+  },
+  {
+   "id": "q141",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "On a Llama-like model and an Acronym-like task, Activation Patching and Attribution Patching both return no connected circuit, as in Table 1's Llama Acronym row. Which baseline in that row offered a connected circuit with any measurable accuracy drop?",
+   "answer": "Attr. IG. It gave a 54.67-node circuit with a \u22122.17% drop. IBCircuit and Prune. produced connected circuits but with 0.00 drop.",
+   "rubric": [
+    "Names Attr. IG",
+    "Notes that IBCircuit and Prune. produced circuits with zero accuracy drop (and that the drop for Attr. IG is small, about \u22122.17%)"
+   ],
+   "batch": 4,
+   "orig_id": "q24"
+  },
+  {
+   "id": "q142",
+   "type": "transfer",
+   "claims": [
+    "c3",
+    "c4",
+    "c7"
+   ],
+   "pair": null,
+   "question": "A team wants to compare its new discovery method's Circuit Size, Acc and Logit. against S\u00b3martCirc using only the numbers printed in the paper. Can they, and what must they do?",
+   "answer": "They cannot. Table 1 reports only the baselines; it has no S\u00b3martCirc row. They would have to run S\u00b3martCirc themselves under the unified protocol, for example with the Appendix A hyperparameters and seed.",
+   "rubric": [
+    "Answers no, the paper does not provide S\u00b3martCirc's Table 1 metrics",
+    "States that they must run S\u00b3martCirc themselves under the protocol (e.g., using the Appendix A settings)"
+   ],
+   "batch": 4,
+   "orig_id": "q25"
+  },
+  {
+   "id": "q143",
+   "type": "connect",
+   "claims": [
+    "c5",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Activation Patching's runtime had been about the same on GPT-2, Llama and Qwen, which motivating argument of the paper would lose its empirical illustration?",
+   "answer": "The argument that patching scales with the number of nodes and becomes prohibitive for modern models. Table 2's growth from about 6,000 s on GPT-2 to about 170,000 to 188,000 s on Qwen is what illustrates it.",
+   "rubric": [
+    "Identifies the claim that exact patching cost grows with model or node count and becomes prohibitive",
+    "Notes that Table 2's large increase from GPT-2 to Qwen is the evidence for this"
+   ],
+   "batch": 4,
+   "orig_id": "q26"
+  },
+  {
+   "id": "q144",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If the hyperparameter analysis had shown that changing the sparsity coefficient leaves circuit size essentially unchanged, which RQ3 statement would be undermined?",
+   "answer": "The statement that the sparsity coefficient directly controls the trade-off between circuit size and retained behavior, with larger values giving smaller circuits. The rationale for tuning it per setting, from 0.3 to 1.0, would also weaken.",
+   "rubric": [
+    "Identifies the claim that the sparsity coefficient controls circuit size (larger values give smaller circuits, a size\u2013behavior trade-off)",
+    "Optionally notes that the justification for per-setting values (0.3 to 1.0) would weaken"
+   ],
+   "batch": 4,
+   "orig_id": "q27"
+  },
+  {
+   "id": "q145",
+   "type": "connect",
+   "claims": [
+    "c7",
+    "c1"
+   ],
+   "pair": null,
+   "question": "If Figure 5 had shown that alpha = 1.0 on GPT-2 IOI keeps the circuit's ability to produce the correct answer as well as intermediate alphas do, which argument in the RQ4 ablation discussion would lose support?",
+   "answer": "The argument that without the correctness term the optimization may preserve the shape of the distribution while losing the components responsible for the actual answer. alpha = 1.0 is exactly the faithfulness-only case.",
+   "rubric": [
+    "Identifies the RQ4 claim that removing the correctness term risks losing answer-producing components",
+    "Notes that alpha = 1.0 corresponds to optimizing faithfulness alone (no correctness term)"
+   ],
+   "batch": 4,
+   "orig_id": "q28"
+  },
+  {
+   "id": "q146",
+   "type": "connect",
+   "claims": [
+    "c6",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If the Random baseline had shown high IOI recovery at the 50-node threshold, which interpretation of the recovery analysis would be undermined?",
+   "answer": "The interpretation that recovery at small thresholds rewards precise node selection. If a random choice among the many candidate nodes scores high, low-threshold recovery would not distinguish deliberate selection from chance.",
+   "rubric": [
+    "Identifies the claim that small-threshold recovery measures precise selection",
+    "Explains that a random selection scoring high would mean the measure does not separate informed selection from chance"
+   ],
+   "batch": 4,
+   "orig_id": "q29"
+  },
+  {
+   "id": "q147",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does Table 1 support the view that Attribution Patching's circuits barely affect accuracy in every setting? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. On GPT-2 IOI, Attr.'s circuits cause a \u221212.73% \u00b1 8.01 accuracy drop, which is not negligible, even though Attr.'s drops are tiny in most other settings.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites the GPT-2 IOI result of about \u221212.73% as a counterexample"
+   ],
+   "batch": 4,
+   "orig_id": "q30"
+  },
+  {
+   "id": "q148",
+   "type": "scope",
+   "claims": [
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does the paper show that the settings where alpha = 0.25 was used (GPT-2 Acronym, Llama IOI) have output distributions that are differently concentrated from the other settings? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper only says that the appropriate alpha can be expected to depend on how concentrated the output distribution is. It never measures concentration, and the alpha sweep was run only on GPT-2 IOI.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that concentration is never measured and the link is only stated as an expectation (with the sweep limited to GPT-2 IOI)"
+   ],
+   "batch": 4,
+   "orig_id": "q31"
+  },
+  {
+   "id": "q149",
+   "type": "scope",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper demonstrate that Activation Patching's large run-to-run variance is caused by the particular corrupted samples used? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper offers this as an interpretation of the high standard deviations. It reports no experiment that varies or fixes the corrupted samples to isolate their effect.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the cause is asserted as an interpretation but not tested by controlling the corrupted samples"
+   ],
+   "batch": 4,
+   "orig_id": "q32"
+  },
+  {
+   "id": "q150",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does Table 1 show that Activation Patching removes more correct predictions on GPT-2 IOI (\u221270.71%) than on Llama IOI (\u221259.17%) in absolute terms? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. Acc is a percent drop relative to each model's original accuracy, and the original accuracies are not reported. The datasets also differ per tokenizer. The absolute losses therefore cannot be compared, and the large standard deviations add further uncertainty.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that Acc is relative to each model's unreported original accuracy (and/or the data differ by tokenizer), so absolute losses cannot be compared"
+   ],
+   "batch": 4,
+   "orig_id": "q33"
+  },
+  {
+   "id": "q151",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does Table 1 support the view that optimization-based discovery methods produce more disruptive circuits than patching-based ones under the Acc metric? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted for the methods tested. Prune. and IBCircuit show 0.00 drops wherever they find circuits, while Activation Patching gives the largest drops. S\u00b3martCirc, the remaining optimization-based method, has no row in Table 1.",
+   "rubric": [
+    "Answers contradicted",
+    "Cites Prune. and IBCircuit at 0.00 versus Act.'s large drops (optionally noting that S\u00b3martCirc is absent from Table 1)"
+   ],
+   "batch": 4,
+   "orig_id": "q34"
+  },
+  {
+   "id": "q152",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that IBCircuit, under the unified protocol, fails to produce a connected circuit in every setting? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. IBCircuit's cells are empty for GPT-2 (both tasks) and Qwen IOI. It does produce connected circuits on Llama Acronym, Llama IOI and Qwen Acronym, although with 0.00 accuracy drop.",
+   "rubric": [
+    "Answers contradicted",
+    "Names settings where IBCircuit yields circuits (Llama Acronym, Llama IOI, Qwen Acronym) versus empty ones (GPT-2, Qwen IOI)"
+   ],
+   "batch": 4,
+   "orig_id": "q35"
+  },
+  {
+   "id": "q153",
+   "type": "scope",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Does Table 2 show that S\u00b3martCirc's runtime increases from GPT-2 to Llama to Qwen on both tasks? Answer supported, contradicted or not settled, and why.",
+   "answer": "Supported for these three models. Acronym goes 197 \u2192 508 \u2192 982 s and IOI goes 264 \u2192 901 \u2192 1048 s. The comparison is confounded, though, because epoch counts differ (Llama IOI uses 75 epochs, the other Llama and Qwen settings 50).",
+   "rubric": [
+    "Answers supported",
+    "Cites the increasing runtimes on both tasks",
+    "Notes the caveat that epoch counts differ across settings"
+   ],
+   "batch": 4,
+   "orig_id": "q36"
+  },
+  {
+   "id": "q154",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "The Acronym generator checks how each formatted word and each three-letter abbreviation tokenize. If a tokenizer merged ' (' and the following capital letter into a single token, would the generation procedure filter out the affected prompts, and why?",
+   "answer": "No. The checks apply only to the formatted words and to the bare three-letter concatenation, never to the full template ending in '(AB'. A merge that only happens in that template context would pass every check, and the letter positions in the prompt would then not be laid out as intended.",
+   "rubric": [
+    "Asserts the procedure would not catch or filter these prompts",
+    "Explains that the checks cover only the formatted words and the bare abbreviation concatenation, not the tokenization of the full template '(AB'"
+   ],
+   "batch": 5,
+   "orig_id": "q154"
+  },
+  {
+   "id": "q155",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c3"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's sparsity coefficient were set near zero, would a large accuracy drop under the paper's Acc metric be good evidence that it had found the task's critical nodes, and why?",
+   "answer": "No. Without sparsity pressure, the circuit can become a near-copy of the full model, as the ablation discussion notes. Evaluation masks the circuit nodes, so masking almost every node would destroy accuracy whatever the selection quality. The drop would only be informative together with Circuit Size.",
+   "rubric": [
+    "Asserts the large drop would not be good evidence of finding critical nodes",
+    "Explains that without the sparsity term the circuit can be nearly the whole model, and evaluation masks the circuit nodes, so a big drop is trivial",
+    "Notes the result must be read jointly with Circuit Size (or equivalent)"
+   ],
+   "batch": 5,
+   "orig_id": "q155"
+  },
+  {
+   "id": "q156",
+   "type": "failure",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "In Acronym data generation, a letter is discarded only if it has no valid words. What weakness arises for a letter that keeps only one or two valid words out of the 500 sampled?",
+   "answer": "Every sample that uses that letter must reuse the same one or two words, because words are sampled from each letter's valid set. Prompts involving that letter therefore have almost no lexical variety, and the discovered circuit could reflect those particular words. The procedure only guards against letters with zero valid words, so it does not prevent this.",
+   "rubric": [
+    "Identifies that prompts with that letter repeatedly reuse the same few words, giving low lexical diversity",
+    "Explains that this follows because words are drawn from each letter's valid set and only letters with zero valid words are discarded"
+   ],
+   "batch": 5,
+   "orig_id": "q156"
+  },
+  {
+   "id": "q157",
+   "type": "failure",
+   "claims": [
+    "c1",
+    "c2"
+   ],
+   "pair": null,
+   "question": "If a node's coefficients ended training at exactly c_{n,i} = c_{n,u} = 0.5, would the paper's procedure assign it unambiguously in or out of the circuit, and why?",
+   "answer": "No. Eq. 1 takes an argmax, which ties here, and the paper gives no tie-breaking rule. The set N_i is defined by the strict rule c_{n,i} > c_{n,u}, which would exclude the node. The two descriptions of selection can therefore disagree for this node.",
+   "rubric": [
+    "Asserts membership is ambiguous / not unambiguously defined",
+    "Explains that Eq. 1's argmax ties without a tie-breaking rule while the strict c_{n,i} > c_{n,u} rule excludes the node"
+   ],
+   "batch": 5,
+   "orig_id": "q157"
+  },
+  {
+   "id": "q158",
+   "type": "failure",
+   "claims": [
+    "c2",
+    "c6"
+   ],
+   "pair": null,
+   "question": "The recovery analysis cuts circuits at 50, 100, 150 and 200 nodes. If S\u00b3martCirc's coefficients end near-binary, as its regularizer intends, how reliably can its circuit be cut to exactly 50 nodes by ranking coefficient values, and why?",
+   "answer": "Not reliably. The confidence term pushes the included nodes' c_{n,i} toward 1, so many of them are nearly tied. Which 50 are kept then depends on tiny, essentially arbitrary differences, because the regularizer deliberately removes graded importance.",
+   "rubric": [
+    "Asserts the 50-node cut would be unreliable or arbitrary",
+    "Explains that the confidence term drives many included coefficients near 1, so ranking among them is nearly tied"
+   ],
+   "batch": 5,
+   "orig_id": "q158"
+  },
+  {
+   "id": "q159",
+   "type": "why",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Eq. 2 describes P_mask as the distribution obtained when nodes with c_{n,u} > c_{n,i} are masked. Why must training nonetheless compute P_mask with the soft coefficients rather than with that hard rule?",
+   "answer": "A hard argmax assignment is piecewise constant, so it passes no gradient to the coefficients and they could not be learned. Soft masking lets gradients reach every coefficient. That is what allows each node to be judged in the context of all the others. The hard rule is used only at evaluation.",
+   "rubric": [
+    "States that a hard assignment gives no gradient to the coefficients (non-differentiable / piecewise constant)",
+    "Links soft masking to gradients flowing to every coefficient, enabling joint evaluation, with hard assignment reserved for evaluation"
+   ],
+   "batch": 5,
+   "orig_id": "q159"
+  },
+  {
+   "id": "q160",
+   "type": "why",
+   "claims": [
+    "c5",
+    "c3"
+   ],
+   "pair": null,
+   "question": "S\u00b3martCirc uses 60 epochs on both GPT-2 tasks yet takes 264.44 s on IOI versus 197.14 s on Acronym, and Activation Patching also takes longer on IOI than on Acronym for every model. What property of the generated data explains this?",
+   "answer": "IOI prompts are longer. With single-token names, place and object, the IOI template is about 14 tokens. The Acronym prompt ('The' plus three two-token words plus '(AB') is about 10 tokens. Both tasks use about 1000 samples over the same node set, so each pass costs more on IOI.",
+   "rubric": [
+    "Attributes the difference to IOI prompts having more tokens than Acronym prompts",
+    "Supports this from the templates and tokenization constraints (roughly 14 vs roughly 10 tokens) with sample count and nodes otherwise equal"
+   ],
+   "batch": 5,
+   "orig_id": "q160"
+  },
+  {
+   "id": "q161",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Why does the Acronym prompt template end with '(AB', and which token serves as y in Eq. 2's correctness term for this task?",
+   "answer": "The task is to predict the last letter of a three-letter acronym. Supplying the first two letters places the model at the position where the third letter comes next. The ground-truth y is therefore the third letter, C, which is the capital initial of the third word.",
+   "rubric": [
+    "States that y is the third acronym letter, the initial of the third word",
+    "Explains that providing the first two letters makes the next-token prediction the last letter of the acronym"
+   ],
+   "batch": 5,
+   "orig_id": "q161"
+  },
+  {
+   "id": "q162",
+   "type": "why",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Why does swapping the second name give the patching baselines a useful corrupted counterpart for IOI?",
+   "answer": "In 'When N1 and N2 went to the PLACE, N1 handed the OBJECT to', N1 is the repeated subject and N2 is the indirect object, which is the answer. Swapping N2 changes the correct answer while keeping the sentence structure and token positions the same. The logit difference between the original answer and the alternative then isolates nodes that carry answer-specific information.",
+   "rubric": [
+    "Identifies that the second name is the indirect object/answer, so swapping it changes the correct answer",
+    "Notes that structure and positions stay the same, so the logit-difference comparison isolates answer-relevant nodes"
+   ],
+   "batch": 5,
+   "orig_id": "q162"
+  },
+  {
+   "id": "q163",
+   "type": "why",
+   "claims": [
+    "c2"
+   ],
+   "pair": null,
+   "question": "When the validity term is satisfied, why does S\u00b3martCirc's confidence term amount to a penalty on the product c_{n,u}\u00b7c_{n,i}?",
+   "answer": "With c_{n,u} = 1 \u2212 c_{n,i}, the quantity v(1\u2212v) equals c_{n,u}\u00b7c_{n,i} for either coefficient. Two halves of that same value sum to c_{n,u}\u00b7c_{n,i}. This is zero only when one coefficient is 0 and the other is 1, and largest at 0.5/0.5.",
+   "rubric": [
+    "Shows that under c_u + c_i = 1 each v(1\u2212v) equals c_u\u00b7c_i, so the two halves sum to the product",
+    "States the consequence: zero only at a binary assignment, maximal at 0.5/0.5"
+   ],
+   "batch": 5,
+   "orig_id": "q163"
+  },
+  {
+   "id": "q164",
+   "type": "why",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Why does the IOI generator draw 1000/p samples from each valid place/object pair instead of simply taking the first 1000 enumerated combinations?",
+   "answer": "The enumeration of all valid combinations is ordered, so its first 1000 entries could be dominated by a few place/object pairs. Drawing an equal number per pair makes every valid pair, and so every sentence context, equally represented. Acronym achieves variety differently, by shuffling before truncating.",
+   "rubric": [
+    "States that per-pair drawing balances representation across place/object pairs (contexts)",
+    "Explains that the first 1000 of an ordered enumeration could over-represent a few pairs"
+   ],
+   "batch": 5,
+   "orig_id": "q164"
+  },
+  {
+   "id": "q165",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p_conf_abs",
+   "question": "For a coefficient that has drifted to v = 1.2, does the confidence term \u00bd|v(1\u2212v)| push it back toward 1?",
+   "answer": "Yes. At v = 1.2, v(1\u2212v) = \u22120.24, so the absolute value equals \u00bd(v\u00b2 \u2212 v), whose derivative is positive for v > 1. Minimizing it decreases v toward 1, where the penalty is zero.",
+   "rubric": [
+    "Answers yes, it pushes v back toward 1",
+    "Explains that the absolute value makes the penalty grow as v moves above 1 (positive derivative), with zero penalty at 1"
+   ],
+   "batch": 5,
+   "orig_id": "q165"
+  },
+  {
+   "id": "q166",
+   "type": "counterfactual",
+   "claims": [
+    "c2"
+   ],
+   "pair": "b5-p_conf_abs",
+   "question": "If the absolute value were removed so the confidence term were \u00bd\u00b7v(1\u2212v), would it push a coefficient at v = 1.2 back toward 1?",
+   "answer": "No. Without the absolute value, v(1\u2212v) is negative and keeps decreasing as v grows past 1. Minimizing it would push v further above 1, without bound, instead of back toward a binary value.",
+   "rubric": [
+    "Answers no",
+    "Explains that the raw v(1\u2212v) is negative and decreasing for v > 1, so minimization drives v further away"
+   ],
+   "batch": 5,
+   "orig_id": "q166"
+  },
+  {
+   "id": "q167",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b5-p_gpt2acr",
+   "question": "In the Acronym with GPT-2 configuration, would changing alpha from 0.25 to 0.75 be expected to change the objective that shapes the circuit?",
+   "answer": "Yes. Alpha sets the balance between the KL and cross-entropy terms of L_disc. In this configuration, L_disc is exactly what drives training throughout the warmup, which covers all 60 epochs.",
+   "rubric": [
+    "Answers yes",
+    "Explains that alpha weights the two terms of L_disc, which governs training during the warmup that spans the whole run"
+   ],
+   "batch": 5,
+   "orig_id": "q167"
+  },
+  {
+   "id": "q168",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b5-p_gpt2acr",
+   "question": "In the Acronym with GPT-2 configuration, would raising the number of warmup epochs from 60 to 70, with total epochs kept at 60, be expected to change training?",
+   "answer": "No. The warmup already covers all 60 epochs, so the full regularized objective never applies whether warmup is set to 60 or 70. Training would be the same.",
+   "rubric": [
+    "Answers no",
+    "Explains that warmup already spans all 60 training epochs, so lengthening it changes nothing"
+   ],
+   "batch": 5,
+   "orig_id": "q168"
+  },
+  {
+   "id": "q169",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p_ioi_p",
+   "question": "If a tokenizer left p = 4 valid place/object pairs, would the IOI procedure yield exactly 1000 samples?",
+   "answer": "Yes. 1000/4 = 250 samples per pair, and 4 \u00d7 250 = 1000, provided each pair has enough name combinations.",
+   "rubric": [
+    "Answers yes",
+    "Shows that 1000/4 = 250 is a whole number and 4 \u00d7 250 = 1000"
+   ],
+   "batch": 5,
+   "orig_id": "q169"
+  },
+  {
+   "id": "q170",
+   "type": "counterfactual",
+   "claims": [
+    "c3"
+   ],
+   "pair": "b5-p_ioi_p",
+   "question": "If a tokenizer left p = 3 valid place/object pairs, would the IOI procedure yield exactly 1000 samples?",
+   "answer": "No. 1000 is not divisible by 3, so equal whole-number draws per pair give 999 (333 each) or 1002, not 1000. The procedure as written does not say how to handle the remainder.",
+   "rubric": [
+    "Answers no (not exactly 1000)",
+    "Explains that 1000/3 is not an integer, so equal per-pair draws cannot sum to 1000"
+   ],
+   "batch": 5,
+   "orig_id": "q170"
+  },
+  {
+   "id": "q171",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b5-p_norm",
+   "question": "With the sparsity coefficient held fixed, does the regularizer's penalty for adding one more node to the circuit depend on the model's total number of nodes?",
+   "answer": "Yes. The regularizer is averaged over the set C (the 1/|C| factor), so one node's c_{n,i} contributes in proportion to 1/|C|. In a model with more nodes, adding a single node costs less.",
+   "rubric": [
+    "Answers yes",
+    "Points to the 1/|C| averaging, which makes each node's contribution shrink as the node count grows"
+   ],
+   "batch": 5,
+   "orig_id": "q171"
+  },
+  {
+   "id": "q172",
+   "type": "counterfactual",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": "b5-p_norm",
+   "question": "With the sparsity coefficient held fixed, does the regularizer's penalty for including a given fraction of all nodes (say 1%) depend on the model's total number of nodes?",
+   "answer": "No. Because the sparsity part is averaged over |C|, it equals the mean c_{n,i}, which is roughly the fraction of nodes included. The same fraction gives the same penalty whatever the model size.",
+   "rubric": [
+    "Answers no",
+    "Explains that the averaged sparsity term reflects the included fraction, which is independent of model size"
+   ],
+   "batch": 5,
+   "orig_id": "q172"
+  },
+  {
+   "id": "q173",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's Qwen IOI training used 75 epochs instead of 50, roughly how long would it take, and would it still be faster than IBCircuit on Qwen IOI?",
+   "answer": "Assume runtime scales with epochs. That gives about 1047.59/50 \u2248 21 s per epoch, so roughly 1570 s for 75 epochs. This is still well below IBCircuit's 5152.79 s on Qwen IOI.",
+   "rubric": [
+    "Estimates about 1500\u20131600 s by scaling the per-epoch cost",
+    "Concludes it would still be faster than IBCircuit's 5152.79 s"
+   ],
+   "batch": 5,
+   "orig_id": "q173"
+  },
+  {
+   "id": "q174",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "Suppose one attention head and a group of ten feedforward neurons make equal contributions to L_disc. Which would S\u00b3martCirc's sparsity term favor keeping, and why?",
+   "answer": "The single head. The sparsity term charges c_{n,i} per node, whatever the node type. Keeping ten neurons costs about ten times the penalty of keeping one head.",
+   "rubric": [
+    "Answers that the head would be favored",
+    "Explains that the sparsity penalty is per node and does not depend on node type, so ten neurons cost ten times as much"
+   ],
+   "batch": 5,
+   "orig_id": "q174"
+  },
+  {
+   "id": "q175",
+   "type": "transfer",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "A team using GPT-2 wants a baseline whose circuit size is stable across runs on both tasks. Between Attr. and Prune., which does Table 1 favor, and what caveat applies?",
+   "answer": "Attr.: its sizes are 37.33\u00b12.05 (Acronym) and 48.00\u00b12.16 (IOI), versus Prune.'s 32.33\u00b137.97 and 38.33\u00b133.81. However, stable size does not mean important nodes. Attr.'s Acronym circuit barely changes accuracy (\u22120.17%).",
+   "rubric": [
+    "Chooses Attr.",
+    "Cites Attr.'s small size standard deviations versus Prune.'s very large ones",
+    "Notes the caveat that Attr.'s circuits can barely affect accuracy (e.g., \u22120.17 on Acronym)"
+   ],
+   "batch": 5,
+   "orig_id": "q175"
+  },
+  {
+   "id": "q176",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "A team wants a four-letter version of the Acronym task built with the paper's generation procedure. What must the abbreviation validity check and the prompt template require?",
+   "answer": "Valid abbreviations would be four-letter sequences whose concatenation tokenizes into four tokens. The template would hold four sampled words and end with '(ABC', so the model's next token is the fourth letter.",
+   "rubric": [
+    "States that the validity check would require four-letter sequences tokenizing into exactly four tokens",
+    "States that the template would use four words and end with the first three letters, so the fourth letter is predicted"
+   ],
+   "batch": 5,
+   "orig_id": "q176"
+  },
+  {
+   "id": "q177",
+   "type": "transfer",
+   "claims": [
+    "c2",
+    "c1"
+   ],
+   "pair": null,
+   "question": "A team applies the paper's classification step (Eq. 1 plus connectivity extraction) to soft masks learned by another method that has no confidence-type term. Should they expect the extracted circuit to behave like that method's trained soft-masked model, and why?",
+   "answer": "Not necessarily. The paper notes that without the confidence term many coefficients can stay near intermediate values, which makes Eq. 1's hard assignment a poor approximation of the trained model. The extraction step is method-agnostic, but it does not close this gap between soft and hard masks.",
+   "rubric": [
+    "Answers no / not necessarily",
+    "Explains that without a confidence term coefficients can stay intermediate, so the hard assignment poorly approximates the soft-masked model"
+   ],
+   "batch": 5,
+   "orig_id": "q177"
+  },
+  {
+   "id": "q178",
+   "type": "transfer",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "On a tokenizer where every three-capital-letter string such as 'ABC' is a single token, can the Acronym dataset be built with the paper's procedure, and why?",
+   "answer": "No. Valid abbreviations must tokenize into three tokens when concatenated. No sequence would pass, so no clean/corrupted abbreviation pairs could be formed.",
+   "rubric": [
+    "Answers no",
+    "Explains that the abbreviation validity check requires three tokens, so no valid abbreviations or pairs would exist"
+   ],
+   "batch": 5,
+   "orig_id": "q178"
+  },
+  {
+   "id": "q179",
+   "type": "transfer",
+   "claims": [
+    "c5",
+    "c7"
+   ],
+   "pair": null,
+   "question": "Suppose choosing alpha for Qwen IOI required one S\u00b3martCirc run for each value in the paper's five-value alpha sweep. Would the total time still be below Activation Patching's and IBCircuit's single-run times there?",
+   "answer": "Five runs take about 5 \u00d7 1047.59 \u2248 5238 s. That is far below Activation Patching's 187663.88 s. It slightly exceeds IBCircuit's 5152.79 s.",
+   "rubric": [
+    "Computes roughly 5238 s for five runs",
+    "Concludes it is still far below Activation Patching",
+    "Concludes it is no longer below IBCircuit (5152.79 s)"
+   ],
+   "batch": 5,
+   "orig_id": "q179"
+  },
+  {
+   "id": "q180",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4",
+    "c6"
+   ],
+   "pair": null,
+   "question": "If Figure 3 showed substantial IOI-node recovery for IBCircuit, which Table 1 result would this conflict with, and why?",
+   "answer": "It would conflict with IBCircuit's empty GPT-2 cells, meaning no connected circuit was found. Recovery is measured within each method's final end-to-end circuit, and the reference circuits exist only for GPT-2. IBCircuit should therefore have no nodes from which to recover reference components.",
+   "rubric": [
+    "Identifies IBCircuit's empty GPT-2 entries (no connected circuit) in Table 1",
+    "Explains that recovery is computed within final end-to-end circuits on GPT-2, the only model with references"
+   ],
+   "batch": 5,
+   "orig_id": "q180"
+  },
+  {
+   "id": "q181",
+   "type": "connect",
+   "claims": [
+    "c2",
+    "c7"
+   ],
+   "pair": null,
+   "question": "If S\u00b3martCirc's Acronym with GPT-2 circuit had turned out very compact, which ablation claim about the regularizer would this call into question, and why?",
+   "answer": "It would question the claim that the sparsity term is what makes the circuit compact rather than a near-copy of the full model. In this configuration the warmup covers all 60 epochs, so the full objective with the sparsity term never applies. Compactness would then have to come from something else.",
+   "rubric": [
+    "Identifies the claim that the sparsity term is what makes circuits compact",
+    "Explains that warmup spans all 60 epochs in this configuration, so the post-warmup sparsity penalty never acts"
+   ],
+   "batch": 5,
+   "orig_id": "q181"
+  },
+  {
+   "id": "q182",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If further Activation Patching runs on Qwen Acronym had produced accuracy drops near zero, which RQ1 observation would lose its example, and why?",
+   "answer": "The cross-model variation observation would lose its example. That example contrasts no connected circuit on Llama Acronym with a complete \u2212100% drop on Qwen Acronym. The Qwen figure rests on a single run, so near-zero additional runs would remove the dramatic Qwen side of the contrast.",
+   "rubric": [
+    "Identifies the cross-model variation observation (Llama empty vs Qwen complete drop)",
+    "Notes that the Qwen \u2212100% value comes from only one run, so other runs could overturn it"
+   ],
+   "batch": 5,
+   "orig_id": "q182"
+  },
+  {
+   "id": "q183",
+   "type": "connect",
+   "claims": [
+    "c6"
+   ],
+   "pair": null,
+   "question": "If automated methods scored heads per individual sample instead of averaging over many samples, which stated reason for reading reference agreement only at the node-membership level would weaken?",
+   "answer": "The caveat that reference circuits describe what a head can do under isolated interventions, while automated methods estimate contributions averaged over many samples. That caveat is illustrated by heads 8.11 and 10.10 acting as either bridge or letter mover heads. Per-sample scores would reduce this mismatch between the two kinds of evidence.",
+   "rubric": [
+    "Identifies the isolated-intervention vs sample-averaged-estimate caveat (illustrated by 8.11/10.10)",
+    "Explains that per-sample scoring would reduce that mismatch, weakening the reason for membership-only interpretation"
+   ],
+   "batch": 5,
+   "orig_id": "q183"
+  },
+  {
+   "id": "q184",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Attr. IG's 47.67-node Llama IOI circuit had shown a 0.00 accuracy drop, which RQ1 point would lose its illustrating contrast, and why?",
+   "answer": "The point that circuit size does not track effect would lose its contrast. The paper illustrates it with Attr. IG's larger circuit causing \u22125.67% while IBCircuit's 7.33-node circuit causes no drop. If both caused no drop, the example would show no difference in effect to compare.",
+   "rubric": [
+    "Identifies the circuit-size-does-not-track-effect observation",
+    "Explains that the example relies on Attr. IG's nonzero drop contrasting with IBCircuit's zero drop"
+   ],
+   "batch": 5,
+   "orig_id": "q184"
+  },
+  {
+   "id": "q185",
+   "type": "connect",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "If IBCircuit had produced connected circuits in every setting, which part of RQ1's explanation of the optimization-based baselines would lose some of its evidence?",
+   "answer": "The claim that mask-based methods are sensitive to connectivity post-processing would lose evidence. That claim is illustrated by IBCircuit failing to produce a connected circuit in several settings. The zero-accuracy-drop observation would still remain.",
+   "rubric": [
+    "Identifies sensitivity to connectivity post-processing as the weakened claim",
+    "Links it to IBCircuit's failures to produce connected circuits (empty cells) as its evidence"
+   ],
+   "batch": 5,
+   "orig_id": "q185"
+  },
+  {
+   "id": "q186",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper's IOI generation description guarantee that each answer name is a single token as it actually appears in the prompt, after a space? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The IOI description says names are kept if they tokenize as a single token, but it does not say whether the check includes a leading space. The Acronym procedure, by contrast, explicitly prepends a space before checking. In the template, the answer name follows 'to' and a space.",
+   "rubric": [
+    "Answers not settled",
+    "Contrasts the IOI description (no mention of space-prefixing) with the Acronym procedure's explicit space-prefixed check"
+   ],
+   "batch": 5,
+   "orig_id": "q186"
+  },
+  {
+   "id": "q187",
+   "type": "scope",
+   "claims": [
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does Table 2 show that its runtimes include the cost of evaluating each discovered circuit on the task data? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The text does not say what the timings cover. Random's times of 0.13 to 3.98 s are consistent with timing only node selection, not evaluation passes over the 1000-sample datasets.",
+   "rubric": [
+    "Answers not settled",
+    "Notes the paper does not specify this, and Random's near-zero times suggest only selection is timed"
+   ],
+   "batch": 5,
+   "orig_id": "q187"
+  },
+  {
+   "id": "q188",
+   "type": "scope",
+   "claims": [
+    "c1"
+   ],
+   "pair": null,
+   "question": "Does the paper show that S\u00b3martCirc's discovered circuits actually contain feedforward neurons as well as attention heads? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The framework masks both node types, but the paper reports no composition of S\u00b3martCirc's circuits. Table 1 has no S\u00b3martCirc row, and the reference circuits are described only in terms of heads.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that no breakdown of S\u00b3martCirc circuit composition is reported, even though both node types are masked"
+   ],
+   "batch": 5,
+   "orig_id": "q188"
+  },
+  {
+   "id": "q189",
+   "type": "scope",
+   "claims": [
+    "c6",
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper show that IOI and Acronym circuits share components in any of its three models? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The paper cites prior work on components being reused across tasks as motivation. It reports no analysis of overlap between its own IOI and Acronym circuits.",
+   "rubric": [
+    "Answers not settled",
+    "Notes that cross-task reuse is cited from prior work but no overlap analysis is reported"
+   ],
+   "batch": 5,
+   "orig_id": "q189"
+  },
+  {
+   "id": "q190",
+   "type": "scope",
+   "claims": [
+    "c3",
+    "c4"
+   ],
+   "pair": null,
+   "question": "Does the paper show that Table 1's accuracy drops would be the same regardless of what value replaces a masked node's output? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled. The protocol says circuit nodes are masked but does not specify the replacement value (for example zero, mean or corrupted activation). It also tests no alternatives.",
+   "rubric": [
+    "Answers not settled",
+    "Explains that the masking replacement value is unspecified and no alternatives are compared"
+   ],
+   "batch": 5,
+   "orig_id": "q190"
+  },
+  {
+   "id": "q191",
+   "type": "scope",
+   "claims": [
+    "c3"
+   ],
+   "pair": null,
+   "question": "Does the paper ensure that the Acronym dataset is balanced across letters or abbreviations, the way the IOI dataset is balanced across place/object pairs? Answer supported, contradicted or not settled, and why.",
+   "answer": "Not settled; nothing in the procedure ensures it. The Acronym data are generated over abbreviation pairs, shuffled, and truncated to the first 1000, with no balancing step. IOI, by contrast, explicitly draws 1000/p samples per pair.",
+   "rubric": [
+    "Answers not settled / not ensured",
+    "Explains that Acronym uses shuffle-and-truncate with no balancing, unlike IOI's per-pair draws"
+   ],
+   "batch": 5,
+   "orig_id": "q191"
+  },
+  {
+   "id": "q192",
+   "type": "scope",
+   "claims": [
+    "c4",
+    "c5"
+   ],
+   "pair": null,
+   "question": "Does Table 2 show that a single Activation Patching run on Qwen Acronym exceeds the 48-hour limit? Answer supported, contradicted or not settled, and why.",
+   "answer": "Contradicted. 168689.44 s is about 46.9 hours, just under 48 hours. That fits one completed run, but leaves no room for a second within the limit.",
+   "rubric": [
+    "Answers contradicted",
+    "Converts 168689.44 s to about 46.9 hours, below 48 hours"
+   ],
+   "batch": 5,
+   "orig_id": "q192"
+  }
+ ],
+ "rejected": [
+  {
+   "id": "q30",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Activation Patching's accuracy drops had shown small variance across its three runs, which stated conclusion would lose its support?",
+   "answer": "The claim that exact patching has high variance, with selected nodes sensitive to the particular corrupted samples used. This claim is also highlighted in the Conclusion.",
+   "rubric": [
+    "Identifies the high-variance / sensitivity-to-corrupted-samples conclusion about Activation Patching"
+   ],
+   "batch": 1,
+   "orig_id": "q30",
+   "reject": "rubric size 1"
+  },
+  {
+   "id": "q31",
+   "type": "connect",
+   "claims": [
+    "c4"
+   ],
+   "pair": null,
+   "question": "If Attribution Patching and Attr. IG had produced accuracy drops comparable to Activation Patching's, which conclusion in the paper would lose its support?",
+   "answer": "The conclusion that there is weak agreement between the patching approximations and true intervention effects, i.e., that linear and path-integrated approximations diverge from the actual effect of intervening.",
+   "rubric": [
+    "Identifies the conclusion of weak agreement between approximations and true intervention effects"
+   ],
+   "batch": 1,
+   "orig_id": "q31",
+   "reject": "rubric size 1"
+  }
+ ],
+ "types": {
+  "failure": 28,
+  "why": 29,
+  "counterfactual": 42,
+  "transfer": 31,
+  "connect": 26,
+  "scope": 36
+ }
+}
