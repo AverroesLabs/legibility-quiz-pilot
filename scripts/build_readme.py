@@ -1,26 +1,39 @@
-"""Build README.md from the blog posts in posts/, so the series can be read start to finish on the repository's front
-page while each post also stands alone. Edit the posts (and docs/about-repo.md), never README.md, then run:
+"""Build README.md: the project's motivation, a link and short description for each post in posts/, then the repository
+guide from docs/about-repo.md. The posts themselves are read in posts/. Edit the posts, the descriptions below or
+docs/about-repo.md, never README.md, then run:
 
     python scripts/build_readme.py
-
-README = series intro and contents, every post in order (headings shifted down one level, links rewritten to work from
-the repository root), then the repository guide from docs/about-repo.md.
 """
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-POSTS = [("posts/part-1-quiz.md", "Part 1"), ("posts/part-2-planted-errors.md", "Part 2")]
 
-INTRO = """# Legibility of research papers to humans: an automated test, in parts
+# (path, label, short description). Keep each description to two or three plain sentences.
+POSTS = [
+    ("posts/part-1-quiz.md", "Part 1",
+     "A strong model writes an open-book quiz on a paper and weaker models take it. Rewriting papers to be hard to "
+     "follow lowered quiz scores only slightly, while the same models rated the rewrites as far harder to read."),
+    ("posts/part-2-planted-errors.md", "Part 2",
+     "We plant an error in a paper and in a garbled version of it, and ask a model to find it. Most readers found as "
+     "many errors in garbled text as in the original; only the strongest, GPT-5.5, found clearly fewer, and asked "
+     "about every paragraph, readers flagged more correct text when it was garbled."),
+]
 
-Averroes Labs is trying to build an automated test of whether a research paper is legible to people, one that a model
-can run on any paper. This repository holds the posts written so far, in order, and the code and data behind them.
-Each post can also be read on its own:
+INTRO = """# Can a model test whether a research paper is legible to people?
 
-{contents}
+AI systems are starting to write a large share of AI safety research, and people can only oversee work they can
+follow. One fix is to have a model translate a hard paper into a readable one, but then readers trust a translation
+nobody has audited. We would rather require the paper itself to be legible, and check that automatically, at the scale
+at which AI will produce papers.
 
-Below, the posts follow one another in full, then a guide to the repository.
+Averroes Labs is trying to build that check. Each post below tries one version of it, using weak models as stand-in
+readers and comparing each paper with a version rewritten to be hard to follow while keeping every fact. A useful test
+should score the hard version lower, the way a person would struggle with it.
+
+## Posts
+
+{posts}
 """
 
 
@@ -28,33 +41,12 @@ def title(text):
     return re.search(r"^# (.+)$", text, re.M).group(1).strip()
 
 
-def anchor(heading):
-    """GitHub's heading slug."""
-    s = re.sub(r"[^\w\- ]", "", heading.lower()).strip()
-    return s.replace(" ", "-")
-
-
-def for_readme(text, part):
-    text = re.sub(r"^(#{1,5}) ", lambda m: "#" + m.group(1) + " ", text, flags=re.M)   # demote headings one level
-    text = re.sub(r"^## (.+)$", lambda m: f"## {part}: {m.group(1)}", text, count=1, flags=re.M)
-    text = text.replace("](../", "](")                                              # paths relative to the root
-    for path, p in POSTS:                                                           # cross-links become anchors
-        name = Path(path).name
-        heading = f"{p}: {title((ROOT / path).read_text())}"
-        text = text.replace(f"]({name})", f"](#{anchor(heading)})")
-    text = re.sub(r"\n---\n\n(Next|Previous): .*\n?$", "\n", text.rstrip() + "\n")  # drop per-post footer nav
-    return text.rstrip() + "\n"
-
-
 def main():
-    contents = "\n".join(f"- [{p}: {title((ROOT / path).read_text())}]({path})" for path, p in POSTS)
-    parts = [INTRO.format(contents=contents)]
-    for path, p in POSTS:
-        parts.append(for_readme((ROOT / path).read_text(), p))
+    items = "\n".join(f"**[{label}: {title((ROOT / path).read_text())}]({path})**  \n{desc}\n"
+                      for path, label, desc in POSTS)
     about = (ROOT / "docs/about-repo.md").read_text().replace("](../", "](")
-    parts.append(about)
-    (ROOT / "README.md").write_text("\n---\n\n".join(s.rstrip() + "\n" for s in parts))
-    print("wrote README.md from", ", ".join(path for path, _ in POSTS))
+    (ROOT / "README.md").write_text(INTRO.format(posts=items).rstrip() + "\n\n---\n\n" + about.rstrip() + "\n")
+    print("wrote README.md:", len(POSTS), "posts")
 
 
 if __name__ == "__main__":
