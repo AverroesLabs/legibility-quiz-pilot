@@ -9,11 +9,13 @@ Averroes Labs is trying to build that check. Each post below tries one version o
 readers and comparing each paper with a version rewritten to be hard to follow while keeping every fact. A useful test
 should score the hard version lower, the way a person would struggle with it.
 
-## Why test with a reader, not a rater?
+## Why test by using the paper, not by rating it?
 
 The cheaper options are to ask a model how legible a paper is, to train a model to rate it, or to find a direction
-inside a model that tracks readability. Each of these predicts legibility from how a text looks. A reader test
-measures it, by having a model try to use the paper. That difference matters most where this test is meant to work.
+inside a model that tracks readability. Each gives a score from one look at the text. Our tests instead make a model
+use the paper, by answering questions that need its content or by finding an error planted in it, and score what the
+model could extract. The line that matters is not reader versus rater. A rater that had to show what it got out of the
+paper before scoring it would be a use test too. What we doubt is any score that never shows the paper was used.
 
 **Legibility is about use.** A paper is legible if a reader can follow its argument and check its claims. A reader test
 does that task, and a rater guesses at the outcome. Part 1 asked models for ratings directly. They rated our garbled
