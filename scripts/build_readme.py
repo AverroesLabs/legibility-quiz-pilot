@@ -41,11 +41,15 @@ measures it, by having a model try to use the paper. That difference matters mos
 does that task, and a rater guesses at the outcome. Part 1 asked models for ratings directly. They rated our garbled
 rewrites as far harder to read, yet their ratings had little to do with how well the same models understood the text.
 
-**The writers will be optimized against the test.** A rater is a fixed function, and a writer trained against it can
-satisfy it without becoming legible. In Part 1 a fluent paper with its key results quietly removed fooled most of the
-ratings. A test in which a reader must extract the paper's content can only be passed by making that content
-extractable. This is why Kirchner et al.'s prover-verifier games made model outputs easier for people to check: the
-writer was trained against a reader that had to verify its work, not against a judge of style.
+**The writers will be optimized against the test.** Any fixed test can be gamed. What differs is the gap between what
+the test rewards and what we want. A rater rewards looking readable, and a writer can satisfy it while hiding content.
+In Part 1 a fluent paper with its key results quietly removed fooled most of the ratings. A reader test can only be
+passed by making the content extractable, because the questions or planted errors are drawn after the paper is written.
+That narrows the gap to the difference between text this model can use and text people can use, but it does not close
+it. A writer optimized against a model reader can drift toward text only machines read well, and our own readers
+barely noticed garbling that would stop a person. Kirchner et al. saw the same risk in prover-verifier games, where
+sneaky provers learned to fool the verifier. This remaining gap is why the reader has to be calibrated against people,
+and why fresh questions, several readers and occasional human checks matter.
 
 **AI-written papers will be hard to follow in new ways.** Unfamiliar notation, compressed reasoning, or shorthand only
 another model reads would not appear in any rater's training data. A reader fails on an unusable text whatever made it
