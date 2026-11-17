@@ -12,17 +12,31 @@ should score the hard version lower, the way a person would struggle with it.
 ## Why test with a reader, not a rater?
 
 The cheaper options are to ask a model how legible a paper is, to train a model to rate it, or to find a direction
-inside a model that tracks readability. Part 1 tried the first. Models rated our garbled rewrites as far harder to
-read, yet their ratings had little to do with how well the same models understood the text, and a fluent paper with
-its key results quietly removed fooled most of them. A rating judges how a text looks, not whether a reader can use it.
+inside a model that tracks readability. Each of these predicts legibility from how a text looks. A reader test
+measures it, by having a model try to use the paper. That difference matters most where this test is meant to work.
 
-Training a rater or fitting a probe needs labels of how legible research papers are to people, which do not exist at
-scale. Existing readability labels grade school texts by difficulty, so a model trained on them would mostly learn
-surface difficulty. A rater is also something AI writers can be optimized against, and polish is exactly what fooled
-the ratings in Part 1. A reader that has to answer questions about the paper, or catch an error planted in it, can
-only succeed by using what the paper says, which is harder to fake. We have not tested trained raters or probes
-ourselves. Once human legibility labels for papers exist, they would calibrate any of these approaches, and comparing
-them would be worth doing.
+**Legibility is about use.** A paper is legible if a reader can follow its argument and check its claims. A reader test
+does that task, and a rater guesses at the outcome. Part 1 asked models for ratings directly. They rated our garbled
+rewrites as far harder to read, yet their ratings had little to do with how well the same models understood the text.
+
+**The writers will be optimized against the test.** A rater is a fixed function, and a writer trained against it can
+satisfy it without becoming legible. In Part 1 a fluent paper with its key results quietly removed fooled most of the
+ratings. A test in which a reader must extract the paper's content can only be passed by making that content
+extractable. This is why Kirchner et al.'s prover-verifier games made model outputs easier for people to check: the
+writer was trained against a reader that had to verify its work, not against a judge of style.
+
+**AI-written papers will be hard to follow in new ways.** Unfamiliar notation, compressed reasoning, or shorthand only
+another model reads would not appear in any rater's training data. A reader fails on an unusable text whatever made it
+unusable.
+
+**Oversight needs mistakes to be catchable.** People read AI research to find what is wrong with it. Planting an error
+and checking whether a reader finds it measures that directly, while a rater can call a paper clear that hides an
+error. Comparing two versions of the same paper also separates how it is written from how hard its ideas are, which a
+rater mixes together, and a failed question or missed error shows the writer where the paper loses its reader.
+
+A reader test costs more to run, and our weak readers so far respond to bad writing much less than people likely do,
+which the posts below report. If a reader test can be calibrated against people, its results would also supply the
+labels that a cheap rater or probe lacks today. We have not tested trained raters or probes ourselves.
 
 ## Posts
 
