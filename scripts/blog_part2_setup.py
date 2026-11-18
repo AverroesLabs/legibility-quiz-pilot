@@ -19,10 +19,10 @@ BULLET = r"$\bullet$ "
 
 
 def main():
-    fig, ax = plt.subplots(figsize=(9, 10.3))
+    fig, ax = plt.subplots(figsize=(9, 10.1))
     fig.patch.set_facecolor("white")
     ax.set_xlim(0, 20)
-    ax.set_ylim(3.7, 26)
+    ax.set_ylim(3.7, 25.5)
     ax.axis("off")
 
     def box(x, y, w, h, title, lines, swatches=None, fs=FS):
@@ -44,8 +44,7 @@ def main():
         ax.annotate("", xy=(x1, y1), xytext=(x0, y0),
                     arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.0, mutation_scale=14))
 
-    box(4.0, 23.4, 12.0, 2.5, "10 papers",
-        ["3 arXiv preprints from Part 1, the 2014 Dropout", "paper, 6 peer-reviewed papers"])
+    box(4.0, 23.4, 12.0, 2.0, "10 machine learning papers", ["Most on AI safety"])
     box(0.1, 14.6, 9.6, 8.1, "Three versions, same facts",
         ["Clarified: summary first,", "a glossary, each claim", "listed with its evidence",
          "Original", "Garbled: compressed to 2/3,", "terms swapped for codes,", "evidence moved away from",
