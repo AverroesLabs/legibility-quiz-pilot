@@ -1,4 +1,4 @@
-# Can Planted Errors Test Whether a Paper Is Legible?
+# Can Planted Errors Test Whether a Paper Is Legible to Humans?
 
 Jason Fantl, Averroes Labs · November 2026 · Part 2
 
