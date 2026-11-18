@@ -18,7 +18,7 @@ His games trained a "sneaky" model to write such mistakes, which is tricky and p
 
 The test is as simple as we could make it. Plant one error in a paper and ask a model to review the paper for internal inconsistencies. Then plant the same error in a garbled version of the same paper and ask again, and repeat over many errors. If the reader finds fewer errors in the garbled version, its success depends on how the paper is written, which is what a legibility test needs. Nothing else is required, no quiz and no rewritten reference copy, only the paper, the errors and the reader.
 
-![The experiment, top to bottom: ten papers; clarified, original and garbled versions; planted error types; four readers reading in three ways (whole paper, every paragraph, one section at a time); measures of errors caught and false alarms.](../docs/blog/part-2/fig-1-setup.png)
+![The experiment, top to bottom: ten papers; clarified, original and garbled versions; five planted error types; four readers reading in three ways (whole paper, every paragraph, one section at a time); measures of errors caught and false alarms.](../docs/blog/part-2/fig-1-setup.png)
 
 **Figure 1.** The experiment, read top to bottom. Each error is planted in all three versions of a paper, and every reader reads every version in each of the three ways. The pattern next to each version is the one it has in the result figures.
 
