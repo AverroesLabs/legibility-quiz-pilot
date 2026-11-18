@@ -1,45 +1,42 @@
 # Can a model test whether a research paper is legible to people?
 
 AI systems are starting to write a large share of AI safety research, and people can only oversee work they can
-follow. One fix is to have a model translate a hard paper into a readable one, but then readers trust a translation
-nobody has audited. We would rather require the paper itself to be legible, and check that automatically, at the scale
-at which AI will produce papers.
+follow. A model could translate each hard paper into a readable one, but then readers would trust a translation nobody
+has checked. We would rather require the paper itself to be legible, and check that automatically, because AI will
+produce papers faster than people can review them.
 
-Averroes Labs is trying to build that check. Each post below tries one version of it, using weak models as stand-in
-readers and comparing each paper with a version rewritten to be hard to follow while keeping every fact. A useful test
-should score the hard version lower, the way a person would struggle with it.
+Averroes Labs is building that check, and each post below tries one version of it. A weaker model stands in for the
+reader, and we compare how it does on a paper and on a version rewritten to be hard to follow while keeping every fact.
+A useful test should score the hard version lower, as a person would.
 
-## Why test by using the paper, not by rating it?
+## Why make the model use the paper
 
-The cheaper options are to ask a model how legible a paper is, to train a model to rate it, or to find a direction
-inside a model that tracks readability. Each gives a score from one look at the text. Our tests instead make a model
-use the paper, by answering questions that need its content or by finding an error planted in it, and score what the
-model could extract. A rater that first had to show what it got out of the paper would count as a use test too. What
-we doubt is a score that gives no sign the paper was used.
+The cheaper options are to ask a model how legible a paper is, to train a model to rate legibility, or to find a
+direction inside a model that tracks readability. Each gives a score from one look at the text. Our tests instead make
+a model use the paper, either by answering questions about its content or by finding an error planted in it. A rater
+would be fine if it first had to show what it got out of the paper. What we doubt is a score that gives no sign the
+paper was used.
 
-**Legibility is about use.** A paper is legible if a reader can follow its argument and check its claims. A reader test
-does that task, and a rater guesses at the outcome. Part 1 asked models for ratings directly. They rated our garbled
-rewrites as far harder to read, yet their ratings had little to do with how well the same models understood the text.
+We prefer use for four reasons. First, legibility means a reader can follow a paper's argument and check its claims,
+and a test that makes the model do this measures it directly. In Part 1, models rated our garbled rewrites as far
+harder to read, yet their ratings had little to do with how well the same models understood the text.
 
-**Writers will learn to pass whatever test we use.** A rating can be passed by text that only looks readable. In Part
-1, a fluent paper with its key results quietly removed still got good ratings. A reader test is harder to fool. The
-questions or planted errors are chosen after the paper is written, so the paper has to contain content the reader can
-actually use. It can still be gamed by writing that a model can use and a person cannot, and our readers already
-barely noticed garbling that would stop a person. So a reader test still has to be checked against people, with fresh
-questions, several readers and occasional human checks.
+Second, writers will learn to pass whatever test we use. A rating can be passed by text that only looks readable, and
+in Part 1 a fluent paper with its key results quietly removed still got good ratings. A reader test is harder to fool,
+because the questions or planted errors are chosen after the paper is written, so the paper has to contain content the
+reader can actually use. It can still be gamed by writing that a model can use and a person cannot. Our readers already
+barely noticed garbling that would stop a person, so a reader test has to be checked against people from time to time.
 
-**AI-written papers will be hard to follow in new ways.** Unfamiliar notation, compressed reasoning, or shorthand only
-another model reads would not appear in any rater's training data. A reader fails on an unusable text whatever made it
-unusable.
+Third, AI-written papers will be hard to follow in new ways, such as unfamiliar notation or shorthand that only another
+model reads. A rater trained on today's papers has never seen these, but a reader fails on an unusable text whatever
+made it unusable.
 
-**Oversight needs mistakes to be catchable.** People read AI research to find what is wrong with it. Planting an error
-and checking whether a reader finds it measures that directly, while a rater can call a paper clear that hides an
-error. Comparing two versions of the same paper also separates how it is written from how hard its ideas are, which a
-rater mixes together, and a failed question or missed error shows the writer where the paper loses its reader.
+Fourth, people read AI research to find what is wrong with it. Planting an error and checking whether a reader finds it
+tests that directly, while a rater can call a paper clear even when it hides an error.
 
-A reader test costs more to run, and our weak readers so far respond to bad writing much less than people likely do,
-which the posts below report. If a reader test can be calibrated against people, its results would also supply the
-labels that a cheap rater or probe lacks today. We have not tested trained raters or probes ourselves.
+A reader test costs more to run, and so far our readers respond to bad writing much less than people likely do, as the
+posts report. If it can be matched to people, a reader test could also supply the training labels that a cheap rater
+or probe needs. We have not tested trained raters or probes ourselves.
 
 ## Posts
 
@@ -77,9 +74,27 @@ This repository holds the code, prompts, model outputs and analysis behind the p
 | `data/analysis/` | The analysis outputs every reported number comes from |
 | `reports/`, `research_notes/` | Literature reviews done for the design and the related-work section |
 
+To rerun Part 1, you need Python 3.12 and an [OpenRouter](https://openrouter.ai) key. Copy `.env.example` to `.env`, add the key, then run `pip install -r requirements.txt`.
+
+Every model call is cached in a `calls.jsonl` file keyed by its full request, so rerunning a script with the data here replays the cached replies at no cost and rebuilds every analysis file. Delete a run directory's `calls.jsonl` to make fresh calls. Fresh calls will not match exactly, since the models are served through OpenRouter and their weights and providers are not pinned.
+
+```
+python scripts/quiz/run_v2.py <paper> [<paper> ...]   # versions, quiz, filters and takes for the main study
+python scripts/quiz/judge_v2.py rate                 # legibility ratings
+python scripts/quiz/gap_v2.py run                    # hidden-gap versions, takes and ratings
+python scripts/quiz/gap_requiz.py run                # Follow-up 2
+python scripts/quiz/gap_imp2.py run                  # Follow-up 3
+python scripts/onestop/run_onestop.py run            # OneStopQA
+python scripts/quiz/analyze_v2.py                    # pooled analysis -> data/analysis/
+python scripts/quiz/ci_v2.py                         # intervals for the figures
+python scripts/blog_figures.py                       # figures in the Part 1 post
+```
+
+Each script's docstring gives its options and outputs. The full study cost about $650 in API calls, mostly for writing and filtering quizzes.
+
 ### Part 2: planted errors
 
-Part 2 was run on OpenAI models only, with its own code under `scripts/v4/` and data under `data/v4/` ("v4" was the working name).
+Part 2 used OpenAI models only. Its code is in `scripts/v4/` and its data in `data/v4/`, named after the project's fourth version.
 
 | Path | Contents |
 |---|---|
@@ -108,7 +123,7 @@ uv run --with matplotlib --with requests python scripts/blog_part2_calibration_m
 uv run --with matplotlib --with requests python scripts/blog_part2_levers.py           # Figure 5
 ```
 
-To rerun the experiments, install the requirements (`pip install -r requirements.txt`) and put an OpenAI key in `.env` (`OPENAI_API_KEY`). Every call goes through `scripts/v4/llm.py`, which caches each reply by its full request. Run `gunzip -k` on the `calls*.jsonl.gz` files first and the steps below replay the cached replies at no cost. Without the caches they make fresh calls, which will differ somewhat from ours. `llm.py` stops before spending more than `V4_SPEND_CAP` dollars (default 2,500), counted in `data/v4/spend.jsonl`, which a fresh copy starts empty. Part 2 cost about $1,500 at OpenAI's list prices.
+To rerun the experiments, install the requirements (`pip install -r requirements.txt`) and put an OpenAI key in `.env` as `OPENAI_API_KEY`. Every call goes through `scripts/v4/llm.py`, which caches each reply. If you first run `gunzip -k` on the `calls*.jsonl.gz` files, the steps below replay our cached replies at no cost. Without the caches they make fresh calls, which will differ somewhat from ours and cost about $1,500 in all. `llm.py` refuses to spend more than `V4_SPEND_CAP` dollars, 2,500 by default.
 
 ```
 FIRST="2609.30094v2 2608.13754v1 2609.02893v1 jmlr-2014-dropout"
@@ -138,26 +153,6 @@ for r in gpt55-A600 gpt55-A1200; do python3 scripts/v4/err9.py read $r $FIRST $R
 
 Then rebuild the figures with the three commands above. `docs/part2-agent-report.md` gives the function behind every number, and each script's docstring lists its other options, such as the preregistered scores (`err9.py --scores`, `exp12_paragraphs.py --scores`, `exp11_whole.py`).
 
-### Rerunning Part 1
-
-You need Python 3.12 and an [OpenRouter](https://openrouter.ai) key. Put the key in `.env` (copy `.env.example`), then `pip install -r requirements.txt`.
-
-Every model call is cached in a `calls.jsonl` file keyed by its full request, so rerunning a script with the data here replays the cached replies at no cost and rebuilds every analysis file. Delete a run directory's `calls.jsonl` to make fresh calls. Fresh calls will not match exactly, since the models are served through OpenRouter and their weights and providers are not pinned.
-
-```
-python scripts/quiz/run_v2.py <paper> [<paper> ...]   # versions, quiz, filters and takes for the main study
-python scripts/quiz/judge_v2.py rate                 # legibility ratings
-python scripts/quiz/gap_v2.py run                    # hidden-gap versions, takes and ratings
-python scripts/quiz/gap_requiz.py run                # Follow-up 2
-python scripts/quiz/gap_imp2.py run                  # Follow-up 3
-python scripts/onestop/run_onestop.py run            # OneStopQA
-python scripts/quiz/analyze_v2.py                    # pooled analysis -> data/analysis/
-python scripts/quiz/ci_v2.py                         # intervals for the figures
-python scripts/blog_figures.py                       # figures in the Part 1 post
-```
-
-Each script's docstring gives its options and outputs. The full study cost about $650 in API calls, mostly for writing and filtering quizzes.
-
 ### Licences
 
-Code is under the MIT licence (`LICENSE`). Our text, quizzes, model outputs and analysis are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (`LICENSE-DATA.md`). The papers belong to their authors and are shared under their own Creative Commons licences (Dropout under JMLR's CC-BY policy), listed in `data/papers/ATTRIBUTION.md`; the rewritten versions deliberately distort them and are not the authors' work. The OneStopQA data is © Berzak, Malmaud and Levy, CC BY-SA 4.0 (`data/onestop/human/`).
+Code is under the MIT licence (`LICENSE`). Our text, quizzes, model outputs and analysis are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (`LICENSE-DATA.md`). The papers belong to their authors and are shared under their own Creative Commons licences (Dropout under JMLR's CC-BY policy), listed in `data/papers/ATTRIBUTION.md`. The rewritten versions deliberately distort them and are not the authors' work. The OneStopQA data is © Berzak, Malmaud and Levy, CC BY-SA 4.0 (`data/onestop/human/`).

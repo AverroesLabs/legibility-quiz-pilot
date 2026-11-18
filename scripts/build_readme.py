@@ -23,45 +23,42 @@ POSTS = [
 INTRO = """# Can a model test whether a research paper is legible to people?
 
 AI systems are starting to write a large share of AI safety research, and people can only oversee work they can
-follow. One fix is to have a model translate a hard paper into a readable one, but then readers trust a translation
-nobody has audited. We would rather require the paper itself to be legible, and check that automatically, at the scale
-at which AI will produce papers.
+follow. A model could translate each hard paper into a readable one, but then readers would trust a translation nobody
+has checked. We would rather require the paper itself to be legible, and check that automatically, because AI will
+produce papers faster than people can review them.
 
-Averroes Labs is trying to build that check. Each post below tries one version of it, using weak models as stand-in
-readers and comparing each paper with a version rewritten to be hard to follow while keeping every fact. A useful test
-should score the hard version lower, the way a person would struggle with it.
+Averroes Labs is building that check, and each post below tries one version of it. A weaker model stands in for the
+reader, and we compare how it does on a paper and on a version rewritten to be hard to follow while keeping every fact.
+A useful test should score the hard version lower, as a person would.
 
-## Why test by using the paper, not by rating it?
+## Why make the model use the paper
 
-The cheaper options are to ask a model how legible a paper is, to train a model to rate it, or to find a direction
-inside a model that tracks readability. Each gives a score from one look at the text. Our tests instead make a model
-use the paper, by answering questions that need its content or by finding an error planted in it, and score what the
-model could extract. A rater that first had to show what it got out of the paper would count as a use test too. What
-we doubt is a score that gives no sign the paper was used.
+The cheaper options are to ask a model how legible a paper is, to train a model to rate legibility, or to find a
+direction inside a model that tracks readability. Each gives a score from one look at the text. Our tests instead make
+a model use the paper, either by answering questions about its content or by finding an error planted in it. A rater
+would be fine if it first had to show what it got out of the paper. What we doubt is a score that gives no sign the
+paper was used.
 
-**Legibility is about use.** A paper is legible if a reader can follow its argument and check its claims. A reader test
-does that task, and a rater guesses at the outcome. Part 1 asked models for ratings directly. They rated our garbled
-rewrites as far harder to read, yet their ratings had little to do with how well the same models understood the text.
+We prefer use for four reasons. First, legibility means a reader can follow a paper's argument and check its claims,
+and a test that makes the model do this measures it directly. In Part 1, models rated our garbled rewrites as far
+harder to read, yet their ratings had little to do with how well the same models understood the text.
 
-**Writers will learn to pass whatever test we use.** A rating can be passed by text that only looks readable. In Part
-1, a fluent paper with its key results quietly removed still got good ratings. A reader test is harder to fool. The
-questions or planted errors are chosen after the paper is written, so the paper has to contain content the reader can
-actually use. It can still be gamed by writing that a model can use and a person cannot, and our readers already
-barely noticed garbling that would stop a person. So a reader test still has to be checked against people, with fresh
-questions, several readers and occasional human checks.
+Second, writers will learn to pass whatever test we use. A rating can be passed by text that only looks readable, and
+in Part 1 a fluent paper with its key results quietly removed still got good ratings. A reader test is harder to fool,
+because the questions or planted errors are chosen after the paper is written, so the paper has to contain content the
+reader can actually use. It can still be gamed by writing that a model can use and a person cannot. Our readers already
+barely noticed garbling that would stop a person, so a reader test has to be checked against people from time to time.
 
-**AI-written papers will be hard to follow in new ways.** Unfamiliar notation, compressed reasoning, or shorthand only
-another model reads would not appear in any rater's training data. A reader fails on an unusable text whatever made it
-unusable.
+Third, AI-written papers will be hard to follow in new ways, such as unfamiliar notation or shorthand that only another
+model reads. A rater trained on today's papers has never seen these, but a reader fails on an unusable text whatever
+made it unusable.
 
-**Oversight needs mistakes to be catchable.** People read AI research to find what is wrong with it. Planting an error
-and checking whether a reader finds it measures that directly, while a rater can call a paper clear that hides an
-error. Comparing two versions of the same paper also separates how it is written from how hard its ideas are, which a
-rater mixes together, and a failed question or missed error shows the writer where the paper loses its reader.
+Fourth, people read AI research to find what is wrong with it. Planting an error and checking whether a reader finds it
+tests that directly, while a rater can call a paper clear even when it hides an error.
 
-A reader test costs more to run, and our weak readers so far respond to bad writing much less than people likely do,
-which the posts below report. If a reader test can be calibrated against people, its results would also supply the
-labels that a cheap rater or probe lacks today. We have not tested trained raters or probes ourselves.
+A reader test costs more to run, and so far our readers respond to bad writing much less than people likely do, as the
+posts report. If it can be matched to people, a reader test could also supply the training labels that a cheap rater
+or probe needs. We have not tested trained raters or probes ourselves.
 
 ## Posts
 

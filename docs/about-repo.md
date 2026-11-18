@@ -24,9 +24,27 @@ This repository holds the code, prompts, model outputs and analysis behind the p
 | `data/analysis/` | The analysis outputs every reported number comes from |
 | `reports/`, `research_notes/` | Literature reviews done for the design and the related-work section |
 
+To rerun Part 1, you need Python 3.12 and an [OpenRouter](https://openrouter.ai) key. Copy `.env.example` to `.env`, add the key, then run `pip install -r requirements.txt`.
+
+Every model call is cached in a `calls.jsonl` file keyed by its full request, so rerunning a script with the data here replays the cached replies at no cost and rebuilds every analysis file. Delete a run directory's `calls.jsonl` to make fresh calls. Fresh calls will not match exactly, since the models are served through OpenRouter and their weights and providers are not pinned.
+
+```
+python scripts/quiz/run_v2.py <paper> [<paper> ...]   # versions, quiz, filters and takes for the main study
+python scripts/quiz/judge_v2.py rate                 # legibility ratings
+python scripts/quiz/gap_v2.py run                    # hidden-gap versions, takes and ratings
+python scripts/quiz/gap_requiz.py run                # Follow-up 2
+python scripts/quiz/gap_imp2.py run                  # Follow-up 3
+python scripts/onestop/run_onestop.py run            # OneStopQA
+python scripts/quiz/analyze_v2.py                    # pooled analysis -> data/analysis/
+python scripts/quiz/ci_v2.py                         # intervals for the figures
+python scripts/blog_figures.py                       # figures in the Part 1 post
+```
+
+Each script's docstring gives its options and outputs. The full study cost about $650 in API calls, mostly for writing and filtering quizzes.
+
 ### Part 2: planted errors
 
-Part 2 was run on OpenAI models only, with its own code under `scripts/v4/` and data under `data/v4/` ("v4" was the working name).
+Part 2 used OpenAI models only. Its code is in `scripts/v4/` and its data in `data/v4/`, named after the project's fourth version.
 
 | Path | Contents |
 |---|---|
@@ -55,7 +73,7 @@ uv run --with matplotlib --with requests python scripts/blog_part2_calibration_m
 uv run --with matplotlib --with requests python scripts/blog_part2_levers.py           # Figure 5
 ```
 
-To rerun the experiments, install the requirements (`pip install -r requirements.txt`) and put an OpenAI key in `.env` (`OPENAI_API_KEY`). Every call goes through `scripts/v4/llm.py`, which caches each reply by its full request. Run `gunzip -k` on the `calls*.jsonl.gz` files first and the steps below replay the cached replies at no cost. Without the caches they make fresh calls, which will differ somewhat from ours. `llm.py` stops before spending more than `V4_SPEND_CAP` dollars (default 2,500), counted in `data/v4/spend.jsonl`, which a fresh copy starts empty. Part 2 cost about $1,500 at OpenAI's list prices.
+To rerun the experiments, install the requirements (`pip install -r requirements.txt`) and put an OpenAI key in `.env` as `OPENAI_API_KEY`. Every call goes through `scripts/v4/llm.py`, which caches each reply. If you first run `gunzip -k` on the `calls*.jsonl.gz` files, the steps below replay our cached replies at no cost. Without the caches they make fresh calls, which will differ somewhat from ours and cost about $1,500 in all. `llm.py` refuses to spend more than `V4_SPEND_CAP` dollars, 2,500 by default.
 
 ```
 FIRST="2609.30094v2 2608.13754v1 2609.02893v1 jmlr-2014-dropout"
@@ -85,26 +103,6 @@ for r in gpt55-A600 gpt55-A1200; do python3 scripts/v4/err9.py read $r $FIRST $R
 
 Then rebuild the figures with the three commands above. `docs/part2-agent-report.md` gives the function behind every number, and each script's docstring lists its other options, such as the preregistered scores (`err9.py --scores`, `exp12_paragraphs.py --scores`, `exp11_whole.py`).
 
-### Rerunning Part 1
-
-You need Python 3.12 and an [OpenRouter](https://openrouter.ai) key. Put the key in `.env` (copy `.env.example`), then `pip install -r requirements.txt`.
-
-Every model call is cached in a `calls.jsonl` file keyed by its full request, so rerunning a script with the data here replays the cached replies at no cost and rebuilds every analysis file. Delete a run directory's `calls.jsonl` to make fresh calls. Fresh calls will not match exactly, since the models are served through OpenRouter and their weights and providers are not pinned.
-
-```
-python scripts/quiz/run_v2.py <paper> [<paper> ...]   # versions, quiz, filters and takes for the main study
-python scripts/quiz/judge_v2.py rate                 # legibility ratings
-python scripts/quiz/gap_v2.py run                    # hidden-gap versions, takes and ratings
-python scripts/quiz/gap_requiz.py run                # Follow-up 2
-python scripts/quiz/gap_imp2.py run                  # Follow-up 3
-python scripts/onestop/run_onestop.py run            # OneStopQA
-python scripts/quiz/analyze_v2.py                    # pooled analysis -> data/analysis/
-python scripts/quiz/ci_v2.py                         # intervals for the figures
-python scripts/blog_figures.py                       # figures in the Part 1 post
-```
-
-Each script's docstring gives its options and outputs. The full study cost about $650 in API calls, mostly for writing and filtering quizzes.
-
 ### Licences
 
-Code is under the MIT licence (`LICENSE`). Our text, quizzes, model outputs and analysis are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (`LICENSE-DATA.md`). The papers belong to their authors and are shared under their own Creative Commons licences (Dropout under JMLR's CC-BY policy), listed in `data/papers/ATTRIBUTION.md`; the rewritten versions deliberately distort them and are not the authors' work. The OneStopQA data is © Berzak, Malmaud and Levy, CC BY-SA 4.0 (`data/onestop/human/`).
+Code is under the MIT licence (`LICENSE`). Our text, quizzes, model outputs and analysis are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (`LICENSE-DATA.md`). The papers belong to their authors and are shared under their own Creative Commons licences (Dropout under JMLR's CC-BY policy), listed in `data/papers/ATTRIBUTION.md`. The rewritten versions deliberately distort them and are not the authors' work. The OneStopQA data is © Berzak, Malmaud and Levy, CC BY-SA 4.0 (`data/onestop/human/`).
