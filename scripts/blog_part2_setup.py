@@ -55,7 +55,7 @@ def main():
          BULLET + "wrong number or calculation", BULLET + "reversed comparison",
          BULLET + "claim stretched past the tests", BULLET + "association stated as cause",
          BULLET + "error carried into later results", "Kept only if Sol finds it in the",
-         "clarified versions: 82 errors"])
+         "clarified versions"])
     box(0.1, 7.7, 19.8, 6.1, "Four readers, three ways of reading",
         ["GPT-5.5, GPT-5 mini, GPT-5.6 Luna, GPT-5.4 mini"])
     for x, title, lines in [(0.5, "Whole paper", ["Review the paper and", "list any internal", "inconsistencies"]),
