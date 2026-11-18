@@ -42,7 +42,7 @@ For three readers that made almost no difference, which is Part 1's result again
 
 ## Result 2: Asking about every paragraph
 
-![Every-paragraph check pooled over ten papers, four readers from strongest to weakest. Top, share of planted errors caught, nearly all for the three stronger readers in every version. Bottom, correct paragraphs flagged per 1,000 words, highest in the garbled versions and lowest in the clarified ones for every reader.](../docs/blog/part-2/fig-2-every-paragraph.png)
+![Every-paragraph check pooled over ten papers, four readers from strongest to weakest. Top, share of planted errors caught, nearly all for the three stronger readers in every version. Bottom, false alarms: correct paragraphs flagged per 1,000 words, highest in the garbled versions and lowest in the clarified ones for every reader.](../docs/blog/part-2/fig-2-every-paragraph.png)
 
 **Figure 2.** The reader has the whole paper and is asked about each paragraph in turn whether it is consistent with the rest. Top, the share of planted errors caught. Bottom, other paragraphs flagged per 1,000 words, including real inconsistencies already in the original papers. Hatching as in Figure 1. Whiskers are 95% intervals.
 
