@@ -4,7 +4,7 @@ Jason Fantl, Averroes Labs · November 2026 · Part 2
 
 *Preliminary internal results. This follows [Part 1](part-1-quiz.md).*
 
-**TL;DR.** In Part 1, rewriting papers to be hard to follow barely lowered a model's quiz score, so here we tried a more direct test of legibility, following a suggestion from Jan Kirchner. We plant the same error in a paper and in a garbled version of it, and ask a model to find it. If writing quality matters to the reader, it should find fewer errors in the garbled version. Reading the whole paper, three of our four readers found about as many errors in garbled text as in the originals, and only the strongest, GPT-5.5, found clearly fewer. Asked about every paragraph in turn, the readers caught most errors in every version, but all four flagged more correct paragraphs when the text was garbled. Reading one section at a time and keeping only short notes, every reader found slightly fewer errors in garbled text, but no gap was clearly larger than chance. So bad writing rarely stops a model from judging an error, and the choice of reader is the one change we found that moves the test toward a calibrated one.
+**TL;DR.** In Part 1, rewriting papers to be hard to follow barely lowered a model's quiz score, so here we tried a more direct test of legibility, following a suggestion from Jan Kirchner. We plant the same error in a paper and in a garbled version of it, and ask a model to find it. If writing quality matters to the reader, it should find fewer errors in the garbled version. Reading the whole paper, three of our four readers found about as many errors in garbled text as in the originals, and only the strongest, GPT-5.5, found clearly fewer. Asked about every paragraph in turn, the readers caught most errors in every version, but all four flagged more correct paragraphs when the text was garbled. Reading one section at a time and keeping only short notes, every reader found slightly fewer errors in garbled text, but no gap was clearly larger than chance. So bad writing rarely stops a model from judging an error, and the choice of reader is the one change we found that helps the test tell the two versions apart.
 
 ## Why plant errors
 
@@ -62,17 +62,15 @@ Result 3 makes the reader read more like a person. It goes through the paper onc
 
 Every reader found slightly fewer errors in the garbled versions, but no gap was clearly larger than chance. Every reader found the most errors in the clarified versions, so reading section by section made the readers sensitive to clearer writing, but not reliably to worse writing.
 
-## Calibrating the test
+## Mapping the solution space
 
-The line between legible and illegible is drawn by people. A paper they can follow should pass, and one they cannot should fail. We cannot move that line, but we can tune the test to match it. Two things are tunable: the weak reader (which model, how much effort, how much of the paper it sees and remembers) and the planted errors (what kind of mistake, and how far each sits from the evidence that contradicts it).
-
-To calibrate, we would run a setting on text whose legibility to people we already know, such as published papers, which people can follow, and garbled versions, which they cannot. A calibrated setting catches most errors in the first and few in the second. We have not done this tuning yet. Every setting in this post was fixed before we ran it, so Figure 4 only maps where those settings landed.
+Every setting in this post comes down to two numbers: the share of errors it catches in the originals and the share it catches in the garbled versions. Plotting one against the other puts all of them on one map (Figure 4). On the diagonal a setting cannot tell the two versions apart. A useful test would sit in the bottom-right corner, catching most errors in text people can follow and few in text they cannot.
 
 ![Calibration map pooled over ten papers: each reader setting's catch rate on original papers against its catch rate on garbled versions. Fill shows how the reader read the paper and marker shape shows which reader. Most settings sit near the diagonal; GPT-5.5 with the whole paper sits below it, still far above the green target corner. Asked about every paragraph, the readers sit near the top corner.](../docs/blog/part-2/fig-4-calibration-map.png)
 
 **Figure 4.** Each point is one reader setting, pooled over all ten papers. Its position shows the share of planted errors caught in the original papers (horizontal) and in their garbled versions (vertical). Black points read the whole paper, blue points were asked about every paragraph, and ochre points read one section at a time. The shape shows which reader. On the dashed diagonal a setting cannot tell the two apart, and the green corner is the target.
 
-Most settings sit near the diagonal. To calibrate, we need to know which changes move a setting off it and in which direction, so Figure 5 traces every change we have measured on the same map.
+Most settings sit near the diagonal. Figure 5 shows what each change we made did to a setting's position.
 
 ![Six small calibration maps on full 0 to 1 axes, pooled over ten papers, one per change: which reader, whole paper to one section at a time, smaller notes for GPT-5.5, being told where the error is, and GPT-5.5's errors split by difficulty and by distance to the evidence. Arrows show how each change moved the setting; the green corner is the target.](../docs/blog/part-2/fig-5-levers.png)
 
@@ -82,7 +80,7 @@ Only one change moved a setting off the diagonal, the choice of reader. GPT-5.5 
 
 The errors themselves gave little to work with. Splitting GPT-5.5's errors by difficulty or by distance to the evidence moved it around a small region below the diagonal, and no subset came near the target. These subsets are small, so we read nothing more into them.
 
-None of this is specific to planted errors. Part 1's quiz can be calibrated the same way. Its score is also a weak reader's success on text, measured on originals and on hard-to-read rewrites, so each quiz setting is a point on the same map. There the tunable parts are the reader and the questions, such as how much of the paper an answer needs and how far apart the facts it combines sit. Part 1's readers lost about five points on the rewrites, which puts them near the diagonal, where most settings here sit too. Any test that scores a reader on text people can follow and text they cannot can be placed on this map and tuned toward the target in the same way.
+Part 1's quiz fits on the same map. Its readers lost about five points on the rewrites, which puts them near the diagonal with most settings here. Any test that scores a reader on text people can follow and text they cannot can be compared this way.
 
 ## What this means
 
@@ -112,7 +110,7 @@ People have been tested in pieces of this design, never as a whole. Peer reviewe
 - **Our errors.** We chose the error templates. Two kinds, a result left out of a summary and a claim with no support, could not yet be tested properly, and naturally occurring errors may behave differently.
 - **A strong model is the referee.** GPT-6.1 Sol built and checked the errors, the garbled versions and the clarified versions. Its own mistakes would pass into the results unnoticed.
 
-The next step is to calibrate for real. We would try these levers on these ten papers, pick a setting by a rule fixed in advance, and only then run it once on nine papers held out from everything so far. The repository that accompanies this post holds the code, prompts, raw model outputs and every experiment's preregistered predictions, so each result here can be rerun. A detailed reference report written for AI agents, docs/part2-agent-report.md, gathers every number behind this post with its source, so an agent can answer questions about it without searching the repository.
+The next step is to calibrate the test: tune a setting toward the target corner on these ten papers, whose legibility to people we take as known, pick it by a rule fixed in advance, and only then run it once on nine papers held out from everything so far. The repository that accompanies this post holds the code, prompts, raw model outputs and every experiment's preregistered predictions, so each result here can be rerun. A detailed reference report written for AI agents, docs/part2-agent-report.md, gathers every number behind this post with its source, so an agent can answer questions about it without searching the repository.
 
 ---
 
