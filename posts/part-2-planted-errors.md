@@ -4,7 +4,7 @@ Jason Fantl, Averroes Labs · November 2026 · Part 2
 
 *Preliminary internal results. This follows [Part 1](part-1-quiz.md).*
 
-**TL;DR.** In Part 1, rewriting papers to be hard to follow barely lowered a model's quiz score. Here we tried a more direct test of legibility, following a suggestion from Jan Kirchner. We planted an error in a paper, asked a model to find it, and planted the same error in a garbled version of the same paper. If writing quality matters to the reader, it should find fewer errors in the garbled one. With the whole paper in view, three of our four readers found about as many errors in garbled text as in the originals. The strongest, GPT-5.5, found clearly fewer, both on the four papers we designed the test with and on six peer-reviewed papers that played no part in the design. Asked about every paragraph in turn, the readers caught most errors in every version, but all four flagged more correct paragraphs in the garbled versions. So bad writing rarely stops a model from judging an error, but it can cost a strong reader in search and make any reader more suspicious of correct text. Of the changes we tried, only the choice of reader moved a setting toward a calibrated test, so that is the lever to work with next.
+**TL;DR.** In Part 1, rewriting papers to be hard to follow barely lowered a model's quiz score. Here we tried a more direct test of legibility, following a suggestion from Jan Kirchner. We planted an error in a paper, asked a model to find it, and planted the same error in a garbled version of the same paper. If writing quality matters to the reader, it should find fewer errors in the garbled one. With the whole paper in view, three of our four readers found about as many errors in garbled text as in the originals. The strongest, GPT-5.5, found clearly fewer. Asked about every paragraph in turn, the readers caught most errors in every version, but all four flagged more correct paragraphs in the garbled versions. So bad writing rarely stops a model from judging an error, but it can cost a strong reader in search and make any reader more suspicious of correct text. Of the changes we tried, only the choice of reader moved a setting toward a calibrated test, so that is the lever to work with next.
 
 ## Why we tried catching errors
 
@@ -18,7 +18,7 @@ His games trained a "sneaky" model to write such mistakes, which is tricky and p
 
 The test is as simple as we could make it. Plant one error in a paper and ask a weak model to review the paper for internal inconsistencies. Then plant the same error in a garbled version of the same paper and ask again, and repeat over many errors. If the reader finds fewer errors in the garbled version, its success depends on how the paper is written, which is what a legibility test needs. Nothing else is required, no quiz and no rewritten reference copy, only the paper, the errors and the reader.
 
-**Papers.** Ten in all. The first four are the papers we started with, three of Part 1's arXiv preprints and the 2014 JMLR Dropout paper. We later added six papers accepted at peer-reviewed venues, drawn at random across lengths of about 4,000 to 15,000 words before anyone read them.
+**Papers.** Ten in all: three of Part 1's arXiv preprints, the 2014 JMLR Dropout paper, and six papers accepted at peer-reviewed venues, drawn at random across lengths of about 4,000 to 15,000 words.
 
 **Garbled versions.** Each stacks every kind of difficulty we had. It compresses the paper to about two thirds of its length, swaps terms for opaque codes, moves evidence away from the claims it supports, and leaves connecting steps unstated. GPT-6.1 Sol checked it against the original until no fact or number was lost.
 
@@ -34,11 +34,11 @@ Everything here cost about $1,500 in API calls at OpenAI's list prices.
 
 ![Share of planted errors found with the whole paper in view, in clarified, original and garbled versions, for four readers from strongest to weakest, pooled over ten papers. Only GPT-5.5 finds clearly fewer in the garbled version.](../docs/blog/part-2/fig-1-whole-paper.png)
 
-**Figure 1.** Share of planted errors found by four readers (groups) reviewing the whole paper, pooled over all ten papers (82 errors), the four we designed the test with and six peer-reviewed papers that played no part in it. Plain bars are the clarified original, diagonal hatching the original, and crosshatching the garbled version. Whiskers are 95% intervals.
+**Figure 1.** Share of planted errors found by four readers (groups) reviewing the whole paper, pooled over all ten papers (82 errors). Plain bars are the clarified original, diagonal hatching the original, and crosshatching the garbled version. Whiskers are 95% intervals.
 
-Each reader reviewed the whole paper and listed any internal inconsistencies. GPT-5 mini, GPT-5.6 Luna and GPT-5.4 mini found about as many errors in the garbled versions as in the originals. GPT-5.5 was the exception. It found 0.67 of the errors in the garbled versions against 0.84 in the originals, and the gap held on both sets of papers. Readers rarely accused clean papers of the planted errors.
+Each reader reviewed the whole paper and listed any internal inconsistencies. GPT-5 mini, GPT-5.6 Luna and GPT-5.4 mini found about as many errors in the garbled versions as in the originals. GPT-5.5 was the exception. It found 0.67 of the errors in the garbled versions against 0.84 in the originals. Readers rarely accused clean papers of the planted errors.
 
-For three readers that made almost no difference, which is Part 1's result again from a different direction. GPT-5.5's gap is the first sign that a reader with the whole paper in view can pay for bad writing, and the first result in this project to hold on papers outside the set we designed with. It is still one reader of four on ten papers, and its catch rates on the two versions remain close enough that it cannot yet sort a single paper as legible or not.
+For three readers that made almost no difference, which is Part 1's result again from a different direction. GPT-5.5's gap is the first sign that a reader with the whole paper in view can pay for bad writing. It is still one reader of four on ten papers, and its catch rates on the two versions remain close enough that it cannot yet sort a single paper as legible or not.
 
 ## Result 2: asked about every paragraph, readers catch most errors but flag more correct text when it is garbled
 
@@ -60,7 +60,7 @@ We also told all four readers which passage holds the error and asked only about
 
 Result 3 makes the reader read more like a person. It goes through the paper once, one section at a time, rewrites notes of at most 300 words after each section, and cannot look back. A code defined pages earlier, or evidence far from its claim, should then cost it something.
 
-Every reader found slightly fewer errors in the garbled versions, but no gap was clearly larger than chance, and the two sets of papers disagreed about which readers showed one. Every reader found the most errors in the clarified versions, so reading section by section made the readers sensitive to clearer writing, but not reliably to worse writing.
+Every reader found slightly fewer errors in the garbled versions, but no gap was clearly larger than chance. Every reader found the most errors in the clarified versions, so reading section by section made the readers sensitive to clearer writing, but not reliably to worse writing.
 
 ## Toward a calibrated test
 
@@ -86,7 +86,7 @@ None of this is specific to planted errors. Part 1's quiz can be calibrated the 
 
 ## What this means
 
-A direct test of legibility needs a reader that pays something for bad writing. With the whole paper in view, three of our four readers pay almost nothing. GPT-5.5 pays in finding errors, on new papers as well as the ones we designed with, though the cost is still too small to sort a single paper. Asked about every paragraph, all four readers pay in another way, by flagging more correct text when it is garbled.
+A direct test of legibility needs a reader that pays something for bad writing. With the whole paper in view, three of our four readers pay almost nothing. GPT-5.5 pays in finding errors, though the cost is still too small to sort a single paper. Asked about every paragraph, all four readers pay in another way, by flagging more correct text when it is garbled.
 
 Several parts of the test work, and all of them need nothing but the paper itself. Errors can be planted and checked automatically, readers rarely accuse clean papers of them, a cheap grader scores reviews reliably, and pointed questions separate finding an error from judging it.
 
@@ -105,14 +105,14 @@ People have been tested in pieces of this design, never as a whole. Peer reviewe
 ## Limitations
 
 - **Small samples.** Ten papers and 82 errors give intervals of about ±0.1 on each rate, so only large differences show up clearly.
-- **Many tries.** We tried several readers and ways of asking, and in that many tries some result is likely to look good by chance. Section-by-section gaps appeared for one reader on one set of papers and not on the other. GPT-5.5's whole-paper gap held on both sets, but it is still one reader on ten papers. The false-alarm difference in Result 2 was not planned as a test before we saw it, and its intervals cover paragraphs, not differences between papers.
+- **Many tries.** We tried several readers and ways of asking, and in that many tries some result is likely to look good by chance. GPT-5.5's whole-paper gap is the clearest result, but it is still one reader on ten papers. The false-alarm difference in Result 2 was not planned as a test before we saw it, and its intervals cover paragraphs, not differences between papers.
 - **The garbled versions were not checked with people.** We assume they are hard for a person to follow, and Result 1 suggests they are not hard for most models. If they are easy for people too, the test was never really challenged.
-- **Legibility to people is assumed, not measured.** We treat the original and peer-reviewed papers as legible because they were written and reviewed for people. We have not measured how people read them.
+- **Legibility to people is assumed, not measured.** We treat the original papers as legible because they were written for people. We have not measured how people read them.
 - **One provider.** Every reader, writer and grader was an OpenAI model, so their blind spots may be shared.
 - **Our errors.** We chose the error templates. Two kinds, a result left out of a summary and a claim with no support, could not yet be tested properly, and naturally occurring errors may behave differently.
 - **A strong model is the referee.** GPT-6.1 Sol built and checked the errors, the garbled versions and the clarified versions. Its own mistakes would pass into the results unnoticed.
 
-The next step is to calibrate for real. We would try these levers on the first four papers, pick a setting by a rule fixed in advance, check it on the six reviewed papers, and only then run it once on nine papers held out from everything so far. The repository that accompanies this post holds the code, prompts, raw model outputs and every experiment's preregistered predictions, so each result here can be rerun. A detailed reference report written for AI agents, docs/part2-agent-report.md, gathers every number behind this post with its source, so an agent can answer questions about it without searching the repository.
+The next step is to calibrate for real. We would try these levers on these ten papers, pick a setting by a rule fixed in advance, and only then run it once on nine papers held out from everything so far. The repository that accompanies this post holds the code, prompts, raw model outputs and every experiment's preregistered predictions, so each result here can be rerun. A detailed reference report written for AI agents, docs/part2-agent-report.md, gathers every number behind this post with its source, so an agent can answer questions about it without searching the repository.
 
 ---
 
