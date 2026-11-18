@@ -15,9 +15,9 @@ POSTS = [
      "A strong model writes an open-book quiz on a paper and weaker models take it. Rewriting papers to be hard to "
      "follow lowered quiz scores only slightly, while the same models rated the rewrites as far harder to read."),
     ("posts/part-2-planted-errors.md", "Part 2",
-     "We plant an error in a paper and in a garbled version of it, and ask a model to find it. Most readers found as "
-     "many errors in garbled text as in the original; only the strongest, GPT-5.5, found clearly fewer, and asked "
-     "about every paragraph, readers flagged more correct text when it was garbled."),
+     "We plant an error in a paper and in a garbled version of it, and ask a model to find it. Only the strongest "
+     "model, GPT-5.5, found clearly fewer errors in the garbled version, and asked about every paragraph, every model "
+     "flagged more correct text when it was garbled."),
 ]
 
 INTRO = """# Can a model test whether a research paper is legible to people?
