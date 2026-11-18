@@ -44,7 +44,7 @@ does that task, and a rater guesses at the outcome. Part 1 asked models for rati
 rewrites as far harder to read, yet their ratings had little to do with how well the same models understood the text.
 
 **Writers will learn to pass whatever test we use.** A rating can be passed by text that only looks readable. In Part
-1, a fluent paper with its key results quietly removed still got good ratings. A reader test is harder to fool: the
+1, a fluent paper with its key results quietly removed still got good ratings. A reader test is harder to fool. The
 questions or planted errors are chosen after the paper is written, so the paper has to contain content the reader can
 actually use. It can still be gamed by writing that a model can use and a person cannot, and our readers already
 barely noticed garbling that would stop a person. So a reader test still has to be checked against people, with fresh
