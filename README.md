@@ -111,7 +111,35 @@ uv run --with matplotlib --with requests python scripts/blog_part2_calibration_m
 uv run --with matplotlib --with requests python scripts/blog_part2_levers.py           # Figure 5
 ```
 
-To replay model calls from the cache at no cost, `gunzip -k` the `calls*.jsonl.gz` files first; each script's docstring gives its commands (for example `python3 scripts/v4/exp12_paragraphs.py --scores`). New calls need an OpenAI key in `.env` (`OPENAI_API_KEY`). `llm.py` stops before spending more than `V4_SPEND_CAP` dollars (default 2,500) as counted in `data/v4/spend.jsonl`, which a fresh copy starts empty. Part 2 cost about $1,500 at OpenAI's list prices.
+To rerun the experiments, install the requirements (`pip install -r requirements.txt`) and put an OpenAI key in `.env` (`OPENAI_API_KEY`). Every call goes through `scripts/v4/llm.py`, which caches each reply by its full request. Run `gunzip -k` on the `calls*.jsonl.gz` files first and the steps below replay the cached replies at no cost. Without the caches they make fresh calls, which will differ somewhat from ours. `llm.py` stops before spending more than `V4_SPEND_CAP` dollars (default 2,500), counted in `data/v4/spend.jsonl`, which a fresh copy starts empty. Part 2 cost about $1,500 at OpenAI's list prices.
+
+```
+FIRST="2609.30094v2 2608.13754v1 2609.02893v1 jmlr-2014-dropout"
+REVIEWED="2601.02896v4 2603.01214v2 2509.22621v3 2509.11379v3 2510.17247v2 2506.22982v1"
+
+# The garbled and clarified versions of each paper
+python3 scripts/v4/obf_max.py $FIRST $REVIEWED
+python3 scripts/v4/clarify.py $FIRST $REVIEWED --prompts explainer
+
+# Inconsistencies already in the originals, then the planted errors and the strong-reader filter
+python3 scripts/v4/err9.py inventory jmlr-2014-dropout $REVIEWED
+python3 scripts/v4/err9.py construct $FIRST $REVIEWED
+
+# Result 1, whole paper (experiment 11)
+for r in w11-gpt55-low w11-mini-high w11-luna-low w11-mini54-med; do python3 scripts/v4/err9.py read $r $FIRST $REVIEWED; done
+
+# Result 2, every paragraph (experiment 12)
+for r in p12-gpt55-low p12-mini-high p12-luna-low p12-mini54-med; do python3 scripts/v4/exp12_paragraphs.py read $r $FIRST $REVIEWED; done
+
+# Result 3, one section at a time with 300-word notes (experiment 9); the readers' names differ by paper set
+for r in gpt55-A mini-high-A luna-low-A mini54-A; do python3 scripts/v4/err9.py read $r $FIRST; done
+for r in gpt55-A-anchors gpt55-A-anchors-clar mini-high-A-anchors luna-low-A-anchors mini54-A-anchors; do python3 scripts/v4/err9.py read $r $REVIEWED; done
+
+# Figure 5's note sizes
+for r in gpt55-A600 gpt55-A1200; do python3 scripts/v4/err9.py read $r $FIRST $REVIEWED; done
+```
+
+Then rebuild the figures with the three commands above. `docs/part2-agent-report.md` gives the function behind every number, and each script's docstring lists its other options, such as the preregistered scores (`err9.py --scores`, `exp12_paragraphs.py --scores`, `exp11_whole.py`).
 
 ### Rerunning Part 1
 
