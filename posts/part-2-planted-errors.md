@@ -88,7 +88,7 @@ A direct test of legibility needs a reader that pays something for bad writing. 
 
 Several parts of the test work, and all of them need nothing but the paper itself. Errors can be planted and checked automatically, readers rarely accuse clean papers of them, a cheap grader scores reviews reliably, and pointed questions separate finding an error from judging it.
 
-The method may still work. Every reader found the most errors and raised the fewest false alarms in the clarified versions, so readers do respond to how text is written. A stronger reader was the one change that made a reader pay for bad writing in finding errors, and stronger readers keep arriving.
+The method may still work. Every reader found the most errors and raised the fewest false alarms in the clarified versions, so readers do respond to how text is written. And the strongest reader, GPT-5.5, was the only one that found fewer errors in garbled text, so newer, stronger models may do better.
 
 ## Related work
 
