@@ -14,8 +14,8 @@ should score the hard version lower, the way a person would struggle with it.
 The cheaper options are to ask a model how legible a paper is, to train a model to rate it, or to find a direction
 inside a model that tracks readability. Each gives a score from one look at the text. Our tests instead make a model
 use the paper, by answering questions that need its content or by finding an error planted in it, and score what the
-model could extract. The line that matters is not reader versus rater. A rater that had to show what it got out of the
-paper before scoring it would be a use test too. What we doubt is any score that never shows the paper was used.
+model could extract. A rater that first had to show what it got out of the paper would count as a use test too. What
+we doubt is a score that gives no sign the paper was used.
 
 **Legibility is about use.** A paper is legible if a reader can follow its argument and check its claims. A reader test
 does that task, and a rater guesses at the outcome. Part 1 asked models for ratings directly. They rated our garbled
