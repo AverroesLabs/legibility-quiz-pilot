@@ -48,6 +48,19 @@ GPT-5.4 mini's caught gap per set (RPT): +0.20 [+0.07, +0.34] first four, −0.1
 
 **Fig 5 difficulty and distance panels** use all 82 errors except three on 2509.11379v3 whose `distance_words` is null (79 errors in the distance panel). Tercile cut points 38 and 710 words.
 
+**Gap by error type (exploratory, chosen after seeing the data; post Result 1, last paragraph).** Originals minus garbled, `bd.per_error` over all ten papers, grouped by `errors.jsonl` `category`; intervals resample errors within papers (2000 draws, seed 0), whole-paper GPT-5.5 only.
+
+| setting | reversed (28) | carried (15) | calculation (22) | stretched (10) | causal (7) |
+|---|---|---|---|---|---|
+| GPT-5.5 whole paper | 0.84/0.80, +0.04 [−0.04, +0.12] | 1.00/0.80, +0.20 [+0.13, +0.33] | 0.84/0.59, +0.25 [+0.07, +0.41] | 0.85/0.65, +0.20 [−0.10, +0.50] | 0.50/0.14, +0.36 [+0.07, +0.64] |
+| GPT-5.5 one section at a time | +0.04 | +0.13 | 0.00 | +0.10 | +0.43 |
+| GPT-5 mini whole paper | −0.05 | +0.10 | −0.02 | +0.05 | −0.14 |
+| GPT-5.6 Luna whole paper | +0.09 | −0.10 | 0.00 | −0.05 | 0.00 |
+| GPT-5.4 mini whole paper | +0.02 | +0.07 | −0.02 | +0.05 | +0.07 |
+| section-by-section, three weaker readers | −0.04 to +0.14 | −0.07 to +0.20 | −0.05 to +0.14 | 0.00 to +0.20 | 0.00 to +0.14 |
+
+Only GPT-5.5 shows a pattern: reversed comparisons near zero in both setups, causal claims largest in both. The weaker readers show no consistent pattern. Only one garbled version exists (all difficulties stacked), so this cannot say which aspect of illegibility affects which error type.
+
 Sections 1-10 below are the 2026-11-17 snapshot; where they disagree with this update (any "first four only" figure description, Fig 2 hard-coded values, PENDING marks), this update wins.
 
 ## Update 2026-11-17 15:00 UTC (supersedes PENDING marks for exp 12 GPT-5.5)

@@ -44,6 +44,8 @@ Each reader reviewed the whole paper and listed any internal inconsistencies. GP
 
 For three readers that made almost no difference, which is Part 1's result again from a different direction. GPT-5.5's gap is the first sign that a reader with the whole paper in view can pay for bad writing. It is still one reader of four on ten papers, and its catch rates on the two versions remain close enough that it cannot yet sort a single paper as legible or not.
 
+GPT-5.5's gap was not spread evenly across error types. It found reversed comparisons about as often in garbled text as in the originals, but found causal claims and wrong calculations much less often. Errors that can be spotted by matching two facts seem to survive garbling, while errors that need the reader to follow the reasoning do not. The groups are small and we chose this split after seeing the data, so we treat it as a lead for the next experiment.
+
 ## Result 2: Asking about every paragraph
 
 ![Every-paragraph check pooled over ten papers, four readers from strongest to weakest. Top, share of planted errors caught, nearly all for the three stronger readers in every version. Bottom, false alarms: correct paragraphs flagged per 1,000 words, highest in the garbled versions and lowest in the clarified ones for every reader.](../docs/blog/part-2/fig-3-every-paragraph.png)
