@@ -3,7 +3,7 @@ papers (82 primary errors). Each panel is the map (catch rate on originals vs ga
 diagonal and target corner; arrows run from the base setting to the changed one. No API calls.
 
 Run: uv run --with matplotlib python scripts/blog_part2_levers.py
-Writes docs/blog/part-2/fig-5-levers.png and prints the points.
+Writes docs/blog/part-2/fig-6-levers.png and prints the points.
 """
 import json
 import os
@@ -126,7 +126,7 @@ def main():
     for a in axes[:, 0]:
         a.set_ylabel("Caught in garbled", fontsize=13)
     fig.subplots_adjust(wspace=0.3, hspace=0.3, top=0.96, bottom=0.07)
-    save(fig, os.path.join(OUT, "part-2/fig-5-levers.png"))
+    save(fig, os.path.join(OUT, "part-2/fig-6-levers.png"))
 
 
 if __name__ == "__main__":

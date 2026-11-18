@@ -68,9 +68,10 @@ Part 2 used OpenAI models only. Its code is in `scripts/v4/` and its data in `da
 Raw model calls (`calls*.jsonl`, `reader-calls*.jsonl`) and the spend ledgers (`spend*.jsonl`) are stored gzipped. The Part 2 figures need only the uncompressed files, so they rebuild without a key and without unzipping:
 
 ```
-uv run --with matplotlib --with requests python scripts/blog_part2_final.py            # Figures 1 to 3
-uv run --with matplotlib --with requests python scripts/blog_part2_calibration_map.py  # Figure 4
-uv run --with matplotlib --with requests python scripts/blog_part2_levers.py           # Figure 5
+uv run --with matplotlib python scripts/blog_part2_setup.py                            # Figure 1, the setup
+uv run --with matplotlib --with requests python scripts/blog_part2_final.py            # Figures 2 to 4
+uv run --with matplotlib --with requests python scripts/blog_part2_calibration_map.py  # Figure 5
+uv run --with matplotlib --with requests python scripts/blog_part2_levers.py           # Figure 6
 ```
 
 To rerun the experiments, install the requirements (`pip install -r requirements.txt`) and put an OpenAI key in `.env` as `OPENAI_API_KEY`. Every call goes through `scripts/v4/llm.py`, which caches each reply. If you first run `gunzip -k` on the `calls*.jsonl.gz` files, the steps below replay our cached replies at no cost. Without the caches they make fresh calls, which will differ somewhat from ours and cost about $1,500 in all. `llm.py` refuses to spend more than `V4_SPEND_CAP` dollars, 2,500 by default.
@@ -97,7 +98,7 @@ for r in p12-gpt55-low p12-mini-high p12-luna-low p12-mini54-med; do python3 scr
 for r in gpt55-A mini-high-A luna-low-A mini54-A; do python3 scripts/v4/err9.py read $r $FIRST; done
 for r in gpt55-A-anchors gpt55-A-anchors-clar mini-high-A-anchors luna-low-A-anchors mini54-A-anchors; do python3 scripts/v4/err9.py read $r $REVIEWED; done
 
-# Figure 5's note sizes
+# Figure 6's note sizes
 for r in gpt55-A600 gpt55-A1200; do python3 scripts/v4/err9.py read $r $FIRST $REVIEWED; done
 ```
 

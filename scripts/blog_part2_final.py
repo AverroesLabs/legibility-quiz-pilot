@@ -7,7 +7,7 @@ fig_oracle (experiment 11 pointed) is no longer in the post.
 Full numbers and provenance: docs/part2-agent-report.md.
 
 Run: uv run --with matplotlib python scripts/blog_part2_final.py
-Writes docs/blog/part-2/fig-1-whole-paper.png, fig-2-every-paragraph.png and fig-3-section-by-section.png.
+Writes docs/blog/part-2/fig-2-whole-paper.png, fig-3-every-paragraph.png and fig-4-section-by-section.png.
 """
 import os
 import sys
@@ -73,7 +73,7 @@ def fig1():
     draw(ax, groups, "Share of planted errors found")
     legend_all(fig, mock=False)
     fig.subplots_adjust(bottom=0.17, top=0.84)
-    save(fig, os.path.join(OUT, "part-2/fig-1-whole-paper.png"))
+    save(fig, os.path.join(OUT, "part-2/fig-2-whole-paper.png"))
 
 
 def ms(v, lo, hi):
@@ -109,7 +109,7 @@ def fig2():
     axes[1].set_title("False alarms", fontsize=12)
     legend_all(fig, y=1.0, mock=False)
     fig.subplots_adjust(bottom=0.08, top=0.9)
-    save(fig, os.path.join(OUT, "part-2/fig-2-every-paragraph.png"))
+    save(fig, os.path.join(OUT, "part-2/fig-3-every-paragraph.png"))
 
 
 def fig_oracle():
@@ -138,7 +138,7 @@ def fig3():
     draw(ax, groups, "Share of planted errors found")
     legend_all(fig, mock=False)
     fig.subplots_adjust(bottom=0.17, top=0.84)
-    save(fig, os.path.join(OUT, "part-2/fig-3-section-by-section.png"))
+    save(fig, os.path.join(OUT, "part-2/fig-4-section-by-section.png"))
 
 
 if __name__ == "__main__":

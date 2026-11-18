@@ -22,7 +22,7 @@ All values in §4 were recomputed by this report from `data/v4/` with the functi
 
 ## Update 2026-11-18 (final; supersedes earlier updates and any PENDING mark below)
 
-All Part 2 runs are complete. Every blog figure is now pooled over all ten papers (82 primary errors); the "first four" vs "reviewed six" split survives only in the text and in per-set numbers below. Ledger final **$1,506.78** (cap raised to $2,500 on 2026-11-17); the blog says "about $1,500". Fill-in runs: section-by-section anchors for mini-high, luna-low, mini54 and `gpt55-A1200` on all six anchors ($48, pass 70); exp 12 for `p12-luna-low`, `p12-mini54-med` (exploratory additions) and `p12-gpt55-low` clarified on the 9 remaining papers, via the Batch API ($258.78, 0 unparsed of ~54k questions, pass 71). Figures: `scripts/blog_part2_final.py` (Figs 1-3), `scripts/blog_part2_calibration_map.py` (Fig 4), `scripts/blog_part2_levers.py` (Fig 5); `blog_part2_direct.per_error`/`summary` now accept a list of sibling files (this replaces `bd.summary_multi`).
+**Figure numbers:** the post later gained a setup figure as Figure 1, so the post's Figures 2 to 6 are this report's Figs 1 to 5. All Part 2 runs are complete. Every blog figure is now pooled over all ten papers (82 primary errors); the "first four" vs "reviewed six" split survives only in the text and in per-set numbers below. Ledger final **$1,506.78** (cap raised to $2,500 on 2026-11-17); the blog says "about $1,500". Fill-in runs: section-by-section anchors for mini-high, luna-low, mini54 and `gpt55-A1200` on all six anchors ($48, pass 70); exp 12 for `p12-luna-low`, `p12-mini54-med` (exploratory additions) and `p12-gpt55-low` clarified on the 9 remaining papers, via the Batch API ($258.78, 0 unparsed of ~54k questions, pass 71). Figures: `scripts/blog_part2_final.py` (Figs 1-3), `scripts/blog_part2_calibration_map.py` (Fig 4), `scripts/blog_part2_levers.py` (Fig 5); `blog_part2_direct.per_error`/`summary` now accept a list of sibling files (this replaces `bd.summary_multi`).
 
 **Exp 12, every paragraph, all ten papers** (`e12.boot` caught over errors present in all 3 versions; `e12.fa_rate`/`fa_boot` per 1,000 words; `fa_diff_boot`):
 
@@ -512,9 +512,9 @@ All analysis below is local, no API calls (call caches are read, never extended,
 
 | figure | command | writes | prints |
 |---|---|---|---|
-| Fig 1, Fig 2, Fig 3, oracle | `uv run -q --with matplotlib --with openai --with requests python scripts/blog_part2_final.py` | `docs/blog/part-2/fig-1-whole-paper.png`, `fig-2-every-paragraph.png`, `fig-3-section-by-section.png` | only "wrote ..."; Fig 2 is hard-coded (edit `fig2()` to replace the GPT-5.5 MOCK) |
-| Fig 4 map | `uv run -q --with matplotlib --with openai --with requests python scripts/blog_part2_calibration_map.py` | `docs/blog/part-2/fig-4-calibration-map.png` | nothing; points in `points()` |
-| Fig 5 levers | `uv run -q --with matplotlib python scripts/blog_part2_levers.py` | `docs/blog/part-2/fig-5-levers.png` | point coordinates per panel |
+| Fig 1, Fig 2, Fig 3, oracle | `uv run -q --with matplotlib --with openai --with requests python scripts/blog_part2_final.py` | `docs/blog/part-2/fig-2-whole-paper.png`, `fig-3-every-paragraph.png`, `fig-4-section-by-section.png` | only "wrote ..."; Fig 2 is hard-coded (edit `fig2()` to replace the GPT-5.5 MOCK) |
+| Fig 4 map | `uv run -q --with matplotlib --with openai --with requests python scripts/blog_part2_calibration_map.py` | `docs/blog/part-2/fig-5-map.png` | nothing; points in `points()` |
+| Fig 5 levers | `uv run -q --with matplotlib python scripts/blog_part2_levers.py` | `docs/blog/part-2/fig-6-levers.png` | point coordinates per panel |
 | older direct-test figures | `uv run -q --with matplotlib python scripts/blog_part2_direct.py` | `docs/blog/part2-direct-fig-*.png` | per-reader orig/garbled/diff lines |
 
 **Tables:**

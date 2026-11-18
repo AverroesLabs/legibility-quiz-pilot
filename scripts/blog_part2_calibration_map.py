@@ -5,7 +5,7 @@ experiment 11 (whole paper), experiment 12 (every paragraph) and experiment 9 (o
 Region labels are schematic; measured moves per lever are in blog_part2_levers.py.
 
 Run: uv run --with matplotlib python scripts/blog_part2_calibration_map.py
-Writes docs/blog/part-2/fig-4-calibration-map.png.
+Writes docs/blog/part-2/fig-5-map.png.
 """
 import os
 import sys
@@ -71,7 +71,7 @@ def main():
     models = [Line2D([], [], marker=SHAPE[n], ls="", mfc="#d4d4d4", mec=INK, mew=1.1, ms=10) for n in NAME.values()]
     legend(fig, models, list(NAME.values()), y=0.955, ncol=4)
     fig.subplots_adjust(top=0.86, bottom=0.13)
-    save(fig, os.path.join(OUT, "part-2/fig-4-calibration-map.png"))
+    save(fig, os.path.join(OUT, "part-2/fig-5-map.png"))
 
 
 if __name__ == "__main__":

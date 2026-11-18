@@ -18,6 +18,10 @@ His games trained a "sneaky" model to write such mistakes, which is tricky and p
 
 The test is as simple as we could make it. Plant one error in a paper and ask a model to review the paper for internal inconsistencies. Then plant the same error in a garbled version of the same paper and ask again, and repeat over many errors. If the reader finds fewer errors in the garbled version, its success depends on how the paper is written, which is what a legibility test needs. Nothing else is required, no quiz and no rewritten reference copy, only the paper, the errors and the reader.
 
+![The experiment, top to bottom: ten papers; clarified, original and garbled versions; planted error types; four readers reading in three ways (whole paper, every paragraph, one section at a time); measures of errors caught and false alarms.](../docs/blog/part-2/fig-1-setup.png)
+
+**Figure 1.** The experiment, read top to bottom. Each error is planted in all three versions of a paper, and every reader reads every version in each of the three ways. The pattern next to each version is the one it has in the result figures.
+
 **Papers.** Ten in all: three of Part 1's arXiv preprints, the 2014 JMLR Dropout paper, and six papers accepted at peer-reviewed venues, drawn at random across lengths of about 4,000 to 15,000 words.
 
 **Garbled versions.** Each stacks every kind of difficulty we had. It compresses the paper to about two thirds of its length, swaps terms for opaque codes, moves evidence away from the claims it supports, and leaves connecting steps unstated. GPT-6.1 Sol checked it against the original until no fact or number was lost.
@@ -32,9 +36,9 @@ Everything here cost about $1,500 in API calls at OpenAI's list prices.
 
 ## Result 1: Reading the whole paper
 
-![Share of planted errors found with the whole paper in view, in clarified, original and garbled versions, for four readers from strongest to weakest, pooled over ten papers. Only GPT-5.5 finds clearly fewer in the garbled version.](../docs/blog/part-2/fig-1-whole-paper.png)
+![Share of planted errors found with the whole paper in view, in clarified, original and garbled versions, for four readers from strongest to weakest, pooled over ten papers. Only GPT-5.5 finds clearly fewer in the garbled version.](../docs/blog/part-2/fig-2-whole-paper.png)
 
-**Figure 1.** Share of planted errors found by four readers (groups) reviewing the whole paper, pooled over all ten papers (82 errors). Plain bars are the clarified original, diagonal hatching the original, and crosshatching the garbled version. Whiskers are 95% intervals.
+**Figure 2.** Share of planted errors found by four readers (groups) reviewing the whole paper, pooled over all ten papers (82 errors). Plain bars are the clarified original, diagonal hatching the original, and crosshatching the garbled version. Whiskers are 95% intervals.
 
 Each reader reviewed the whole paper and listed any internal inconsistencies. GPT-5 mini, GPT-5.6 Luna and GPT-5.4 mini found about as many errors in the garbled versions as in the originals. GPT-5.5 was the exception. It found 0.67 of the errors in the garbled versions against 0.84 in the originals. Readers rarely accused clean papers of the planted errors.
 
@@ -42,9 +46,9 @@ For three readers that made almost no difference, which is Part 1's result again
 
 ## Result 2: Asking about every paragraph
 
-![Every-paragraph check pooled over ten papers, four readers from strongest to weakest. Top, share of planted errors caught, nearly all for the three stronger readers in every version. Bottom, false alarms: correct paragraphs flagged per 1,000 words, highest in the garbled versions and lowest in the clarified ones for every reader.](../docs/blog/part-2/fig-2-every-paragraph.png)
+![Every-paragraph check pooled over ten papers, four readers from strongest to weakest. Top, share of planted errors caught, nearly all for the three stronger readers in every version. Bottom, false alarms: correct paragraphs flagged per 1,000 words, highest in the garbled versions and lowest in the clarified ones for every reader.](../docs/blog/part-2/fig-3-every-paragraph.png)
 
-**Figure 2.** The reader has the whole paper and is asked about each paragraph in turn whether it is consistent with the rest. Top, the share of planted errors caught. Bottom, other paragraphs flagged per 1,000 words, including real inconsistencies already in the original papers. Hatching as in Figure 1. Whiskers are 95% intervals.
+**Figure 3.** The reader has the whole paper and is asked about each paragraph in turn whether it is consistent with the rest. Top, the share of planted errors caught. Bottom, other paragraphs flagged per 1,000 words, including real inconsistencies already in the original papers. Hatching as in Figure 2. Whiskers are 95% intervals.
 
 Result 2 removes the search step. The reader still has the whole paper, but we ask about every paragraph in turn, so it cannot miss an error by never looking at it. Because most paragraphs hold no error, this also measures how often the reader flags correct text.
 
@@ -54,9 +58,9 @@ We also told all four readers which passage holds the error and asked only about
 
 ## Result 3: Reading one section at a time
 
-![Share of planted errors found by four readers that see one section at a time, pooled over ten papers, in clarified, original and garbled versions. Every reader finds slightly fewer in the garbled version and the most in the clarified one.](../docs/blog/part-2/fig-3-section-by-section.png)
+![Share of planted errors found by four readers that see one section at a time, pooled over ten papers, in clarified, original and garbled versions. Every reader finds slightly fewer in the garbled version and the most in the clarified one.](../docs/blog/part-2/fig-4-section-by-section.png)
 
-**Figure 3.** Share of planted errors found by readers that read each paper once, one section at a time, with notes of at most 300 words, pooled over all ten papers. Hatching and whiskers as in Figure 1.
+**Figure 4.** Share of planted errors found by readers that read each paper once, one section at a time, with notes of at most 300 words, pooled over all ten papers. Hatching and whiskers as in Figure 2.
 
 Result 3 makes the reader read more like a person. It goes through the paper once, one section at a time, rewrites notes of at most 300 words after each section, and cannot look back. A code defined pages earlier, or evidence far from its claim, should then cost it something.
 
@@ -64,17 +68,17 @@ Every reader found slightly fewer errors in the garbled versions, but no gap was
 
 ## Mapping the solution space
 
-Every setting in this post comes down to two numbers: the share of errors it catches in the originals and the share it catches in the garbled versions. Plotting one against the other puts all of them on one map (Figure 4). On the diagonal a setting cannot tell the two versions apart. A useful test would sit in the bottom-right corner, catching most errors in text people can follow and few in text they cannot.
+Every setting in this post comes down to two numbers: the share of errors it catches in the originals and the share it catches in the garbled versions. Plotting one against the other puts all of them on one map (Figure 5). On the diagonal a setting cannot tell the two versions apart. A useful test would sit in the bottom-right corner, catching most errors in text people can follow and few in text they cannot.
 
-![Map pooled over ten papers: each reader setting's catch rate on original papers against its catch rate on garbled versions. Fill shows how the reader read the paper and marker shape shows which reader. Most settings sit near the diagonal; GPT-5.5 with the whole paper sits below it, still far above the green target corner. Asked about every paragraph, three of the four readers sit near the top corner.](../docs/blog/part-2/fig-4-calibration-map.png)
+![Map pooled over ten papers: each reader setting's catch rate on original papers against its catch rate on garbled versions. Fill shows how the reader read the paper and marker shape shows which reader. Most settings sit near the diagonal; GPT-5.5 with the whole paper sits below it, still far above the green target corner. Asked about every paragraph, three of the four readers sit near the top corner.](../docs/blog/part-2/fig-5-map.png)
 
-**Figure 4.** Each point is one reader setting, pooled over all ten papers. Its position shows the share of planted errors caught in the original papers (horizontal) and in their garbled versions (vertical). Black points read the whole paper, blue points were asked about every paragraph, and ochre points read one section at a time. The shape shows which reader. On the dashed diagonal a setting cannot tell the two apart, and the green corner is the target.
+**Figure 5.** Each point is one reader setting, pooled over all ten papers. Its position shows the share of planted errors caught in the original papers (horizontal) and in their garbled versions (vertical). Black points read the whole paper, blue points were asked about every paragraph, and ochre points read one section at a time. The shape shows which reader. On the dashed diagonal a setting cannot tell the two apart, and the green corner is the target.
 
-Most settings sit near the diagonal. Figure 5 shows what each change we made did to a setting's position.
+Most settings sit near the diagonal. Figure 6 shows what each change we made did to a setting's position.
 
-![Six small maps on full 0 to 1 axes, pooled over ten papers, one per change: which reader, whole paper to one section at a time, smaller notes for GPT-5.5, being told where the error is, and GPT-5.5's errors split by difficulty and by distance to the evidence. Arrows show how each change moved the setting; the green corner is the target.](../docs/blog/part-2/fig-5-levers.png)
+![Six small maps on full 0 to 1 axes, pooled over ten papers, one per change: which reader, whole paper to one section at a time, smaller notes for GPT-5.5, being told where the error is, and GPT-5.5's errors split by difficulty and by distance to the evidence. Arrows show how each change moved the setting; the green corner is the target.](../docs/blog/part-2/fig-6-levers.png)
 
-**Figure 5.** Each panel is the map of Figure 4, with the same axes, for one kind of change, pooled over all ten papers. Arrows run from a starting setting (open circle) to the changed one (filled circle), and lines join settings that differ in one way. The last two panels split GPT-5.5's errors, read with the whole paper, into three groups each, by the difficulty each was built at and by how far its contradicting evidence sits.
+**Figure 6.** Each panel is the map of Figure 5, with the same axes, for one kind of change, pooled over all ten papers. Arrows run from a starting setting (open circle) to the changed one (filled circle), and lines join settings that differ in one way. The last two panels split GPT-5.5's errors, read with the whole paper, into three groups each, by the difficulty each was built at and by how far its contradicting evidence sits.
 
 Only one change moved a setting off the diagonal, the choice of reader. GPT-5.5 is the one reader whose catch rate falls clearly on garbled text, and it stays below the diagonal whether it reads the whole paper or one section at a time, though less clearly by section. Cutting its notes from 1,200 words to 300 cost it errors in both versions alike, so the setting slid along the diagonal with its gap unchanged. Everything else also slid settings along the diagonal or up to the top corner. Reading one section at a time made GPT-5.6 Luna and GPT-5.4 mini miss more errors in both versions, and telling readers where the error is moved them all toward the top corner.
 
