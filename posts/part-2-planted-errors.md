@@ -1,4 +1,4 @@
-# Can a Reader That Catches Planted Errors Tell Whether a Paper Is Legible?
+# Can Planted Errors Test Whether a Paper Is Legible?
 
 Jason Fantl, Averroes Labs · November 2026 · Part 2
 
@@ -6,7 +6,7 @@ Jason Fantl, Averroes Labs · November 2026 · Part 2
 
 **TL;DR.** In Part 1, rewriting papers to be hard to follow barely lowered a model's quiz score, so here we tried a more direct test of legibility, following a suggestion from Jan Kirchner. We plant the same error in a paper and in a garbled version of it, and ask a model to find it. If writing quality matters to the reader, it should find fewer errors in the garbled version. Reading the whole paper, three of our four readers found about as many errors in garbled text as in the originals, and only the strongest, GPT-5.5, found clearly fewer. Asked about every paragraph in turn, the readers caught most errors in every version, but all four flagged more correct paragraphs when the text was garbled. Reading one section at a time and keeping only short notes, every reader found slightly fewer errors in garbled text, but no gap was clearly larger than chance. So bad writing rarely stops a model from judging an error, and the choice of reader is the one change we found that moves the test toward a calibrated one.
 
-## Why we tried catching errors
+## Why plant errors
 
 Part 1 asked whether a weak model with the paper open could answer questions that need understanding. Scrambled, convoluted rewrites lowered its scores by only about five points. A model holds the whole paper in context, so it can dig an answer out of bad prose that a person would give up on.
 
@@ -14,7 +14,7 @@ Jan Kirchner, whose [prover-verifier work](https://arxiv.org/abs/2407.13692) mad
 
 His games trained a "sneaky" model to write such mistakes, which is tricky and possibly risky. We used his lighter alternative instead, planting errors from a small fixed set of templates. The hope was that catching an error needs the reader to hold a claim and its contradicting evidence together, which is exactly what hard writing gets in the way of.
 
-## How we tested it
+## The test
 
 The test is as simple as we could make it. Plant one error in a paper and ask a weak model to review the paper for internal inconsistencies. Then plant the same error in a garbled version of the same paper and ask again, and repeat over many errors. If the reader finds fewer errors in the garbled version, its success depends on how the paper is written, which is what a legibility test needs. Nothing else is required, no quiz and no rewritten reference copy, only the paper, the errors and the reader.
 
@@ -30,7 +30,7 @@ The test is as simple as we could make it. Plant one error in a paper and ask a 
 
 Everything here cost about $1,500 in API calls at OpenAI's list prices.
 
-## Result 1: with the whole paper, only the strongest reader finds fewer errors in garbled text
+## Result 1: Reading the whole paper
 
 ![Share of planted errors found with the whole paper in view, in clarified, original and garbled versions, for four readers from strongest to weakest, pooled over ten papers. Only GPT-5.5 finds clearly fewer in the garbled version.](../docs/blog/part-2/fig-1-whole-paper.png)
 
@@ -40,7 +40,7 @@ Each reader reviewed the whole paper and listed any internal inconsistencies. GP
 
 For three readers that made almost no difference, which is Part 1's result again from a different direction. GPT-5.5's gap is the first sign that a reader with the whole paper in view can pay for bad writing. It is still one reader of four on ten papers, and its catch rates on the two versions remain close enough that it cannot yet sort a single paper as legible or not.
 
-## Result 2: asked about every paragraph, readers catch most errors but flag more correct text when it is garbled
+## Result 2: Asking about every paragraph
 
 ![Every-paragraph check pooled over ten papers, four readers from strongest to weakest. Top, share of planted errors caught, nearly all for the three stronger readers in every version. Bottom, correct paragraphs flagged per 1,000 words, highest in the garbled versions and lowest in the clarified ones for every reader.](../docs/blog/part-2/fig-2-every-paragraph.png)
 
@@ -52,7 +52,7 @@ The three stronger readers caught nearly every planted error this way in every v
 
 We also told all four readers which passage holds the error and asked only about that passage. Each then judged the error about as well in garbled text as in the original. So what bad writing costs these readers lies in finding errors and in flagging correct text, not in judging them.
 
-## Result 3: reading one section at a time, every reader found slightly fewer errors in garbled text
+## Result 3: Reading one section at a time
 
 ![Share of planted errors found by four readers that see one section at a time, pooled over ten papers, in clarified, original and garbled versions. Every reader finds slightly fewer in the garbled version and the most in the clarified one.](../docs/blog/part-2/fig-3-section-by-section.png)
 
@@ -62,7 +62,7 @@ Result 3 makes the reader read more like a person. It goes through the paper onc
 
 Every reader found slightly fewer errors in the garbled versions, but no gap was clearly larger than chance. Every reader found the most errors in the clarified versions, so reading section by section made the readers sensitive to clearer writing, but not reliably to worse writing.
 
-## Toward a calibrated test
+## Calibrating the test
 
 The line between legible and illegible is drawn by people. A paper they can follow should pass, and one they cannot should fail. We cannot move that line, but we can tune the test to match it. Two things are tunable: the weak reader (which model, how much effort, how much of the paper it sees and remembers) and the planted errors (what kind of mistake, and how far each sits from the evidence that contradicts it).
 

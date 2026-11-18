@@ -119,4 +119,4 @@ We found no automated legibility test for papers that has been checked against h
 
 ---
 
-Next: [Part 2: Can a reader that catches planted errors tell whether a paper is legible?](part-2-planted-errors.md)
+Next: [Part 2: Can planted errors test whether a paper is legible?](part-2-planted-errors.md)

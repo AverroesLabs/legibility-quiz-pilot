@@ -49,7 +49,7 @@ labels that a cheap rater or probe lacks today. We have not tested trained rater
 **[Part 1: Can a Quiz Test Whether a Paper Is Legible to Humans?](posts/part-1-quiz.md)**  
 A strong model writes an open-book quiz on a paper and weaker models take it. Rewriting papers to be hard to follow lowered quiz scores only slightly, while the same models rated the rewrites as far harder to read.
 
-**[Part 2: Can a Reader That Catches Planted Errors Tell Whether a Paper Is Legible?](posts/part-2-planted-errors.md)**  
+**[Part 2: Can Planted Errors Test Whether a Paper Is Legible?](posts/part-2-planted-errors.md)**  
 We plant an error in a paper and in a garbled version of it, and ask a model to find it. Most readers found as many errors in garbled text as in the original; only the strongest, GPT-5.5, found clearly fewer, and asked about every paragraph, readers flagged more correct text when it was garbled.
 
 ---
