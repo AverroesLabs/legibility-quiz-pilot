@@ -1,0 +1,46 @@
+{
+  "abstract": "Supervised Fine-Tuning (SFT) is used to specialize model behavior by training weights to produce intended target responses for queries. In contrast, In-Context Learning (ICL) adapts models during inference with instructions or demonstrations in the prompt. ICL can offer better generalizability and more calibrated responses compared to SFT in data scarce settings, at the cost of more inference compute. In this work, we ask the question: Can ICL's internal computations be used to improve the qualities of SFT? We first show that ICL and SFT produce distinct activation patterns, indicating that the two methods achieve adaptation through different functional mechanisms. Motivated by this observation and to use ICL's rich functionality, we introduce ICL Activation Alignment (IA2), a self-distillation technique which aims to replicate ICL's activation patterns in SFT models and incentivizes ICL-like internal reasoning. Performing IA2 as a priming step before SFT significantly improves the accuracy and calibration of model outputs, as shown by our extensive empirical results on 12 popular benchmarks and two model families. This finding is not only practically useful, but also offers a conceptual window into the inner mechanics of model adaptation.",
+  "appendix_cut": "## Appendix A Additional Dataset Details",
+  "arxiv_id": "2509.22621",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Aayush Mishra",
+    "Daniel Khashabi",
+    "Anqi Liu"
+  ],
+  "band": "medium",
+  "body_words": 12449,
+  "changes": "Converted from arXiv HTML to plain text; images removed; main.md cut at the first appendix heading.",
+  "conversion_errors": 0,
+  "decision_date_used": "2026-01-01",
+  "forum_id": "r99m9ziONQ",
+  "hidden_style_hits": 0,
+  "html_sha256": "9a3eec007a79d9a2e4cc8dfa5e6014887d11a4eee8cd7cf1178d2f4fdccee778",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "licence_source": "https://arxiv.org/abs/2509.22621",
+  "listed_authors": [
+    "Aayush Mishra",
+    "Daniel Khashabi",
+    "Anqi Liu"
+  ],
+  "listed_title": "IA2: Alignment with ICL Activations improves Supervised Fine-Tuning",
+  "main_figures": 4,
+  "main_sha256": "5179b2cb8bd9ff83225d59176edaef3855d79ce5fdb405bed69b6d9f9c8abc9d",
+  "main_words": 7094,
+  "openreview_url": "https://openreview.net/forum?id=r99m9ziONQ",
+  "primary_category": "cs.LG",
+  "rank": "0279e7ea222c3219bfebb50496826909f871e73935c8727a6fe085bba8e278ee",
+  "retrieved_utc": "2026-11-13T15:20:11.690058+00:00",
+  "role": "reviewed_anchor",
+  "rule": "anchors-v2",
+  "source_url": "https://arxiv.org/html/2509.22621v3",
+  "text_sha256": "5411142537d087d4dc189a82e031a93864123ff692c2f15c02dc7afa2b08a834",
+  "title": "IA2: Alignment with ICL Activations Improves Supervised Fine-Tuning",
+  "venue": "ICLR 2026",
+  "version": 3,
+  "version_dates": {
+    "3": "2026-03-18"
+  },
+  "version_note": "earliest on or after decision"
+}

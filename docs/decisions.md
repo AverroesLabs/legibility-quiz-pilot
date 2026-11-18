@@ -27,9 +27,22 @@ Newest first. Add a row for each decision that changes the plan.
 | 2026-11-02 | Use a range of models through OpenRouter, with no GPU for now. A final standardized reader still needs pinned weights | Jason | Jagged intelligence may affect which model passes which quiz. The Runpod GPU was out of stock and hosted endpoints need a key |
 | 2026-11-02 | Knowledge gain becomes a supporting measure, not the pass criterion. Compare gain with per-claim and per-section measures on partly obfuscated papers, using `docs/measure-comparison-plan.md`. The plan's thresholds await Jason's sign-off | Jason's inbox note; plan drafted by Claude | Gain does not show the reader followed the whole paper, and can be low for clear papers on known material |
 | 2026-11-02 | Select papers by the fixed hash-ordered rule in `docs/paper-selection.md`: arXiv, 2026-07 to 2026-09, three AI safety strata, CC BY, CC BY-SA or CC0 only | Claude | No hand-picking. Dates aim to post-date reader training data. Those licences allow sharing rewritten versions |
+| 2026-11-02 | No account API key on the pod, since Jason cannot create one and does not want to ask the admin. Pods are created from Jason's signed-in session | Jason | Removes most shared-account risk; the agent cannot manage GPUs |
+| 2026-11-02 | Use the shared Runpod account | Jason | Jason's compute budget is on this account, and other people's pods and secrets are on it too |
+| 2026-11-02 | Claude runs on a Runpod CPU pod in a shell loop of `claude -p` passes (`scripts/agent-loop.sh`). GPUs are rented per batch | Jason, on Claude's recommendation | The pod stays up without Jason's laptop. Cloud routines run at most hourly, and their maximum run length is unconfirmed |
 | 2026-11-02 | Use open-weight models for experiments; a frontier API for the quiz writer and attacker is optional | Claude's recommendation, API choice still open | Pinned weights keep the reader fixed. A weak attacker understates gaming |
 | 2026-11-02 | Run the first experiments without human baselines | Jason | Get initial signal on other properties first |
 | 2026-11-02 | The goal is fixed in `docs/goals.md`; experiment details may change | Jason | Details are expected to change once implemented |
+
+## Claude Code facts behind the setup
+
+From the docs at code.claude.com, read through a subagent on 2026-11-02. Not tested.
+
+- `claude -p "..." --output-format json` returns `session_id`. `--max-budget-usd` caps spend.
+- A `-p` run waits for its background commands, subagents and Monitor watches.
+- Without `--bare`, `claude -p` uses the subscription login. `--bare` needs `ANTHROPIC_API_KEY`.
+- `--dangerously-skip-permissions` equals `bypassPermissions`. It is refused as root and meant for an isolated VM or container only.
+- The docs have no recipe for running `claude -p` from a shell loop, cron or systemd.
 
 ## 2026-11-03 09:10 UTC: exploratory per-section diagnostic (pass 8)
 
@@ -69,3 +82,201 @@ Jason asked whether the blog's claim that human readers show our pattern (readab
 - **Measures:** accuracy per reader and level, with 95% bootstrap intervals clustered by question for the Advanced minus Elementary difference; humans the same way. Mean rating per level.
 - **Caveat fixed in advance:** Advanced vs Elementary is a mild, real-world simplification, much milder than our obfuscation, and there are no human readability ratings, so this tests only the comprehension half of the claim directly.
 - Spend cap $30. Code `scripts/onestop/run_onestop.py`, output `data/onestop/`.
+
+## 2026-11-04: public release
+
+Jason approved publishing a cleaned copy as https://github.com/AverroesLabs/legibility-quiz-pilot (public), with the blog post as README. Built from this repo's tracked files minus agent and ops files (CLAUDE.md, INBOX.md, STATE.md, STOP, NOTIFY_JASON.md, loop, watchdog and pod scripts, .github), internal docs (docs/background, style guide, pod setup, watchdog log, LW-post, pitch-doc), with the private doc links in goals.md and the shared-account rows in decisions.md removed. Added MIT (code), CC BY-SA 4.0 (text and data) and per-paper attribution. The blog links to the repo.
+
+## 2026-11-12: new branch v4/tamper-templates from V1
+
+Jason judged the Codex-run v3 (branch `v3/openai-overnight-20261111`) a failure: it spent $2,076 of OpenAI usage, $2,039 of it on gpt-6.1-sol for error construction, validation and agent work, and under $5 on weak readers, and it produced no completed comparison under its final protocol. This branch restarts from tag `V1` and ports only data checked by hand:
+
+- `data/papers/jmlr-2014-dropout/` (JMLR 2014 Dropout paper; PDF and text match the hashes in its `meta.json`; pdftotext layout with page headers, tables readable).
+- `data/selection/v3-expanded-13.json`: the 12 core papers plus Dropout. The 12 core texts are byte-identical to V1 and match the manifest hashes.
+
+No v3 code, protocols, prompts or results are carried over. Experiments now use OpenAI models only, because that is the API access Jason has; the key goes in `.env` as `OPENAI_API_KEY`.
+
+## 2026-11-12, pod pass 1: ledger prices for the cheap readers
+
+`llm.py` charged models missing from `PRICES` at the Sol rate ($10/$20 per M tokens). That overstated a gpt-5-nano call about 100 times, and the reader grid of experiment 3 would have spent the $500 ledger on paper. Added gpt-5-nano at $0.10/$0.80 and gpt-4.1-mini at $0.80/$3.20, twice OpenAI's published list prices, because v3's gateway charged gpt-5-mini at twice list. These still err high. gpt-5.6-luna stays at the fallback rate because I have no reliable price for it, so its ledger cost is an overestimate. Jason sees the real figure on the OpenAI usage page; a real luna price would make the ledger more accurate.
+
+## 2026-11-12, pod pass 2: contradiction inventory before planting errors
+
+Experiment 0 showed that V1's `obf` and `compobf` copies, and the original of 2609.02893v1, contain real internal contradictions (rewrite defects, and one real appendix-table mismatch). The design assumes the copies differ only in legibility and contain no errors except planted ones. So before experiment 2, gpt-6.1-sol lists the contradictions already present (plan v4 step 0b). I chose to avoid the listed passages rather than repair V1's texts: repairs would change fixed texts that earlier results (V1) were measured on, and every repair would itself need checking. If a copy turns out to have so many defects that little text is free for planting, repair becomes the fallback and will be recorded here. Sol is used because the inventory sets what counts as a planted-error catch, so its accuracy matters more than its cost (about $0.3 per copy).
+
+## 2026-11-12: experiment 2 construction choices
+
+- One planted error per copy. Each error is a list of exact text edits, so a planted copy is rebuilt from `data/v4/exp2-errors/errors.jsonl` with `planted_text()` and is not stored.
+- Grid types as written into the design prompt: "carried" errors are two consistent edits (a wrong intermediate statement and a later claim built on it) against unchanged data; "omitted" errors drop a caveat or exception from a summary while the body keeps it.
+- The design call sees the clarified copy and `compobf`, so that every error's claim and evidence exist in the most compressed copy.
+- An error survives only if it is planted in all four copies, the strong reader (gpt-6.1-sol, medium, 1 sample) catches it in all four, and the pair check finds it planted equally. The pair check compares each copy with its own text before planting, so differences in detail that the copies already had (the clarified copy's evidence placed next to claims) are allowed; detail added or removed by the planting is not.
+
+## 2026-11-12: after experiment 3, reading the grid
+
+Read with the key in `calibration-table.md`. The false-accusation gate passes (at most 9% per cell). No cell meets the proposed bars: the stronger rows are "low clarified, lower illegible", between the floor and the window, and the illegible penalty (about 0.15 pooled, mostly `compobf`) is much smaller than predicted. The key says to move toward stronger readers or larger budgets when the clarified rate is low. Next moves, in order:
+
+1. **Stronger reader settings** on the same 19 errors: gpt-5.6-luna medium and gpt-5-mini high (2 samples, 4 copies; about $25 to $35 at the ledger's luna fallback rate). Drop gpt-5-nano and gpt-4.1-mini, which are on the floor. This tests whether a setting exists with clarified at least 0.7 that still loses catches on the illegible copies.
+2. **Pointed check** on the missed clarified-copy errors for the best reader (told the section and claim): it tells finding from judging, and so whether lower clarified rates are a search problem (fixable by budget) or bad errors.
+3. **More errors** before trusting any gap: 19 errors give intervals about ±0.2. New errors on the remaining development papers, with the same construction checks, once a promising setting exists.
+Exploratory results do not change these choices; the strong-reader gate question stays with Jason.
+
+## 2026-11-12: repair V1's illegible copies (Jason's note, ~18:00 UTC)
+
+Jason's INBOX note replaces the pod pass 2 choice ("avoid, don't repair") for `obf` and `compobf`. Defects stay in V1's texts, which are left untouched. Repaired copies are saved as `data/v4/repaired/<paper>.<copy>.md`, with each patch's diff and reason. A gpt-6.1-sol consistency check against the original is rerun until it lists nothing. Errors in the original stay and are still avoided. Then only the work that touches repaired copies is rerun: re-planting, checks, clean reviews and the experiment 3 readers on `obf`/`compobf`. The two grids are reported side by side. This comes before the stronger-reader step above, because defects in one copy only could bias that copy's catch rate.
+
+## 2026-11-12, pod pass 6: how the repair check is run
+
+- One call per round both lists defects and writes their patches (`find`/`replace`, an exact unique substring of the copy), which halves the cost. A patch whose `find` is not unique is not applied and is logged as unapplied. The loop stops when a check lists nothing, after 4 rounds, or when no listed patch applies.
+- The checker is told that consistent code names (the glossary), harder wording, omitted detail in `compobf`, and inconsistencies the original already has are not defects. That way the repair restores fidelity to the original without "fixing" errors that every copy shares.
+- Clarified copies get one round, report only. Jason's note says they already passed an equivalent check, so I do not change them. The one difference found (2608.13754v1, "all levels" against "the levels of each ... each with a citation") is outside every planted error.
+- Next, re-planting into the repaired copies: re-run `exp2_errors`' plant, strong-reader and pair checks with `source()` pointing at the repaired `obf`/`compobf`. The clarified and original planted copies stay as they are, and the 19 surviving errors (plus 3 exploratory) are the set. Then run experiment 3's readers and clean reviews on the repaired planted copies only.
+
+## 2026-11-12, pod pass 7: experiment 3r reuses V1's planted edits where they still apply
+
+Re-planting every error from scratch would change the planted wording too, mixing re-planting noise into the V1-versus-repaired comparison. So V1's edits are reused wherever every old text still occurs once in the repaired copy and every evidence quote is still found (43 of 44 pairs); only the rest are re-planted with experiment 2's plant(). The strong-reader and pair checks are rerun on all of them, as Jason's note asks. Result: the repairs moved catch rates by less than 0.1 (no measurable distortion), so the next step returns to the stronger-reader experiment (experiment 4), on the repaired copies, since those are now the better texts.
+
+## 2026-11-12, pod pass 8: after experiment 4
+
+Stronger settings raised catch rates on the illegible copies as much as or more than on the clarified copy, so the clarified-minus-illegible gap shrank (luna 0.21 → 0.10, gpt-5-mini 0.08 → 0.03). Only gpt-5-mini high reaches clarified 0.70, with illegible 0.68. Per the preregistered reading, a stronger reader is not the way into the window. Next, in order:
+
+1. **Pointed check** (item 2 above) for mini-high and luna-low: for each clarified-copy miss, tell the reader the section and claim and ask if it is consistent. Cheap (about $2). It separates finding from judging.
+2. **Harder illegible copies.** The current copies cost a strong reader little. Candidates: stronger compression, definitions removed or moved far from use, evidence split across sections. Each must pass the same consistency check against the original. This changes the design in `calibration-table.md`, so I will write the proposal here and in the report before building it, and flag it to Jason as not blocking.
+3. More errors on new papers only once some setting shows a gap whose interval excludes 0 at clarified ≥ 0.7.
+
+## 2026-11-12, pod pass 9: after experiment 5, proposal for search-hard illegible copies
+
+Experiment 5 measured that the readers judge planted errors correctly when pointed at them, in every copy (0.91 to 1.00), and rarely accuse the unplanted passage (1 of 34). So unpointed misses are failures to find, and the illegible copies cost readers search, not judgment. The current illegible copies change wording (codes, compression) but leave each claim near its evidence. Proposal, changing the illegible side of `calibration-table.md`:
+
+- **New illegible copy `scatter`**, made from the original by gpt-6.1-sol: the same facts, with the content an error would be checked against moved away from the claims it supports. Numbers are reported once, in tables or an appendix, rather than restated next to claims. Definitions and caveats are stated once, far from their use. Cross-references ("Table 5", "Section 7.4") are removed from the claims. Ordinary wording, no codes, so any effect comes from search and not vocabulary.
+- **Checks, as for the repaired copies:** every number of the original present (exp1's number check), and the gpt-6.1-sol consistency check against the original rounds until clean. Length within 0.9 to 1.1 times the original, so that length does not drive the effect.
+- **Errors:** re-plant the 17 errors into `scatter` with experiment 2's plant prompt, the strong reader and the pair check, as in 3r. Then run luna-low and mini-high (2 samples) with clean reviews, plus the pointed check on `scatter` to confirm that judging is still intact.
+- **Reading:** the approach is promising if a setting with clarified at least 0.7 drops on `scatter` by a gap whose interval excludes 0. If even `scatter` costs mini-high little, the conclusion is that current readers search well enough that illegibility of this kind is not measurable with one planted error per paper.
+- Estimated cost about $25 (rewrite and checks about $6, re-planting and checks about $5, readers about $12, pointed about $2). Not blocking: flagged to Jason in `STATE.md`. Unless he objects, the next pass preregisters and builds it on one paper first.
+- Also: add the 2609.02893v1 sentence "Interpretations of the greedy-selected PCs describe ... survives the move to other domains" to the avoid list for new errors (report weird result 14).
+
+## 2026-11-12, pod pass 10: after experiment 6 (`scatter`)
+
+Measured: `scatter` (evidence moved away from claims, plain wording, consistency-checked) costs neither reader any catches. On the 13 errors that survived planting, the catch rate is 0.62 for both readers, against 0.54 (luna-low) and 0.69 (mini-high) on clarified, with pointed rates of 0.92. By the preregistered reading, layout illegibility of this kind is not measurable with these readers and one planted error per paper. For luna-low, jargon and compression cost more than layout (0.38 vs 0.62).
+
+Decision: the last cheap test within the design is **several planted errors per copy**, scoring the share found. With one error per paper, each review is a single near-coin-flip outcome. With several (for example 3 errors from different types, planted together in one copy, from the existing surviving errors where their passages do not overlap), each review gives a graded count, and readers that stop searching after one finding would show it. Estimated about $20. The next pass preregisters it (which errors are combined, the measure, the reading) and runs it on the existing clarified, repaired `obf`/`compobf` and `scatter` copies. If it shows no gap with an interval excluding 0 for a setting at clarified ≥ 0.7, the pilot is written up as a negative result on this design and flagged ready to Jason.
+
+Not chosen without Jason: a limited-view reader (section by section with a short memory). It would make search the bottleneck, but it changes what the audit measures, so it is a next step in the report for him to decide.
+
+## 2026-11-12, pod pass 11: after experiment 7 (several errors per copy)
+
+Measured: with 3 to 5 errors planted together, neither reader reaches 0.7 on clarified (mini-high 0.65, luna-low 0.34), and no clarified-minus-illegible or clarified-minus-`scatter` gap has an interval excluding 0. luna-low is reversed (clarified lowest), linked to reporting fewer errors on clarified.
+
+Decision: by the preregistered reading (plan v4, experiment 7) and `STATE.md` next step 2, the pilot is written up as a negative result on this design. The next pass finalises the report (bottom line rewritten as one negative answer, the open promise to classify other accusations either done cheaply or dropped), adds "report ready" to Waiting on Jason, commits `NOTIFY_JASON.md` and creates `STOP`. No further experiments are started without Jason: a limited-view reader is the main idea for a continuation, and it changes what the audit measures.
+
+## 2026-11-12, pod pass 12: report finalised as a negative result
+
+The bottom line of `docs/report-v4.md` is now one plain negative answer, with a summary figure (`docs/figures/v4-summary.png`, drawn by `scripts/v4/summary_figure.py` from each experiment's own `measures()`, no API calls). Results are reordered by experiment. Two earlier promises were dropped rather than done, because neither can change the bottom line, which rests on planted-error catch rates: classifying accusations outside the planted error and the inventory, and a second Sol sample on the copies where the strong reader missed an error only in `compobf`. Both are stated in the report. No new experiments: the continuation (a limited-view reader) changes what the audit measures and waits for Jason. The loop is stopped with a `STOP` file.
+
+## 2026-11-12, pod pass 13: experiment 8 design (limited-view reader), on Jason's instruction
+
+Jason approved the limited-view reader (`INBOX.md`, ~22:30 UTC). Choices made in the preregistration (plan v4, experiment 8), before any data:
+
+- **Sections are level-1 and level-2 headings.** The clarified and original copies keep 26 to 45 headings at levels 3 to 6, while the jargon copies keep only level 2. Splitting at every heading would give the clarified copy about 45 chunks and `compobf` 11, so the chunk count would track heading depth rather than length. Splitting at level 2 gives 9 to 14 chunks per copy for every copy, and the length difference shows up as chunk size.
+- **Variants:** A (section chunks ≤ 800 words, notes ≤ 300), B (notes ≤ 150), C (paragraph chunks ≤ 250 words, notes ≤ 300). B and C bracket A in the two directions Jason named: less memory, and smaller views (more notes rewrites).
+- **Readers by cost:** luna-low only on A, because the ledger charges luna at the Sol fallback rate (about $72 for A alone). mini-high runs all three variants, so variants are compared on the same reader. mini-med on A last. This order is fixed in advance and cut from the end only for cost.
+- **Primary set excludes `omitted`** (12 errors), as Jason asked; the 5 `omitted` errors are reported separately.
+
+## 2026-11-13 (pass 19): ledger repriced to OpenAI list prices
+
+Jason replaced `PRICES` in `llm.py` with OpenAI's published list prices on 2026-11-13 (source and date in the code). **Every ledger total before this date used inflated estimates** (v3's gateway rates, and the Sol fallback rate for gpt-5.6-luna), and so did every per-experiment cost quoted in the report and STATE before it. As Jason asked, no row was rewritten. One `kind: "reprice"` row per model was appended to `data/v4/spend.jsonl` at 03:1x UTC, with no job running. Each row's `usd` is the cost of every `settle` row's `usage` at the new prices (`llm._cost`, cached-input discount included) minus the logged `actual`:
+
+| model | settled calls | logged | at list prices | reprice row |
+|---|---|---|---|---|
+| gpt-5-mini | 13,330 | $157.20 | $77.68 | −$79.52 |
+| gpt-5.6-luna | 2,552 | $111.86 | $3.61 | −$108.25 |
+| gpt-6.1-sol | 864 | $34.28 | $9.59 | −$24.68 |
+| gpt-4.1-mini | 316 | $1.73 | $0.85 | −$0.89 |
+| gpt-5-nano | 316 | $0.45 | $0.17 | −$0.28 |
+| **total** | 17,378 | $305.52 | $91.90 | −$213.62 |
+
+Every settle row has usage. One reservation never settled (`8bf40542a4fd3dba`, exp8 C, 01:18 UTC 13 Nov, $0.07), most likely a request lost during the pass 18 stash incident. It stays charged at its logged value. Ledger total: $305.59 before, **$91.96 after**. Rule for later: a job that started before a price change keeps the old `PRICES` until it restarts, and its rows get the same kind of correction afterwards.
+
+## 2026-11-13 (pass 20): Batch API helper in `llm.py`
+
+Jason's 03:30 note asked for the Batch API on large runs that can wait, through the ledger and cap, as one helper and not a framework. Design: `Calls.submit_batch` and `Calls.collect_batch`, about 100 lines in `llm.py`. Batch results go into the same `calls.jsonl` under the same keys as synchronous calls, so an experiment script can submit its large stage as a batch and then run its normal synchronous loop. That loop finds everything in cache, and anything the batch dropped is redone synchronously at full price. One reservation covers a whole batch, settled once from the summed usage at half rate. `collect_batch` must run from one process at a time, because the `done` record in `batches.jsonl` is what prevents a second settlement. Following the 03:05 note, batches are used only off the critical path. Tiny test batches took 1.5 to 7.3 minutes, but the API promises only 24 hours.
+
+## 2026-11-13 (pass 21): limited-view reader resumes planted copies from saved clean notes
+
+Jason's 03:30 note, item 3. A planted copy is the same text as its clean version up to the chunk the edit changes, and the reader is shown the same prompts ("part k of n", the same notes) on that prefix, so its state before that chunk has the same distribution as in a clean read. `scripts/v4/limited_reader.py` therefore reads each clean version once per sample and starts every planted copy at its first changed chunk with the saved notes. This is a change of procedure, not of reader: prompts, chunking, notes cap and parsing are experiment 8's. Consequences for experiment 9's preregistration: errors in the same version and sample share the clean prefix (resample by error in the bootstrap, as before); a review includes the clean read's findings before the planted chunk; copies whose edit changes the chunk count are read from the start. The check against experiment 8 is in `run-log.md` (pass 21): same grade in 67 of 68 copies, 63% of steps called.
+
+## 2026-11-13 (pass 22): experiment 9 plan and anchor rule
+
+The plan is in `plan-v4.md` ("Experiment 9 plan") and the anchor rule in `paper-selection.md` ("Reviewed anchors"). Both were committed before any experiment 9 output and before any anchor candidate was fetched. These are the choices Jason's notes left open:
+
+- **`clar-<prompt>-obf` is not repaired against the original.** A real audit gets only the possibly illegible paper. Patching the clarifier's output from `orig` would hand it information the audit never has, and would inflate the `obf-max` row's denominator. Its differences from `orig` are measured and reported, and planted errors avoid those passages. This is the "avoid" approach of pass 2. Jason replaced it with repair for V1's copies (18:00 note), because those defects came from our own construction. Here the defects are part of what is measured. Experiment 3r found that repairs moved catch rates by less than 0.1, so avoiding them should cost little. `clar-<prompt>-orig` and `obf-max` are repaired, since both are constructions we control.
+- **Prompt pass rule.** `clar-orig` must come clean within 4 repair rounds. `clar-obf` may have at most 1 changed or added item per 1,000 words of `orig`. Lost content does not fail a prompt, because recovering less from `obf-max` is the effect being measured, and an error whose evidence was lost fails the pair check anyway. The threshold is a judgment call fixed before data, chosen to drop only clarifiers that invent or alter content.
+- **At most 4 repair rounds, one regeneration.** `repair.py` needed up to 3 rounds per copy in pass 6. A cap keeps a bad generation from spending without end.
+- **Reading grades are computed in-script** (Flesch-Kincaid with a vowel-group syllable count, and Coleman-Liau, which needs no syllables). The pod's system Python refuses `pip install`, and these grades only need to compare versions with each other.
+- **Anchors come from ICLR 2026 and TMLR.** Both have public OpenReview reviews. TMLR has no page limit and so can fill the 10,000 to 15,000 word band, which ICLR papers (10 pages) mostly cannot. Using the arXiv HTML reuses V1's extraction and checks. PDF extraction is not available on the pod (no `pdftotext`, `pypdf` or `fitz`).
+- **Order:** the held-out papers' clean versions come after the calibration error stage has started, as a Batch job off the critical path. Nothing in calibration depends on them, and their checks are read only for pass or fail.
+
+## 2026-11-13 (pass 23): anchor rule v2, because OpenReview's API blocks anonymous queries
+
+Rule v1 (pass 22) drew from OpenReview's API. Pass 22 had only checked that the `groups` endpoint answers. On running, every `notes` query (API v1 and v2, ICLR 2026 and TMLR) returns HTTP 403 `ChallengeRequiredError`, a bot check. Passing it would mean getting around an access control, so I did not try. Rule v2 (`docs/paper-selection.md`) takes the same two venues from their public static lists of accepted papers (jmlr.org/tmlr/papers, iclr.cc/virtual/2026/papers.html), matches the area on titles only, and orders by a hash of the normalized title, because the ICLR list has no forum ids. All other screens, bands and places are unchanged. Written and committed before any candidate's text or arXiv record was fetched.
+
+## 2026-11-13 (pass 24): `obf-max` details the plan left open
+
+Fixed in `scripts/v4/obf_max.py` (prompt `obf-max-v1`) before any `obf-max` output was seen.
+
+- **One whole-paper call, the model picks its own codes.** V1's `obf` rewrote section by section with a glossary from a separate call. A single call lets evidence and definitions move across sections, which per-section rewriting cannot do. The rewriter returns its glossary after a `===GLOSSARY===` line, and the glossary is passed to the check so intended codes are not reported as defects.
+- **Length target 60 to 80 percent of `orig`, never at the cost of a fact.** "Compression" with every fact kept can only remove redundancy and wording. The target is in the prompt, not enforced, and the achieved ratio is in the manifest.
+- **Missing facts count as defects.** `repair.py`'s check treats omitted detail as allowed; `obf-max` must keep every fact (Jason's 01:40 note), so the check uses `exp6_scatter.py`'s variant: omissions are defects, and numbers missing by the mechanical check are listed for the checker to confirm or dismiss as format changes.
+- **Reading grades** strip markdown tables, display and inline math, headings and code before counting. Coleman-Liau counts letters, so opaque codes (short "words") lower it while Flesch-Kincaid rises with longer sentences: on V1's 2609.30094v2, `obf` grades FK 32.1 and CL 13.0 against `orig` FK 15.8 and CL 16.4. Report both and read them only as comparisons between versions.
+
+## 2026-11-13, pass 25: clarification prompt set (experiment 9, step 4)
+
+From `docs/clarification-approaches.md`: five prompts, `base` (unchanged), `plain` (target Flesch-Kincaid grade 12), `cohesion` (repair inference calls, 2× length cap), `explainer` (summary, glossary, section gists, claim-to-evidence maps) and `twostage` (extract the argument, then write). All keep `base`'s fidelity block verbatim, including "keep the inconsistency as it is", because a prompt that spells out reasoning could otherwise smooth over planted errors later. Chosen before any output; the texts go into the script before the first generation.
+
+## Pass 26: clarification script choices (before any clarification was generated)
+
+- The five prompt texts are in `scripts/v4/clarify.py`, committed before the first generation. `base` is experiment 1's `CLARIFY_USER` byte for byte (asserted in the script); the others replace only its Goals block (`cohesion` also sets the length cap to 2×; `twostage` appends the extraction to the user message). Generation uses gpt-6.1-sol at **high** effort, as the plan says, whereas experiment 1 used medium; so `clar-base-orig` is not a regeneration of experiment 1's copy.
+- The length rule says "times the original"; for `clar-*-obf` the clarifier's "original" is `obf-max`, so its cap is relative to `obf-max`. Kept, since the audit would only have that text.
+- **Clean** means the fidelity check (experiment 1's prompt, unchanged) lists no issues, minor ones included, matching experiment 1's copies (all three had zero issues).
+- The fidelity check gives quotes, not patches, so `clar-*-orig` repair adds one patch call per round (gpt-6.1-sol medium, `PATCH_USER`) that turns the listed issues into find/replace patches; then the check is rerun. At most 4 fidelity checks per copy.
+- For the pass rule on `clar-*-obf`, "fixed" issues (an error of the original silently corrected) count with "changed" and "added", because removing an inconsistency is a change to content.
+
+## 2026-11-13 (pass 27): error-stage preregistration choices
+
+Committed in `plan-v4.md` ("Experiment 9 error stage preregistration") before any error design or weak-reader data. Choices the notes left open:
+
+- **Variant A, not C, for the limited-view readers.** Gaps were a near-tie (0.17 vs 0.19, intervals almost identical), C falsely accused in 19% of clean passes against 11% for A, and A costs less. Experiment 8's own rule sends near-ties to the cheaper option.
+- **No staging.** At list prices the whole ladder on the 4 calibration papers is estimated at about $170 without gpt-5.5 (about $550 with it), well within the $1,895 left, so the 03:30 note's staging (which applies only when the budget does not fit) is not needed. With one carried prompt there is nothing to choose between anyway. Jason's own estimate ($850) used the old, inflated prices.
+- **49 errors per paper (7 categories × 7: 2 easy, 3 medium, 2 hard)**, the nearest balanced count to "about 50".
+- **Pointed question extended to "consistent with, and supported by"**, so the `unsupported` category can be caught when pointed; the same question is used for every category and the control.
+- **Proposed bars** follow the earlier calibration key (clarified high, illegible low, low false accusations), restated as audit scores: `orig` row ≥ 0.85, `obf-max` ≤ 0.60, separation ≥ 0.25. They are proposals; Jason approves final bars.
+- **Category exclusion in the frozen audit** only by a fixed rule (pooled `orig` row under 0.60), not by inspecting per-category separations, to limit overfitting on 4 papers.
+
+## 2026-11-13 (pod pass 33): experiment 9 selection frozen: gpt55-A, pointed score
+
+Applied the preregistered selection rule (`plan-v4.md`, experiment 9, "Proposed bars and selection rule") to the 5 readers' primary-set results. No reader × score meets the bars; gpt55-A is "close" on both scores (clarified-copy separation 0.22 [0.04, 0.40], pointed 0.24 [0.09, 0.41]); all others are "no". Largest separation: pointed 0.24; the clarified-copy score is within 0.05 with the same reader, so the near-tie goes to the pointed score. Frozen: **gpt-5.5 low, variant A limited view, pointed audit score, categories calculation, carried, causal, reversed, stretched** (none has a pooled `orig` row under 0.60). Next by the plan: anchor addendum, then the 9 held-out papers once. Not started, because Jason's 2026-11-13 03:05 note allows gpt-5.5 only on the 4 calibration papers; asked in STATE and by `NOTIFY_JASON.md`.
+
+## 2026-11-13 (pod pass 34): anchor addendum choices (before any anchor data)
+
+The addendum is in `plan-v4.md` ("Experiment 9 anchor addendum"). It was written while blocked on Jason's gpt-5.5 answer, so that the length rule is fixed before any anchor result exists.
+
+- **Construction unchanged (49 errors, all categories)** although only 5 categories enter the frozen audit: anchor errors are then built exactly like the calibration papers' errors, and the extra Sol cost (a few dollars per anchor) is small next to comparability.
+- **Frozen reader on `orig` and `obf-max` and primary survivors only:** the frozen score is the pointed score on those categories, so other reads would not enter any decision. This about halves the gpt-5.5 cost per anchor.
+- **Dropout out of the length test:** its result was seen before the rule was written. It is shown in the figure, marked.
+- **Rule (a) uses the "close" `orig` bar (0.75)** rather than "meets" (0.85), because the frozen audit itself only reached "close", and with about 8 to 11 primary errors per anchor one miss moves a row by 0.1.
+- **Rule (b) is a band difference, not a slope test:** with 2 anchors per band a slope across 6 points adds nothing a band difference does not, and the band difference is easy to read. The slope is reported.
+- **Ladder only for a length failure, and only the notes budget:** Jason's note names the memory budget. Doubling twice (600, 1,200) spans "a bit more memory" to "about a section remembered". Each step must keep the original 4 papers at "close", because more memory may also help the reader of the illegible copy and erase the separation. Chunk size is not changed: experiment 8's variant C showed chunking changes false accusations.
+- **If no step passes, the held-out run still goes ahead with variant A:** the length failure is then a reported limit of the audit, and the held-out result is still the preregistered test.
+
+## 2026-11-13 (pod pass 35): anchor `orig` inventory
+
+The error stage's avoid list (`plan-v4.md`, "Avoid") includes the inventory of contradictions in `orig`; for Dropout, which had none, a new inventory was run first with the same `inventory.py` prompt. The anchors are treated the same way (one `err9.py inventory <paper>` call each, about $0.5), so that anchor errors are built exactly like the calibration papers' errors, as the addendum requires.
+
+## 2026-11-13 (pod pass 35): held-out run preregistered; `explainer` only on held-out papers
+
+Written before any held-out data, after Jason approved gpt-5.5 (16:15 UTC note). The plan said the held-out papers "get every clean version". Only `obf-max` and the `explainer` prompt are now made for them: the frozen pointed audit reads only `orig` and `obf-max`, the construction gate needs only the `clar-explainer` copies, and the other prompts' pass or fail on held-out papers would not enter any decision (the selection is already frozen). This saves about $25 and keeps the held-out run to what the frozen audit uses. The bars are the calibration bars, unchanged, so the held-out verdict is read on the same scale as the calibration verdict.
+
+## 2026-11-13 (pod pass 43): held-out run paused; experiment 11 is the core (Jason, INBOX 2026-11-14 notes)
+
+- **Held-out run paused** before any held-out data. The frozen gpt55-A selection was made for the section-by-section reader, now a side experiment. What the held-out run tests will be re-chosen after experiments 11 and 12, by the rule in `plan-v4.md` (experiment 11 preregistration, "Feeds the held-out choice"). `heldout.sh` is not run.
+- **Ladder A1200 stopped and not restarted**, no verdict (`run-log.md`, pass 43). Experiment 10 and the `unsupported` second prompt are not started.
+- **Experiment 11 choices:** 2 unaided samples per error and version for every reader (Jason's "2 samples"; the existing whole-mini-high rows had 1, so its sample 0 is reused and a sample 1 added under a new name, leaving experiment 9's rows untouched); 1 pointed check and control per error and version, as in experiment 9; primary categories only, as in the frozen runs; whole-paper prompt, grader and 32,000-token allowance unchanged. "Positive difference on the anchors" in Jason's step 5 is read as a pooled point difference > 0, the literal reading; its interval is reported beside it.

@@ -1,0 +1,31 @@
+{
+  "id": "jmlr-2014-dropout",
+  "title": "Dropout: A Simple Way to Prevent Neural Networks from Overfitting",
+  "authors": [
+    "Nitish Srivastava",
+    "Geoffrey Hinton",
+    "Alex Krizhevsky",
+    "Ilya Sutskever",
+    "Ruslan Salakhutdinov"
+  ],
+  "published": "2014-06",
+  "journal": "Journal of Machine Learning Research 15(56):1929\u20131958",
+  "source_url": "https://jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf",
+  "landing_url": "https://jmlr.org/papers/v15/srivastava14a.html",
+  "license": "CC-BY per JMLR publication policy; version unspecified here",
+  "license_source": "https://jmlr.org/author-info.html#Publication",
+  "retrieved_utc": "2026-11-12T00:48:00.635284+00:00",
+  "pdf_sha256": "9c196ccbe6c6a595a1adba6cd030d35f7c2e548bbf5e7f1278b0109d8dd9ebaa",
+  "text_sha256": "581edbdad056fea908e37c6ad99af3b38b9bf02dc6e8f30bd1c429dc9a99e65b",
+  "extraction": "pdftotext -layout; full extracted text retained; bibliography split into references.md, appendices retained",
+  "words": 12105,
+  "partition": "familiar_reference",
+  "stratum": "classic-reference",
+  "selection_reason": "Assistant judgment: clearly develops motivation, mechanism and empirical findings; user requested a well-known well-written paper. Not objective ground-truth legibility.",
+  "extraction_limitations": [
+    "Figure pixels are not represented by this text-only experiment.",
+    "PDF equation layout may be imperfect: verify all target-relevant formulas and tables against source.pdf.",
+    "More figures than original recent-paper sampling rule: deliberate reference-stratum exception; substantive evidence for every tested error must be present in all O/D/C versions."
+  ],
+  "prior_knowledge": "High potential training exposure; analyze separately from recent papers and fresh prospective holdouts."
+}

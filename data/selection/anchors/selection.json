@@ -1,0 +1,62 @@
+{
+  "rule": "anchors-v2",
+  "seed": "20261113-anchors:",
+  "drawn_utc": "2026-11-13T15:39:23.129727+00:00",
+  "listed": 8656,
+  "area_frame": 721,
+  "screened": 383,
+  "outcomes": {
+    "pass": 6,
+    "arxiv": 90,
+    "band full": 160,
+    "licence": 108,
+    "type": 8,
+    "length": 8,
+    "figures": 1,
+    "format": 2
+  },
+  "anchors": [
+    {
+      "paper": "2603.01214v2",
+      "band": "short",
+      "venue": "ICLR 2026",
+      "main_words": 5535
+    },
+    {
+      "paper": "2601.02896v4",
+      "band": "short",
+      "venue": "TMLR",
+      "main_words": 5374
+    },
+    {
+      "paper": "2509.22621v3",
+      "band": "medium",
+      "venue": "ICLR 2026",
+      "main_words": 7094
+    },
+    {
+      "paper": "2509.11379v3",
+      "band": "medium",
+      "venue": "TMLR",
+      "main_words": 7270
+    },
+    {
+      "paper": "2510.17247v2",
+      "band": "long",
+      "venue": "TMLR",
+      "main_words": 10151
+    },
+    {
+      "paper": "2506.22982v1",
+      "band": "long",
+      "venue": "TMLR",
+      "main_words": 12311
+    }
+  ],
+  "filled": {
+    "short": 2,
+    "medium": 2,
+    "long": 2
+  },
+  "stop_reason": "all bands full"
+}

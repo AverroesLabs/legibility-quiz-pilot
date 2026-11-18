@@ -1,0 +1,50 @@
+{
+  "abstract": "Large Vision-Language Models (VLMs) have revolutionized computer vision, enabling tasks such as image classification, captioning, and visual question answering. However, they remain highly vulnerable to adversarial attacks, particularly in scenarios where both visual and textual modalities can be manipulated. In this study, we conduct a comprehensive reproducibility study of \"An Image is Worth 1000 Lies: Adversarial Transferability Across Prompts on Vision-Language Models\" validating the Cross-Prompt Attack (CroPA) and confirming its superior cross-prompt transferability compared to existing baselines. Beyond replication we propose several key improvements: (1) A novel initialization strategy that significantly improves Attack Success Rate (ASR). (2) Investigate cross-image transferability by learning universal perturbations. (3) A novel loss function targeting vision encoder attention mechanisms to improve generalization. Our evaluation across prominent VLMs -- including Flamingo, BLIP-2, and InstructBLIP as well as extended experiments on LLaVA validates the original results and demonstrates that our improvements consistently boost adversarial effectiveness. Our work reinforces the importance of studying adversarial vulnerabilities in VLMs and provides a more robust framework for generating transferable adversarial examples, with significant implications for understanding the security of VLMs in real-world applications.",
+  "appendix_cut": "## Appendix",
+  "arxiv_id": "2506.22982",
+  "ascii_ratio": 1.0,
+  "authors": [
+    "Atharv Mittal",
+    "Agam Pandey",
+    "Amritanshu Tiwari",
+    "Sukrit Jindal",
+    "Swadesh Swain"
+  ],
+  "band": "long",
+  "body_words": 15322,
+  "changes": "Converted from arXiv HTML to plain text; images removed; main.md cut at the first appendix heading.",
+  "conversion_errors": 0,
+  "decision_date_used": "2025-06-01",
+  "forum_id": "5L90cl0xtf",
+  "hidden_style_hits": 2,
+  "html_sha256": "52fe6f5e1624664d969ec49bad2b68ee32a9326da5751109bcb7ef40b671f3e4",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "licence_source": "https://arxiv.org/abs/2506.22982",
+  "listed_authors": [
+    "Atharv Mittal",
+    "Agam Pandey",
+    "Amritanshu Tiwari",
+    "Sukrit Jindal",
+    "Swadesh Swain"
+  ],
+  "listed_title": "Revisiting CroPA: A Reproducibility Study and Enhancements for Cross-Prompt Adversarial Transferability in Vision-Language Models",
+  "main_figures": 11,
+  "main_sha256": "5781a3664e48ca106da56f1e46cca2cc84ae1288b07d8fa24db2d01840a83d72",
+  "main_words": 12311,
+  "openreview_url": "https://openreview.net/forum?id=5L90cl0xtf",
+  "primary_category": "cs.CV",
+  "rank": "82dfe68ba75c58bd114c8f055b7b6e837e7b1babb58c39256bda432eb2a30162",
+  "retrieved_utc": "2026-11-13T15:39:23.126327+00:00",
+  "role": "reviewed_anchor",
+  "rule": "anchors-v2",
+  "source_url": "https://arxiv.org/html/2506.22982v1",
+  "text_sha256": "4aeada5c170fcb2240a1aece966eace68e53bdfd263f0beb5afb3eca876e3f6d",
+  "title": "Revisiting CroPA: A Reproducibility Study and Enhancements for Cross-Prompt Adversarial Transferability in Vision-Language Models",
+  "venue": "TMLR",
+  "version": 1,
+  "version_dates": {
+    "1": "2025-06-28"
+  },
+  "version_note": "earliest on or after decision"
+}

@@ -1,0 +1,44 @@
+{
+  "abstract": "We demonstrate that learning procedures that rely on aggregated labels, e.g., label information distilled from noisy responses, enjoy robustness properties impossible without data cleaning. This robustness appears in several ways. In the context of risk consistency -- when one takes the standard approach in machine learning of minimizing a surrogate (typically convex) loss in place of a desired task loss (such as the zero-one mis-classification error) -- procedures using label aggregation obtain stronger consistency guarantees than those even possible using raw labels. And while classical statistical scenarios of fitting perfectly-specified models suggest that incorporating all possible information -- modeling uncertainty in labels -- is statistically efficient, consistency fails for ``standard'' approaches as soon as a loss to be minimized is even slightly mis-specified. Yet procedures leveraging aggregated information still converge to optimal classifiers, highlighting how incorporating a fuller view of the data analysis pipeline, from collection to model-fitting to prediction time, can yield a more robust methodology by refining noisy signals.",
+  "appendix_cut": "## Appendix A Proofs related to the ranking examples",
+  "arxiv_id": "2509.11379",
+  "ascii_ratio": 0.9998,
+  "authors": [
+    "Chen Cheng",
+    "John Duchi"
+  ],
+  "band": "medium",
+  "body_words": 13041,
+  "changes": "Converted from arXiv HTML to plain text; images removed; main.md cut at the first appendix heading.",
+  "conversion_errors": 0,
+  "decision_date_used": "2026-05-01",
+  "forum_id": "O2ORErbcBy",
+  "hidden_style_hits": 0,
+  "html_sha256": "f1682dfc37cdbae2df290ad93d739ef56aaf8a6cdc56061e9d136aabc89cf8e4",
+  "injection_phrase_hits": [],
+  "licence": "http://creativecommons.org/licenses/by/4.0/",
+  "licence_source": "https://arxiv.org/abs/2509.11379",
+  "listed_authors": [
+    "Chen Cheng",
+    "John Duchi"
+  ],
+  "listed_title": "Some Robustness Properties of Label Cleaning",
+  "main_figures": 2,
+  "main_sha256": "5d259b2a8bce61181c7822c939b65f8af64cff2d9303b3f29bd56eae9b54e064",
+  "main_words": 7270,
+  "openreview_url": "https://openreview.net/forum?id=O2ORErbcBy",
+  "primary_category": "stat.ML",
+  "rank": "06ddbed485395a189f4d4a23142869fa3cb541420906927de43b27d1df747f66",
+  "retrieved_utc": "2026-11-13T15:20:13.800011+00:00",
+  "role": "reviewed_anchor",
+  "rule": "anchors-v2",
+  "source_url": "https://arxiv.org/html/2509.11379v3",
+  "text_sha256": "c2a2ab10a960345cbdb859fc1be12d541c91e6d35f0af9ef05c8307a12e65ab3",
+  "title": "Some Robustness Properties of Label Cleaning",
+  "venue": "TMLR",
+  "version": 3,
+  "version_dates": {
+    "3": "2026-05-22"
+  },
+  "version_note": "earliest on or after decision"
+}

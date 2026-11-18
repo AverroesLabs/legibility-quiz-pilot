@@ -1,0 +1,47 @@
+{
+ "paper": "2609.30094v2",
+ "planted": [
+  {
+   "kind": "lost",
+   "old": "We do not yet report formal inter-annotator agreement between humans and automated methods\u2014that is, how consistently they assign the same labels. ",
+   "new": ""
+  },
+  {
+   "kind": "changed",
+   "old": "Within the tested drift range, topic drift does not reliably reduce leakage (Section 5.4).",
+   "new": "Within the tested drift range, topic drift modestly reduces leakage (Section 5.4)."
+  },
+  {
+   "kind": "added",
+   "old": "High-pressure requests reduce GPT-OSS-120B leakage, consistent with the possibility that urgency cues activate refusal behavior.",
+   "new": "High-pressure requests reduce GPT-OSS-120B leakage, because GPT-OSS-120B was trained on refusal data for urgent requests."
+  }
+ ],
+ "fidelity": {
+  "issues": [
+   {
+    "kind": "changed",
+    "severity": "major",
+    "original_quote": "For GPT-OSS-120B, high-pressure requests reduce leakage, consistent with the possibility that urgency cues activate refusal behavior.",
+    "rewrite_quote": "High-pressure requests reduce GPT-OSS-120B leakage, because GPT-OSS-120B was trained on refusal data for urgent requests.",
+    "description": "The rewrite replaces a tentative behavioral explanation with a definite causal claim about training data that the original neither states nor establishes."
+   },
+   {
+    "kind": "lost",
+    "severity": "minor",
+    "original_quote": "but we do not yet report formal inter-annotator agreement between humans and the automated methods.",
+    "rewrite_quote": "",
+    "description": "The rewrite omits the explicit limitation that formal agreement between human judgments and automated detection methods has not been reported."
+   },
+   {
+    "kind": "changed",
+    "severity": "major",
+    "original_quote": "Within the tested drift range, topic drift does not reliably reduce leakage",
+    "rewrite_quote": "Within the tested drift range, topic drift modestly reduces leakage (Section 5.4).",
+    "description": "The conclusion changes the central finding from no reliable leakage reduction to an affirmative claim of modest reduction, contradicting both the original and the rewrite's own Section 5.4."
+   }
+  ],
+  "verdict": "unfaithful"
+ },
+ "cost": 0.15176
+}

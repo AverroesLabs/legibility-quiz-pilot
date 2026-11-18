@@ -2,7 +2,7 @@
 
 Jason Fantl, Averroes Labs · November 2026 · Part 2
 
-*Preliminary internal results. This follows [Part 1](part-1-quiz.md).*
+*Preliminary results. This follows [Part 1](part-1-quiz.md).*
 
 **TL;DR.** In Part 1, rewriting papers to be hard to follow barely lowered a model's quiz score, so here we tried a more direct test of legibility, following a suggestion from Jan Kirchner. We plant the same error in a paper and in a garbled version of it, and ask a model to find it. If writing quality matters to the reader, it should find fewer errors in the garbled version. Reading the whole paper, three of our four readers found about as many errors in garbled text as in the originals, and only the strongest, GPT-5.5, found clearly fewer. Asked about every paragraph in turn, the readers caught most errors in every version, but all four flagged more correct paragraphs when the text was garbled. Reading one section at a time and keeping only short notes, every reader found slightly fewer errors in garbled text, but no gap was clearly larger than chance. So bad writing rarely stops a model from judging an error, but we cannot yet rule this method out.
 
@@ -16,13 +16,13 @@ His games trained a "sneaky" model to write such mistakes, which is tricky and p
 
 ## The test
 
-The test is as simple as we could make it. Plant one error in a paper and ask a weak model to review the paper for internal inconsistencies. Then plant the same error in a garbled version of the same paper and ask again, and repeat over many errors. If the reader finds fewer errors in the garbled version, its success depends on how the paper is written, which is what a legibility test needs. Nothing else is required, no quiz and no rewritten reference copy, only the paper, the errors and the reader.
+The test is as simple as we could make it. Plant one error in a paper and ask a model to review the paper for internal inconsistencies. Then plant the same error in a garbled version of the same paper and ask again, and repeat over many errors. If the reader finds fewer errors in the garbled version, its success depends on how the paper is written, which is what a legibility test needs. Nothing else is required, no quiz and no rewritten reference copy, only the paper, the errors and the reader.
 
 **Papers.** Ten in all: three of Part 1's arXiv preprints, the 2014 JMLR Dropout paper, and six papers accepted at peer-reviewed venues, drawn at random across lengths of about 4,000 to 15,000 words.
 
 **Garbled versions.** Each stacks every kind of difficulty we had. It compresses the paper to about two thirds of its length, swaps terms for opaque codes, moves evidence away from the claims it supports, and leaves connecting steps unstated. GPT-6.1 Sol checked it against the original until no fact or number was lost.
 
-**Clarified versions.** As a known more-legible standard, Sol also rewrote each original as a structured explainer, with a summary first, a glossary, and each claim listed with its evidence. A separate check against the original confirmed nothing was lost or added. The clarified version only calibrates the test. The test itself runs on the submitted paper alone.
+**Clarified versions.** As a known more-legible standard, Sol also rewrote each original as a structured explainer, with a summary first, a glossary, and each claim listed with its evidence. A separate check against the original confirmed nothing was lost or added. The clarified version only serves as a reference point. The test itself runs on the submitted paper alone.
 
 **Errors.** GPT-6.1 Sol planted errors from seven templates, such as a wrong number, a reversed comparison or a claim stretched beyond what was tested, one error per copy, and kept only the ones it could find itself in the clarified versions, so every error is findable when the writing is clear. It did not have to find them in the garbled versions, since errors that garbling hides are what the test looks for. That left 82 errors across the ten papers.
 
@@ -60,23 +60,23 @@ We also told all four readers which passage holds the error and asked only about
 
 Result 3 makes the reader read more like a person. It goes through the paper once, one section at a time, rewrites notes of at most 300 words after each section, and cannot look back. A code defined pages earlier, or evidence far from its claim, should then cost it something.
 
-Every reader found slightly fewer errors in the garbled versions, but no gap was clearly larger than chance. Every reader found the most errors in the clarified versions, so reading section by section made the readers sensitive to clearer writing, but not reliably to worse writing.
+Every reader found slightly fewer errors in the garbled versions, but no gap was clearly larger than chance. As with the whole paper, every reader found the most errors in the clarified versions, so the readers respond to clearer writing, but not reliably to worse writing.
 
 ## Mapping the solution space
 
 Every setting in this post comes down to two numbers: the share of errors it catches in the originals and the share it catches in the garbled versions. Plotting one against the other puts all of them on one map (Figure 4). On the diagonal a setting cannot tell the two versions apart. A useful test would sit in the bottom-right corner, catching most errors in text people can follow and few in text they cannot.
 
-![Calibration map pooled over ten papers: each reader setting's catch rate on original papers against its catch rate on garbled versions. Fill shows how the reader read the paper and marker shape shows which reader. Most settings sit near the diagonal; GPT-5.5 with the whole paper sits below it, still far above the green target corner. Asked about every paragraph, the readers sit near the top corner.](../docs/blog/part-2/fig-4-calibration-map.png)
+![Map pooled over ten papers: each reader setting's catch rate on original papers against its catch rate on garbled versions. Fill shows how the reader read the paper and marker shape shows which reader. Most settings sit near the diagonal; GPT-5.5 with the whole paper sits below it, still far above the green target corner. Asked about every paragraph, three of the four readers sit near the top corner.](../docs/blog/part-2/fig-4-calibration-map.png)
 
 **Figure 4.** Each point is one reader setting, pooled over all ten papers. Its position shows the share of planted errors caught in the original papers (horizontal) and in their garbled versions (vertical). Black points read the whole paper, blue points were asked about every paragraph, and ochre points read one section at a time. The shape shows which reader. On the dashed diagonal a setting cannot tell the two apart, and the green corner is the target.
 
 Most settings sit near the diagonal. Figure 5 shows what each change we made did to a setting's position.
 
-![Six small calibration maps on full 0 to 1 axes, pooled over ten papers, one per change: which reader, whole paper to one section at a time, smaller notes for GPT-5.5, being told where the error is, and GPT-5.5's errors split by difficulty and by distance to the evidence. Arrows show how each change moved the setting; the green corner is the target.](../docs/blog/part-2/fig-5-levers.png)
+![Six small maps on full 0 to 1 axes, pooled over ten papers, one per change: which reader, whole paper to one section at a time, smaller notes for GPT-5.5, being told where the error is, and GPT-5.5's errors split by difficulty and by distance to the evidence. Arrows show how each change moved the setting; the green corner is the target.](../docs/blog/part-2/fig-5-levers.png)
 
-**Figure 5.** Each panel is the map of Figure 4, with the same axes, for one kind of change, pooled over all ten papers. Arrows run from the starting setting (open circle) to the changed one (filled circle). The last two panels split GPT-5.5's errors into three groups each, by the difficulty each was built at and by how far its contradicting evidence sits.
+**Figure 5.** Each panel is the map of Figure 4, with the same axes, for one kind of change, pooled over all ten papers. Arrows run from a starting setting (open circle) to the changed one (filled circle), and lines join settings that differ in one way. The last two panels split GPT-5.5's errors, read with the whole paper, into three groups each, by the difficulty each was built at and by how far its contradicting evidence sits.
 
-Only one change moved a setting off the diagonal, the choice of reader. GPT-5.5 is the one reader whose catch rate falls clearly on garbled text, and it stays below the diagonal whether it reads the whole paper or one section at a time. Its memory did not matter. Cutting its notes from 1,200 words to 300 cost it errors in both versions alike, so the setting slid along the diagonal with its gap unchanged. Everything else also slid settings along the diagonal or up to the top corner. Reading one section at a time made the weaker readers miss more errors in both versions, and telling readers where the error is moved them all to the ceiling.
+Only one change moved a setting off the diagonal, the choice of reader. GPT-5.5 is the one reader whose catch rate falls clearly on garbled text, and it stays below the diagonal whether it reads the whole paper or one section at a time, though less clearly by section. Cutting its notes from 1,200 words to 300 cost it errors in both versions alike, so the setting slid along the diagonal with its gap unchanged. Everything else also slid settings along the diagonal or up to the top corner. Reading one section at a time made GPT-5.6 Luna and GPT-5.4 mini miss more errors in both versions, and telling readers where the error is moved them all toward the top corner.
 
 The errors themselves gave little to work with. Splitting GPT-5.5's errors by difficulty or by distance to the evidence moved it around a small region below the diagonal, and no subset came near the target. These subsets are small, so we read nothing more into them.
 
@@ -86,7 +86,7 @@ Part 1's quiz fits on the same map. Its readers lost about five points on the re
 
 A direct test of legibility needs a reader that pays something for bad writing. With the whole paper in view, three of our four readers pay almost nothing. GPT-5.5 pays in finding errors, though the cost is still too small to sort a single paper. Asked about every paragraph, all four readers pay in another way, by flagging more correct text when it is garbled.
 
-Several parts of the test work, and all of them need nothing but the paper itself. Errors can be planted and checked automatically, readers rarely accuse clean papers of them, a cheap grader scores reviews reliably, and pointed questions separate finding an error from judging it.
+Several parts of the test work, and all of them need nothing but the paper itself. Errors can be planted and checked automatically, readers rarely accuse clean papers of them, a cheap grader agrees with a stronger one on nearly every review, and telling the reader where the error is separates finding an error from judging it.
 
 The method may still work. Every reader found the most errors and raised the fewest false alarms in the clarified versions, so readers do respond to how text is written. And the strongest reader, GPT-5.5, was the only one that found fewer errors in garbled text, so newer, stronger models may do better.
 
@@ -110,7 +110,7 @@ People have been tested in pieces of this design, never as a whole. Peer reviewe
 - **Our errors.** We chose the error templates. Two kinds, a result left out of a summary and a claim with no support, could not yet be tested properly, and naturally occurring errors may behave differently.
 - **A strong model is the referee.** GPT-6.1 Sol built and checked the errors, the garbled versions and the clarified versions. Its own mistakes would pass into the results unnoticed.
 
-The next step is to calibrate the test: tune a setting toward the target corner on these ten papers, whose legibility to people we take as known, pick it by a rule fixed in advance, and only then run it once on nine papers held out from everything so far. The repository that accompanies this post holds the code, prompts, raw model outputs and every experiment's preregistered predictions, so each result here can be rerun. A detailed reference report written for AI agents, docs/part2-agent-report.md, gathers every number behind this post with its source, so an agent can answer questions about it without searching the repository.
+The next step is to calibrate the test. We would tune a setting toward the target corner on these ten papers, pick it by a rule fixed in advance, and only then run it once on nine papers held out from everything so far. The repository that accompanies this post holds the code, prompts, raw model outputs and every experiment's preregistered predictions, so each result here can be rerun. A detailed reference report written for AI agents, [docs/part2-agent-report.md](../docs/part2-agent-report.md), gathers every number behind this post with its source, so an agent can answer questions about it without searching the repository.
 
 ---
 

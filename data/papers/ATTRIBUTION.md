@@ -30,3 +30,17 @@ Every paper here is an arXiv preprint released under a Creative Commons licence 
 | [2609.30094v2](https://arxiv.org/abs/2609.30094v2) | PrivDrift: Auditing User-Secret Leakage Under Topic Drift in Active LLM Conversations | Luciano Maldonado | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
 | [2609.34091v1](https://arxiv.org/abs/2609.34091v1) | When Is an SAE Feature Interpretable? A Validation Ladder for EEG Foundation Models | Yucong Cao, Chenqi Li, Tingting Zhu | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
 | [2609.37054v2](https://arxiv.org/abs/2609.37054v2) | ACTR: Aligning Thoughts and Responses for Multilingual Safety in Reasoning LLMs | Xianhui Zhang, Jian Yu, Chengyu Xie et al. | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
+
+## Added for Part 2
+
+Six peer-reviewed papers (all CC BY 4.0 on arXiv), plus the 2014 JMLR Dropout paper. The garbled (`obf-max`) and clarified (`clar-*`) versions in `data/v4/versions/` and the copies with planted errors are adaptations made for this study. They deliberately change the papers and must not be cited as the authors' work.
+
+| Paper | Title | Authors | Licence |
+|---|---|---|---|
+| [2506.22982v1](https://arxiv.org/abs/2506.22982v1) | Revisiting CroPA: A Reproducibility Study and Enhancements for Cross-Prompt Adversarial Transferability in Vision-Language Models | Atharv Mittal, Agam Pandey, Amritanshu Tiwari et al. | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
+| [2509.11379v3](https://arxiv.org/abs/2509.11379v3) | Some Robustness Properties of Label Cleaning | Chen Cheng, John Duchi | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
+| [2509.22621v3](https://arxiv.org/abs/2509.22621v3) | IA2: Alignment with ICL Activations improves Supervised Fine-Tuning | Aayush Mishra, Daniel Khashabi, Anqi Liu | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
+| [2510.17247v2](https://arxiv.org/abs/2510.17247v2) | From Preferences to Prejudice: The Role of Alignment Tuning in Shaping Social Bias in Video Diffusion Models | Zefan Cai, Haoyi Qiu, Haozhe Zhao et al. | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
+| [2601.02896v4](https://arxiv.org/abs/2601.02896v4) | Bridging Mechanistic Interpretability and Prompt Engineering with Gradient Ascent for Interpretable Persona Control | Harshvardhan Saini, Yiming Tang, Dianbo Liu | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
+| [2603.01214v2](https://arxiv.org/abs/2603.01214v2) | Reasoning Boosts Opinion Alignment in LLMs | Frédéric Berdoz, Yann Billeter, Yann Vonlanthen et al. | [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/) |
+| [jmlr-2014-dropout](https://jmlr.org/papers/v15/srivastava14a.html) | Dropout: A Simple Way to Prevent Neural Networks from Overfitting | Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky et al. | CC BY under JMLR's publication policy (version not stated; [jmlr.org/author-info.html](https://jmlr.org/author-info.html#Publication)) |
